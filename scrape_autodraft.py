@@ -1,0 +1,180 @@
+import asyncio
+import pandas as pd
+from bs4 import BeautifulSoup
+from playwright.async_api import async_playwright
+import re
+
+URLS = [
+    ("https://www.autodraft.cz/auta.html?palivo=elektro", False),
+    ("https://www.autodraft.cz/auta-na-ceste.html", True),
+]
+
+# Status keywords appear lowercase at START and END of model block in card text.
+# With status:    "{status} {ModelName} {status} ocen\u00edte na cest\u00e1ch: Elektro ..."
+# Without status: "{ModelName} ocen\u00edte na cest\u00e1ch: Elektro ..."
+STATUS_MAP = {
+    "domluven\u00e1 prohl\u00eddka": "Zamluven\u00e9",
+    "z\u00e1lohovan\u00e9":          "Zamluven\u00e9",
+    "zarezervovan\u00e9":             "Zamluven\u00e9",
+    "prodan\u00e9":                   "Prodan\u00e9",
+}
+
+MODEL_SEPARATOR = "ocen\u00edte na cest\u00e1ch:"
+
+
+def extract_model_and_status(text, is_on_the_way):
+    """Extract clean model name and status label from card text."""
+    text_lower = text.lower()
+
+    if MODEL_SEPARATOR in text_lower:
+        idx = text_lower.index(MODEL_SEPARATOR)
+        model_block = text[:idx].strip()
+    elif "Elektro" in text:
+        model_block = text.split("Elektro")[0].strip()
+    else:
+        model_block = text.strip()
+
+    default_status = "Chyst\u00e1 se" if is_on_the_way else "Dostupn\u00fd"
+    status = default_status
+    model = model_block
+
+    for sw, mapped in STATUS_MAP.items():
+        if model_block.lower().startswith(sw):
+            status = mapped
+            rest = model_block[len(sw):].strip()
+            if rest.lower().endswith(sw):
+                rest = rest[: -len(sw)].strip()
+            model = rest
+            break
+
+    return model.strip(), status
+
+
+def split_model(model):
+    """Strip nav noise and split 'VW ID.4 Pro 150kW / ALU ...' into (base_name, extra)."""
+    # Remove leading navigation artefacts like "P\u0159edchoz\u00ed Dal\u0161\u00ed"
+    model = re.sub(r'^(?:P\u0159edchoz\u00ed\s+|Dal\u0161\u00ed\s+)+', '', model).strip()
+    m = re.search(r'\s+(\d+kW\b.*)', model, re.IGNORECASE)
+    if m:
+        return model[:m.start()].strip(), m.group(1).strip()
+    return model, ""
+
+
+def split_extra(extra):
+    """Split extra string into (power_kw, kola, nahon_4x4, remaining_extra).
+
+    '4x4' goes to nahon_4x4; 'Ta\u017en\u00e9' is kept in extra; ALU/Sada go to kola.
+    """
+    power_match = re.match(r'^(\d+)kW\b', extra, re.IGNORECASE)
+    power = power_match.group(1) if power_match else ""
+    # Strip the leading " / " that separates power from the rest
+    rest = re.sub(r'^\s*/\s*', '', extra[power_match.end():]).strip() if power_match else extra
+
+    # Split only on " / " (with spaces) so that dates like "03/2030" are preserved.
+    segments = [s.strip() for s in re.split(r'\s+/\s+', rest) if s.strip()]
+
+    kola_parts, other_parts, nahon_4x4 = [], [], "Ne"
+    for seg in segments:
+        if re.search(r'\bALU\b|\bSada\s+\d', seg, re.IGNORECASE):
+            kola_parts.append(seg)
+        elif seg == "4x4":
+            nahon_4x4 = "Ano"
+        else:
+            other_parts.append(seg)
+
+    return power, " / ".join(kola_parts), nahon_4x4, " / ".join(other_parts)
+
+
+async def load_all(page):
+    """Click 'Na\u010d\u00edst dal\u0161\u00ed auta' until it disappears."""
+    while True:
+        try:
+            btn = page.locator('text="Na\u010d\u00edst dal\u0161\u00ed auta"')
+            if await btn.count() > 0 and await btn.is_visible():
+                await btn.click()
+                await page.wait_for_timeout(2000)
+            else:
+                break
+        except Exception:
+            break
+
+
+async def scrape_autodraft():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+        all_cars = []
+
+        for url, is_on_the_way in URLS:
+            print(f"Zpracov\u00e1v\u00e1m: {url}")
+            await page.goto(url)
+
+            try:
+                await page.click("text=Accept all", timeout=3000)
+            except Exception:
+                pass
+
+            if is_on_the_way:
+                try:
+                    await page.click('label:has-text("elektro")', timeout=3000)
+                    await page.wait_for_timeout(2000)
+                except Exception:
+                    pass
+
+            await load_all(page)
+
+            html = await page.content()
+            soup = BeautifulSoup(html, "html.parser")
+
+            seen = set()
+            for car in soup.find_all("a", href=True):
+                href = car["href"]
+                if "/detail/" not in href:
+                    continue
+
+                text = car.get_text(separator=" ", strip=True)
+
+                if is_on_the_way and "Elektro" not in text:
+                    continue
+
+                model, status = extract_model_and_status(text, is_on_the_way)
+                base_name, extra = split_model(model)
+                power, kola, nahon_4x4, extra_rest = split_extra(extra)
+
+                link = href if href.startswith("http") else "https://www.autodraft.cz" + href
+                if link in seen:
+                    continue
+                seen.add(link)
+
+                # Price: e.g. "597 000 Kč" or "1 387 000 Kč" – groups of 3 digits.
+                # Negative lookbehind prevents matching the year ("9/2022 597 000 Kč" → "2022597000" bug).
+                price_match = re.search(r"(?<!\d)(\d{1,3}(?:\s\d{3})+)\s*K\u010d", text)
+                price = price_match.group(1).replace(" ", "") if price_match else ""
+
+                mileage_match = re.search(r"(?<!\d)(\d{1,3}(?:\s\d{3})+)\s*km", text)
+                mileage = mileage_match.group(1).replace(" ", "") if mileage_match else ""
+
+                all_cars.append({
+                    "Model auta":                 base_name,
+                    "Cena (K\u010d)":             price,
+                    "N\u00e1jezd (km)":           mileage,
+                    "V\u00fdkon (kW)":            power,
+                    "Tepeln\u00e9 \u010derpadlo": "Ano" if "Tepelko" in text else "Ne",
+                    "Kola":                       kola,
+                    "N\u00e1hon 4x4":            nahon_4x4,
+                    "Extra":                      extra_rest,
+                    "Zdroj":                      "Autodraft.cz",
+                    "Stav":                       status,
+                    "Odkaz na auto":              link,
+                })
+
+        df = pd.DataFrame(all_cars)
+        df.drop_duplicates(subset="Odkaz na auto", inplace=True)
+        df.to_csv("autodraft.csv", index=False, encoding="utf-8")
+        print(f"Hotovo \u2013 ulo\u017eeno {len(df)} aut do autodraft.csv")
+
+        await browser.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(scrape_autodraft())

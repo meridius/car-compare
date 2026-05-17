@@ -1,0 +1,11 @@
+Model auta
+Cena (Kč)
+Nájezd (km)
+Výkon (kW)
+Tepelné čerpadlo
+Kola
+Náhon 4x4
+Extra
+Zdroj
+Stav
+Odkaz na auto
