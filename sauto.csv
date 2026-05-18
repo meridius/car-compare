@@ -1,193 +1,176 @@
 Model auta,Cena (Kč),Nájezd (km),Výkon (kW),Rok výroby,Tepelné čerpadlo,Kola,Náhon 4x4,Extra,Stav,Zdroj,Odkaz na auto
-VW ID.4,664000,67902,150,2022,Ano,,Ne,"Dojezd 547 km / Baterie 77 kWh / IQ, ACC, Keyless,tažné",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210120902
+VW ID.4,664000,67902,150,2022,Ano,,Ne,"Dojezd 547 km / Baterie 77 kWh / 150 kW, IQ, ACC, Keyless,tažné",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210120902
 BMW i3,468900,57968,135,2021,Ano,,Ne,i3s 120Ah Tepelné čerpadlo + D,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/209826342
 Hyundai Kona,650000,33800,150,2022,Ano,,Ne,Dojezd 550 km / Baterie 64 kWh / X Line 150Kw 64kWh 1 MAJITEL,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/207744106
 Renault Mégane,695750,27450,97,2023,Ano,,Ne,Dojezd 475 km / Baterie 60 kWh / E TECH Evolution EV60 1MAJITEL,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/megane/209407935
-Nissan LEAF,389000,35101,110,2021,Ano,,Ne,"Dojezd 0 km / Baterie 40 kWh / N-Connecta 88,6% SoH",,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210408020
-Opel Corsa,419900,33800,100,2023,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / e-Corsa 100kW ELEGANCE Kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/corsa/210372500
+Nissan LEAF,389000,35101,110,2021,Ano,,Ne,"Baterie 40 kWh / N-Connecta 88,6% SoH",,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210408020
+Opel Corsa,419900,33800,100,,Ano,,Ne,e-Corsa 100kW ELEGANCE Kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/corsa/210372500
 VW ID.3,529900,37306,150,2021,Ano,,Ne,Dojezd 427 km / Baterie 62 kWh / Pro 150kW MATRIX LED 62kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/210335360
 Hyundai Kona,560000,75951,150,2023,Ano,,Ne,"Dojezd 484 km / Baterie 67 kWh / Electric 64 kWh, SoH 100%",,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210434606
 BMW i3,629000,31779,135,2021,Ano,,Ne,"Dojezd 285 km / Baterie 42 kWh / i3s 120Ah, H/K, Navi profi",,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/209746152
-VW ID.4,619900,41400,150,2022,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / PRO PERFORMANCE 150kW, ACC",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210429326
-BYD Dolphin Surf,665000,18,11,2025,Ano,,Ne,Dojezd 460 km / Baterie 43 kWh / BYD Dolphin Surf 156k COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209668386
+VW ID.4,619900,41400,150,2022,Ano,,Ne,"PRO PERFORMANCE 150kW, ACC",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210429326
+BYD Dolphin Surf,665000,18,11,,Ano,,Ne,Dojezd 460 km / Baterie 43 kWh / BYD Dolphin Surf 156k COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209668386
 BYD ATTO 2,655000,18,130,2025,Ano,,Ne,"Dojezd 312 km / Baterie 45 kWh / 177k Active 45,1 kWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209486052
-BYD Dolphin Surf,591920,10,65,2025,Ano,,Ne,Dojezd 507 km / Baterie 43 kWh / BYD Dolphin Surf 156k BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209988078
-BYD Dolphin Surf,575260,10,65,2025,Ano,,Ne,Dojezd 507 km / Baterie 43 kWh / BYD Dolphin Surf 156k BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209921592
+BYD Dolphin Surf,591920,10,65,,Ano,,Ne,Dojezd 507 km / Baterie 43 kWh / BYD Dolphin Surf 156k BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209988078
+BYD Dolphin Surf,575260,10,65,,Ano,,Ne,Dojezd 507 km / Baterie 43 kWh / BYD Dolphin Surf 156k BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209921592
 BYD ATTO 2,709000,18,130,2025,Ano,,Ne,"Dojezd 312 km / Baterie 45 kWh / 177k Boost 45,1 kWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209859681
-Cupra Born,588000,60412,150,2023,Ano,,Ne,Tepelko LED Kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210341045
+Cupra Born,588000,60412,150,2022,Ano,,Ne,150kW Tepelko LED Kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210341045
 VW ID.4,700000,82251,220,2023,Ano,,Ano,"Dojezd 488 km / Baterie 82 kWh / GTX (82 kWh), SoH 94%, 4X4",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210432347
 Kia Soul,419000,22862,100,2021,Ano,,Ne,Dojezd 341 km / Baterie 39 kWh / Záruka 08/2028 DPH ACC 100%SoH,,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/soul/210355517
 Tesla Model 3,569000,90685,208,2021,Ano,,Ne,Dojezd 448 km / Baterie 55 kWh / Standard Range Plus/208kW/taž.,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210325334
-Tesla Model 3,669000,92000,239,2023,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / RWD 239kW         PŘIPRAVUJEME,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210408266
-Renault R4,799000,1,110,2026,Ano,,Ne,Iconic 150 k Comfort Range,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/r4/209823774
-Volvo XC90,1739000,1,184,2026,Ano,,Ano,B5 AWD PLUS DARK 7S,,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/xc90/209289567
-VW ID.4,699000,92046,150,2022,Ano,,Ne,Dojezd 0 km / Baterie 82 kWh / Pro Performance Max Tepelko,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210426533
+Tesla Model 3,669000,92000,239,2023,Ano,,Ne,RWD 239kW         PŘIPRAVUJEME,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210408266
+VW ID.4,699000,92046,150,2022,Ano,,Ne,Baterie 82 kWh / Pro Performance Max Tepelko,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210426533
 Hyundai Kona,699900,27000,150,2024,Ano,,Ne,"Dojezd 484 km / Baterie 64 kWh / 64KWH-150KW,CZECH EDITION,1.MA",,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210401585
-MG MG4,498000,69432,150,2023,Ano,,Ne,Dojezd 420 km / Baterie 64 kWh / 64kWh LUXURY 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210354737
-MG MG4,499000,63956,150,2023,Ano,,Ne,Dojezd 420 km / Baterie 64 kWh / 64kWh LUXURY 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210301322
-Nissan LEAF,348000,44425,110,2022,Ano,,Ne,Dojezd 270 km / Baterie 40 kWh / Tepelko ACC 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210098447
+MG MG4,498000,69432,150,2023,Ano,,Ne,Dojezd 420 km / Baterie 64 kWh / 150kW 64kWh LUXURY 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210354737
+MG MG4,499000,63956,150,2023,Ano,,Ne,Dojezd 420 km / Baterie 64 kWh / 150kW 64kWh LUXURY 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210301322
+Nissan LEAF,348000,44425,110,2022,Ano,,Ne,Dojezd 270 km / Baterie 40 kWh / 110kW Tepelko ACC 1.Maj DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210098447
 Opel Mokka,438000,15166,100,2022,Ano,,Ne,Dojezd 324 km / Baterie 50 kWh / EV 100kW 50kWh GS Tepelko DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209855427
 Škoda Enyaq,680000,45000,132,2022,Ano,,Ne,Dojezd 430 km / Baterie 62 kWh / ENYAQ iV 60 Sportline,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/210416312
-Audi Q4 e-tron,739000,83905,150,2023,Ano,,Ne,Dojezd 0 km / Baterie 82 kWh / 40 150kW LED Matrix Tepelko,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q4-e-tron/210423611
-Leapmotor B10,745000,0,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210422744
+Audi Q4 e-tron,739000,83905,150,2023,Ano,,Ne,Baterie 82 kWh / 40 150kW LED Matrix Tepelko,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q4-e-tron/210423611
+Leapmotor B10,745000,,160,2025,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210422744
 Audi e-tron,658000,47650,230,2022,Ano,,Ano,Dojezd 350 km / Baterie 71 kWh / AUDI E-Tron Q8 QUATTRO záruka,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/e-tron/209851392
 Škoda Enyaq iV,679000,69164,150,2022,Ano,,Ne,80 150kW Desing paket Suite,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/210419621
-Tesla Model 3,649000,72000,366,2021,Ano,,Ano,Dojezd 0 km / Baterie 0 kWh / AWD Long Range    PŘIPRAVUJEME,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210213122
-Tesla Model 3,624999,53385,239,2021,Ano,,Ne,Dojezd 0 km / Baterie 55 kWh / Standard Range Dual Motor 239,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210415565
+Tesla Model 3,649000,72000,366,,Ano,,Ano,AWD Long Range    PŘIPRAVUJEME,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210213122
+Tesla Model 3,624999,53385,239,2021,Ano,,Ne,Baterie 55 kWh / Standard Range Dual Motor 239,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210415565
 Škoda Enyaq iV,719000,36000,150,2021,Ano,,Ne,80 SportLine 150kW 82kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/210413945
 VW ID.3,469000,44735,150,2021,Ano,,Ne,Business 150 kW SoH 90% TČ,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/209967906
 VW ID.4,710000,76000,150,2022,Ano,,Ne,Dojezd 530 km / Baterie 77 kWh / ID4 Pro Perfomance 77kwh 150kw,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210407711
 VW ID.4,710000,64000,150,2022,Ano,,Ne,Dojezd 530 km / Baterie 77 kWh / ID4 Pro Perfomance 77kwh 150kw,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210406595
 BMW i3,634999,58563,135,2022,Ano,,Ne,Dojezd 281 km / Baterie 42 kWh / i3s 120Ah SOH 91% NAVI PROF,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210407279
-VW ID.4,619000,64758,150,2022,Ano,,Ne,Baterie 0 kWh / Pro Perfo 150kW -77KwH  SoH 94,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/209915745
+VW ID.4,619000,64758,150,2022,Ano,,Ne,Pro Perfo 150kW -77KwH  SoH 94,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/209915745
 Škoda Enyaq iV,549000,44380,132,2021,Ano,,Ne,"iV 60 132 kW SoH 93,5%",,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/210404399
-Land Rover Discovery Sport,1199000,22950,150,2025,Ano,,Ano,D200 DYNAMIC SE AWD AUT,,Sauto.cz,https://www.sauto.cz/osobni/detail/land-rover/discovery-sport/208210331
-Audi A6 Avant,1739900,12828,250,2024,Ano,,Ano,Sport 55 TFSI quattro,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/a6-avant/208453598
-Mazda MX-30,395000,26572,107,2021,Ano,,Ne,Dojezd 0 km / Baterie 36 kWh / E-SKYACTIV  GT PLUS  96 % SoH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mazda/mx-30/210323114
+Mazda MX-30,395000,26572,107,2021,Ano,,Ne,Baterie 36 kWh / E-SKYACTIV  GT PLUS  96 % SoH,,Sauto.cz,https://www.sauto.cz/osobni/detail/mazda/mx-30/210323114
 Mazda MX-30,385000,41600,107,2021,Ano,,Ne,"Dojezd 200 km / Baterie 35 kWh / e-SKYACTIV, šedá, záruka",,Sauto.cz,https://www.sauto.cz/osobni/detail/mazda/mx-30/210397061
 Seat Mii,319900,61859,61,2021,Ano,,Ne,Dojezd 250 km / Baterie 35 kWh / SEAT MII ELECTRIC 61 KW,,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/mii/210396479
 BMW i3,499000,77500,135,2021,Ano,,Ne,"Dojezd 280 km / Baterie 120 kWh / i3S,135kw,120Ah,12/2021",,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/208930287
 Mercedes-Benz EQA,700000,17500,140,2021,Ano,,Ne,Dojezd 420 km / Baterie 68 kWh / 250 MBUX Kamera Navi,,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/eqa/209414370
 Peugeot 2008,629900,23269,115,2024,Ano,,Ne,GT 156k TČ LED alcantara,,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/2008/210393728
 Cupra Born,649990,30577,170,2023,Ano,,Ne,Baterie 77 kWh / e-Boost 77/82 KWH 170 kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210393563
-Cupra Born,599900,26500,150,2022,Ano,,Ne,Dojezd 427 km / Baterie 62 kWh / 62 kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/208222328
-Tesla Model 3,740000,42480,239,2021,Ano,,Ne,"Dojezd 400 km / Baterie 60 kWh / Tesla Model 3 SR+, EAP, LFP,",,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210389669
+Cupra Born,599900,26500,150,2022,Ano,,Ne,"Dojezd 427 km / Baterie 62 kWh / 150 kW, 62 kWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/208222328
+Tesla Model 3,740000,42480,239,,Ano,,Ne,"Dojezd 400 km / Baterie 60 kWh / Tesla Model 3 SR+, EAP, LFP,",,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210389669
 Renault Mégane,499000,71238,96,2022,Ano,,Ne,"Dojezd 300 km / Baterie 40 kWh / E-TECH ELEKTRO SoH 95%, záruka",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/megane/209906217
 Opel Mokka,450000,20649,100,2022,Ano,,Ne,"Dojezd 324 km / Baterie 50 kWh / Electric 50 kWh, SoH 93%",,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210389552
-Mini,460000,47742,135,2022,Ano,,Ne,"Dojezd 234 km / Baterie 32 kWh / Cooper SE 32 kWh, SoH 95%",,Sauto.cz,https://www.sauto.cz/osobni/detail/mini/ostatni/210387509
+Mini Ostatní,460000,47742,135,2022,Ano,,Ne,"Dojezd 234 km / Baterie 32 kWh / Cooper SE 32 kWh, SoH 95%",,Sauto.cz,https://www.sauto.cz/osobni/detail/mini/ostatni/210387509
 Cupra Born,580000,22266,150,2022,Ano,,Ne,"Dojezd 427 km / Baterie 62 kWh / 58, SoH 94%, Automat",,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210387311
 Peugeot 2008,423379,99988,100,2022,Ano,,Ne,Dojezd 320 km / Baterie 50 kWh / e Allure Pack TEPELKO SOH 99 %,,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/2008/210206489
-Kia EV2,747980,5,107,2026,Ano,,Ne,"EV2 Air 42,2kWh+HEAT+WINT",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev2/210383996
-Kia,667980,0,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210382058
-BMW i3,580000,31600,125,2022,Ano,,Ne,"Dojezd 320 km / Baterie 120 kWh / 120 Ah, UNIQUE limited",,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210122366
+Kia EV2,747980,5,107,,Ano,,Ne,"EV2 Air 42,2kWh+HEAT+WINT",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev2/210383996
+Kia Ostatní,667980,,108,2026,Ano,,Ne,"AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210382058
+BMW i3,580000,31600,135,2022,Ano,,Ne,"Dojezd 320 km / Baterie 120 kWh / 125 kW, 120 Ah, UNIQUE limited",,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210122366
 Peugeot 208,390000,32631,100,2021,Ano,,Ne,"Dojezd 340 km / Baterie 50 kWh / 50 kWh, SoH 92%, GT Pack",,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/208/210380606
 VW ID.3,488900,61430,150,2021,Ano,,Ne,Pro Performance 150kW TČ,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/210379139
-Nissan LEAF,444000,11500,110,2021,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / ZE1 N-Connecta  Option-DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210375704
-Audi R8,3499900,10814,418,2024,Ano,,Ne,Coupe V10 RWD,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/r8/208769031
-Land Rover Discovery,2499000,0,257,2025,Ano,,Ano,D350 Dynamic HSE AWD AUT,,Sauto.cz,https://www.sauto.cz/osobni/detail/land-rover/discovery/209655156
+Nissan LEAF,444000,11500,110,,Ano,,Ne,ZE1 N-Connecta  Option-DPH,,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210375704
 VW ID.3,649900,84993,150,2021,Ano,,Ne,Dojezd 539 km / Baterie 82 kWh / Pro S 150/82 TČ IQ.LED SoH 92%,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/210354707
-BMW i3,599000,53000,135,2021,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / s 120Ah,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210374633
+BMW i3,599000,53000,135,2021,Ano,,Ne,s 120Ah,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210374633
 Škoda Enyaq iV,579000,85885,132,2022,Ano,,Ne,62 kWh Clever,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/210374177
-Renault ZOE,338000,55200,80,2022,Ano,,Ne,Dojezd 385 km / Baterie 52 kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210165770
+Renault ZOE,338000,55200,80,,Ano,,Ne,Dojezd 385 km / Baterie 52 kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210165770
 Mazda MX-30,359000,57456,107,2021,Ano,,Ne,"Dojezd 200 km / Baterie 35 kWh / e-SKYACTIV,HEAD UP,!ZADÁNO!",,Sauto.cz,https://www.sauto.cz/osobni/detail/mazda/mx-30/210372248
 Kia EV2,649000,1000,108,2026,Ano,,Ne,"Dojezd 317 km / Baterie 42 kWh / 4x2 AIR 108kW+42,2kWh+WINT",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev2/210368339
 Tesla Model 3,689999,62299,208,2022,Ano,,Ne,Dojezd 491 km / Baterie 61 kWh / Standard Range Plus 208 kW SOH,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210362288
 MG MG4,725000,23400,320,2025,Ano,,Ano,Dojezd 380 km / Baterie 64 kWh / X- POWER 320kw Super Stav,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210360884
 Peugeot 208,300000,33820,100,2021,Ano,,Ne,Dojezd 350 km / Baterie 50 kWh / Peugeot e-208 GT 100 kw,,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/208/209798112
 MG MG4,750000,5900,320,2025,Ano,,Ano,Baterie 64 kWh / XPower 320kW 4x4,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210142382
-Renault ZOE,338000,52800,80,2021,Ano,,Ne,"Dojezd 395 km / Baterie 52 kWh / Life 52 kWh, AC 22 kW",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210196250
+Renault ZOE,338000,52800,80,,Ano,,Ne,"Dojezd 395 km / Baterie 52 kWh / Life 52 kWh, AC 22 kW",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210196250
 Peugeot 208,370000,55813,100,2021,Ano,,Ne,"Dojezd 340 km / Baterie 50 kWh / 50 kWh, SoH 87%, Automat",,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/208/210352829
-Nissan LEAF,419000,19953,110,2022,Ano,,Ne,"Dojezd 0 km / Baterie 40 kWh / N-Connecta 94,3 % SoH",,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210323219
-Citroën ë-C4,485000,46736,100,2022,Ano,,Ne,Dojezd 350 km / Baterie 50 kWh / SHINE PLUS SOH90% MAX VÝ,,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/e-c4/209564672
+Nissan LEAF,419000,19953,110,2022,Ano,,Ne,"Baterie 40 kWh / N-Connecta 94,3 % SoH",,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/leaf/210323219
+Citroën ë-C4,485000,46736,100,2022,Ano,,Ne,Dojezd 350 km / Baterie 50 kWh / 100kW SHINE PLUS SOH90% MAX VÝ,,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/e-c4/209564672
 Škoda Enyaq iV,749000,38120,150,2021,Ano,,Ne,Loft iV 80 150kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/210347120
 Tesla Model 3,699999,78274,366,2021,Ano,,Ano,Dojezd 580 km / Baterie 78 kWh / Long Range Dual Motor 366kW SO,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210343352
 Cupra Born,641179,96706,170,2022,Ano,,Ne,Dojezd 552 km / Baterie 82 kWh / E-BOOST 82 kWh SOH 96 % 170 kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210194765
-Leapmotor B10,698900,0,160,2026,Ano,,Ne,"Dojezd 361 km / Baterie 56 kWh / LIFE PRO, RWD, 160 kW/218k",,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210332873
+Leapmotor B10,698900,,160,,Ano,,Ne,"Dojezd 361 km / Baterie 56 kWh / LIFE PRO, RWD, 160 kW/218k",,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210332873
 Renault ZOE,379900,21700,80,2021,Ano,,Ne,Dojezd 420 km / Baterie 52 kWh / R110 winterpacket SoH 96% CCS,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210331301
-Polestar 2,729000,76000,165,2021,Ano,,Ne,Dojezd 0 km / Baterie 64 kWh / SR SM 91%SoH park. kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/polestar/2/210320525
-Audi S6,1599900,12208,252,2024,Ano,,Ano,Avant TDI quattro tiptronic,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/s6/208307030
+Polestar 2,729000,76000,165,2021,Ano,,Ne,Baterie 64 kWh / SR SM 91%SoH park. kamera,,Sauto.cz,https://www.sauto.cz/osobni/detail/polestar/2/210320525
 Cupra Born,590000,38040,150,2023,Ano,,Ne,"Dojezd 427 km / Baterie 62 kWh / 58, SoH 92%, Záruka, Automat",,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/210318773
-Hyundai Ioniq 5,749900,36202,160,2022,Ano,,Ne,Dojezd 400 km / Baterie 73 kWh / Style 73kWh TEPELKO,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/ioniq-5/207958633
+Hyundai Ioniq 5,749900,36202,160,2022,Ano,,Ne,Dojezd 400 km / Baterie 73 kWh / 160kW Style 73kWh TEPELKO,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/ioniq-5/207958633
 Hyundai Inster,660000,5000,85,2026,Ano,,Ne,Dojezd 360 km / Baterie 49 kWh / Cross 49kWH (85kW/115k),,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/210306581
 VW ID.3,409000,78000,110,2021,Ano,,Ne,"Dojezd 245 km / Baterie 45 kWh / Pure 110kw, 45kwh SOH 87%",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/210304910
 Renault ZOE,368000,68700,80,2022,Ano,,Ne,"Dojezd 420 km / Baterie 52 kWh / R110 52kWh CCS 50kW SoH 94,8%",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/zoe/210223334
-Audi Q4 e-tron,739000,50000,125,2022,Ano,,Ne,"Dojezd 0 km / Baterie 55 kWh / 35 92,6% SoH senzory",,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q4-e-tron/210302045
+Audi Q4 e-tron,739000,50000,125,2022,Ano,,Ne,"Baterie 55 kWh / 35 92,6% SoH senzory",,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q4-e-tron/210302045
 Hyundai Kona,718000,28714,160,2024,Ano,,Ne,Dojezd 514 km / Baterie 65 kWh / Power 65kWh  Czech Edition,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210299474
 Tesla Model 3,589999,66326,208,2021,Ano,,Ne,Dojezd 491 km / Baterie 55 kWh / Standard Range 208 kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210298550
-MG MG4,550550,21000,125,2023,Ano,,Ne,4 Luxory 125 KW*Navi*Led*DAB*,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210296192
-MG,649770,26000,132,2022,Ano,,Ne,Marvel R Luxury*Panorama*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/ostatni/210294302
-Kia,728980,5,108,2026,Ano,,Ne,"Dojezd 315 km / Baterie 42 kWh / EARTH 4P 108kW + 42,2KWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210282932
-Audi e-tron,719990,95423,230,2021,Ano,,Ano,Dojezd 0 km / Baterie 71 kWh / 50 QUATTRO 230kw 20ALU,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/e-tron/210271316
+MG MG4,550550,21000,125,,Ano,,Ne,4 Luxory 125 KW*Navi*Led*DAB*,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/210296192
+MG Ostatní,649770,26000,132,,Ano,,Ne,Marvel R Luxury*Panorama*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/ostatni/210294302
+Kia Ostatní,728980,5,108,,Ano,,Ne,"Dojezd 315 km / Baterie 42 kWh / EARTH 4P 108kW + 42,2KWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210282932
+Audi e-tron,719990,95423,230,2021,Ano,,Ano,Baterie 71 kWh / 50 QUATTRO 230kw 20ALU,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/e-tron/210271316
 BMW i3,565000,39000,135,2022,Ano,,Ne,Dojezd 283 km / Baterie 42 kWh / PRODÁNO !,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/209308113
-Tesla Model 3,679990,60411,208,2022,Ano,,Ne,Dojezd 0 km / Baterie 60 kWh / STANDART RANGE  SOH 97%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210267101
-Kia,720000,1000,107,2026,Ano,,Ne,"EV2 Earth 42,2kWh, Biege, Eart",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210261011
+Tesla Model 3,679990,60411,208,2022,Ano,,Ne,Baterie 60 kWh / STANDART RANGE  SOH 97%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210267101
+Kia Ostatní,720000,1000,107,2026,Ano,,Ne,"EV2 Earth 42,2kWh, Biege, Eart",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210261011
 Škoda Enyaq iV,545000,81740,132,2021,Ano,,Ne,iV 60 132 kW 62kWh SoH 89% TČ,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq-iv/209639223
-VW ID.4,748000,26520,128,2023,Ano,,Ne,Dojezd 0 km / Baterie 77 kWh / PRO Performance 128kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210254756
-Tesla Model 3,679990,52620,208,2022,Ano,,Ne,Dojezd 0 km / Baterie 60 kWh / STANDART RANGE  SOH 96%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210244091
+VW ID.4,748000,26520,128,2023,Ano,,Ne,Baterie 77 kWh / PRO Performance 128kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210254756
+Tesla Model 3,679990,52620,208,2022,Ano,,Ne,Baterie 60 kWh / STANDART RANGE  SOH 96%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210244091
 BYD ATTO 3,699000,56700,150,2022,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*vyhř. volant*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210241778
 BYD ATTO 3,699000,56700,150,2022,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*vyhř. volant*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210241775
-Volvo EX30,869000,0,200,2026,Ano,,Ne,Dojezd 337 km / Baterie 0 kWh / BLACK EDITION P5 ELETRIC PLUS,,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/ex30/210207722
-Renault Rafale,1199000,7500,220,2025,Ano,,Ano,Atelier Alpine E-Tech 4x4 300,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/rafale/208171868
 BMW i3,479000,100000,125,2021,Ano,,Ne,Dojezd 303 km / Baterie 42 kWh / 120Ah Comfort Advanced Tep.čer,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210228155
-BYD ATTO 3,599000,67650,150,2022,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*př.ventil. sedačky*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222332
-BYD ATTO 3,599000,67650,150,2022,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*vyhř. volant*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222329
-BYD ATTO 3,599000,67650,150,2022,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / vyhř. volant*př. ventil. sed.,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222323
-Kia,682980,0,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216887
-Kia,682980,0,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216884
-Kia,694980,0,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / AIR QV1 5P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216596
-Kia,746980,0,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 0 kWh / EARTH QV1 5P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210215789
+BYD ATTO 3,599000,67650,150,,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*př.ventil. sedačky*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222332
+BYD ATTO 3,599000,67650,150,,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / Design*vyhř. volant*360°,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222329
+BYD ATTO 3,599000,67650,150,,Ano,,Ne,Dojezd 300 km / Baterie 60 kWh / vyhř. volant*př. ventil. sed.,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-3/210222323
+Kia Ostatní,682980,,108,2026,Ano,,Ne,"AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216887
+Kia Ostatní,682980,,108,2026,Ano,,Ne,"AIR QV1 4P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216884
+Kia Ostatní,694980,,108,2026,Ano,,Ne,"AIR QV1 5P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210216596
+Kia Ostatní,746980,,108,2026,Ano,,Ne,"EARTH QV1 5P 42,2 kWh, 4x2",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210215789
 Renault R4,750000,8,110,2026,Ano,,Ne,"Dojezd 409 km / Baterie 55 kWh / 52 kWh, Záruka, NOVÁ CENA",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/r4/210213527
-Hyundai Kona,540000,67000,150,2022,Ano,,Ne,Dojezd 484 km / Baterie 64 kWh / Czech Edition | Tepelné č.,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210083861
+Hyundai Kona,540000,67000,150,,Ano,,Ne,Dojezd 484 km / Baterie 64 kWh / Czech Edition | Tepelné č.,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210083861
 Hyundai Inster,629990,18000,85,2025,Ano,,Ne,POWER 49kWh  Style Technology,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/210188894
 VW ID.4,699000,47260,150,2021,Ano,,Ne,Dojezd 516 km / Baterie 82 kWh / Pro Performance 150kW ACC,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210162995
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210153752
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210153752
 Hyundai Ioniq 5,630000,70213,160,2022,Ano,,Ne,"Dojezd 485 km / Baterie 72 kWh / Power, SoH 100%, NOVÁ CENA",,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/ioniq-5/210152756
-Kia,709900,1000,108,2026,Ano,,Ne,"Dojezd 315 km / Baterie 42 kWh / EARTH 5P 108kW + 42,2KWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210146093
-Kia,749980,5,108,2026,Ano,,Ne,"Dojezd 0 km / Baterie 42 kWh / 5P EARTH 108 KW + 42,2 KWH",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210137921
-Polestar 2,699000,95000,165,2022,Ano,,Ne,Dojezd 0 km / Baterie 64 kWh / Standard Range SM 93%SoH,,Sauto.cz,https://www.sauto.cz/osobni/detail/polestar/2/210134546
+Kia Ostatní,709900,1000,108,,Ano,,Ne,"Dojezd 315 km / Baterie 42 kWh / EARTH 5P 108kW + 42,2KWh",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210146093
+Kia Ostatní,749980,5,108,,Ano,,Ne,"Baterie 42 kWh / 5P EARTH 108 KW + 42,2 KWH",,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210137921
+Polestar 2,699000,95000,165,2022,Ano,,Ne,Baterie 64 kWh / Standard Range SM 93%SoH,,Sauto.cz,https://www.sauto.cz/osobni/detail/polestar/2/210134546
 VW ID.4,729900,92406,220,2022,Ano,,Ano,Dojezd 476 km / Baterie 77 kWh / GTX 220kW 4Mot. SOH 93% ČR 1.m,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/208913988
-Leapmotor B10,698000,0,160,2026,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087737
-Leapmotor B10,698000,0,160,2026,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087272
-Renault R5,779000,5,0,2026,Ano,,Ne,"Techno 150k Comfort Range,52kW",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/r5/209670492
-Dodge Ram,1199000,185000,301,2020,Ano,,Ano,+2500+HEMI+LPG+8feet LONG+,,Sauto.cz,https://www.sauto.cz/osobni/detail/dodge/ram/208708577
-Leapmotor B10,698000,0,160,2026,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087269
-Leapmotor B10,743000,0,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210086918
+Leapmotor B10,698000,,160,,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087737
+Leapmotor B10,698000,,160,,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087272
+Leapmotor B10,698000,,160,,Ano,,Ne,Dojezd 900 km / Baterie 19 kWh / DESIGN HYBRID EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210087269
+Leapmotor B10,743000,,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/210086918
 Tesla Model 3,599999,76407,208,2021,Ano,,Ne,Dojezd 491 km / Baterie 55 kWh / Tesla Model 3 Standard Range P,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/210045498
 Škoda Enyaq,549900,97688,132,2021,Ano,,Ne,Baterie 62 kWh / iV 60 132kW LODGE,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/210016350
-Hyundai Inster,707890,0,85,2026,Ano,,Ne,Dojezd 370 km / Baterie 49 kWh / 4S Power Style 49kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/210009060
-Hyundai Inster,619900,1800,85,2025,Ano,,Ne,Baterie 49 kWh / Power STYLE Technology,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/209391744
+Hyundai Inster,707890,,85,,Ano,,Ne,Dojezd 370 km / Baterie 49 kWh / 4S Power Style 49kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/210009060
+Hyundai Inster,619900,1800,85,,Ano,,Ne,Baterie 49 kWh / Power STYLE Technology,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/209391744
 Tesla Model 3,605999,67216,208,2021,Ano,,Ne,Dojezd 491 km / Baterie 55 kWh / Standard Range Plus 208 kW SOH,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209971692
-Leapmotor B10,725000,1,160,2025,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209959935
-Kia EV6,680000,54100,168,2023,Ano,,Ne,Dojezd 528 km / Baterie 77 kWh / Kia EV6 Air,,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev6/208467488
+Leapmotor B10,725000,1,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / DESIGN BATTERIE PROMAX,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209959935
+Kia EV6,680000,54100,168,,Ano,,Ne,Dojezd 528 km / Baterie 77 kWh / Kia EV6 Air,,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev6/208467488
 Tesla Model 3,666666,38586,239,2021,Ano,,Ne,"Dojezd 491 km / Baterie 55 kWh / Standard Range  239 kW SOH 92,",,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209880576
 VW ID.5,699000,45019,150,2023,Ano,,Ne,Dojezd 512 km / Baterie 82 kWh / Pro Performance - 150kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id5/209878743
-BYD Dolphin Surf,675000,15,115,2025,Ano,,Ne,COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209830095
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209772663
-Leapmotor B10,664900,10,160,2026,Ano,,Ne,Dojezd 361 km / Baterie 56 kWh / Life  56 kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209767068
-Leapmotor B10,749989,5,160,2025,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / LIFE BATTERIE PROMAX/D733FH,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209760759
-BYD Dolphin Surf,665000,15,115,2025,Ano,,Ne,COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209748660
-BYD ATTO 2,730000,0,130,2026,Ano,,Ne,Dojezd 312 km / Baterie 45 kWh / Boost 177 HP,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209733654
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209726796
+BYD Dolphin Surf,675000,15,115,,Ano,,Ne,COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209830095
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209772663
+Leapmotor B10,664900,10,160,,Ano,,Ne,Dojezd 361 km / Baterie 56 kWh / Life  56 kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209767068
+Leapmotor B10,749989,5,160,,Ano,,Ne,LIFE BATTERIE PROMAX/D733FH,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209760759
+BYD Dolphin Surf,665000,15,115,,Ano,,Ne,COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209748660
+BYD ATTO 2,730000,,130,,Ano,,Ne,Dojezd 312 km / Baterie 45 kWh / Boost 177 HP,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209733654
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209726796
 Tesla Model 3,739900,69579,377,2021,Ano,,Ano,"Dojezd 567 km / Baterie 78 kWh / FSD,PERFORMANCE,377kW",,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209671812
-MG MG4,339000,14468,180,2024,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / ELECTRIC 180kW navigace,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209670681
-Cupra Formentor,543000,17617,110,2024,Ano,,Ne,1.5 TSI,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/formentor/210304088
-Renault Arkana,593700,1,107,2026,Ano,,Ne,Techno Full Hybrid E-Tech 145,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/arkana/210415127
-Volvo EX30,399000,23924,200,2024,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / EL Plus 2WD Pure Electric,,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/ex30/209670678
-Leapmotor B10,724900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645592
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645319
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645316
-Leapmotor B10,742900,10,160,2025,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645313
-Leapmotor B10,742900,10,160,2026,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209644884
+MG MG4,339000,14468,180,2024,Ano,,Ne,ELECTRIC 180kW navigace,,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209670681
+Volvo EX30,399000,23924,200,2024,Ano,,Ne,EL Plus 2WD Pure Electric,,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/ex30/209670678
+Leapmotor B10,724900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645592
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645319
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645316
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209645313
+Leapmotor B10,742900,10,160,,Ano,,Ne,Dojezd 434 km / Baterie 67 kWh / Design 67kW EV,,Sauto.cz,https://www.sauto.cz/osobni/detail/leapmotor/b10/209644884
 Tesla Model 3,599999,76194,239,2021,Ano,,Ne,Dojezd 491 km / Baterie 55 kWh / Standard Range Plus kW SOH,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209599905
-MG MG4,699900,1,150,2025,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582952
-MG MG4,699900,1,150,2025,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582949
-MG MG4,699900,1,150,2025,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582943
-MG MG4,683900,1,150,2025,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582940
+MG MG4,699900,1,150,,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582952
+MG MG4,699900,1,150,,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582949
+MG MG4,699900,1,150,,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582943
+MG MG4,683900,1,150,,Ano,,Ne,Dojezd 450 km / Baterie 64 kWh / Electric Exclusive (64 kWh),,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/mg4/209582940
 Tesla Model 3,624999,42656,239,2021,Ano,,Ne,Dojezd 491 km / Baterie 55 kWh / Standard Range Plus 239 kW SOH,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209580609
-BYD ATTO 2,748000,0,130,2025,Ano,,Ne,Dojezd 250 km / Baterie 45 kWh / Boost*LED*Qi*Panorama*360°V2L,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209563143
-Cupra Born,579900,19901,150,2022,Ano,,Ne,62kWh TEPELNÉ ČERPADLO N,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/209540649
+BYD ATTO 2,748000,,130,,Ano,,Ne,Dojezd 250 km / Baterie 45 kWh / Boost*LED*Qi*Panorama*360°V2L,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209563143
+Cupra Born,579900,19901,150,2022,Ano,,Ne,150KW 62kWh TEPELNÉ ČERPADLO N,,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/born/209540649
 VW ID.3,729000,27942,150,2023,Ano,,Ne,PRO 150kW 58kWh,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/208585031
-BYD Dolphin Surf,499900,0,115,2026,Ano,,Ne,Dojezd 220 km / Baterie 30 kWh / ACTIVE,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513901
-BYD Dolphin Surf,575260,0,115,2026,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513763
-BYD Dolphin Surf,655400,0,115,2026,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513691
-BYD Dolphin Surf,655400,0,115,2026,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513406
-BYD Dolphin Surf,638400,0,115,2026,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209511342
-Volvo V60,952900,1,154,2026,Ano,,Ne,B4 PLUS DARK MY26,,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/v60/208281059
-Renault R5,749000,3950,110,2026,Ano,,Ne,"Iconic 150k Comfort Range,52kW",,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/r5/210104957
-BYD Dolphin Surf,655400,0,115,2026,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209511219
-Tesla Model 3,709990,88335,366,2022,Ano,,Ano,Dojezd 0 km / Baterie 79 kWh / LONG RANGE DUAL MOTOR SOH 92%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209503311
+BYD Dolphin Surf,499900,,115,,Ano,,Ne,Dojezd 220 km / Baterie 30 kWh / ACTIVE,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513901
+BYD Dolphin Surf,575260,,115,,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / BOOST,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513763
+BYD Dolphin Surf,655400,,115,,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513691
+BYD Dolphin Surf,655400,,115,,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209513406
+BYD Dolphin Surf,638400,,115,,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209511342
+BYD Dolphin Surf,655400,,115,,Ano,,Ne,Dojezd 310 km / Baterie 43 kWh / COMFORT,,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/dolphin-surf/209511219
+Tesla Model 3,709990,88335,366,2022,Ano,,Ano,Baterie 79 kWh / LONG RANGE DUAL MOTOR SOH 92%,,Sauto.cz,https://www.sauto.cz/osobni/detail/tesla/model-3/209503311
 Opel Corsa,425000,19200,100,2023,Ano,,Ne,Dojezd 350 km / Baterie 50 kWh / E-Corsa 50 kWh/100kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/corsa/209364462
 BYD ATTO 2,700000,127,130,2025,Ano,,Ne,"Dojezd 312 km / Baterie 45 kWh / 45 kWh LFP, SoH 100%, Automat",,Sauto.cz,https://www.sauto.cz/osobni/detail/byd/atto-2/209352276
 VW ID.3,529000,55700,150,2021,Ano,,Ne,Baterie 62 kWh / Pro/TČ//Matrix/Kamera/Servis,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/209257434
 BMW i3,549000,29000,125,2021,Ano,,Ne,Dojezd 304 km / Baterie 42 kWh / 120Ah Comfort Navi Reku,,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/208528121
-Škoda Enyaq,749990,77299,195,2022,Ano,,Ano,Dojezd 0 km / Baterie 82 kWh / iV80x 20ALU TZ SOH 93%,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/209144424
-Škoda Enyaq,719990,62600,150,2022,Ano,,Ne,Dojezd 0 km / Baterie 82 kWh / iV80 19ALU SOH 90%,,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/209090715
-VW ID.4,749990,78244,220,2022,Ano,,Ano,"Dojezd 0 km / Baterie 77 kWh / GTX 4x4, 220kw, 20ALU",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/209073216
-Jeep Avenger,734900,1,115,2026,Ano,,Ne,Dojezd 400 km / Baterie 54 kWh / Electric 54 kWh LONGITUDE 156k,,Sauto.cz,https://www.sauto.cz/osobni/detail/jeep/avenger/208745666
-Hyundai Inster,639900,12200,85,2025,Ano,,Ne,4S PWR STYLE TECHNOLOGY,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/208417484
-Fiat 600e,670900,12000,115,2024,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / RED BEV 54 kWh 115kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/fiat/600e/207702616
-Peugeot 2008,719000,550,115,2025,Ano,,Ne,Dojezd 0 km / Baterie 0 kWh / ALLURE e-115 kW /156k,,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/2008/207156072
-Renault Mégane,680000,67210,162,2022,Ano,,Ne,Dojezd 450 km / Baterie 60 kWh / Megane E Tech Techno EV60 220k,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/megane/201052126
-VW ID.3,699000,8000,110,2022,Ano,,Ne,Baterie 0 kWh / Pure Performance 110 kW / 45 k,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/181974779
-Audi A6 Avant,1369900,27869,209,2024,Ano,,Ano,Sline 50 TDI quattro tiptronic,,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/a6-avant/208700894
-Dodge Ram,1699000,7600,276,2020,Ano,,Ano,+2500+CUMMINS DIESEL+DPH+HD+,,Sauto.cz,https://www.sauto.cz/osobni/detail/dodge/ram/209498631
+Škoda Enyaq,749990,77299,195,2022,Ano,,Ano,"Baterie 82 kWh / 195kw, iV80x 20ALU TZ SOH 93%",,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/209144424
+Škoda Enyaq,719990,62600,150,2022,Ano,,Ne,"Baterie 82 kWh / 150kw, iV80 19ALU SOH 90%",,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/enyaq/209090715
+VW ID.4,749990,78244,220,2022,Ano,,Ano,"Baterie 77 kWh / GTX 4x4, 220kw, 20ALU",,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/209073216
+Jeep Avenger,734900,1,115,,Ano,,Ne,Dojezd 400 km / Baterie 54 kWh / Electric 54 kWh LONGITUDE 156k,,Sauto.cz,https://www.sauto.cz/osobni/detail/jeep/avenger/208745666
+Hyundai Inster,639900,12200,85,,Ano,,Ne,4S PWR STYLE TECHNOLOGY,,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/inster/208417484
+Fiat 600e,670900,12000,115,2024,Ano,,Ne,RED BEV 54 kWh 115kW,,Sauto.cz,https://www.sauto.cz/osobni/detail/fiat/600e/207702616
+Peugeot 2008,719000,550,115,,Ano,,Ne,ALLURE e-115 kW /156k,,Sauto.cz,https://www.sauto.cz/osobni/detail/peugeot/2008/207156072
+Renault Mégane,680000,67210,162,,Ano,,Ne,Dojezd 450 km / Baterie 60 kWh / Megane E Tech Techno EV60 220k,,Sauto.cz,https://www.sauto.cz/osobni/detail/renault/megane/201052126
+VW ID.3,699000,8000,110,2022,Ano,,Ne,Pure Performance 110 kW / 45 k,,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id3/181974779
