@@ -101,6 +101,7 @@ def build_record(item: dict, detail: dict) -> dict:
     vehicle_range = detail.get("vehicle_range") or ""
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
     awd = "Ano" if AWD_RE.search(drive_name) else "Ne"
+    condition = (detail.get("condition_cb") or {}).get("name", "")
 
     extra_parts = []
     if vehicle_range:
@@ -126,7 +127,7 @@ def build_record(item: dict, detail: dict) -> dict:
         "Kola":              "",
         "Náhon 4x4":         awd,
         "Extra":             " / ".join(extra_parts),
-        "Stav":              "",
+        "Stav":              condition,
         "Zdroj":             "Sauto.cz",
         "Odkaz na auto":     link,
     }
