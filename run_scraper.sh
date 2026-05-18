@@ -4,6 +4,25 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
+# ---------------------------------------------------------------------------
+# Argument parsing: -s / --scrapers accepts a comma-separated list of scraper
+# names (e.g. "autodraft" or "autodraft,energycars"). Defaults to all.
+# ---------------------------------------------------------------------------
+SCRAPERS="autodraft energycars"
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -s|--scrapers)
+            SCRAPERS="${2//,/ }"
+            shift 2
+            ;;
+        *)
+            echo "Usage: $0 [-s|--scrapers SCRAPER1,SCRAPER2]"
+            echo "  Available scrapers: autodraft, energycars"
+            exit 1
+            ;;
+    esac
+done
+
 echo "==> Kontroluji Python závislosti..."
 python3 -c "import playwright, pandas, bs4" 2>/dev/null || {
     echo "    Instaluji chybějící balíčky..."
@@ -26,6 +45,36 @@ if [ "${_chromium_ok:-no}" != "yes" ]; then
     playwright install chromium
 fi
 
-echo "==> Spouštím scrapers..."
-python3 "$SCRIPT_DIR/scrape_autodraft.py"
-python3 "$SCRIPT_DIR/scrape_energycars.py"
+# ---------------------------------------------------------------------------
+# Launch selected scrapers in parallel; collect PIDs and report failures.
+# ---------------------------------------------------------------------------
+echo "==> Spouštím scrapers: $SCRAPERS"
+declare -a pids=()
+declare -a names=()
+
+for scraper in $SCRAPERS; do
+    script="$SCRIPT_DIR/scrape_${scraper}.py"
+    if [[ ! -f "$script" ]]; then
+        echo "  WARN: scraper '$scraper' nenalezen ($script), přeskakuji."
+        continue
+    fi
+    python3 "$script" &
+    pids+=($!)
+    names+=("$scraper")
+done
+
+failed=0
+for i in "${!pids[@]}"; do
+    if wait "${pids[$i]}"; then
+        echo "  [OK] ${names[$i]}"
+    else
+        echo "  [FAIL] ${names[$i]}"
+        failed=$((failed + 1))
+    fi
+done
+
+if [[ $failed -gt 0 ]]; then
+    echo "==> $failed scraper(s) selhaly." >&2
+    exit 1
+fi
+echo "==> Všechny scrapers dokončeny."
