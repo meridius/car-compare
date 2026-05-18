@@ -97,6 +97,19 @@ def split_extra(extra):
 
     return power, " / ".join(kola_parts), nahon_4x4, rok_vyroby, " / ".join(other_parts)
 
+
+# Extracts Enyaq variant from autodraft detail URL slug, e.g.
+# ".../skoda-enyaq-iv-60-132kw..." → "iV 60"
+_ENYAQ_URL_VARIANT_RE = re.compile(r'enyaq-(?:iv-?)?(80x?|60|50)', re.IGNORECASE)
+
+
+def _enyaq_variant_from_url(url: str) -> str:
+    """Return Enyaq variant string ('iV 50', 'iV 60', 'iV 80') from the
+    autodraft detail URL slug, or '' if not found."""
+    m = _ENYAQ_URL_VARIANT_RE.search(url)
+    return f"iV {m.group(1)}" if m else ""
+
+
 async def load_all(page):
     """Click 'Na\u010d\u00edst dal\u0161\u00ed auta' until it disappears."""
     while True:
@@ -158,6 +171,12 @@ async def scrape_autodraft():
                 if link in seen:
                     continue
                 seen.add(link)
+
+                # For Enyaq cards without a variant number, extract it from the detail URL slug.
+                if re.search(r'\bEnyaq\b', base_name, re.IGNORECASE) and not re.search(r'iV\s+\d', base_name):
+                    variant = _enyaq_variant_from_url(link)
+                    if variant:
+                        base_name = f"Škoda Enyaq {variant}"
 
                 # Price: e.g. "597 000 Kč" or "1 387 000 Kč" – groups of 3 digits.
                 # Negative lookbehind prevents matching the year ("9/2022 597 000 Kč" → "2022597000" bug).

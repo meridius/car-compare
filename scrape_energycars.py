@@ -31,12 +31,13 @@ async def load_all(page):
 
 
 async def fetch_detail_data(browser, url, semaphore):
-    """Return (tepelné_čerpadlo, kola, náhon_4x4) from a car detail page.
+    """Return (tepelné_čerpadlo, kola, náhon_4x4, detail_model) from a car detail page.
 
     Scrapes:
     - Tepelné čerpadlo: presence of the text in Výbava section
     - Kola: wheel size in inches from equipment list (e.g. '19" kola' → '19"')
     - Náhon 4x4: from the Motor table's Pohon row
+    - detail_model: normalised model name from page H1 (used to refine ambiguous listing names)
     """
     try:
         async with semaphore:
@@ -47,7 +48,7 @@ async def fetch_detail_data(browser, url, semaphore):
             finally:
                 await page.close()
     except Exception:
-        return "Ne", "", "Ne"
+        return "Ne", "", "Ne", ""
 
     soup = BeautifulSoup(html, "html.parser")
     text = soup.get_text(separator=" ")
@@ -68,7 +69,13 @@ async def fetch_detail_data(browser, url, semaphore):
             break
     awd = "Ano" if re.search(r'4x4|všechna|AWD|quattro|xDrive|4MATIC', pohon, re.IGNORECASE) else "Ne"
 
-    return tepelne, kola, awd
+    # Extract model name from H1 for disambiguation of ambiguous listing names
+    detail_model = ""
+    h1 = soup.find("h1")
+    if h1:
+        detail_model = normalize_model(h1.get_text(strip=True))
+
+    return tepelne, kola, awd, detail_model
 
 
 async def scrape_energycars():
@@ -181,10 +188,14 @@ async def scrape_energycars():
         detail_results = await asyncio.gather(
             *[fetch_detail_data(browser, car["Odkaz na auto"], semaphore) for car in cars]
         )
-        for car, (tepelne, kola, awd) in zip(cars, detail_results):
+        for car, (tepelne, kola, awd, detail_model) in zip(cars, detail_results):
             car["Tepelné čerpadlo"] = tepelne
             car["Kola"] = kola
             car["Náhon 4x4"] = awd
+            # If the detail page H1 gives a longer, more specific model name that
+            # starts with the same prefix as what we parsed from the listing, prefer it.
+            if detail_model and detail_model.startswith(car["Model auta"]) and len(detail_model) > len(car["Model auta"]):
+                car["Model auta"] = detail_model
 
         df = pd.DataFrame(cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)

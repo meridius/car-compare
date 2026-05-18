@@ -43,6 +43,20 @@ AWD_RE = re.compile(
     re.IGNORECASE,
 )
 
+# Matches Enyaq variant specifiers: "iV 80x", "iV 80", "iV 60", "iV 50", or
+# bare "80x", "80", "60", "50" when "iV" is absent.
+_ENYAQ_VARIANT_RE = re.compile(r'\biV\s*(80x?|60|50)\b|\b(80x?|60|50)\b', re.IGNORECASE)
+
+
+def _enyaq_variant(suffix: str) -> str:
+    """Extract Enyaq variant string ('iV 50', 'iV 60', 'iV 80', 'iV 80x') from
+    the additional_model_name field, or return '' if not found."""
+    m = _ENYAQ_VARIANT_RE.search(suffix)
+    if m:
+        v = (m.group(1) or m.group(2)).lower()
+        return f"iV {v}"
+    return ""
+
 
 async def fetch_all_items(session: aiohttp.ClientSession) -> list:
     """Page through the search API and return every result item."""
@@ -96,6 +110,13 @@ def build_record(item: dict, detail: dict) -> dict:
         suffix = ""
     else:
         model_base = normalize_model(f"{brand} {model}")
+
+    # For Enyaq listings sauto uses a generic model_cb ("Enyaq" / "Enyaq iV")
+    # while the specific variant (50/60/80/80x) lives in additional_model_name.
+    if re.search(r'\bEnyaq\b', model_base, re.IGNORECASE) and suffix:
+        variant = _enyaq_variant(suffix)
+        if variant:
+            model_base = f"Škoda Enyaq {variant}"
     price = item.get("price") or ""
     mileage = item.get("tachometer") or ""
     year = (item.get("in_operation_date") or item.get("manufacturing_date") or "")[:4]
@@ -106,6 +127,20 @@ def build_record(item: dict, detail: dict) -> dict:
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
     awd = "Ano" if AWD_RE.search(drive_name) else "Ne"
     condition = (detail.get("condition_cb") or {}).get("name", "")
+
+    # Fallback: if Enyaq still has no variant number, infer from battery capacity
+    if re.fullmatch(r'Škoda Enyaq(?: iV)?', model_base) and battery_kw:
+        try:
+            bc = float(str(battery_kw).replace(",", "."))
+            if bc <= 56:
+                inferred = "iV 50"
+            elif bc <= 65:
+                inferred = "iV 60"
+            else:
+                inferred = "iV 80"
+            model_base = f"Škoda Enyaq {inferred}"
+        except ValueError:
+            pass
 
     extra_parts = []
     if vehicle_range:
