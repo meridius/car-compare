@@ -8,7 +8,7 @@ cd "$SCRIPT_DIR"
 # Argument parsing: -s / --scrapers accepts a comma-separated list of scraper
 # names (e.g. "autodraft" or "autodraft,energycars"). Defaults to all.
 # ---------------------------------------------------------------------------
-SCRAPERS="autodraft energycars"
+SCRAPERS="autodraft energycars sauto"
 while [[ $# -gt 0 ]]; do
     case "$1" in
         -s|--scrapers)
@@ -17,7 +17,7 @@ while [[ $# -gt 0 ]]; do
             ;;
         *)
             echo "Usage: $0 [-s|--scrapers SCRAPER1,SCRAPER2]"
-            echo "  Available scrapers: autodraft, energycars"
+            echo "  Available scrapers: autodraft, energycars, sauto"
             exit 1
             ;;
     esac
