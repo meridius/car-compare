@@ -62,10 +62,17 @@ def split_model(model):
     return model, ""
 
 
-def split_extra(extra):
-    """Split extra string into (power_kw, kola, nahon_4x4, remaining_extra).
+COLS = [
+    "Model auta", "Cena (K\u010d)", "N\u00e1jezd (km)", "V\u00fdkon (kW)", "Rok v\u00fdroby",
+    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+]
 
-    '4x4' goes to nahon_4x4; 'Ta\u017en\u00e9' is kept in extra; ALU/Sada go to kola.
+
+def split_extra(extra):
+    """Split extra string into (power_kw, kola, nahon_4x4, rok_vyroby, remaining_extra).
+
+    '4x4' goes to nahon_4x4; bare year (2010-2029) or MM/YYYY goes to rok_vyroby;
+    'Ta\u017en\u00e9' is kept in extra; ALU/Sada go to kola.
     """
     power_match = re.match(r'^(\d+)kW\b', extra, re.IGNORECASE)
     power = power_match.group(1) if power_match else ""
@@ -75,17 +82,20 @@ def split_extra(extra):
     # Split only on " / " (with spaces) so that dates like "03/2030" are preserved.
     segments = [s.strip() for s in re.split(r'\s+/\s+', rest) if s.strip()]
 
-    kola_parts, other_parts, nahon_4x4 = [], [], "Ne"
+    kola_parts, other_parts, nahon_4x4, rok_vyroby = [], [], "Ne", ""
     for seg in segments:
         if re.search(r'\bALU\b|\bSada\s+\d', seg, re.IGNORECASE):
             kola_parts.append(seg)
         elif seg == "4x4":
             nahon_4x4 = "Ano"
+        elif re.fullmatch(r'20[12]\d', seg):
+            rok_vyroby = seg
+        elif re.fullmatch(r'\d{1,2}/20[12]\d', seg):
+            rok_vyroby = seg[-4:]
         else:
             other_parts.append(seg)
 
-    return power, " / ".join(kola_parts), nahon_4x4, " / ".join(other_parts)
-
+    return power, " / ".join(kola_parts), nahon_4x4, rok_vyroby, " / ".join(other_parts)
 
 async def load_all(page):
     """Click 'Na\u010d\u00edst dal\u0161\u00ed auta' until it disappears."""
@@ -142,7 +152,7 @@ async def scrape_autodraft():
                 model, status = extract_model_and_status(text, is_on_the_way)
                 base_name, extra = split_model(model)
                 base_name = normalize_model(base_name)
-                power, kola, nahon_4x4, extra_rest = split_extra(extra)
+                power, kola, nahon_4x4, rok_vyroby, extra_rest = split_extra(extra)
 
                 link = href if href.startswith("http") else "https://www.autodraft.cz" + href
                 if link in seen:
@@ -157,21 +167,26 @@ async def scrape_autodraft():
                 mileage_match = re.search(r"(?<!\d)(\d{1,3}(?:\s\d{3})+)\s*km", text)
                 mileage = mileage_match.group(1).replace(" ", "") if mileage_match else ""
 
+                # Year: listed in card as "M/YYYY" or "MM/YYYY" (e.g. "9/2022")
+                year_match = re.search(r'(?<!\d)\d{1,2}/(20[12]\d)(?!\d)', text)
+                rok_vyroby = year_match.group(1) if year_match else rok_vyroby
+
                 all_cars.append({
-                    "Model auta":                 base_name,
-                    "Cena (K\u010d)":             price,
-                    "N\u00e1jezd (km)":           mileage,
-                    "V\u00fdkon (kW)":            power,
-                    "Tepeln\u00e9 \u010derpadlo": "Ano" if "Tepelko" in text else "Ne",
-                    "Kola":                       kola,
-                    "N\u00e1hon 4x4":            nahon_4x4,
-                    "Extra":                      extra_rest,
-                    "Zdroj":                      "Autodraft.cz",
-                    "Stav":                       status,
-                    "Odkaz na auto":              link,
+                    "Model auta":        base_name,
+                    "Cena (Kč)":         price,
+                    "Nájezd (km)":       mileage,
+                    "Výkon (kW)":        power,
+                    "Rok výroby":        rok_vyroby,
+                    "Tepelné čerpadlo":  "Ano" if "Tepelko" in text else "Ne",
+                    "Kola":              kola,
+                    "Náhon 4x4":         nahon_4x4,
+                    "Extra":             extra_rest,
+                    "Stav":              status,
+                    "Zdroj":             "Autodraft.cz",
+                    "Odkaz na auto":     link,
                 })
 
-        df = pd.DataFrame(all_cars)
+        df = pd.DataFrame(all_cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
         df.to_csv("autodraft.csv", index=False, encoding="utf-8")
         print(f"Hotovo \u2013 ulo\u017eeno {len(df)} aut do autodraft.csv")

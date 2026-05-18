@@ -2,10 +2,11 @@ Model auta
 Cena (Kč)
 Nájezd (km)
 Výkon (kW)
+Rok výroby
 Tepelné čerpadlo
 Kola
 Náhon 4x4
 Extra
-Zdroj
 Stav
+Zdroj
 Odkaz na auto

@@ -6,6 +6,11 @@ from playwright.async_api import async_playwright
 
 from utils import normalize_model
 
+COLS = [
+    "Model auta", "Cena (K\u010d)", "N\u00e1jezd (km)", "V\u00fdkon (kW)", "Rok v\u00fdroby",
+    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+]
+
 URL = "https://www.energycars.cz/nabidka-vozidel/?ordering=price_asc"
 DETAIL_CONCURRENCY = 5
 
@@ -154,21 +159,20 @@ async def scrape_energycars():
                 extra_parts.append(f"Dojezd {range_km} km")
             if battery_kwh:
                 extra_parts.append(f"Baterie {battery_kwh} kWh")
-            if year:
-                extra_parts.append(f"Rok {year}")
 
             cars.append({
-                "Model auta":        model,
-                "Cena (Kč)":         price,
-                "Nájezd (km)":       mileage,
-                "Výkon (kW)":        power,
-                "Tepelné čerpadlo":  "",   # filled from detail page
-                "Kola":              "",   # filled from detail page
-                "Náhon 4x4":         "",   # filled from detail page
-                "Extra":             " / ".join(extra_parts),
-                "Zdroj":             "EnergyCars.cz",
-                "Stav":              "Dostupný",
-                "Odkaz na auto":     link,
+                "Model auta":       model,
+                "Cena (Kč)":        price,
+                "Nájezd (km)":      mileage,
+                "Výkon (kW)":       power,
+                "Rok výroby":       year,
+                "Tepelné čerpadlo": "",   # filled from detail page
+                "Kola":             "",   # filled from detail page
+                "Náhon 4x4":        "",   # filled from detail page
+                "Extra":            " / ".join(extra_parts),
+                "Stav":             "Dostupný",
+                "Zdroj":            "EnergyCars.cz",
+                "Odkaz na auto":    link,
             })
 
         # Fetch all detail pages concurrently (capped by semaphore)
@@ -182,7 +186,7 @@ async def scrape_energycars():
             car["Kola"] = kola
             car["Náhon 4x4"] = awd
 
-        df = pd.DataFrame(cars)
+        df = pd.DataFrame(cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
         df.to_csv("energycars.csv", index=False, encoding="utf-8")
         print(f"Hotovo – uloženo {len(df)} aut do energycars.csv")
