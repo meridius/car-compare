@@ -89,12 +89,16 @@ def build_record(item: dict, detail: dict) -> dict:
     """Combine search-API item and detail-API result into one CSV row."""
     brand = item["manufacturer_cb"]["name"]
     model = item["model_cb"]["name"]
-    model_base = normalize_model(f"{brand} {model}")
-
     suffix = item.get("additional_model_name") or ""
+
+    if model == "Ostatní" and suffix:
+        model_base = normalize_model(f"{brand} {suffix}")
+        suffix = ""
+    else:
+        model_base = normalize_model(f"{brand} {model}")
     price = item.get("price") or ""
     mileage = item.get("tachometer") or ""
-    year = (item.get("in_operation_date") or "")[:4]
+    year = (item.get("in_operation_date") or item.get("manufacturing_date") or "")[:4]
 
     engine_power = detail.get("engine_power") or ""
     battery_kw = detail.get("battery_capacity") or ""
