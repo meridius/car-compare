@@ -4,6 +4,8 @@ from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import re
 
+from utils import normalize_model
+
 URLS = [
     ("https://www.autodraft.cz/auta.html?palivo=elektro", False),
     ("https://www.autodraft.cz/auta-na-ceste.html", True),
@@ -139,6 +141,7 @@ async def scrape_autodraft():
 
                 model, status = extract_model_and_status(text, is_on_the_way)
                 base_name, extra = split_model(model)
+                base_name = normalize_model(base_name)
                 power, kola, nahon_4x4, extra_rest = split_extra(extra)
 
                 link = href if href.startswith("http") else "https://www.autodraft.cz" + href

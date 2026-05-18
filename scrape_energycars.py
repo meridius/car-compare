@@ -4,13 +4,10 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
-URL = "https://www.energycars.cz/nabidka-vozidel/?ordering=price_asc"
+from utils import normalize_model
 
-# Keywords strongly suggesting AWD/4x4
-AWD_RE = re.compile(
-    r'\b(quattro|4MATIC|xDrive|AWD|4x4|e-4MATIC|Twin|GTX)\b',
-    re.IGNORECASE,
-)
+URL = "https://www.energycars.cz/nabidka-vozidel/?ordering=price_asc"
+DETAIL_CONCURRENCY = 5
 
 
 async def load_all(page):
@@ -26,6 +23,47 @@ async def load_all(page):
                     break
             except Exception:
                 break
+
+
+async def fetch_detail_data(browser, url, semaphore):
+    """Return (tepelné_čerpadlo, kola, náhon_4x4) from a car detail page.
+
+    Scrapes:
+    - Tepelné čerpadlo: presence of the text in Výbava section
+    - Kola: wheel size in inches from equipment list (e.g. '19" kola' → '19"')
+    - Náhon 4x4: from the Motor table's Pohon row
+    """
+    try:
+        async with semaphore:
+            page = await browser.new_page()
+            try:
+                await page.goto(url, wait_until="domcontentloaded", timeout=15000)
+                html = await page.content()
+            finally:
+                await page.close()
+    except Exception:
+        return "Ne", "", "Ne"
+
+    soup = BeautifulSoup(html, "html.parser")
+    text = soup.get_text(separator=" ")
+
+    # Heat pump: literal string anywhere on the detail page
+    tepelne = "Ano" if "Tepelné čerpadlo" in text else "Ne"
+
+    # Wheel size: matches "17" kola", "19" kola", "20" kola" etc.
+    kola_match = re.search(r'(\d{2})["\u201d]\s*kola', text)
+    kola = f'{kola_match.group(1)}"' if kola_match else ""
+
+    # Drive type from the Motor parameters table
+    pohon = ""
+    for row in soup.find_all("tr"):
+        cells = row.find_all("td")
+        if len(cells) == 2 and cells[0].get_text(strip=True) == "Pohon":
+            pohon = cells[1].get_text(strip=True)
+            break
+    awd = "Ano" if re.search(r'4x4|všechna|AWD|quattro|xDrive|4MATIC', pohon, re.IGNORECASE) else "Ne"
+
+    return tepelne, kola, awd
 
 
 async def scrape_energycars():
@@ -80,6 +118,8 @@ async def scrape_energycars():
             if not model:
                 continue
 
+            model = normalize_model(model)
+
             # Price incl. VAT – prefer "X Kč vč. DPH", fall back to first Kč group
             # Groups of 3 digits separated by spaces/nbsp, minimum 6 digits total (≥ 100 000 Kč)
             price_match = re.search(
@@ -97,7 +137,7 @@ async def scrape_energycars():
             power_match = re.search(r'Výkon[\s\xa0]+(\d+)[\s\xa0]*kW', text)
             power = power_match.group(1) if power_match else ""
 
-            # Range km  → Extra
+            # Range km → Extra
             range_match = re.search(r'Dojezd[\s\xa0]+(\d+)[\s\xa0]*km', text)
             range_km = range_match.group(1) if range_match else ""
 
@@ -109,10 +149,6 @@ async def scrape_energycars():
             year_match = re.search(r'V provozu od[\s\xa0]+(\d{4})', text)
             year = year_match.group(1) if year_match else ""
 
-            # 4x4 detection from model name
-            awd = "Ano" if AWD_RE.search(model) else "Ne"
-
-            # Pack non-columnar data into Extra
             extra_parts = []
             if range_km:
                 extra_parts.append(f"Dojezd {range_km} km")
@@ -126,14 +162,25 @@ async def scrape_energycars():
                 "Cena (Kč)":         price,
                 "Nájezd (km)":       mileage,
                 "Výkon (kW)":        power,
-                "Tepelné čerpadlo":  "",
-                "Kola":              "",
-                "Náhon 4x4":         awd,
+                "Tepelné čerpadlo":  "",   # filled from detail page
+                "Kola":              "",   # filled from detail page
+                "Náhon 4x4":         "",   # filled from detail page
                 "Extra":             " / ".join(extra_parts),
                 "Zdroj":             "EnergyCars.cz",
                 "Stav":              "Dostupný",
                 "Odkaz na auto":     link,
             })
+
+        # Fetch all detail pages concurrently (capped by semaphore)
+        print(f"  Načítám detaily pro {len(cars)} aut...")
+        semaphore = asyncio.Semaphore(DETAIL_CONCURRENCY)
+        detail_results = await asyncio.gather(
+            *[fetch_detail_data(browser, car["Odkaz na auto"], semaphore) for car in cars]
+        )
+        for car, (tepelne, kola, awd) in zip(cars, detail_results):
+            car["Tepelné čerpadlo"] = tepelne
+            car["Kola"] = kola
+            car["Náhon 4x4"] = awd
 
         df = pd.DataFrame(cars)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)

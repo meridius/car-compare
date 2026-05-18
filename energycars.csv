@@ -1,35 +1,35 @@
 Model auta,Cena (Kč),Nájezd (km),Výkon (kW),Tepelné čerpadlo,Kola,Náhon 4x4,Extra,Zdroj,Stav,Odkaz na auto
-JAC iEV7S,359900,53669,85,,,Ne,"Dojezd 300 km / Baterie 43,50 kWh / Rok 2020",EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/jac-iev7s/
-Volkswagen Crafter,399900,88331,100,,,Ne,Dojezd 173 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-crafter/
-BMW i3,399900,55416,125,,,Ne,Dojezd 250 km / Baterie 32 kWh / Rok 2017,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-i3-2/
-Tesla Model 3,449900,134099,239,,,Ne,Dojezd 409 km / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-3-2/
-Honda e,449900,27026,113,,,Ne,Dojezd 222 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/honda-e/
-Volkswagen ID.3,459900,82643,150,,,Ne,Dojezd 424 km / Baterie 62 kWh / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-2/
-Citroën Berlingo,499900,31260,100,,,Ne,Dojezd 285 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/citroen-berlingo/
-Volkswagen ID.3 Pro Performance,529900,37306,150,,,Ne,Dojezd 427 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-pro-performance/
-Tesla Model 3,539000,139009,324,,,Ne,Dojezd 560 km / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-3/
-BMW i3,559000,62923,135,,,Ne,Dojezd 359 km / Baterie 42 kWh / Rok 2019,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-i3/
-Volkswagen ID.3,569900,28983,107,,,Ne,Dojezd 427 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-3/
-Volkswagen ID.3,569900,53317,150,,,Ne,Dojezd 427 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-5/
-Volkswagen ID.3,569900,81002,107,,,Ne,Dojezd 427 km / Baterie 62 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-4/
-Volkswagen ID.3,579900,15846,150,,,Ne,Dojezd 426 km / Baterie 62 kWh / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-6/
-Cupra Born,599900,26500,150,,,Ne,Dojezd 427 km / Baterie 62 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/cupra-born/
-Škoda Octavia,599900,72316,110,,,Ne,Dojezd 68 km / Baterie 13 kWh / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/skoda-octavia/
-Kia Niro,649900,93621,150,,,Ne,Dojezd 463 km / Baterie 64 kWh / Rok 2023,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/kia-niro/
-Tesla Model X,679900,142875,306,,,Ne,Dojezd 489 km / Baterie 90 kWh / Rok 2017,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-x/
-Volvo XC40,684990,52414,170,,,Ne,Dojezd 425 km / Baterie 63 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volvo-xc40/
-Audi Q4 e-tron,719900,80622,150,,,Ne,Dojezd 523 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-q4-e-tron-2/
-Volkswagen ID.3,720000,9387,150,,,Ne,Dojezd 434 km / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-7/
-Volkswagen ID.4 Pro Performance,739900,52006,150,,,Ne,Dojezd 537 km / Baterie 82 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-4-pro-performance/
-Mercedes-Benz EQA,749900,49576,140,,,Ne,Dojezd 486 km / Baterie 69 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mercedes-benz-eqa/
-Audi Q4 e-tron,749900,100870,150,,,Ne,Dojezd 535 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-q4-e-tron/
-MINI Cooper SE,759900,2754,,,,Ne,Dojezd 305 km / Baterie 40 kWh / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mini-cooper-se/
-Volkswagen ID.4,769900,67207,150,,,Ne,Dojezd 537 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-4/
-Volkswagen ID.3,799900,43169,150,,,Ne,Dojezd 559 km / Baterie 82 kWh / Rok 2023,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3/
-Volkswagen ID.5 GTX,799900,62144,220,,,Ano,Dojezd 517 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-5-gtx/
-Volvo C40,819990,38063,,,,Ne,Dojezd 449 km / Baterie 78 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volvo-c40/
-Kia EV3,949900,1101,150,,,Ne,Dojezd 605 km / Rok 2025,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/kia-ev3/
-BYD Seal,049900,44796,390,,,Ne,Dojezd 520 km / Baterie 84 kWh / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/byd-seal/
-BMW iX,149900,25518,240,,,Ne,Dojezd 425 km / Baterie 76 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-ix/
-Mercedes-Benz EQE,149900,37036,215,,,Ne,Dojezd 693 km / Baterie 105 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mercedes-benz-eqe/
-Audi RS e-tron GT,499900,91634,440,,,Ne,Dojezd 475 km / Baterie 93 kWh / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-rs-e-tron-gt/
+JAC iEV7S,359900,53669,85,Ne,,Ne,"Dojezd 300 km / Baterie 43,50 kWh / Rok 2020",EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/jac-iev7s/
+VW Crafter,399900,88331,100,Ne,,Ne,Dojezd 173 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-crafter/
+BMW i3,399900,55416,125,Ano,"19""",Ne,Dojezd 250 km / Baterie 32 kWh / Rok 2017,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-i3-2/
+Tesla Model 3,449900,134099,239,Ne,"18""",Ne,Dojezd 409 km / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-3-2/
+Honda e,449900,27026,113,Ne,"17""",Ne,Dojezd 222 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/honda-e/
+VW ID.3,459900,82643,150,Ne,"19""",Ne,Dojezd 424 km / Baterie 62 kWh / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-2/
+Citroën Berlingo,499900,31260,100,Ne,"16""",Ne,Dojezd 285 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/citroen-berlingo/
+VW ID.3 Pro Performance,529900,37306,150,Ano,"18""",Ne,Dojezd 427 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-pro-performance/
+Tesla Model 3,539000,139009,324,Ne,"19""",Ano,Dojezd 560 km / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-3/
+BMW i3,559000,62923,135,Ano,"20""",Ne,Dojezd 359 km / Baterie 42 kWh / Rok 2019,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-i3/
+VW ID.3,569900,28983,107,Ne,"19""",Ne,Dojezd 427 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-3/
+VW ID.3,569900,53317,150,Ne,"18""",Ne,Dojezd 427 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-5/
+VW ID.3,569900,81002,107,Ne,"18""",Ne,Dojezd 427 km / Baterie 62 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-4/
+VW ID.3,579900,15846,150,Ne,"20""",Ne,Dojezd 426 km / Baterie 62 kWh / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-6/
+Cupra Born,599900,26500,150,Ano,"18""",Ne,Dojezd 427 km / Baterie 62 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/cupra-born/
+Škoda Octavia,599900,72316,110,Ne,"18""",Ne,Dojezd 68 km / Baterie 13 kWh / Rok 2020,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/skoda-octavia/
+Kia Niro,649900,93621,150,Ne,"17""",Ne,Dojezd 463 km / Baterie 64 kWh / Rok 2023,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/kia-niro/
+Tesla Model X,679900,142875,306,Ne,"20""",Ano,Dojezd 489 km / Baterie 90 kWh / Rok 2017,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/tesla-model-x/
+Volvo XC40,684990,52414,170,Ne,"19""",Ne,Dojezd 425 km / Baterie 63 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volvo-xc40/
+Audi Q4 e-tron,719900,80622,150,Ne,"20""",Ne,Dojezd 523 km / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-q4-e-tron-2/
+VW ID.3,720000,9387,150,Ne,"18""",Ne,Dojezd 434 km / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3-7/
+VW ID.4 Pro Performance,739900,52006,150,Ne,"19""",Ne,Dojezd 537 km / Baterie 82 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-4-pro-performance/
+Mercedes-Benz EQA,749900,49576,140,Ne,,Ne,Dojezd 486 km / Baterie 69 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mercedes-benz-eqa/
+Audi Q4 e-tron,749900,100870,150,Ne,,Ne,Dojezd 535 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-q4-e-tron/
+MINI Cooper SE,759900,2754,,Ne,,Ne,Dojezd 305 km / Baterie 40 kWh / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mini-cooper-se/
+VW ID.4,769900,67207,150,Ne,"19""",Ne,Dojezd 537 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-4/
+VW ID.3,799900,43169,150,Ne,"20""",Ne,Dojezd 559 km / Baterie 82 kWh / Rok 2023,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-3/
+VW ID.5 GTX,799900,62144,220,Ne,"20""",Ano,Dojezd 517 km / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volkswagen-id-5-gtx/
+Volvo C40,819990,38063,,Ne,"19""",Ano,Dojezd 449 km / Baterie 78 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/volvo-c40/
+Kia EV3,949900,1101,150,Ne,"17""",Ne,Dojezd 605 km / Rok 2025,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/kia-ev3/
+BYD Seal,049900,44796,390,Ne,"19""",Ano,Dojezd 520 km / Baterie 84 kWh / Rok 2024,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/byd-seal/
+BMW iX,149900,25518,240,Ano,"21""",Ano,Dojezd 425 km / Baterie 76 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/bmw-ix/
+Mercedes-Benz EQE,149900,37036,215,Ano,,Ne,Dojezd 693 km / Baterie 105 kWh / Rok 2022,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/mercedes-benz-eqe/
+Audi RS e-tron GT,499900,91634,440,Ne,,Ano,Dojezd 475 km / Baterie 93 kWh / Rok 2021,EnergyCars.cz,Dostupný,https://www.energycars.cz/vuz/audi-rs-e-tron-gt/
