@@ -63,15 +63,20 @@ BODY_KEYWORDS = [
 ]
 
 TRIM_KEYWORDS = [
+    "Laurin & Klement",
     "Monte Carlo",
     "Top Selection",
-    "R-Line", "RS Line", "R.S.Line", "RS-Line",
+    "PanAmericana",
+    "FR-Line", "R-Line", "RS Line", "R.S.Line", "RS-Line",
+    "S-Line", "S Line",
     "GT-Line", "GT Line",
     "N-Line", "N Line",
     "ST-Line", "ST Line",
     "N-Connecta", "N-CONNECTA",
+    "Quattro",
     "FR", "Xcellence", "Sportline",
     "Titanium", "Tekna", "Elegance", "Style", "Exclusive",
+    "AVANTGARDE", "Alltrack", "Scout",
     "TOP", "SPIN", "Selection",
     "Ambition", "Comfort", "Life", "Highline",
     "Allure", "Active", "Acenta",
@@ -85,7 +90,8 @@ DCT_KEYWORDS = [
 _ENGINE_VOL_RE = re.compile(r'(?<!\d)(\d[.,]\d)\s*(?=[TtA-Z]|l\b|$)')
 _ENGINE_VOL_START_RE = re.compile(r'^(\d[.,]\d)\b')
 _ENGINE_VOL_CLEANUP_RE = re.compile(r'(?<!\d)\d[.,]\d(?!\d)')
-_AWD_EXTRA_RE = re.compile(r'\b(?:4x4|AWD)\b', re.IGNORECASE)
+_ENGINE_VOL_MODEL_RE = re.compile(r'(?<!\d)(\d[.,]\d)\b')
+_AWD_EXTRA_RE = re.compile(r'\b(?:4x4|AWD|4Motion|Quattro|xDrive|4MATIC)\b', re.IGNORECASE)
 _PARTICLE_FILTER_RE = re.compile(r'\b[GD]PF\b', re.IGNORECASE)
 
 
@@ -97,12 +103,28 @@ def extract_engine_volume(text: str) -> str:
     return m.group(1).replace(',', '.') if m else ""
 
 
+def extract_engine_volume_from_model(text: str) -> str:
+    """Extract displacement from model name (relaxed — no lookahead requirement)."""
+    m = _ENGINE_VOL_MODEL_RE.search(text)
+    return m.group(1).replace(',', '.') if m else ""
+
+
 def extract_engine_type(text: str) -> str:
     """Extract engine technology (TSI, TDI, EcoBoost, etc.)."""
     for kw in ENGINE_TYPE_KEYWORDS:
         if re.search(re.escape(kw), text, re.IGNORECASE):
             return kw
     return ""
+
+
+def strip_engine_from_model(model: str, engine_vol: str, engine_type: str) -> str:
+    """Strip engine volume and type (including prefixed variants like eTSI) from model name."""
+    if engine_type:
+        model = re.sub(r'\S*' + re.escape(engine_type) + r'\S*', '', model, count=1, flags=re.IGNORECASE)
+    if engine_vol:
+        model = re.sub(r'(?<!\d)' + re.escape(engine_vol) + r'(?!\d)', '', model, count=1)
+    model = re.sub(r'\s{2,}', ' ', model).strip()
+    return model
 
 
 def extract_hybrid_type(text: str) -> str:
@@ -153,6 +175,13 @@ def extract_awd(text: str) -> str:
     return "Ano" if _AWD_EXTRA_RE.search(text) else "Ne"
 
 
+_WARRANTY_RE = re.compile(
+    r'\d+\s+(?:rok[yůa]?\s+)?(?:pln[áa]\s+)?z[áa]ruk[ay]?\s+(?:v\s+cen[ěe])?',
+    re.IGNORECASE,
+)
+_TRANSMISSION_EXTRA_RE = re.compile(r'\bMan\.|\bMAN\b')
+_SEAT_COUNT_RE = re.compile(r'\b[79]-?\s*[Mm][íi]st\b')
+
 _EXTRA_CLEANUP_RES = [
     _ENGINE_VOL_CLEANUP_RE,
     re.compile(r'\d+\s*kW', re.IGNORECASE),
@@ -174,6 +203,13 @@ def clean_extra(text: str, extracted: dict) -> str:
 
     for pat in _EXTRA_CLEANUP_RES:
         text = pat.sub("", text)
+
+    for kw in TRIM_KEYWORDS:
+        text = re.sub(r'\b' + re.escape(kw) + r'\b', '', text, count=1, flags=re.IGNORECASE)
+
+    text = _WARRANTY_RE.sub("", text)
+    text = _TRANSMISSION_EXTRA_RE.sub("", text)
+    text = _SEAT_COUNT_RE.sub("", text)
 
     text = re.sub(r'\s*/\s*', ' / ', text)
     text = re.sub(r',\s*,', ',', text)

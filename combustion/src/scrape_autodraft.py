@@ -8,7 +8,9 @@ import re
 from utils import (
     normalize_model,
     extract_engine_volume,
+    extract_engine_volume_from_model,
     extract_engine_type,
+    strip_engine_from_model,
     extract_hybrid_type,
     extract_body_type,
     extract_trim,
@@ -43,7 +45,7 @@ _FUEL_KEYWORDS = [
 _EXCLUDED_FUEL_RE = re.compile(r'\b(?:Elektro|Hybrid)\b', re.IGNORECASE)
 
 _TRANSMISSION_RE = re.compile(
-    r'\b(automat(?:ick[áa])?|DSG|manu[áa]l(?:ní)?)\b', re.IGNORECASE,
+    r'\b(automat(?:ick[áa])?|DSG|manu[áa]l(?:ní)?|Man\.|MAN)\b', re.IGNORECASE,
 )
 
 
@@ -60,8 +62,8 @@ def _extract_transmission(text: str) -> str:
     m = _TRANSMISSION_RE.search(text)
     if not m:
         return ""
-    raw = m.group(1).lower()
-    if raw.startswith("auto") or raw == "dsg":
+    raw = m.group(1)
+    if raw.lower().startswith("auto") or raw.lower() == "dsg":
         return "Automat"
     return "Manual"
 
@@ -108,11 +110,11 @@ def split_model(model):
 
 
 COLS = [
-    "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Palivo", "Převodovka", "Kola", "Náhon 4x4",
-    "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
-    "Dvouspojková převodovka", "Filtr pevných částic",
-    "Stav", "Extra", "Zdroj", "Odkaz na auto",
+    "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby",
+    "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ",
+    "Výkon (kW)", "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
+    "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka",
+    "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 
@@ -230,13 +232,28 @@ async def scrape_autodraft():
                 # 4x4/AWD from extra text overrides split_extra result
                 if extract_awd(extra_rest) == "Ano":
                     nahon_4x4 = "Ano"
+                # Also check base_name for AWD indicators
+                if nahon_4x4 == "Ne" and extract_awd(base_name) == "Ano":
+                    nahon_4x4 = "Ano"
+
+                # Extract engine vol/type from model name (primary), fallback to extra_rest
+                engine_vol = extract_engine_volume_from_model(base_name) or extract_engine_volume(extra_rest)
+                engine_type = extract_engine_type(base_name) or extract_engine_type(extra_rest)
+
+                # Strip engine info from model name
+                base_name = strip_engine_from_model(base_name,
+                    extract_engine_volume_from_model(base_name),
+                    extract_engine_type(base_name))
+
+                # Extract trim from both base_name and extra_rest
+                trim = extract_trim(base_name) or extract_trim(extra_rest)
 
                 extracted = {
-                    "Objem motoru":  extract_engine_volume(extra_rest),
-                    "Typ motoru":    extract_engine_type(extra_rest),
+                    "Objem motoru":  engine_vol,
+                    "Typ motoru":    engine_type,
                     "Hybrid typ":    extract_hybrid_type(text),
                     "Karoserie":     extract_body_type(base_name + " " + extra_rest),
-                    "Výbava":        extract_trim(extra_rest),
+                    "Výbava":        trim,
                     "Záruka":        extract_warranty(text),
                     "Dvouspojková převodovka": extract_dct(text),
                     "Filtr pevných částic":    extract_particle_filter(extra_rest),

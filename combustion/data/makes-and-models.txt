@@ -1,0 +1,156 @@
+Abarth Fengon 5
+Abarth T5 EVO EV
+Alfa Romeo Giulia
+Alfa Romeo Stelvio
+Audi A3
+Audi A4
+Audi A4 40 Avant S-line Quattro
+Audi A4 Avant
+Audi A4 Avant 35 eTDI
+Audi Q2
+Audi Q3
+BAIC X3
+BAIC X35
+BAIC X5
+BAIC X55
+Bestune T90
+BMW Řada 1
+BMW Řada 2
+BMW X1
+BMW X2
+Chery Tiggo 4 HEV
+Chery Tiggo 7
+Chevrolet Equinox
+Citroën C4
+Citroën C5 Aircross
+Citroën C5 X
+Citroën Grand C4 SpaceTourer
+Cupra Ateca
+Cupra Formentor
+Cupra Leon
+Dacia Duster
+Dongfeng Fengon 5
+Dongfeng Mage
+Dongfeng MAGE E2
+Dongfeng T5 EVO
+Dongfeng U-Tour
+DR 5
+DS 4
+DS 7 Crossback
+Fiat Talento
+Ford Focus
+Ford Kuga
+Ford Mondeo
+Ford Puma
+Ford S-MAX
+Geely Haoyue PRO
+Honda Civic
+Honda ZR-V
+Hyundai i30
+Hyundai Kona
+Hyundai Santa Fe
+Hyundai Tucson
+Jaecoo 7
+Jaguar E-Pace
+Jeep Compass
+Jeep Renegade
+KGM Korando
+KGM Tivoli
+KGM Torres
+Kia Cee´d
+Kia Cee´d SW
+Kia K4
+Kia Niro
+Kia Pro_cee´d
+Kia ProCeed
+Kia Sportage
+Kia Stinger
+Kia XCee´d
+Kia XCeed
+Land Rover Discovery Sport
+Mazda 3
+Mazda 6
+Mazda CX-30
+Mazda CX-5
+Mercedes-Benz CLA
+Mercedes-Benz GLB
+Mercedes-Benz Třídy A
+Mercedes-Benz Třídy B
+MG HS
+MG MG3
+MG ZS
+Mini Clubman
+Mini Cooper
+Mini Cooper S
+Mini Countryman
+Mitsubishi ASX
+Mitsubishi Eclipse Cross
+Nissan Juke
+Nissan Qashqai
+Nissan X-Trail
+Omoda 5
+Opel Astra
+Opel Frontera
+Opel Grandland X
+Opel Insignia
+Ostatní GWM HAVAL Jolion Pro H6 1.5
+Ostatní Jaecoo 5 ICE 1,6 TGI 7AT Exclu
+Peugeot 2008
+Peugeot 308
+Peugeot 5008
+Peugeot 508
+Renault Arkana
+Renault Captur
+Renault Kadjar
+Renault Koleos
+Renault Mégane
+Renault Talisman
+Seat Arona
+Seat Ateca
+Seat Ateca Xperience
+Seat Leon
+Seat Tarraco
+Škoda Fabia
+Škoda Kamiq
+Škoda Karoq
+Škoda Kodiaq
+Škoda Octavia
+Škoda Octavia 4 Combi
+Škoda Octavia 4 Combi Selection
+Škoda Octavia 4 Combi Style
+Škoda Octavia 4 Lim. Style
+Škoda Octavia 4 RS Sedan
+Škoda Scala
+Škoda Superb
+Škoda Superb 3 Combi Style
+Škoda Superb Combi Style
+SsangYong Korando
+SsangYong Rexton
+SsangYong Tivoli
+SsangYong Torres
+Subaru Forester
+Subaru XV
+Suzuki Swace
+Toyota Corolla
+Toyota Rav4
+Volvo XC40
+VW Arteon
+VW Arteon Shooting Brake
+VW Golf
+VW Golf 8
+VW Golf 8 Variant Style
+VW Golf Variant
+VW Passat
+VW Passat B8 Variant Elegance
+VW Passat B8 Variant Elegance 4Motion
+VW Passat Variant
+VW Polo
+VW Sharan
+VW T-Cross
+VW T-Roc
+VW Taigo
+VW Tiguan
+VW Tiguan Allspace
+VW Tiguan Life
+VW Touran
+VW Touran Comfortline

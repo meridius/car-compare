@@ -19,11 +19,11 @@ from utils import (
 )
 
 COLS = [
-    "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Palivo", "Převodovka", "Kola", "Náhon 4x4",
-    "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
-    "Dvouspojková převodovka", "Filtr pevných částic",
-    "Stav", "Extra", "Zdroj", "Odkaz na auto",
+    "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby",
+    "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ",
+    "Výkon (kW)", "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
+    "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka",
+    "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 SEARCH_URL = "https://www.sauto.cz/api/v1/items/search"
