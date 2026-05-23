@@ -1,4 +1,5 @@
 import asyncio
+from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -207,7 +208,7 @@ async def scrape_autodraft():
 
         df = pd.DataFrame(all_cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-        df.to_csv("autodraft.csv", index=False, encoding="utf-8")
+        df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "autodraft.csv", index=False, encoding="utf-8")
         print(f"Hotovo \u2013 ulo\u017eeno {len(df)} aut do autodraft.csv")
 
         await browser.close()

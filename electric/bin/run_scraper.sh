@@ -2,7 +2,7 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR"
+cd "$SCRIPT_DIR/../src"
 
 # ---------------------------------------------------------------------------
 # Argument parsing: -s / --scrapers accepts a comma-separated list of scraper
@@ -53,7 +53,7 @@ declare -a pids=()
 declare -a names=()
 
 for scraper in $SCRAPERS; do
-    script="$SCRIPT_DIR/scrape_${scraper}.py"
+    script="$SCRIPT_DIR/../src/scrape_${scraper}.py"
     if [[ ! -f "$script" ]]; then
         echo "  WARN: scraper '$scraper' nenalezen ($script), přeskakuji."
         continue

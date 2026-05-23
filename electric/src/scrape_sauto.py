@@ -1,5 +1,6 @@
 import asyncio
 import re
+from pathlib import Path
 import aiohttp
 import pandas as pd
 
@@ -187,7 +188,7 @@ async def scrape_sauto():
 
     df = pd.DataFrame(cars, columns=COLS)
     df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-    df.to_csv("sauto.csv", index=False, encoding="utf-8")
+    df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "sauto.csv", index=False, encoding="utf-8")
     print(f"Hotovo – uloženo {len(df)} aut do sauto.csv")
 
 

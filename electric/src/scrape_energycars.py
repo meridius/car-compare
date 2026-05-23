@@ -1,5 +1,6 @@
 import asyncio
 import re
+from pathlib import Path
 import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
@@ -199,7 +200,7 @@ async def scrape_energycars():
 
         df = pd.DataFrame(cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-        df.to_csv("energycars.csv", index=False, encoding="utf-8")
+        df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "energycars.csv", index=False, encoding="utf-8")
         print(f"Hotovo – uloženo {len(df)} aut do energycars.csv")
 
         await browser.close()
