@@ -61,7 +61,7 @@ Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
 Tepelné čerpadlo | Kola | Náhon 4x4 | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
-### Combustion (19 columns)
+### Combustion (21 columns)
 
 Defined in `combustion/data/scrape-data-cols.txt`.
 
@@ -69,6 +69,7 @@ Defined in `combustion/data/scrape-data-cols.txt`.
 Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
 Palivo | Převodovka | Kola | Náhon 4x4 | Extra
 Objem motoru | Typ motoru | Hybrid typ | Karoserie | Výbava | Záruka
+Dvouspojková převodovka | Filtr pevných částic
 Stav | Zdroj | Odkaz na auto
 ```
 

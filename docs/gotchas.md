@@ -86,3 +86,11 @@ The `fuel_seo` parameter accepts comma-separated values: `"benzin,nafta,lpg-benz
 ## sauto combustion — vehicle_body_cb is the primary body type source
 
 The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatchback). These are used directly — `extract_body_type()` is only a fallback when the API field is empty.
+
+## combustion — DCT regex uses lookahead, not trailing \b
+
+`extract_dct()` and `clean_extra()` use `\bKEYWORD(?![A-Za-z])` instead of `\bKEYWORD\b`. This is because DSG often appears as "DSG7", "7DSG", or "DSG_ČR" where digit/underscore prevents a trailing word boundary. The lookahead `(?![A-Za-z])` allows digits, underscores, and punctuation after the keyword.
+
+## combustion — clean_extra uses case-insensitive regex for field stripping
+
+`clean_extra()` uses `re.sub(re.escape(val), "", text, count=1, flags=re.IGNORECASE)` to strip extracted values from Extra. This handles cases like "T-GDi" in Extra when "T-GDI" was extracted to Typ motoru.

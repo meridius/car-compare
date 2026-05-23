@@ -12,6 +12,9 @@ from utils import (
     extract_body_type,
     extract_trim,
     extract_warranty,
+    extract_dct,
+    extract_particle_filter,
+    extract_awd,
     clean_extra,
 )
 
@@ -19,6 +22,7 @@ COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
     "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra",
     "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
+    "Dvouspojková převodovka", "Filtr pevných částic",
     "Stav", "Zdroj", "Odkaz na auto",
 ]
 
@@ -131,6 +135,9 @@ def build_record(item: dict, detail: dict) -> dict | None:
     engine_power = detail.get("engine_power") or ""
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
     awd = "Ano" if AWD_RE.search(drive_name) else "Ne"
+    # Also check suffix for 4x4/AWD mentions
+    if awd == "Ne" and extract_awd(suffix) == "Ano":
+        awd = "Ano"
     gearbox = (detail.get("gearbox_cb") or {}).get("name", "")
 
     extra_parts = []
@@ -150,6 +157,8 @@ def build_record(item: dict, detail: dict) -> dict | None:
     body_api = (detail.get("vehicle_body_cb") or {}).get("name", "")
     body_type = body_api if body_api else extract_body_type(model_base + " " + suffix)
 
+    extra_text = " / ".join(extra_parts)
+
     extracted = {
         "Objem motoru":  engine_volume,
         "Typ motoru":    extract_engine_type(suffix),
@@ -157,9 +166,9 @@ def build_record(item: dict, detail: dict) -> dict | None:
         "Karoserie":     body_type,
         "Výbava":        extract_trim(suffix),
         "Záruka":        extract_warranty(suffix),
+        "Dvouspojková převodovka": extract_dct(gearbox + " " + suffix + " " + extra_text),
+        "Filtr pevných částic":    extract_particle_filter(suffix),
     }
-
-    extra_text = " / ".join(extra_parts)
 
     link = LISTING_URL.format(
         man=item["manufacturer_cb"]["seo_name"],

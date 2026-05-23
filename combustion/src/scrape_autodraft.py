@@ -13,6 +13,9 @@ from utils import (
     extract_body_type,
     extract_trim,
     extract_warranty,
+    extract_dct,
+    extract_particle_filter,
+    extract_awd,
     clean_extra,
 )
 
@@ -108,6 +111,7 @@ COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
     "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra",
     "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
+    "Dvouspojková převodovka", "Filtr pevných částic",
     "Stav", "Zdroj", "Odkaz na auto",
 ]
 
@@ -223,6 +227,10 @@ async def scrape_autodraft():
                 year_match = re.search(r'(?<!\d)\d{1,2}/(20[12]\d)(?!\d)', text)
                 rok_vyroby = year_match.group(1) if year_match else rok_vyroby
 
+                # 4x4/AWD from extra text overrides split_extra result
+                if extract_awd(extra_rest) == "Ano":
+                    nahon_4x4 = "Ano"
+
                 extracted = {
                     "Objem motoru":  extract_engine_volume(extra_rest),
                     "Typ motoru":    extract_engine_type(extra_rest),
@@ -230,6 +238,8 @@ async def scrape_autodraft():
                     "Karoserie":     extract_body_type(base_name + " " + extra_rest),
                     "Výbava":        extract_trim(extra_rest),
                     "Záruka":        extract_warranty(text),
+                    "Dvouspojková převodovka": extract_dct(text),
+                    "Filtr pevných částic":    extract_particle_filter(extra_rest),
                 }
 
                 all_cars.append({

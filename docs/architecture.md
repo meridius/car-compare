@@ -60,7 +60,10 @@ All CSVs are **overwritten on every run**. No incremental/append mode.
 | Výbava | — | yes |
 | Záruka | — | yes |
 
-Electric: 12 columns. Combustion: 19 columns.
+| Dvouspojková převodovka | — | yes |
+| Filtr pevných částic | — | yes |
+
+Electric: 12 columns. Combustion: 21 columns.
 
 ## Normalisation Pipeline
 
@@ -79,7 +82,10 @@ After the base scrape, `utils.py` extraction helpers parse Extra/suffix text int
 4. `extract_body_type()` — body style (Combi, SUV, Fastback, …)
 5. `extract_trim()` — trim level (Style, R-Line, Monte Carlo, …)
 6. `extract_warranty()` — warranty mention (Ano / blank)
-7. `clean_extra()` — strips extracted substrings from Extra text
+7. `extract_dct()` — dual-clutch transmission (DSG, DCT, S-tronic, PDK, …)
+8. `extract_particle_filter()` — GPF/DPF detection (Ano / blank)
+9. `extract_awd()` — 4x4/AWD from Extra text (supplements API-level detection)
+10. `clean_extra()` — strips extracted substrings from Extra text
 
 ## sauto API Filters
 

@@ -36,6 +36,7 @@ ENGINE_TYPE_KEYWORDS = [
     "PureTech", "BlueHDi",
     "SKYACTIV-G", "SKYACTIV-D", "Sky-G",
     "EcoBlue",
+    "e-TEC",
     "T-MIVEC", "MIVEC",
     "MTJ",
     "Turbo",
@@ -47,6 +48,7 @@ HYBRID_KEYWORDS = [
     ("iV", "PHEV"),
     ("E-Tech full hybrid", "HEV"),
     ("full hybrid", "HEV"),
+    ("e-TEC", "MHEV"),
     ("MHEV", "MHEV"),
     ("mHEV", "MHEV"),
     ("mild hybrid", "MHEV"),
@@ -76,8 +78,15 @@ TRIM_KEYWORDS = [
     "Premium", "Luxury",
 ]
 
+DCT_KEYWORDS = [
+    "7DCT", "7DSG", "DCT", "DSG", "S-tronic", "S-Tronic", "PDK", "Powershift",
+]
+
 _ENGINE_VOL_RE = re.compile(r'(?<!\d)(\d[.,]\d)\s*(?=[TtA-Z]|l\b|$)')
 _ENGINE_VOL_START_RE = re.compile(r'^(\d[.,]\d)\b')
+_ENGINE_VOL_CLEANUP_RE = re.compile(r'(?<!\d)\d[.,]\d(?!\d)')
+_AWD_EXTRA_RE = re.compile(r'\b(?:4x4|AWD)\b', re.IGNORECASE)
+_PARTICLE_FILTER_RE = re.compile(r'\b[GD]PF\b', re.IGNORECASE)
 
 
 def extract_engine_volume(text: str) -> str:
@@ -126,19 +135,42 @@ def extract_warranty(text: str) -> str:
     return "Ano" if re.search(r'\b[Zz][áa]ruk', text) else ""
 
 
+def extract_dct(text: str) -> str:
+    """Detect dual-clutch transmission. Returns 'Ano' or ''."""
+    for kw in DCT_KEYWORDS:
+        if re.search(r'\b' + re.escape(kw) + r'(?![A-Za-z])', text, re.IGNORECASE):
+            return "Ano"
+    return ""
+
+
+def extract_particle_filter(text: str) -> str:
+    """Detect particulate filter (GPF/DPF). Returns 'Ano' or ''."""
+    return "Ano" if _PARTICLE_FILTER_RE.search(text) else ""
+
+
+def extract_awd(text: str) -> str:
+    """Detect AWD/4x4 from text. Returns 'Ano' or 'Ne'."""
+    return "Ano" if _AWD_EXTRA_RE.search(text) else "Ne"
+
+
 _EXTRA_CLEANUP_RES = [
-    _ENGINE_VOL_RE,
-    _ENGINE_VOL_START_RE,
+    _ENGINE_VOL_CLEANUP_RE,
     re.compile(r'\d+\s*kW', re.IGNORECASE),
+    _AWD_EXTRA_RE,
+    _PARTICLE_FILTER_RE,
 ]
 
 
 def clean_extra(text: str, extracted: dict) -> str:
     """Remove substrings already captured in dedicated columns from Extra text."""
-    for field in ("Typ motoru", "Výbava", "Karoserie"):
+    for field in ("Typ motoru", "Výbava", "Karoserie", "Hybrid typ"):
         val = extracted.get(field, "")
-        if val and val in text:
-            text = text.replace(val, "", 1)
+        if val:
+            text = re.sub(re.escape(val), "", text, count=1, flags=re.IGNORECASE)
+
+    for kw in DCT_KEYWORDS:
+        if re.search(r'\b' + re.escape(kw) + r'(?![A-Za-z])', text, re.IGNORECASE):
+            text = re.sub(r'\b' + re.escape(kw) + r'(?![A-Za-z])', '', text, count=1, flags=re.IGNORECASE)
 
     for pat in _EXTRA_CLEANUP_RES:
         text = pat.sub("", text)
