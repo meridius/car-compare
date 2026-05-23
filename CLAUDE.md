@@ -66,11 +66,11 @@ Tepelné čerpadlo | Kola | Náhon 4x4 | Extra | Stav | Zdroj | Odkaz na auto
 Defined in `combustion/data/scrape-data-cols.txt`.
 
 ```text
-Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
-Palivo | Převodovka | Kola | Náhon 4x4
-Objem motoru | Typ motoru | Hybrid typ | Karoserie | Výbava | Záruka
-Dvouspojková převodovka | Filtr pevných částic
-Stav | Extra | Zdroj | Odkaz na auto
+Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
+Palivo | Objem motoru | Typ motoru | Hybrid typ
+Výkon (kW) | Převodovka | Dvouspojková převodovka | Filtr pevných částic
+Kola | Náhon 4x4 | Karoserie | Výbava | Záruka
+Extra | Stav | Zdroj | Odkaz na auto
 ```
 
 Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · *(blank for energycars)*

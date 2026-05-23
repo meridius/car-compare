@@ -94,3 +94,20 @@ The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatch
 ## combustion — clean_extra uses case-insensitive regex for field stripping
 
 `clean_extra()` uses `re.sub(re.escape(val), "", text, count=1, flags=re.IGNORECASE)` to strip extracted values from Extra. This handles cases like "T-GDi" in Extra when "T-GDI" was extracted to Typ motoru.
+
+## combustion — clean_extra strips ALL trim keywords, not just extracted one
+
+Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in extra text). `extract_trim()` returns only the first match (for the Výbava column), but `clean_extra()` strips ALL `TRIM_KEYWORDS` from Extra to prevent duplicates leaking through.
+
+## autodraft combustion — engine vol/type extracted from model name first
+
+`extract_engine_volume_from_model()` uses a relaxed regex (`\d[.,]\d\b` — no lookahead) to find displacement in the model name. `extract_engine_type()` finds engine tech (TSI, TDI, etc.) in the model name. Both fall back to `extra_rest` if not found. After extraction, `strip_engine_from_model()` removes them from the model name using `\S*` around the engine type to catch prefixed variants like "eTSI" or "BiTDI".
+
+## combustion — _TRANSMISSION_EXTRA_RE uses no trailing \b after Man.
+
+`\bMan\.` has no trailing `\b` because the period is not a word character — a trailing `\b` would only match if the next char is a word character, missing cases where "Man." appears at end-of-string or before whitespace.
+
+## combustion — _SEAT_COUNT_RE allows space after dash
+
+`\b[79]-?\s*[Mm][íi]st\b` handles both "7-Míst" and "7- Míst" (with space between dash and M). The space variant appears in some autodraft card texts.
+

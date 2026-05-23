@@ -40,39 +40,38 @@ All CSVs are **overwritten on every run**. No incremental/append mode.
 
 ## Scraper Comparison
 
-| Scraper | Suite | Tech | Concurrency | Notes |
-|---------|-------|------|-------------|-------|
-| autodraft | electric + combustion | Playwright (Chromium) | single page, sequential | Two/three URLs depending on suite |
-| energycars | electric only | Playwright (Chromium) | `DETAIL_CONCURRENCY = 5` detail pages | Listing page → detail page per car |
-| sauto | electric + combustion | `aiohttp` (REST API) | `DETAIL_CONCURRENCY = 20` | No browser; pre-filtered at API level |
+| Scraper    | Suite                 | Tech                  | Concurrency                           | Notes                                 |
+| ---------- | --------------------- | --------------------- | ------------------------------------- | ------------------------------------- |
+| autodraft  | electric + combustion | Playwright (Chromium) | single page, sequential               | Two/three URLs depending on suite     |
+| energycars | electric only         | Playwright (Chromium) | `DETAIL_CONCURRENCY = 5` detail pages | Listing page → detail page per car    |
+| sauto      | electric + combustion | `aiohttp` (REST API)  | `DETAIL_CONCURRENCY = 20`             | No browser; pre-filtered at API level |
 
 ## Column Differences
 
-| Column | Electric | Combustion |
-|--------|----------|------------|
-| Tepelné čerpadlo | yes | — |
-| Palivo | — | yes |
-| Převodovka | — | yes |
-| Objem motoru | — | yes |
-| Typ motoru | — | yes |
-| Hybrid typ | — | yes |
-| Karoserie | — | yes |
-| Výbava | — | yes |
-| Záruka | — | yes |
-
-| Dvouspojková převodovka | — | yes |
-| Filtr pevných částic | — | yes |
+| Column                  | Electric | Combustion |
+| ----------------------- | -------- | ---------- |
+| Tepelné čerpadlo        | yes      | —          |
+| Palivo                  | —        | yes        |
+| Převodovka              | —        | yes        |
+| Objem motoru            | —        | yes        |
+| Typ motoru              | —        | yes        |
+| Hybrid typ              | —        | yes        |
+| Karoserie               | —        | yes        |
+| Výbava                  | —        | yes        |
+| Záruka                  | —        | yes        |
+| Dvouspojková převodovka | —        | yes        |
+| Filtr pevných částic    | —        | yes        |
 
 Electric: 12 columns. Combustion: 21 columns.
 
 ## Column Order (combustion)
 
 ```text
-Model auta, Cena (Kč), Nájezd (km), Výkon (kW), Rok výroby,
-Palivo, Převodovka, Kola, Náhon 4x4,
-Objem motoru, Typ motoru, Hybrid typ, Karoserie, Výbava, Záruka,
-Dvouspojková převodovka, Filtr pevných částic,
-Stav, Extra, Zdroj, Odkaz na auto
+Model auta, Cena (Kč), Nájezd (km), Rok výroby,
+Palivo, Objem motoru, Typ motoru, Hybrid typ,
+Výkon (kW), Převodovka, Dvouspojková převodovka, Filtr pevných částic,
+Kola, Náhon 4x4, Karoserie, Výbava, Záruka,
+Extra, Stav, Zdroj, Odkaz na auto
 ```
 
 ## Normalisation Pipeline
