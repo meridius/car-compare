@@ -56,18 +56,20 @@ cd combustion/src && python3 scrape_sauto.py
 
 Defined in `electric/data/scrape-data-cols.txt`.
 
-```
+```text
 Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
 Tepelné čerpadlo | Kola | Náhon 4x4 | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
-### Combustion (13 columns)
+### Combustion (19 columns)
 
 Defined in `combustion/data/scrape-data-cols.txt`.
 
-```
+```text
 Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
-Palivo | Převodovka | Kola | Náhon 4x4 | Extra | Stav | Zdroj | Odkaz na auto
+Palivo | Převodovka | Kola | Náhon 4x4 | Extra
+Objem motoru | Typ motoru | Hybrid typ | Karoserie | Výbava | Záruka
+Stav | Zdroj | Odkaz na auto
 ```
 
 Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · *(blank for energycars)*

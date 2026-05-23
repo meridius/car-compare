@@ -5,7 +5,16 @@ from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import re
 
-from utils import normalize_model
+from utils import (
+    normalize_model,
+    extract_engine_volume,
+    extract_engine_type,
+    extract_hybrid_type,
+    extract_body_type,
+    extract_trim,
+    extract_warranty,
+    clean_extra,
+)
 
 URLS = [
     ("https://www.autodraft.cz/auta.html?palivo=benzin", False, "Benzín"),
@@ -88,6 +97,7 @@ def extract_model_and_status(text, is_on_the_way):
 def split_model(model):
     """Strip nav noise and split 'VW Golf 110kW / ALU ...' into (base_name, extra)."""
     model = re.sub(r'^(?:Předchozí\s+|Další\s+)+', '', model).strip()
+    model = re.sub(r'^2letá záruka teď zdarma\s*', '', model).strip()
     m = re.search(r'\s+(\d+kW\b.*)', model, re.IGNORECASE)
     if m:
         return model[:m.start()].strip(), m.group(1).strip()
@@ -96,7 +106,9 @@ def split_model(model):
 
 COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra",
+    "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
+    "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 
@@ -211,6 +223,15 @@ async def scrape_autodraft():
                 year_match = re.search(r'(?<!\d)\d{1,2}/(20[12]\d)(?!\d)', text)
                 rok_vyroby = year_match.group(1) if year_match else rok_vyroby
 
+                extracted = {
+                    "Objem motoru":  extract_engine_volume(extra_rest),
+                    "Typ motoru":    extract_engine_type(extra_rest),
+                    "Hybrid typ":    extract_hybrid_type(text),
+                    "Karoserie":     extract_body_type(base_name + " " + extra_rest),
+                    "Výbava":        extract_trim(extra_rest),
+                    "Záruka":        extract_warranty(text),
+                }
+
                 all_cars.append({
                     "Model auta":    base_name,
                     "Cena (Kč)":     price,
@@ -221,7 +242,8 @@ async def scrape_autodraft():
                     "Převodovka":    transmission,
                     "Kola":          kola,
                     "Náhon 4x4":     nahon_4x4,
-                    "Extra":         extra_rest,
+                    "Extra":         clean_extra(extra_rest, extracted),
+                    **extracted,
                     "Stav":          status,
                     "Zdroj":         "Autodraft.cz",
                     "Odkaz na auto": link,

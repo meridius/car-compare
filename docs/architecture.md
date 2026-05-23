@@ -53,15 +53,33 @@ All CSVs are **overwritten on every run**. No incremental/append mode.
 | Tepelné čerpadlo | yes | — |
 | Palivo | — | yes |
 | Převodovka | — | yes |
+| Objem motoru | — | yes |
+| Typ motoru | — | yes |
+| Hybrid typ | — | yes |
+| Karoserie | — | yes |
+| Výbava | — | yes |
+| Záruka | — | yes |
 
-Electric: 12 columns. Combustion: 13 columns.
+Electric: 12 columns. Combustion: 19 columns.
 
 ## Normalisation Pipeline
 
 Applied in `utils.normalize_model()`, in order:
 
 1. `BRAND_MAP` — brand aliases (e.g. `"Volkswagen" → "VW"`)
-2. `MODEL_CLEANUP_PATTERNS` — regex fixups (electric only: Enyaq bare variant → `iV NN`; combustion: empty list)
+2. `MODEL_CLEANUP_PATTERNS` — regex fixups (electric: Enyaq bare variant → `iV NN`; combustion: X-Perience, Combi ordering)
+
+## Field Extraction Pipeline (combustion only)
+
+After the base scrape, `utils.py` extraction helpers parse Extra/suffix text into dedicated columns:
+
+1. `extract_engine_volume()` — displacement (1.5, 2.0)
+2. `extract_engine_type()` — engine tech (TSI, TDI, EcoBoost, …)
+3. `extract_hybrid_type()` — MHEV/HEV/PHEV classification
+4. `extract_body_type()` — body style (Combi, SUV, Fastback, …)
+5. `extract_trim()` — trim level (Style, R-Line, Monte Carlo, …)
+6. `extract_warranty()` — warranty mention (Ano / blank)
+7. `clean_extra()` — strips extracted substrings from Extra text
 
 ## sauto API Filters
 

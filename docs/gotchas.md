@@ -74,3 +74,15 @@ The `fuel_seo` parameter accepts comma-separated values: `"benzin,nafta,lpg-benz
 ## utils — normalisation order matters
 
 `normalize_model()` applies BRAND_MAP first, then MODEL_CLEANUP_PATTERNS. A pattern that expects a short brand name (e.g. `"VW"`) will fail if run before BRAND_MAP expansion replaces `"Volkswagen"`.
+
+## combustion — Extra field is cleaned after extraction
+
+`clean_extra()` removes substrings already captured in dedicated columns (Typ motoru, Výbava, Karoserie, engine volume, kW values) from the Extra text. Extraction must happen **before** cleaning. Both scrapers build an `extracted` dict first, then pass it to `clean_extra()`.
+
+## sauto combustion — engine_volume API field is in cc
+
+`detail.get("engine_volume")` returns displacement in cubic centimetres (e.g. 1498). Code divides by 1000 when value > 100 to get litres (1.5). Values ≤ 100 are passed through as-is.
+
+## sauto combustion — vehicle_body_cb is the primary body type source
+
+The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatchback). These are used directly — `extract_body_type()` is only a fallback when the API field is empty.

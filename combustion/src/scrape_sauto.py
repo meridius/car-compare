@@ -4,11 +4,22 @@ from pathlib import Path
 import aiohttp
 import pandas as pd
 
-from utils import normalize_model
+from utils import (
+    normalize_model,
+    extract_engine_volume,
+    extract_engine_type,
+    extract_hybrid_type,
+    extract_body_type,
+    extract_trim,
+    extract_warranty,
+    clean_extra,
+)
 
 COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra",
+    "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
+    "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 SEARCH_URL = "https://www.sauto.cz/api/v1/items/search"
@@ -24,6 +35,7 @@ SEARCH_PARAMS = {
     "capacity_from":    4,
     "door_from":        5,
     "condition_seo":    "nove,ojete,predvadeci",
+    "typ_seo":          "cuv,kombi,suv,hatchback,mpv",
     "category_id":      838,
     "operating_lease":  "false",
 }
@@ -125,6 +137,30 @@ def build_record(item: dict, detail: dict) -> dict | None:
     if suffix:
         extra_parts.append(suffix)
 
+    # Engine volume: API field (in cc) → litres, fallback to suffix parsing
+    engine_vol_raw = detail.get("engine_volume")
+    if engine_vol_raw and int(engine_vol_raw) > 100:
+        engine_volume = f"{int(engine_vol_raw) / 1000:.1f}"
+    elif engine_vol_raw:
+        engine_volume = str(engine_vol_raw)
+    else:
+        engine_volume = extract_engine_volume(suffix)
+
+    # Body type: API field, fallback to suffix parsing
+    body_api = (detail.get("vehicle_body_cb") or {}).get("name", "")
+    body_type = body_api if body_api else extract_body_type(model_base + " " + suffix)
+
+    extracted = {
+        "Objem motoru":  engine_volume,
+        "Typ motoru":    extract_engine_type(suffix),
+        "Hybrid typ":    extract_hybrid_type(suffix),
+        "Karoserie":     body_type,
+        "Výbava":        extract_trim(suffix),
+        "Záruka":        extract_warranty(suffix),
+    }
+
+    extra_text = " / ".join(extra_parts)
+
     link = LISTING_URL.format(
         man=item["manufacturer_cb"]["seo_name"],
         mod=item["model_cb"]["seo_name"],
@@ -141,7 +177,8 @@ def build_record(item: dict, detail: dict) -> dict | None:
         "Převodovka":    gearbox,
         "Kola":          "",
         "Náhon 4x4":     awd,
-        "Extra":         " / ".join(extra_parts),
+        "Extra":         clean_extra(extra_text, extracted),
+        **extracted,
         "Stav":          condition,
         "Zdroj":         "Sauto.cz",
         "Odkaz na auto": link,

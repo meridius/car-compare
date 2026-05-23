@@ -34,12 +34,21 @@ Model cleanup patterns (regex fixups) belong in `utils.MODEL_CLEANUP_PATTERNS`.
 
 ## Column Order
 
-The final DataFrame column list must match the order in `electric/data/scrape-data-cols.txt`. Never reorder silently.
+The final DataFrame column list must match the order in `{suite}/data/scrape-data-cols.txt`. Never reorder silently.
 
 ## Running Scrapers
 
-- Recommend `./electric/bin/run_scraper.sh` (handles dep check + parallel run).
+- Recommend `./electric/bin/run_scraper.sh` or `./combustion/bin/run_scraper.sh` (handles dep check + parallel run).
 - Run individual scrapers only when debugging a single scraper in isolation (`cd electric/src && python3 scrape_*.py`).
+
+## Verification After Changes
+
+After modifying any scraper or `utils.py`, **always run the affected scraper(s)** and verify the CSV output before reporting the task as complete. Check:
+
+1. Scraper runs without errors
+2. Column count matches `scrape-data-cols.txt`
+3. New/changed fields are populated (spot-check with `pandas value_counts`)
+4. Existing fields still correct (model, price, mileage)
 
 ## Dependencies
 
