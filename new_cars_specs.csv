@@ -1,0 +1,54 @@
+Model auta;Objem kufru (l);Hlučnost (dB);Kapacita baterie (kWh);Dojezd komb. letní WLTP (km);Dojezd komb. letní EV-database (km);Aerodynamická modifikace (lepší/horší);Tepelné čerpadlo možné (ano/ne)
+Audi Q4 e-tron;520;;77;527;425;;ne
+Audi RS e-tron GT;366;;97;598;525;;ne
+Audi e-tron;660;;86,5;441;340;;ne
+BMW i3;260;;38;359;250;;ne
+BMW iX;500;;94,8;630;470;;ano
+BYD ATTO 2;335;;64,8;425;340;;ano
+BYD ATTO 3;440;;60,5;420;340;;ano
+BYD Dolphin Surf;294;;43,2;345;265;;ano
+BYD Seal;400;;82,5;570;480;;ano
+Citroën Berlingo;775;;50;295;235;;ne
+Citroën ë-C4;380;;50,8;420;325;;ne
+Cupra Born;385;;58;424;360;;ne
+Fiat 600e;360;;50,8;404;310;;ne
+Honda e;171;;35,5;222;175;;ne
+Hyundai Inster;280;;46;370;300;;ne
+Hyundai Ioniq 5;531;;80;600;450;;ano
+Hyundai Kona;332;;64,8;514;385;;ne
+JAC iEV7S;350;;55;400;;;ne
+Jeep Avenger;355;;50,8;406;310;;ne
+Kia EV2;350;;41;308;240;;ne
+Kia EV2 (61 kWh);350;;58;400;340;;ano
+Kia EV3;460;;55;600;455;;ano
+Kia EV6;490;;80;599;455;;ano
+Kia Niro;385;;64,8;463;385;;ano
+Kia Soul;315;;64;452;370;;ne
+Leapmotor B10;380;;56,2;380;305;;ano
+MG MG4;363;;61,7;450;360;;ne
+MG Marvel R;357;;70;402;330;;ne
+MINI Cooper SE;211;;49,2;402;330;;ne
+Mazda MX-30;341;;35,5;200;165;;ano
+Mercedes-Benz EQA;340;;66,5;528;395;;ne
+Mercedes-Benz EQE;430;;96;654;555;;ano
+Nissan LEAF;435;;52;385;330;;ne
+Opel Corsa;267;;50,8;406;335;;ne
+Opel Mokka;310;;50,8;338;285;;ne
+Peugeot 2008;434;;50,8;406;300;;ne
+Peugeot 208;267;;50,8;406;335;;ne
+Polestar 2;405;;79;620;475;;ano
+Renault Mégane;440;;60;470;380;;ne
+Renault R4;420;;52;410;315;;ne
+Renault ZOE;338;;52;395;315;;ne
+Seat Mii;251;;32,3;260;210;;ne
+Tesla Model 3;594;;60;513;445;;ano
+Tesla Model X;745;;95;580;490;;ano
+VW Crafter;;;83,7;165;135;;ne
+VW ID.3;385;;58;426;365;;ne
+VW ID.4;543;;79;531;460;;ne
+VW ID.5;549;;79;539;465;;ne
+VW ID.5 GTX;549;;77;526;430;;ne
+Volvo C40;413;;79;515;420;;ano
+Volvo EX30;318;;65;475;365;;ano
+Volvo XC40;419;;79;530;400;;ano
+Škoda Octavia;490;;(PHEV);56;;;ne

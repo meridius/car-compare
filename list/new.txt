@@ -1,0 +1,64 @@
+Audi e-tron
+Audi Q4 e-tron
+Audi RS e-tron GT
+BMW i3
+BMW iX
+BYD ATTO 2
+BYD ATTO 3
+BYD Dolphin Surf
+BYD Seal
+Citroën Berlingo
+Citroën ë-C4
+Cupra Born
+Fiat 600e
+Honda e
+Hyundai Inster
+Hyundai Ioniq 5
+Hyundai Kona
+JAC iEV7S
+Jeep Avenger
+Kia 5P EARTH 108 KW + 42,2 KWH
+Kia AIR QV1 4P 42,2 kWh, 4x2
+Kia AIR QV1 5P 42,2 kWh, 4x2
+Kia EARTH 4P 108kW + 42,2KWh
+Kia EARTH 5P 108kW + 42,2KWh
+Kia EARTH QV1 5P 42,2 kWh, 4x2
+Kia EV2
+Kia EV2 Earth 42,2kWh, Biege, Eart
+Kia EV3
+Kia EV6
+Kia Niro
+Kia Soul
+Leapmotor B10
+Mazda MX-30
+Mercedes-Benz EQA
+Mercedes-Benz EQE
+MG Marvel R Luxury*Panorama*360°
+MG MG4
+MINI Cooper SE
+Mini Cooper SE 32 kWh, SoH 95%
+Nissan LEAF
+Opel Corsa
+Opel Mokka
+Peugeot 2008
+Peugeot 208
+Polestar 2
+Renault Mégane
+Renault R4
+Renault ZOE
+Seat Mii
+Škoda Enyaq
+Škoda Enyaq 50
+Škoda Enyaq iV
+Škoda Octavia
+Tesla Model 3
+Tesla Model X
+Volvo C40
+Volvo EX30
+Volvo XC40
+VW Crafter
+VW ID.3
+VW ID.3 Pro Performance
+VW ID.4
+VW ID.5
+VW ID.5 GTX
