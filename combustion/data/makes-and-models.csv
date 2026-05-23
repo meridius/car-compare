@@ -1,0 +1,214 @@
+Jednoznačná varianta vozu,Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Aerodynamická modifikace (lepší/horší)
+DFSK Fengon 5 1.5 CVT (chybně Abarth Fengon 5),"9,0",385,71,horší
+Dongfeng Forthing T5 EVO EV (chybně Abarth T5 EVO EV),"1,6 (13,8 kWh)",480,67,lepší
+Alfa Romeo Giulia 2.0 GME (Benzín),"7,4",480,69,lepší
+Alfa Romeo Giulia 2.2 JTDM (Diesel),"5,3",480,70,lepší
+"Alfa Romeo Stelvio 2.0 GME (SUV, Benzín)","8,9",525,71,horší
+"Alfa Romeo Stelvio 2.2 JTDM (SUV, Diesel)","6,1",525,71,horší
+Audi A3 Hatchback 35 TFSI,"5,2",380,68,horší
+Audi A3 Hatchback 40 TFSI e (PHEV),"1,4",280,67,lepší
+Audi A3 Sedan 35 TFSI,"5,0",425,68,lepší
+Audi A4 Sedan 35 TFSI,"5,8",460,68,lepší
+Audi A4 Avant 35 TFSI (Kombi),"6,3",495,69,horší
+Audi Q2 35 TFSI (Pohon předních kol),"5,8",405,69,horší
+Audi Q2 40 TFSI Quattro (Pohon všech kol),"7,2",355,70,horší
+Audi Q3 35 TFSI (Standardní SUV),"6,5",530,69,horší
+Audi Q3 Sportback 35 TFSI (Coupé-SUV),"6,3",488,69,lepší
+Audi Q3 45 TFSI e (PHEV),"1,6",380,68,lepší
+BAIC X3 1.5T 6MT,"6,9",390,70,horší
+BAIC X5 1.5T CVT,"7,4",410,71,horší
+BAIC Beijing X55 1.5 Turbo 7DCT,"8,0",380,70,horší
+Bestune T90 1.5T 7DCT (Benzín),"7,2",540,70,horší
+Bestune T90 1.5T PHEV (Yueyi 07),"1,5",490,68,lepší
+"BMW 118i Hatchback (F40, Benzín)","5,7",380,68,horší
+BMW 218i Active Tourer (MPV),"6,2",470,68,horší
+"BMW X1 sDrive18i (Benzín, U11)","6,3",540,69,horší
+"BMW X1 xDrive30e (PHEV, U11)","1,0",490,68,lepší
+"BMW iX1 xDrive30 (EV, U11)","1,9 (17,3 kWh)",490,66,lepší
+"BMW X2 sDrive20i (Crossover, U10)","6,0",515,69,lepší
+"BMW iX2 xDrive30 (EV, U10)","1,8 (16,5 kWh)",525,66,lepší
+Chery Tiggo 7 Pro 1.5T (Benzín),"7,8",475,70,horší
+Chevrolet Equinox 1.5T AWD (Benzín),"8,4",840,71,horší
+Citroën C4 1.2 PureTech (Fastback),"5,4",380,68,lepší
+Citroën ë-C4 (Elektromobil),"1,7 (15,2 kWh)",380,66,lepší
+Citroën C5 Aircross 1.2 MHEV,"5,7",580,69,horší
+Citroën C5 Aircross Plug-In Hybrid,"1,4",460,68,lepší
+Citroën C5 X 1.2 PureTech,"6,0",545,68,lepší
+Citroën C5 X Plug-In Hybrid,"1,3",485,67,lepší
+Citroën Grand C4 SpaceTourer 2.0 BlueHDi,"5,2",645,70,horší
+Cupra Ateca 1.5 TSI (Pohon předních kol),"6,6",510,70,horší
+Cupra Ateca 2.0 TSI 4Drive (Pohon všech kol),"8,7",485,72,horší
+Cupra Formentor 1.5 TSI,"6,4",450,69,lepší
+Cupra Formentor 1.4 e-Hybrid (PHEV),"1,4",345,68,lepší
+Cupra Leon Hatchback 1.5 TSI,"5,6",380,68,horší
+Cupra Leon Sportstourer 1.5 TSI (Kombi),"5,8",620,69,horší
+Cupra Leon ST 1.4 e-Hybrid (PHEV),"1,3",470,67,lepší
+Dacia Duster ECO-G 100 LPG (Gen 3),"7,8",474,69,horší
+Dacia Duster Hybrid 140 (Gen 3),"4,8",430,68,lepší
+Dongfeng Forthing T5 EVO 1.5T,"6,6",480,71,horší
+Dongfeng U-Tour 1.5T Petrol (Magna),"6,6",620,70,lepší
+Dongfeng U-Tour 1.5T Hybrid (7 míst),"5,8",620,68,lepší
+DR 5 1.5 Bi-Fuel (LPG verze),"8,5",340,71,horší
+DS 4 1.2 PureTech (Základní benzín),"5,9",430,68,lepší
+DS 4 E-Tense (Plug-In Hybrid),"1,3",390,67,lepší
+DS 7 Crossback 2.0 BlueHDi (Nafta),"5,5",555,69,horší
+DS 7 Crossback E-Tense (PHEV),"1,5",555,68,lepší
+Fiat Talento L1H1 2.0 EcoJet (Užitková),"6,5",1000,72,horší
+Ford Focus Hatchback 1.0 EcoBoost,"5,1",375,68,horší
+Ford Focus Kombi 1.0 EcoBoost,"5,3",608,69,horší
+Ford Focus ST 2.3 EcoBoost (Sportovní),"8,0",375,74,horší
+Ford Kuga 1.5 EcoBoost (Benzín),"6,6",512,69,horší
+Ford Kuga 2.5 Duratec FHEV (Full-Hybrid),"5,4",475,68,lepší
+Ford Kuga 2.5 Duratec PHEV (Plug-In),"1,0",475,67,lepší
+Ford Mondeo Liftback 2.0 EcoBlue,"5,0",550,68,lepší
+Ford Mondeo Kombi 2.0 Hybrid,"5,6",525,67,horší
+Ford Puma 1.0 EcoBoost MHEV (Crossover),"5,3",456,69,horší
+Ford Puma Gen-E (Elektromobil),"1,8 (15,8 kWh)",523,66,lepší
+Ford S-MAX 2.5 Duratec FHEV (Hybrid),"6,4",700,69,horší
+Geely Haoyue Pro 1.5T (7místná verze),"8,7",150,70,horší
+Honda Civic Hatchback 2.0 e:HEV (Gen 11),"4,7",410,68,lepší
+Honda Civic Type R 2.0 VTEC (Sportovní),"8,2",410,74,horší
+Hyundai i30 Hatchback 1.0 T-GDI,"5,4",395,68,horší
+Hyundai i30 Kombi 1.5 T-GDI MHEV,"5,8",602,69,horší
+Hyundai Kona 1.0 T-GDI (Benzín),"5,8",466,69,horší
+Hyundai Kona Electric (Elektromobil),"1,6 (14,6 kWh)",466,66,lepší
+Hyundai Santa Fe 1.6 T-GDI Hybrid (Gen 5),"6,9",725,69,horší
+Hyundai Tucson 1.6 T-GDI MHEV,"6,5",577,69,horší
+Hyundai Tucson 1.6 T-GDI PHEV,"1,4",558,68,lepší
+Jaecoo 7 1.6 TGDI AWD (Benzín),"8,0",340,70,horší
+Jaecoo 7 1.5 TGDI PHEV,"1,2",584,68,lepší
+Jaguar E-Pace P200 MHEV,"8,0",494,70,horší
+Jaguar E-Pace P300e PHEV,"2,0",405,69,lepší
+Jeep Compass 1.5 MHEV,"5,6",438,70,horší
+Jeep Compass 1.3 PHEV 4xe (Plug-In),"1,9",420,69,lepší
+Jeep Renegade 1.5 MHEV,"5,7",351,71,horší
+KGM Korando 1.5 GDI-T 2WD,"7,5",551,85,horší
+KGM Tivoli 1.5 GDI-T (Kompaktní),"7,0",427,70,horší
+KGM Torres 1.5 GDI-T 2WD (Benzín),"8,5",703,71,horší
+KGM Torres EVX (Elektromobil),"2,1 (18,6 kWh)",703,67,lepší
+Kia Ceed Hatchback 1.5 T-GDI,"5,5",395,68,horší
+Kia Ceed SW 1.5 T-GDI (Kombi),"5,7",625,69,horší
+Kia Ceed SW 1.6 GDI PHEV,"1,3",437,67,lepší
+Kia ProCeed 1.5 T-GDI (Shooting Brake),"5,7",594,69,lepší
+Kia XCeed 1.5 T-GDI (Crossover),"6,0",426,69,horší
+Kia XCeed 1.6 GDI PHEV,"1,4",291,68,lepší
+Kia K4 2.0 MPI (Sedan pro USA),"6,5",470,68,lepší
+Kia Niro 1.6 GDI HEV,"4,4",451,67,lepší
+Kia Niro EV (Čistě elektrický pohon),"1,8 (16,2 kWh)",475,65,lepší
+Kia Sportage 1.6 T-GDI MHEV,"6,4",562,69,horší
+Kia Sportage 1.6 T-GDI PHEV,"1,1",540,68,lepší
+Kia Stinger 3.3 T-GDI AWD (Sportovní),"10,5",406,73,lepší
+Land Rover Discovery Sport D165 MHEV,"6,4",780,70,horší
+Land Rover Discovery Sport P300e PHEV,"1,6",541,68,lepší
+Mazda 3 Hatchback 2.0 e-Skyactiv G,"5,5",351,68,horší
+Mazda 3 Sedan 2.0 e-Skyactiv X,"5,0",450,67,lepší
+Mazda 6 Sedan 2.0 Skyactiv-G,"6,2",480,68,lepší
+Mazda 6 Wagon 2.5 Skyactiv-G (Kombi),"7,0",522,69,horší
+Mazda CX-30 2.0 e-Skyactiv G,"5,9",430,68,horší
+Mazda CX-5 2.0 Skyactiv-G (Oprava CX-5),"6,8",506,69,horší
+Mercedes-Benz CLA Coupé 180,"5,9",460,68,lepší
+Mercedes-Benz CLA Shooting Brake 200,"6,1",505,69,horší
+Mercedes-Benz GLB 200 (5místná verze),"6,9",570,69,horší
+Mercedes-Benz GLB 200 (7místná verze),"6,9",500,69,horší
+Mercedes-Benz Třídy A Hatchback 180,"5,8",355,68,lepší
+Mercedes-Benz Třídy A Sedan 180,"5,5",405,67,lepší
+Mercedes-Benz Třídy B 180 (MPV),"6,0",455,68,horší
+MG HS 1.5 T-GDI (Zážehový motor),"7,6",507,70,horší
+MG EHS Plug-In Hybrid,"1,8",448,68,lepší
+MG ZS 1.5 VTi-tech (Benzín),"6,6",448,70,horší
+MG ZS EV (Elektromobil),"2,0 (17,8 kWh)",448,67,lepší
+Mini Clubman Cooper,"5,9",360,69,horší
+Mini Cooper 3D Hatchback (Benzín),"5,6",211,68,horší
+Mini Cooper SE (Čistý elektromobil),"1,7 (15,0 kWh)",211,65,lepší
+Mini Countryman Cooper (Nová gen.),"6,2",505,69,horší
+Mitsubishi ASX 1.0 TSI (Nová generace),"5,8",422,68,horší
+Mitsubishi ASX 1.6 MIVEC (Stará generace),"7,0",419,70,horší
+Mitsubishi Eclipse Cross PHEV,"2,0",359,68,lepší
+Nissan Juke 1.0 DIG-T (Základní),"5,9",422,69,horší
+Nissan Juke 1.6 Hybrid,"5,0",354,68,lepší
+Nissan Qashqai 1.3 DIG-T MHEV,"6,3",504,69,horší
+Nissan Qashqai 1.5 e-Power (Hybrid),"5,3",479,67,lepší
+Nissan X-Trail 1.5 VC-T (5místná verze),"5,8",585,68,horší
+Nissan X-Trail 1.5 VC-T (7místná verze),"6,2",485,68,horší
+Omoda 5 1.6 T-GDI,"7,5",378,69,lepší
+Omoda E5 (Elektromobil),"1,7 (15,5 kWh)",378,66,lepší
+Opel Astra Hatchback 1.2 Turbo,"5,4",422,68,lepší
+Opel Astra Sports Tourer 1.2 Turbo (Kombi),"5,6",597,69,horší
+Opel Frontera Hybrid (Kompaktní),"5,5",460,69,horší
+Opel Grandland X 1.2 Turbo,"6,5",514,69,horší
+Opel Insignia Grand Sport 2.0 CDTI,"5,2",490,68,lepší
+Opel Insignia Sports Tourer 2.0 CDTI,"5,5",560,69,horší
+GWM Haval Jolion Pro Hybrid 1.5,"6,0",255,70,horší
+GWM Haval H6 1.5T,"9,1",510,71,horší
+Peugeot 2008 1.2 PureTech,"5,4",434,69,horší
+Peugeot e-2008 (Elektromobil),"1,7 (15,6 kWh)",434,66,lepší
+Peugeot 308 Hatchback 1.2 PureTech,"5,5",412,68,horší
+Peugeot 308 SW 1.2 PureTech (Kombi),"5,7",608,69,horší
+Peugeot 5008 1.2 PureTech MHEV,"5,8",748,69,horší
+Peugeot 508 Fastback 1.2 PureTech,"5,9",487,68,lepší
+Peugeot 508 SW 1.5 BlueHDi (Kombi),"4,9",530,69,horší
+Renault Arkana 1.3 TCe MHEV (SUV-Kupé),"5,8",513,69,lepší
+Renault Arkana E-Tech Hybrid,"4,8",480,68,lepší
+Renault Captur 1.0 TCe,"5,8",422-536,68,horší
+Renault Captur E-Tech Plug-In Hybrid,"1,4",265-379,67,lepší
+Renault Kadjar 1.3 TCe,"6,2",472,69,horší
+Renault Koleos 2.0 dCi 4WD,"6,8",579,70,horší
+Renault Mégane Hatchback 1.3 TCe,"5,6",384,68,horší
+Renault Mégane E-Tech Electric,"1,7 (15,5 kWh)",397,65,lepší
+Renault Talisman Sedan 2.0 BlueHDi,"5,2",608,68,lepší
+Renault Talisman Grandtour 2.0 dCi,"5,5",572,69,horší
+Seat Arona 1.0 TSI,"5,2",400,69,horší
+Seat Arona 1.0 TGI (Verze na CNG),"5,2 (3,5 kg)",282,69,horší
+Seat Ateca 1.5 TSI,"6,4",510,69,horší
+Seat Leon Hatchback 1.5 TSI,"5,5",380,68,horší
+Seat Leon Sportstourer 1.5 TSI (Kombi),"5,7",620,69,horší
+Seat Tarraco 1.5 TSI (5místná verze),"6,9",760,69,horší
+Seat Tarraco 1.4 e-Hybrid (PHEV),"1,5",610,68,lepší
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,"5,0",380,68,lepší
+Škoda Fabia Combi (Gen 3) 1.0 TSI,"5,2",530,69,horší
+Škoda Kamiq 1.0 TSI,"5,3",400,69,horší
+Škoda Karoq 1.5 TSI,"6,2",521,69,horší
+"Škoda Kodiaq 1.5 TSI (Gen 2, 5 m.)","6,0",910,70,horší
+"Škoda Kodiaq iV (Gen 2, PHEV)","1,4",745,68,lepší
+Škoda Octavia Liftback 1.5 TSI,"5,4",600,68,lepší
+Škoda Octavia Combi 1.5 TSI,"5,6",640,69,horší
+Škoda Octavia Combi iV (PHEV),"1,2",490,67,lepší
+Škoda Octavia 4 Combi Selection 1.5 TSI,"5,6",640,69,horší
+Škoda Octavia 4 Combi Style 1.5 TSI,"5,6",640,69,horší
+Škoda Octavia 4 Lim. Style 1.5 TSI,"5,4",600,68,lepší
+Škoda Scala 1.0 TSI,"5,2",467,68,horší
+Škoda Superb Liftback 1.5 TSI (Gen 4),"5,4",645,68,lepší
+Škoda Superb Combi 1.5 TSI (Gen 4),"5,6",690,69,horší
+"Škoda Superb Combi iV (PHEV, Gen 4)","1,2",510,67,lepší
+Škoda Superb 3 Combi Style 2.0 TDI,"4,9",660,69,horší
+Škoda Superb Combi Style 1.5 TSI (B9),"5,6",690,69,horší
+SsangYong Rexton 2.2 e-XDI (5místná verze),"7,9",784,70,horší
+SsangYong Tivoli 1.5 GDI-T,"7,0",427,70,horší
+SsangYong Torres 1.5 GDI-T,"8,5",703,71,horší
+Subaru Forester 2.0i e-Boxer,"6,7",508,69,horší
+Subaru XV 1.6i Petrol,"7,2",385,70,horší
+Subaru XV 2.0i e-Boxer,"6,9",340,69,lepší
+Toyota Corolla Hatchback 1.8 Hybrid,"4,4",361,67,horší
+Toyota Corolla TS Kombi 2.0 Hybrid,"4,6",596,68,horší
+Toyota Rav4 2.5 Hybrid (HEV),"5,6",580,69,horší
+Toyota Rav4 2.5 Plug-In Hybrid (PHEV),"1,0",520,68,lepší
+Volvo XC40 B3 MHEV,"6,7",452,69,horší
+Volvo EX40 (Recharge EV),"1,9 (17,5 kWh)",452,66,lepší
+VW Arteon Liftback 2.0 TSI,"7,2",563,68,lepší
+VW Arteon Shooting Brake 2.0 TDI,"5,2",565,69,horší
+VW Golf Hatchback 1.5 TSI (Gen 8),"5,4",381,68,horší
+VW Golf Variant 1.5 eTSI (Gen 8),"5,6",611,69,horší
+VW Golf 8 eHybrid (PHEV),"1,2",273,67,lepší
+VW Passat Variant 1.5 eTSI (B9),"5,4",690,68,horší
+VW Passat B8 Variant Elegance 2.0 TDI,"4,9",650,68,horší
+VW Passat B8 GTE (PHEV),"1,5",483,67,lepší
+VW Polo 1.0 TSI,"5,2",351,68,horší
+VW Sharan 2.0 TDI (5místná verze),"6,2",955,70,horší
+VW T-Cross 1.0 TSI,"5,8",385-455,69,horší
+VW T-Roc 1.5 TSI,"6,0",445,69,horší
+VW Taigo 1.0 TSI,"5,5",440,69,lepší
+VW Tiguan 1.5 eTSI (Gen 3),"6,2",615,69,horší
+VW Tiguan Allspace 2.0 TDI (5místná verze),"5,8",760,70,horší
+VW Tiguan Life 1.5 TSI (Gen 2),"6,8",615,70,horší
+VW Touran 1.5 TSI (5místná verze),"6,5",743,69,horší
+VW Touran Comfortline 1.5 TSI (5místná),"6,5",743,69,horší
