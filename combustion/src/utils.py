@@ -32,7 +32,7 @@ def normalize_model(model: str) -> str:
 ENGINE_TYPE_KEYWORDS = [
     "EcoBoost", "eTSI", "TSI", "TDI", "TFSI",
     "T-GDI", "T-GDi", "TGDI", "TGDi", "CRDi", "GDI",
-    "TCe", "dCi",
+    "TCe", "dCi", "CDTi",
     "PureTech", "BlueHDi",
     "SKYACTIV-G", "SKYACTIV-D", "Sky-G",
     "EcoBlue",

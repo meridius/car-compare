@@ -20,10 +20,10 @@ from utils import (
 
 COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Palivo", "Převodovka", "Kola", "Náhon 4x4", "Extra",
+    "Palivo", "Převodovka", "Kola", "Náhon 4x4",
     "Objem motoru", "Typ motoru", "Hybrid typ", "Karoserie", "Výbava", "Záruka",
     "Dvouspojková převodovka", "Filtr pevných částic",
-    "Stav", "Zdroj", "Odkaz na auto",
+    "Stav", "Extra", "Zdroj", "Odkaz na auto",
 ]
 
 SEARCH_URL = "https://www.sauto.cz/api/v1/items/search"
@@ -209,6 +209,7 @@ async def scrape_sauto():
 
     df = pd.DataFrame(cars, columns=COLS)
     df.drop_duplicates(subset="Odkaz na auto", inplace=True)
+    df.sort_values("Odkaz na auto", inplace=True)
     df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "sauto.csv", index=False, encoding="utf-8")
     print(f"Hotovo – uloženo {len(df)} aut do sauto.csv")
 

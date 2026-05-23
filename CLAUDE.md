@@ -67,10 +67,10 @@ Defined in `combustion/data/scrape-data-cols.txt`.
 
 ```text
 Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
-Palivo | Převodovka | Kola | Náhon 4x4 | Extra
+Palivo | Převodovka | Kola | Náhon 4x4
 Objem motoru | Typ motoru | Hybrid typ | Karoserie | Výbava | Záruka
 Dvouspojková převodovka | Filtr pevných částic
-Stav | Zdroj | Odkaz na auto
+Stav | Extra | Zdroj | Odkaz na auto
 ```
 
 Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · *(blank for energycars)*

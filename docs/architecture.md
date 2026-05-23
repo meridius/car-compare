@@ -65,6 +65,16 @@ All CSVs are **overwritten on every run**. No incremental/append mode.
 
 Electric: 12 columns. Combustion: 21 columns.
 
+## Column Order (combustion)
+
+```text
+Model auta, Cena (Kč), Nájezd (km), Výkon (kW), Rok výroby,
+Palivo, Převodovka, Kola, Náhon 4x4,
+Objem motoru, Typ motoru, Hybrid typ, Karoserie, Výbava, Záruka,
+Dvouspojková převodovka, Filtr pevných částic,
+Stav, Extra, Zdroj, Odkaz na auto
+```
+
 ## Normalisation Pipeline
 
 Applied in `utils.normalize_model()`, in order:
