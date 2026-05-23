@@ -1,0 +1,27 @@
+# Rules: https://rumdl.dev/rules/
+
+[global]
+flavor = "mkdocs" # Use MkDocs flavor - see https://rumdl.dev/flavors/
+disable = [
+  "MD013", # Line length limit
+]
+
+[MD007]
+# List indentation
+# Since rumdl 0.1.47 the MkDocs flavor enforces 4-space indentation (indent=4, style=fixed)
+# as required by Python-Markdown; conflicting user config emits a warning and is overridden.
+# https://github.com/rvben/rumdl/issues/522
+# This is small price to pay for being able to lint all features of the MkDocs flavor. The Markdownlint doesn't support MkDocs at all, only CommonMark (e.g. it processes text in admonitions like codeblock). https://github.com/DavidAnson/markdownlint/issues/207#issuecomment-603922941
+# Megalinter v9.4.0 contains rumdl 0.1.62
+indent = 4
+style = "fixed"
+start-indented = false
+
+[MD033]
+# Allow <br> tags for line breaks in tables
+allowed-elements = ["br"]
+
+[MD060]
+# Align table columns
+enabled = true
+style = "aligned"
