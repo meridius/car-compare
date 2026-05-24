@@ -6,6 +6,7 @@ Rok výroby
 Tepelné čerpadlo
 Kola
 Náhon 4x4
+Karoserie
 Extra
 Stav
 Zdroj

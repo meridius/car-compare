@@ -5,11 +5,11 @@ import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
-from utils import normalize_model
+from utils import normalize_model, extract_body_type, merge_with_previous
 
 COLS = [
     "Model auta", "Cena (K\u010d)", "N\u00e1jezd (km)", "V\u00fdkon (kW)", "Rok v\u00fdroby",
-    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Karoserie", "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 URL = "https://www.energycars.cz/nabidka-vozidel/?ordering=price_asc"
@@ -136,10 +136,10 @@ async def scrape_energycars():
             # Price incl. VAT – prefer "X Kč vč. DPH", fall back to first Kč group
             # Groups of 3 digits separated by spaces/nbsp, minimum 6 digits total (≥ 100 000 Kč)
             price_match = re.search(
-                r'(\d{3}(?:[\s\xa0]\d{3})+)[\s\xa0]*Kč[\s\xa0]+vč\.', text
+                r'(\d{1,3}(?:[\s\xa0]\d{3})+)[\s\xa0]*Kč[\s\xa0]+vč\.', text
             )
             if not price_match:
-                price_match = re.search(r'(\d{3}(?:[\s\xa0]\d{3})+)[\s\xa0]*Kč', text)
+                price_match = re.search(r'(\d{1,3}(?:[\s\xa0]\d{3})+)[\s\xa0]*Kč', text)
             price = re.sub(r'[\s\xa0]', '', price_match.group(1)) if price_match else ""
 
             # Mileage
@@ -177,6 +177,7 @@ async def scrape_energycars():
                 "Tepelné čerpadlo": "",   # filled from detail page
                 "Kola":             "",   # filled from detail page
                 "Náhon 4x4":        "",   # filled from detail page
+                "Karoserie":        extract_body_type(model),
                 "Extra":            " / ".join(extra_parts),
                 "Stav":             "Dostupný",
                 "Zdroj":            "EnergyCars.cz",
@@ -200,7 +201,9 @@ async def scrape_energycars():
 
         df = pd.DataFrame(cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-        df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "energycars.csv", index=False, encoding="utf-8")
+        csv_path = Path(__file__).parent.parent / "data" / "scrapes" / "energycars.csv"
+        df = merge_with_previous(df, csv_path)
+        df.to_csv(csv_path, index=False, encoding="utf-8")
         print(f"Hotovo – uloženo {len(df)} aut do energycars.csv")
 
         await browser.close()

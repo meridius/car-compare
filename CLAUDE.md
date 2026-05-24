@@ -52,13 +52,13 @@ cd combustion/src && python3 scrape_sauto.py
 
 ## CSV Schema
 
-### Electric (12 columns)
+### Electric (13 columns)
 
 Defined in `electric/data/scrape-data-cols.txt`.
 
 ```text
 Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
-Tepelné čerpadlo | Kola | Náhon 4x4 | Extra | Stav | Zdroj | Odkaz na auto
+Tepelné čerpadlo | Kola | Náhon 4x4 | Karoserie | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
 ### Combustion (21 columns)
@@ -73,7 +73,7 @@ Kola | Náhon 4x4 | Karoserie | Výbava | Záruka
 Extra | Stav | Zdroj | Odkaz na auto
 ```
 
-Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · *(blank for energycars)*
+Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars)*
 
 ## Dashboard (GitHub Pages)
 

@@ -4,11 +4,11 @@ from pathlib import Path
 import aiohttp
 import pandas as pd
 
-from utils import normalize_model
+from utils import normalize_model, extract_body_type, merge_with_previous
 
 COLS = [
     "Model auta", "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-    "Tepelné čerpadlo", "Kola", "Náhon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Tepelné čerpadlo", "Kola", "Náhon 4x4", "Karoserie", "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 SEARCH_URL = "https://www.sauto.cz/api/v1/items/search"
@@ -127,6 +127,7 @@ def build_record(item: dict, detail: dict) -> dict:
     vehicle_range = detail.get("vehicle_range") or ""
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
     awd = "Ano" if AWD_RE.search(drive_name) else "Ne"
+    body_api = (detail.get("vehicle_body_cb") or {}).get("name", "")
     condition = (detail.get("condition_cb") or {}).get("name", "")
 
     # Fallback: if Enyaq still has no variant number, infer from battery capacity
@@ -166,6 +167,7 @@ def build_record(item: dict, detail: dict) -> dict:
         "Tepelné čerpadlo":  "Ano",   # guaranteed by equipment_seo filter
         "Kola":              "",
         "Náhon 4x4":         awd,
+        "Karoserie":         body_api if body_api else extract_body_type(model_base),
         "Extra":             " / ".join(extra_parts),
         "Stav":              condition,
         "Zdroj":             "Sauto.cz",
@@ -188,7 +190,9 @@ async def scrape_sauto():
 
     df = pd.DataFrame(cars, columns=COLS)
     df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-    df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "sauto.csv", index=False, encoding="utf-8")
+    csv_path = Path(__file__).parent.parent / "data" / "scrapes" / "sauto.csv"
+    df = merge_with_previous(df, csv_path)
+    df.to_csv(csv_path, index=False, encoding="utf-8")
     print(f"Hotovo – uloženo {len(df)} aut do sauto.csv")
 
 

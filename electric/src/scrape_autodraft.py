@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 import re
 
-from utils import normalize_model
+from utils import normalize_model, extract_body_type, merge_with_previous
 
 URLS = [
     ("https://www.autodraft.cz/auta.html?palivo=elektro", False),
@@ -65,7 +65,7 @@ def split_model(model):
 
 COLS = [
     "Model auta", "Cena (K\u010d)", "N\u00e1jezd (km)", "V\u00fdkon (kW)", "Rok v\u00fdroby",
-    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Karoserie", "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 
@@ -200,6 +200,7 @@ async def scrape_autodraft():
                     "Tepelné čerpadlo":  "Ano" if "Tepelko" in text else "Ne",
                     "Kola":              kola,
                     "Náhon 4x4":         nahon_4x4,
+                    "Karoserie":         extract_body_type(base_name + " " + extra_rest),
                     "Extra":             extra_rest,
                     "Stav":              status,
                     "Zdroj":             "Autodraft.cz",
@@ -208,7 +209,9 @@ async def scrape_autodraft():
 
         df = pd.DataFrame(all_cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-        df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "autodraft.csv", index=False, encoding="utf-8")
+        csv_path = Path(__file__).parent.parent / "data" / "scrapes" / "autodraft.csv"
+        df = merge_with_previous(df, csv_path)
+        df.to_csv(csv_path, index=False, encoding="utf-8")
         print(f"Hotovo \u2013 ulo\u017eeno {len(df)} aut do autodraft.csv")
 
         await browser.close()

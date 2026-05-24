@@ -3,6 +3,25 @@
 
   var STORAGE_KEY = "carCompareFilters";
   var THRESHOLD_KEY = "carCompareThresholds";
+  var THEME_KEY = "carCompareTheme";
+
+  function applyTheme(theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.getElementById("btn-theme").textContent = theme === "dark" ? "\u263E" : "\u2600";
+  }
+
+  window.toggleTheme = function () {
+    var current = document.documentElement.getAttribute("data-theme") || "dark";
+    var next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
+  };
+
+  (function initTheme() {
+    var saved = null;
+    try { saved = localStorage.getItem(THEME_KEY); } catch (_) {}
+    applyTheme(saved || "dark");
+  })();
 
   var NUMERIC_COLS = {
     "Cena (Kč)": false,
@@ -18,7 +37,7 @@
   };
 
   var SET_COLS = [
-    "Typ", "Palivo", "Stav", "Karoserie", "Převodovka",
+    "Palivo", "Stav", "Karoserie", "Převodovka",
     "Náhon 4x4", "Hybrid typ", "Dvouspojková převodovka",
     "Filtr pevných částic", "Tepelné čerpadlo", "Zdroj",
     "Aerodynamická modifikace", "Tepelné čerpadlo možné", "Výbava", "Záruka",
@@ -53,24 +72,33 @@
     return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
   }
 
+  var RIGHT_ALIGN_COLS = ["Cena (Kč)", "Nájezd (km)"];
+
   function cellStyle(field) {
     return function (params) {
-      if (params.value == null) return null;
+      var style = {};
+      if (RIGHT_ALIGN_COLS.indexOf(field) >= 0) {
+        style.textAlign = "right";
+      } else {
+        style.textAlign = "center";
+      }
+      if (params.value == null) return style;
       var greenHigh = NUMERIC_COLS[field];
       var th = userThresholds[field] || {};
       var range = colRanges[field] || {};
       var min = th.min != null ? th.min : range.min;
       var max = th.max != null ? th.max : range.max;
-      if (min == null || max == null) return null;
+      if (min == null || max == null) return style;
       var bg = colorForValue(params.value, min, max, greenHigh);
-      return bg ? { backgroundColor: bg, color: "#fff" } : null;
+      if (bg) { style.backgroundColor = bg; style.color = "#fff"; }
+      return style;
     };
   }
 
   function buildColumnDefs() {
     var defs = [];
 
-    defs.push({ field: "Typ", filter: "agSetColumnFilter", width: 100, pinned: "left" });
+    defs.push({ field: "Typ", filter: "agSetColumnFilter", width: 100, pinned: "left", cellStyle: { textAlign: "center" } });
     defs.push({ field: "Model auta", filter: "agTextColumnFilter", width: 260, pinned: "left" });
 
     var numericFields = Object.keys(NUMERIC_COLS);
@@ -93,25 +121,28 @@
     }
 
     for (var j = 0; j < SET_COLS.length; j++) {
-      defs.push({ field: SET_COLS[j], filter: "agSetColumnFilter", width: 130 });
+      defs.push({ field: SET_COLS[j], filter: "agSetColumnFilter", width: 130, cellStyle: { textAlign: "center" } });
     }
 
     var textCols = ["Objem motoru", "Typ motoru", "Kola", "Extra"];
     for (var k = 0; k < textCols.length; k++) {
-      defs.push({ field: textCols[k], filter: "agTextColumnFilter", width: 130 });
+      defs.push({ field: textCols[k], filter: "agTextColumnFilter", width: 130, cellStyle: { textAlign: "center" } });
     }
 
     defs.push({
       field: "Odkaz na auto",
+      headerName: "Odkaz",
       filter: false,
-      width: 100,
+      width: 60,
       cellRenderer: function (params) {
         if (!params.value) return "";
         var a = document.createElement("a");
         a.href = params.value;
         a.target = "_blank";
         a.rel = "noopener";
-        a.textContent = "Otevřít";
+        a.textContent = "\u2197";
+        a.title = params.value;
+        a.style.fontSize = "1.2em";
         return a;
       },
     });
@@ -278,6 +309,8 @@
         sortable: true,
         resizable: true,
         floatingFilter: true,
+        wrapHeaderText: true,
+        autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
       },
       animateRows: false,

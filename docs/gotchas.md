@@ -126,3 +126,15 @@ Cars not matching any auth entry are reformatted as "Brand Model EngVol EngType"
 ## combustion — model_base matching uses first-word heuristic
 
 `_model_base_match()` compares first word of scraped vs auth model base. This handles cases where scraped has extra suffixes ("Golf 8 Variant" → first word "Golf" matches auth "Golf"). Can produce false positives for single-letter model names but scoring step disambiguates.
+
+## all scrapers — merge_with_previous preserves removed listings
+
+`merge_with_previous()` in both `utils.py` files loads the previous CSV, finds rows whose "Odkaz na auto" is no longer in the new scrape, sets their "Stav" to "Odstraněno", and appends them. New data always wins (`keep="first"` in dedup). This means CSVs grow over time — rows are never deleted, only marked.
+
+## all scrapers — merge happens after authoritative matching (combustion)
+
+In combustion scrapers, `merge_with_previous()` is called AFTER `match_to_authoritative()`. This means the "Model auta" in removed rows retains the authoritative format from the last successful scrape. If the auth list changes, old removed rows won't get re-matched.
+
+## electric — Karoserie uses vehicle_body_cb API (sauto) or extract_body_type (autodraft/energycars)
+
+Electric sauto scraper gets body type from `detail.get("vehicle_body_cb")` API field (Czech names: Kombi, SUV, Hatchback) with fallback to `extract_body_type()`. Autodraft and energycars use `extract_body_type()` on model name text. Same pattern as combustion sauto.

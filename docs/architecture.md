@@ -10,7 +10,7 @@ electric/
     scrape_autodraft.py   → data/scrapes/autodraft.csv
     scrape_energycars.py  → data/scrapes/energycars.csv
     scrape_sauto.py       → data/scrapes/sauto.csv
-    utils.py              (shared: BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model)
+    utils.py              (shared: BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model, merge_with_previous)
   data/
     makes-and-models/current.txt   tracked models
     makes-and-models/new.txt       newly added models
@@ -33,10 +33,10 @@ bin/run_all.sh                     global runner (--electric, --combustion, --al
 ## Data Flow
 
 ```text
-HTTP/browser → raw HTML/JSON → BeautifulSoup/JSON parse → normalize_model() → DataFrame → CSV (overwrite)
+HTTP/browser → raw HTML/JSON → BeautifulSoup/JSON parse → normalize_model() → DataFrame → merge_with_previous() → CSV
 ```
 
-All CSVs are **overwritten on every run**. No incremental/append mode.
+CSVs are **merged incrementally**: new scraped data is combined with the previous CSV. Listings present in the old CSV but absent from the new scrape get their `Stav` set to `"Odstraněno"`. New listings always take priority (via `keep="first"` dedup).
 
 ## Scraper Comparison
 
@@ -57,12 +57,13 @@ All CSVs are **overwritten on every run**. No incremental/append mode.
 | Typ motoru              | —        | yes        |
 | Hybrid typ              | —        | yes        |
 | Karoserie               | —        | yes        |
+| Karoserie               | yes      | yes        |
 | Výbava                  | —        | yes        |
 | Záruka                  | —        | yes        |
 | Dvouspojková převodovka | —        | yes        |
 | Filtr pevných částic    | —        | yes        |
 
-Electric: 12 columns. Combustion: 21 columns.
+Electric: 13 columns. Combustion: 21 columns.
 
 ## Column Order (combustion)
 
