@@ -8,18 +8,18 @@ Python web scrapers collecting Czech car listings, exported to CSV. Two suites: 
 
 ### Electric (3 scrapers)
 
-| Site | Script | Output |
-|------|--------|--------|
-| [autodraft.cz](https://www.autodraft.cz) | `electric/src/scrape_autodraft.py` | `electric/data/scrapes/autodraft.csv` |
+| Site                                       | Script                              | Output                                 |
+| ------------------------------------------ | ----------------------------------- | -------------------------------------- |
+| [autodraft.cz](https://www.autodraft.cz)   | `electric/src/scrape_autodraft.py`  | `electric/data/scrapes/autodraft.csv`  |
 | [energycars.cz](https://www.energycars.cz) | `electric/src/scrape_energycars.py` | `electric/data/scrapes/energycars.csv` |
-| [sauto.cz](https://www.sauto.cz) | `electric/src/scrape_sauto.py` | `electric/data/scrapes/sauto.csv` |
+| [sauto.cz](https://www.sauto.cz)           | `electric/src/scrape_sauto.py`      | `electric/data/scrapes/sauto.csv`      |
 
 ### Combustion (2 scrapers)
 
-| Site | Script | Output |
-|------|--------|--------|
+| Site                                     | Script                               | Output                                  |
+| ---------------------------------------- | ------------------------------------ | --------------------------------------- |
 | [autodraft.cz](https://www.autodraft.cz) | `combustion/src/scrape_autodraft.py` | `combustion/data/scrapes/autodraft.csv` |
-| [sauto.cz](https://www.sauto.cz) | `combustion/src/scrape_sauto.py` | `combustion/data/scrapes/sauto.csv` |
+| [sauto.cz](https://www.sauto.cz)         | `combustion/src/scrape_sauto.py`     | `combustion/data/scrapes/sauto.csv`     |
 
 ## Documentation
 
@@ -93,6 +93,7 @@ python build/build_data.py
 ```
 
 Reference data:
+
 - `combustion/data/makes-and-models.csv` — exact join on "Model auta"
 - `electric/data/new_cars_specs.csv` — prefix match join
 

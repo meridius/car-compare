@@ -103,6 +103,11 @@ def join_electric_reference(df, ref):
         "Tepelné čerpadlo možné (ano/ne)": "Tepelné čerpadlo možné",
     }
 
+    for dst_col in add_cols_map.values():
+        if dst_col not in electric.columns:
+            electric[dst_col] = None
+        electric[dst_col] = electric[dst_col].astype(object)
+
     ref_lookup = {}
     for _, row in ref.iterrows():
         ref_lookup[row["Model auta"]] = row
