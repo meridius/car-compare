@@ -1,0 +1,67 @@
+name: Scrape and Deploy
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install playwright pandas beautifulsoup4 aiohttp
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
+
+      - run: playwright install chromium --with-deps
+
+      - run: ./bin/run_all.sh
+
+      - run: python build/build_data.py
+
+      - name: Commit data if changed
+        run: |
+          git config user.name "Martin Lukeš"
+          git config user.email "martin.meridius@gmail.com"
+          git add electric/data/scrapes/ combustion/data/scrapes/ site/data/
+          git diff --cached --quiet && echo "No changes" || git commit -m "data: daily scrape $(date -u +%Y-%m-%d)"
+          git push
+
+  deploy:
+    needs: scrape
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,102 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #1a1a2e;
+    color: #e0e0e0;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 20px;
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+}
+
+header h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #e94560;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+#row-count {
+    font-size: 0.85rem;
+    color: #888;
+}
+
+button {
+    padding: 6px 14px;
+    border: 1px solid #0f3460;
+    border-radius: 4px;
+    background: #16213e;
+    color: #e0e0e0;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+button:hover {
+    background: #0f3460;
+}
+
+.settings-panel {
+    padding: 16px 20px;
+    background: #16213e;
+    border-bottom: 1px solid #0f3460;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.settings-panel.hidden { display: none; }
+
+.settings-panel h3 { margin-bottom: 8px; font-size: 1rem; }
+.settings-panel p { margin-bottom: 12px; font-size: 0.8rem; color: #888; }
+
+.threshold-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.threshold-row label {
+    width: 200px;
+    font-size: 0.85rem;
+}
+
+.threshold-row input {
+    width: 80px;
+    padding: 3px 6px;
+    background: #1a1a2e;
+    border: 1px solid #0f3460;
+    color: #e0e0e0;
+    border-radius: 3px;
+}
+
+#grid {
+    width: 100%;
+    height: calc(100vh - 52px);
+}
+
+.ag-theme-alpine {
+    --ag-background-color: #1a1a2e;
+    --ag-header-background-color: #16213e;
+    --ag-odd-row-background-color: #1e1e3a;
+    --ag-row-hover-color: #0f3460;
+    --ag-foreground-color: #e0e0e0;
+    --ag-border-color: #0f3460;
+    --ag-header-foreground-color: #e94560;
+    --ag-secondary-foreground-color: #bbb;
+    --ag-input-border-color: #0f3460;
+    --ag-selected-row-background-color: #0f3460;
+}
+
+a { color: #5dade2; text-decoration: none; }
+a:hover { text-decoration: underline; }
