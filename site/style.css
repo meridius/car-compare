@@ -301,5 +301,9 @@ button {
     height: calc(100vh - 52px);
 }
 
+.ag-header-cell-label {
+    justify-content: center;
+}
+
 a { text-decoration: none; }
 a:hover { text-decoration: underline; }

@@ -4,6 +4,7 @@
   var STORAGE_KEY = "carCompareFilters";
   var THRESHOLD_KEY = "carCompareThresholds";
   var THEME_KEY = "carCompareTheme";
+  var COL_STATE_KEY = "carCompareColState";
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -23,25 +24,44 @@
     applyTheme(saved || "dark");
   })();
 
-  var NUMERIC_COLS = {
-    "Cena (Kč)": false,
-    "Nájezd (km)": false,
-    "Rok výroby": true,
-    "Výkon (kW)": true,
-    "Objem kufru (l)": true,
-    "Hlučnost (dB)": false,
-    "Spotřeba (l/100 km)": false,
-    "Kapacita baterie (kWh)": true,
-    "Dojezd WLTP (km)": true,
-    "Dojezd EV-database (km)": true,
-  };
-
-  var SET_COLS = [
-    "Palivo", "Stav", "Karoserie", "Převodovka",
-    "Náhon 4x4", "Hybrid typ", "Dvouspojková převodovka",
-    "Filtr pevných částic", "Tepelné čerpadlo", "Zdroj",
-    "Aerodynamická modifikace", "Tepelné čerpadlo možné", "Výbava", "Záruka",
+  var COL_CONFIG = [
+    { field: "Odkaz na auto", hdr: "Odkaz", filter: false, w: 60, pinned: "left", link: true },
+    { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
+    { field: "Typ", filter: "agSetColumnFilter", w: 80 },
+    { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
+    { field: "Stav", filter: "agSetColumnFilter", w: 110 },
+    { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right" },
+    { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
+    { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right" },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false },
+    { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
+    { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
+    { field: "Objem motoru", filter: "agTextColumnFilter", w: 80 },
+    { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
+    { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90 },
+    { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
+    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false },
+    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
+    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
+    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)" },
+    { field: "Aerodynamická modifikace", filter: "agSetColumnFilter", w: 100, hdr: "Aerodyn.\nmodifikace" },
+    { field: "Převodovka", filter: "agSetColumnFilter", w: 110 },
+    { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka" },
+    { field: "Náhon 4x4", filter: "agSetColumnFilter", w: 80 },
+    { field: "Filtr pevných částic", filter: "agSetColumnFilter", w: 90, hdr: "Filtr pevn.\nčástic" },
+    { field: "Tepelné čerpadlo", filter: "agSetColumnFilter", w: 80, hdr: "Tepelné\nčerpadlo" },
+    { field: "Tepelné čerpadlo možné", filter: "agSetColumnFilter", w: 90, hdr: "Tep. čerp.\nmožné" },
+    { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
+    { field: "Kola", filter: "agTextColumnFilter", w: 70 },
+    { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
+    { field: "Extra", filter: "agTextColumnFilter", w: 200 },
+    { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
+
+  var NUMERIC_COLS = {};
+  for (var ci = 0; ci < COL_CONFIG.length; ci++) {
+    if (COL_CONFIG[ci].num) NUMERIC_COLS[COL_CONFIG[ci].field] = COL_CONFIG[ci].hi;
+  }
 
   var gridApi = null;
   var colRanges = {};
@@ -72,16 +92,16 @@
     return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
   }
 
-  var RIGHT_ALIGN_COLS = ["Cena (Kč)", "Nájezd (km)"];
+  function makeHeaderName(field) {
+    var m = field.match(/^(.+?)\s*\(([^)]+)\)$/);
+    if (m) return m[1] + "\n(" + m[2] + ")";
+    return field;
+  }
 
-  function cellStyle(field) {
+  function numericCellStyle(field) {
+    var isRight = (field === "Cena (Kč)" || field === "Nájezd (km)");
     return function (params) {
-      var style = {};
-      if (RIGHT_ALIGN_COLS.indexOf(field) >= 0) {
-        style.textAlign = "right";
-      } else {
-        style.textAlign = "center";
-      }
+      var style = { textAlign: isRight ? "right" : "center" };
       if (params.value == null) return style;
       var greenHigh = NUMERIC_COLS[field];
       var th = userThresholds[field] || {};
@@ -95,58 +115,53 @@
     };
   }
 
+  function numericFormatter(field) {
+    return function (p) {
+      if (p.value == null) return "";
+      if (field === "Cena (Kč)") return Number(p.value).toLocaleString("cs-CZ") + " Kč";
+      if (field === "Nájezd (km)") return Number(p.value).toLocaleString("cs-CZ") + " km";
+      if (field === "Spotřeba (l/100 km)") return p.value.toFixed(1);
+      return String(p.value);
+    };
+  }
+
+  function linkRenderer(params) {
+    if (!params.value) return "";
+    var a = document.createElement("a");
+    a.href = params.value;
+    a.target = "_blank";
+    a.rel = "noopener";
+    a.textContent = "\u2197";
+    a.title = params.value;
+    a.style.fontSize = "1.2em";
+    return a;
+  }
+
   function buildColumnDefs() {
     var defs = [];
+    for (var i = 0; i < COL_CONFIG.length; i++) {
+      var cfg = COL_CONFIG[i];
+      var def = {
+        field: cfg.field,
+        headerName: cfg.hdr || makeHeaderName(cfg.field),
+        filter: cfg.filter,
+        width: cfg.w,
+      };
 
-    defs.push({ field: "Typ", filter: "agSetColumnFilter", width: 100, pinned: "left", cellStyle: { textAlign: "center" } });
-    defs.push({ field: "Model auta", filter: "agTextColumnFilter", width: 260, pinned: "left" });
+      if (cfg.pinned) def.pinned = cfg.pinned;
 
-    var numericFields = Object.keys(NUMERIC_COLS);
-    for (var i = 0; i < numericFields.length; i++) {
-      (function (field) {
-        defs.push({
-          field: field,
-          filter: "agNumberColumnFilter",
-          cellStyle: cellStyle(field),
-          width: 130,
-          valueFormatter: function (p) {
-            if (p.value == null) return "";
-            if (field === "Cena (Kč)") return Number(p.value).toLocaleString("cs-CZ") + " Kč";
-            if (field === "Nájezd (km)") return Number(p.value).toLocaleString("cs-CZ") + " km";
-            if (field === "Spotřeba (l/100 km)") return p.value.toFixed(1);
-            return String(p.value);
-          },
-        });
-      })(numericFields[i]);
+      if (cfg.link) {
+        def.cellRenderer = linkRenderer;
+        def.cellStyle = { textAlign: "center" };
+      } else if (cfg.num) {
+        def.cellStyle = numericCellStyle(cfg.field);
+        def.valueFormatter = numericFormatter(cfg.field);
+      } else {
+        def.cellStyle = { textAlign: cfg.align || "center" };
+      }
+
+      defs.push(def);
     }
-
-    for (var j = 0; j < SET_COLS.length; j++) {
-      defs.push({ field: SET_COLS[j], filter: "agSetColumnFilter", width: 130, cellStyle: { textAlign: "center" } });
-    }
-
-    var textCols = ["Objem motoru", "Typ motoru", "Kola", "Extra"];
-    for (var k = 0; k < textCols.length; k++) {
-      defs.push({ field: textCols[k], filter: "agTextColumnFilter", width: 130, cellStyle: { textAlign: "center" } });
-    }
-
-    defs.push({
-      field: "Odkaz na auto",
-      headerName: "Odkaz",
-      filter: false,
-      width: 60,
-      cellRenderer: function (params) {
-        if (!params.value) return "";
-        var a = document.createElement("a");
-        a.href = params.value;
-        a.target = "_blank";
-        a.rel = "noopener";
-        a.textContent = "\u2197";
-        a.title = params.value;
-        a.style.fontSize = "1.2em";
-        return a;
-      },
-    });
-
     return defs;
   }
 
@@ -185,6 +200,36 @@
     if (!b64) return null;
     try { return JSON.parse(decodeURIComponent(escape(atob(b64)))); }
     catch (_) { return null; }
+  }
+
+  function saveColState() {
+    if (!gridApi) return;
+    var state = gridApi.getColumnState();
+    var ids = state.map(function (c) { return c.colId; });
+    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(ids)); } catch (_) {}
+    var url = new URL(window.location);
+    url.searchParams.set("cols", btoa(JSON.stringify(ids)));
+    history.replaceState(null, "", url);
+  }
+
+  function loadColState() {
+    var url = new URL(window.location);
+    var b64 = url.searchParams.get("cols");
+    if (b64) {
+      try { return JSON.parse(atob(b64)); } catch (_) {}
+    }
+    try {
+      var s = localStorage.getItem(COL_STATE_KEY);
+      return s ? JSON.parse(s) : null;
+    } catch (_) { return null; }
+  }
+
+  function applyColState(ids) {
+    if (!gridApi || !ids || !ids.length) return;
+    var state = ids.map(function (id, idx) {
+      return { colId: id, sort: null, sortIndex: null };
+    });
+    gridApi.applyColumnState({ state: state, applyOrder: true });
   }
 
   function onFilterChanged() {
@@ -280,6 +325,18 @@
     updateRowCount();
   };
 
+  window.resetColOrder = function () {
+    localStorage.removeItem(COL_STATE_KEY);
+    var url = new URL(window.location);
+    url.searchParams.delete("cols");
+    history.replaceState(null, "", url);
+    if (gridApi) {
+      gridApi.applyColumnState({ defaultState: { sort: null } });
+      var defaultIds = COL_CONFIG.map(function (c) { return c.field; });
+      applyColState(defaultIds);
+    }
+  };
+
   function computeRanges(data) {
     colRanges = {};
     var fields = Object.keys(NUMERIC_COLS);
@@ -316,8 +373,11 @@
       animateRows: false,
       enableCellTextSelection: true,
       onFilterChanged: onFilterChanged,
+      onDragStopped: saveColState,
       onGridReady: function (params) {
         gridApi = params.api;
+        var savedCols = loadColState();
+        if (savedCols) applyColState(savedCols);
         var urlFilters = loadFiltersFromUrl();
         var storageFilters = loadFiltersFromStorage();
         var filters = urlFilters || storageFilters;
