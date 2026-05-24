@@ -103,7 +103,7 @@ Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in e
 
 `extract_engine_volume_from_model()` uses a relaxed regex (`\d[.,]\d\b` — no lookahead) to find displacement in the model name. `extract_engine_type()` finds engine tech (TSI, TDI, etc.) in the model name. Both fall back to `extra_rest` if not found. After extraction, `strip_engine_from_model()` removes them from the model name using `\S*` around the engine type to catch prefixed variants like "eTSI" or "BiTDI".
 
-## combustion — _TRANSMISSION_EXTRA_RE uses no trailing \b after Man.
+## combustion — _TRANSMISSION_EXTRA_RE uses no trailing \b after Man
 
 `\bMan\.` has no trailing `\b` because the period is not a word character — a trailing `\b` would only match if the next char is a word character, missing cases where "Man." appears at end-of-string or before whitespace.
 
@@ -111,3 +111,18 @@ Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in e
 
 `\b[79]-?\s*[Mm][íi]st\b` handles both "7-Míst" and "7- Míst" (with space between dash and M). The space variant appears in some autodraft card texts.
 
+## combustion — SsangYong↔KGM brand alias in matching
+
+Auth list has some models under "SsangYong" and others under "KGM" (brand was renamed). Sauto returns listings under both names. `_BRAND_MATCH_ALIASES` maps each to the other so matching finds candidates regardless of which brand name the listing uses.
+
+## combustion — Cee´d accent normalisation
+
+Sauto returns "Kia Cee´d" with an accent character (´). Auth list uses "Kia Ceed" without accent. `MODEL_CLEANUP_PATTERNS` includes `Cee´d → Ceed` to normalize before matching.
+
+## combustion — unmatched cars get reformatted
+
+Cars not matching any auth entry are reformatted as "Brand Model EngVol EngType" (e.g. "Opel Mokka 1.2 Turbo"). This is done by `_format_unmatched()` — the original verbose model name is replaced.
+
+## combustion — model_base matching uses first-word heuristic
+
+`_model_base_match()` compares first word of scraped vs auth model base. This handles cases where scraped has extra suffixes ("Golf 8 Variant" → first word "Golf" matches auth "Golf"). Can produce false positives for single-letter model names but scoring step disambiguates.

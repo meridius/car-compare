@@ -96,6 +96,20 @@ After the base scrape, `utils.py` extraction helpers parse Extra/suffix text int
 9. `extract_awd()` — 4x4/AWD from Extra text (supplements API-level detection)
 10. `clean_extra()` — strips extracted substrings from Extra text
 
+## Authoritative Model Matching (combustion only)
+
+After field extraction, each scraped car is matched against `combustion/data/makes-and-models.csv`:
+
+1. `load_authoritative_list(csv_path)` — parses auth CSV into structured records (brand, model_base, body, engine_vol, engine_type, hybrid, fuel)
+2. `match_to_authoritative(df, auth_list)` — for each row:
+    - Parse brand + model_base from "Model auta"
+    - Find candidates: brand must match (with `_BRAND_MATCH_ALIASES` for SsangYong↔KGM) AND model_base must match
+    - Score candidates using weighted multi-field matching: body(3), engine_vol(2), engine_type(2), hybrid(3), fuel(1)
+    - **Matched** → "Model auta" set to full auth string (e.g. "Škoda Karoq 1.5 TSI")
+    - **Unmatched** → reformatted as "Brand Model EngVol EngType"
+
+Body types use synonym groups (`_BODY_GROUPS`): Kombi↔Combi↔Variant↔SW↔Avant↔Touring.
+
 ## sauto API Filters
 
 ### Electric

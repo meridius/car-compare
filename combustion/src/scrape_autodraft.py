@@ -19,6 +19,8 @@ from utils import (
     extract_particle_filter,
     extract_awd,
     clean_extra,
+    load_authoritative_list,
+    match_to_authoritative,
 )
 
 URLS = [
@@ -279,6 +281,8 @@ async def scrape_autodraft():
         df = pd.DataFrame(all_cars, columns=COLS)
         df.drop_duplicates(subset="Odkaz na auto", inplace=True)
         df.sort_values("Odkaz na auto", inplace=True)
+        auth = load_authoritative_list(Path(__file__).parent.parent / "data" / "makes-and-models.csv")
+        df = match_to_authoritative(df, auth)
         df.to_csv(Path(__file__).parent.parent / "data" / "scrapes" / "autodraft.csv", index=False, encoding="utf-8")
         print(f"Hotovo – uloženo {len(df)} aut do autodraft.csv")
 
