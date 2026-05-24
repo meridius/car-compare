@@ -96,6 +96,56 @@ button:hover {
     --ag-secondary-foreground-color: #bbb;
     --ag-input-border-color: #0f3460;
     --ag-selected-row-background-color: #0f3460;
+    --ag-popup-background-color: #16213e;
+    --ag-control-panel-background-color: #16213e;
+    --ag-subheader-background-color: #16213e;
+    --ag-input-focus-border-color: #e94560;
+    --ag-checkbox-checked-color: #e94560;
+    --ag-range-selection-border-color: #e94560;
+}
+
+.ag-theme-alpine .ag-popup {
+    background: #16213e;
+}
+
+.ag-theme-alpine .ag-filter-toolpanel,
+.ag-theme-alpine .ag-filter,
+.ag-theme-alpine .ag-simple-filter-body-wrapper,
+.ag-theme-alpine .ag-filter-wrapper,
+.ag-theme-alpine .ag-set-filter-list,
+.ag-theme-alpine .ag-mini-filter {
+    background-color: #16213e;
+    color: #e0e0e0;
+}
+
+.ag-theme-alpine .ag-picker-field-wrapper {
+    background-color: #1a1a2e;
+    border-color: #0f3460;
+}
+
+.ag-theme-alpine .ag-select .ag-picker-field-display {
+    color: #e0e0e0;
+}
+
+.ag-theme-alpine input[type="text"],
+.ag-theme-alpine input[type="number"],
+.ag-theme-alpine .ag-input-field-input {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+    border-color: #0f3460;
+}
+
+.ag-theme-alpine .ag-filter-condition {
+    background-color: #16213e;
+}
+
+.ag-theme-alpine .ag-select-list {
+    background-color: #16213e;
+    color: #e0e0e0;
+}
+
+.ag-theme-alpine .ag-select-list-item:hover {
+    background-color: #0f3460;
 }
 
 a { color: #5dade2; text-decoration: none; }
