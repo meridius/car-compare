@@ -33,7 +33,7 @@ Work on the following tasks. Check off each item as you complete it. Commit and 
 - [x] when scraping, don't remove the data from scraped cols, add to them instad
     - mark the existing rows, that are not currently scraped, as "Odstaněno" in the "Stav" col
 - [x] add Karoserie col
-- there are still some vehicles with incorrect price
+- [x] there are still some vehicles with incorrect price
     - <https://www.energycars.cz/vuz/byd-seal/>
     - <https://www.energycars.cz/vuz/mercedes-benz-eqe/>
     - <https://www.energycars.cz/vuz/bmw-ix/>
