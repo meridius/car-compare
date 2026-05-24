@@ -176,6 +176,10 @@ def main():
     os.makedirs(os.path.dirname(out_path), exist_ok=True)
 
     records = df.to_dict(orient="records")
+    for rec in records:
+        for k, v in rec.items():
+            if isinstance(v, float) and (v != v):
+                rec[k] = None
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(records, f, ensure_ascii=False, separators=(",", ":"))
 
