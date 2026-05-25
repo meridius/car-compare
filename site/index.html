@@ -20,7 +20,7 @@
             <button id="btn-reset-cols" onclick="resetColOrder()">Reset sloupců</button>
             <button id="btn-settings" onclick="toggleSettings()">Nastavení barev</button>
             <button id="btn-summary" onclick="toggleSummary()">Přehled dat</button>
-            <a href="reference.html" class="nav-link">Referenční modely</a>
+            <button class="nav-link" onclick="location.href='reference.html'">Referenční modely</button>
         </div>
     </header>
     <div id="settings-panel" class="settings-panel hidden">
@@ -30,7 +30,7 @@
         <button onclick="saveThresholds()">Uložit</button>
         <button onclick="resetThresholds()">Výchozí</button>
     </div>
-    <div id="grid" class="ag-theme-alpine"></div>
+    <div id="grid" class="ag-theme-alpine-dark"></div>
     <div id="summary-overlay" class="modal-overlay hidden" onclick="closeSummaryBackdrop(event)">
         <div class="modal-content">
             <div class="modal-header">

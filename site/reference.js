@@ -8,6 +8,11 @@
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     document.getElementById("btn-theme").textContent = theme === "dark" ? "\u263E" : "\u2600";
+    var gridEl = document.getElementById("grid");
+    if (gridEl) {
+      gridEl.classList.remove("ag-theme-alpine", "ag-theme-alpine-dark");
+      gridEl.classList.add(theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine");
+    }
   }
 
   window.toggleTheme = function () {
@@ -178,6 +183,8 @@
   };
 
   var gridApi = null;
+  var colRanges = {};
+  var totalRowCount = 0;
 
   var COL_DEFS = [
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
@@ -192,59 +199,177 @@
     { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center" },
   ];
 
+  // Map numeric column fields to whether higher is better (true) or lower is better (false)
+  var NUMERIC_COLS = {
+    "Spotřeba (l/100 km)": false,
+    "Objem kufru (l)": true,
+    "Hlučnost (dB)": false,
+    "Kapacita baterie (kWh)": true,
+    "Dojezd WLTP (km)": true,
+    "Dojezd EV-database (km)": true,
+  };
+
+  // ── HSL gradient coloring for numeric columns ──
+
+  function hslToRgb(h, s, l) {
+    s /= 100; l /= 100;
+    var c = (1 - Math.abs(2 * l - 1)) * s;
+    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    var m = l - c / 2;
+    var r, g, b;
+    if (h < 60) { r = c; g = x; b = 0; }
+    else if (h < 120) { r = x; g = c; b = 0; }
+    else if (h < 180) { r = 0; g = c; b = x; }
+    else if (h < 240) { r = 0; g = x; b = c; }
+    else if (h < 300) { r = x; g = 0; b = c; }
+    else { r = c; g = 0; b = x; }
+    return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+  }
+
+  function colorForValue(val, min, max, greenHigh) {
+    if (val == null || min === max) return null;
+    var t = (val - min) / (max - min);
+    t = Math.max(0, Math.min(1, t));
+    if (!greenHigh) t = 1 - t;
+    var hue = t * 120;
+    var rgb = hslToRgb(hue, 80, 35);
+    return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+  }
+
+  function numericCellStyle(field) {
+    return function (params) {
+      var style = { textAlign: "center" };
+      if (params.value == null) return style;
+      var greenHigh = NUMERIC_COLS[field];
+      var range = colRanges[field] || {};
+      if (range.min == null || range.max == null) return style;
+      var bg = colorForValue(params.value, range.min, range.max, greenHigh);
+      if (bg) { style.backgroundColor = bg; style.color = "#fff"; }
+      return style;
+    };
+  }
+
+  function computeRanges(data) {
+    colRanges = {};
+    var fields = Object.keys(NUMERIC_COLS);
+    for (var i = 0; i < fields.length; i++) {
+      var field = fields[i];
+      var min = Infinity, max = -Infinity;
+      for (var j = 0; j < data.length; j++) {
+        var v = data[j][field];
+        if (v != null && typeof v === "number" && isFinite(v)) {
+          if (v < min) min = v;
+          if (v > max) max = v;
+        }
+      }
+      if (min !== Infinity) colRanges[field] = { min: min, max: max };
+    }
+  }
+
+  // ── Row count ──
+
   function updateRowCount() {
     var displayed = 0;
     if (gridApi) {
       gridApi.forEachNodeAfterFilter(function () { displayed++; });
     }
     var el = document.getElementById("row-count");
-    if (el) el.textContent = displayed + " záznamů";
+    if (el) {
+      if (displayed < totalRowCount) {
+        el.textContent = "Vyfiltrováno " + displayed + " / " + totalRowCount + " záznamů";
+      } else {
+        el.textContent = totalRowCount + " záznamů";
+      }
+    }
   }
 
-  function saveFilters() {
-    if (!gridApi) return;
-    try {
-      var model = gridApi.getFilterModel();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(model));
-    } catch (_) {}
+  // ── Filter persistence (URL + localStorage) ──
+
+  function saveFiltersToStorage(model) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(model)); } catch (_) {}
   }
 
-  function restoreFilters() {
-    if (!gridApi) return;
+  function loadFiltersFromStorage() {
     try {
-      var saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) gridApi.setFilterModel(JSON.parse(saved));
-    } catch (_) {}
+      var s = localStorage.getItem(STORAGE_KEY);
+      return s ? JSON.parse(s) : null;
+    } catch (_) { return null; }
   }
+
+  function saveFiltersToUrl(model) {
+    var url = new URL(window.location);
+    if (model && Object.keys(model).length > 0) {
+      url.searchParams.set("filters", btoa(unescape(encodeURIComponent(JSON.stringify(model)))));
+    } else {
+      url.searchParams.delete("filters");
+    }
+    history.replaceState(null, "", url);
+  }
+
+  function loadFiltersFromUrl() {
+    var url = new URL(window.location);
+    var b64 = url.searchParams.get("filters");
+    if (!b64) return null;
+    try { return JSON.parse(decodeURIComponent(escape(atob(b64)))); }
+    catch (_) { return null; }
+  }
+
+  // ── Column state persistence (URL + localStorage) ──
 
   function saveColState() {
     if (!gridApi) return;
-    try {
-      var state = gridApi.getColumnState();
-      localStorage.setItem(COL_STATE_KEY, JSON.stringify(state));
-    } catch (_) {}
+    var state = gridApi.getColumnState();
+    var ids = state.map(function (c) { return c.colId; });
+    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(ids)); } catch (_) {}
+    var url = new URL(window.location);
+    url.searchParams.set("cols", btoa(JSON.stringify(ids)));
+    history.replaceState(null, "", url);
   }
 
-  function restoreColState() {
-    if (!gridApi) return;
+  function loadColState() {
+    var url = new URL(window.location);
+    var b64 = url.searchParams.get("cols");
+    if (b64) {
+      try { return JSON.parse(atob(b64)); } catch (_) {}
+    }
     try {
-      var saved = localStorage.getItem(COL_STATE_KEY);
-      if (saved) gridApi.applyColumnState({ state: JSON.parse(saved), applyOrder: true });
-    } catch (_) {}
+      var s = localStorage.getItem(COL_STATE_KEY);
+      return s ? JSON.parse(s) : null;
+    } catch (_) { return null; }
   }
+
+  function applyColState(ids) {
+    if (!gridApi || !ids || !ids.length) return;
+    var state = ids.map(function (id) {
+      return { colId: id, sort: null, sortIndex: null };
+    });
+    gridApi.applyColumnState({ state: state, applyOrder: true });
+  }
+
+  // ── Toolbar actions ──
 
   window.clearFilters = function () {
-    if (!gridApi) return;
-    gridApi.setFilterModel(null);
-    try { localStorage.removeItem(STORAGE_KEY); } catch (_) {}
+    localStorage.removeItem(STORAGE_KEY);
+    var url = new URL(window.location);
+    url.searchParams.delete("filters");
+    history.replaceState(null, "", url);
+    if (gridApi) gridApi.setFilterModel(null);
     updateRowCount();
   };
 
   window.resetColOrder = function () {
-    if (!gridApi) return;
-    gridApi.resetColumnState();
-    try { localStorage.removeItem(COL_STATE_KEY); } catch (_) {}
+    localStorage.removeItem(COL_STATE_KEY);
+    var url = new URL(window.location);
+    url.searchParams.delete("cols");
+    history.replaceState(null, "", url);
+    if (gridApi) {
+      gridApi.applyColumnState({ defaultState: { sort: null } });
+      var defaultIds = COL_DEFS.map(function (c) { return c.field; });
+      applyColState(defaultIds);
+    }
   };
+
+  // ── Value formatter ──
 
   function numericValueFormatter(params) {
     if (params.value == null) return "";
@@ -253,13 +378,21 @@
     return n.toLocaleString("cs-CZ");
   }
 
+  // ── Grid init ──
+
   function init(data) {
+    computeRanges(data);
+    totalRowCount = data.length;
+
     for (var i = 0; i < COL_DEFS.length; i++) {
       var col = COL_DEFS[i];
       col.sortable = true;
       col.resizable = true;
       if (col.type === "numericColumn") {
         col.valueFormatter = numericValueFormatter;
+        if (NUMERIC_COLS.hasOwnProperty(col.field)) {
+          col.cellStyle = numericCellStyle(col.field);
+        }
       }
     }
 
@@ -269,24 +402,32 @@
       rowData: data,
       defaultColDef: {
         floatingFilter: true,
+        wrapHeaderText: true,
+        autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
       },
       animateRows: false,
+      enableCellTextSelection: true,
       onFilterChanged: function () {
+        var model = gridApi ? gridApi.getFilterModel() : null;
+        saveFiltersToStorage(model);
+        saveFiltersToUrl(model);
         updateRowCount();
-        saveFilters();
       },
-      onColumnMoved: saveColState,
-      onColumnResized: saveColState,
-      onSortChanged: saveColState,
-      onGridReady: function () {
-        restoreFilters();
-        restoreColState();
+      onDragStopped: saveColState,
+      onGridReady: function (params) {
+        gridApi = params.api;
+        var savedCols = loadColState();
+        if (savedCols) applyColState(savedCols);
+        var urlFilters = loadFiltersFromUrl();
+        var storageFilters = loadFiltersFromStorage();
+        var filters = urlFilters || storageFilters;
+        if (filters) gridApi.setFilterModel(filters);
         updateRowCount();
       },
     };
 
-    gridApi = agGrid.createGrid(gridDiv, gridOptions);
+    agGrid.createGrid(gridDiv, gridOptions);
   }
 
   fetch("data/reference.json")

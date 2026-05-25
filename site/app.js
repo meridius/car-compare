@@ -9,6 +9,11 @@
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
     document.getElementById("btn-theme").textContent = theme === "dark" ? "\u263E" : "\u2600";
+    var gridEl = document.getElementById("grid");
+    if (gridEl) {
+      gridEl.classList.remove("ag-theme-alpine", "ag-theme-alpine-dark");
+      gridEl.classList.add(theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine");
+    }
   }
 
   window.toggleTheme = function () {
@@ -231,6 +236,7 @@
   var appMetadata = null;
   var chartLoaded = false;
   var summaryRendered = false;
+  var totalRows = 0;
 
   function hslToRgb(h, s, l) {
     s /= 100; l /= 100;
@@ -456,14 +462,14 @@
       var minInput = document.createElement("input");
       minInput.type = "number";
       minInput.className = "th-min";
-      minInput.placeholder = "min (" + (range.min != null ? range.min : "") + ")";
+      minInput.placeholder = "min: " + (range.min != null ? range.min : "");
       if (th.min != null) minInput.value = th.min;
       row.appendChild(minInput);
 
       var maxInput = document.createElement("input");
       maxInput.type = "number";
       maxInput.className = "th-max";
-      maxInput.placeholder = "max (" + (range.max != null ? range.max : "") + ")";
+      maxInput.placeholder = "max: " + (range.max != null ? range.max : "");
       if (th.max != null) maxInput.value = th.max;
       row.appendChild(maxInput);
 
@@ -478,7 +484,8 @@
   function updateRowCount() {
     var count = 0;
     if (gridApi) gridApi.forEachNodeAfterFilter(function () { count++; });
-    document.getElementById("row-count").textContent = count + " aut";
+    var text = count < totalRows ? "Vyfiltrov\u00e1no " + count + " / " + totalRows + " aut" : totalRows + " aut";
+    document.getElementById("row-count").textContent = text;
   }
 
   window.clearFilters = function () {
@@ -520,6 +527,7 @@
   }
 
   function init(data) {
+    totalRows = data.length;
     computeRanges(data);
     loadThresholds();
     renderThresholdInputs();
@@ -654,7 +662,7 @@
     } else {
       var noData = makeCard("");
       var p = document.createElement("p");
-      p.textContent = "Metadata nejsou k dispozici (star\u0161\u00ed form\u00e1t dat).";
+      p.textContent = "Data nebyla sestavena n\u00e1strojem build (spus\u0165te python build/build_data.py).";
       noData.appendChild(p);
       body.appendChild(noData);
     }
@@ -665,7 +673,7 @@
       gridApi.forEachNode(function (node) {
         if (!node.data) return;
         var typ = node.data["Typ"] || "\u2014";
-        var pal = node.data["Palivo"] || "\u2014";
+        var pal = node.data["Palivo"] || "Elektro";
         if (!matrix[typ]) matrix[typ] = {};
         matrix[typ][pal] = (matrix[typ][pal] || 0) + 1;
       });
@@ -692,16 +700,18 @@
     }
 
     // Chart container
-    var card6 = makeCard("Historie scrapov\u00e1n\u00ed");
-    var chartDiv = document.createElement("div");
-    chartDiv.id = "summary-chart-container";
-    var loading = document.createElement("p");
-    loading.id = "chart-loading";
-    loading.textContent = "Na\u010d\u00edt\u00e1n\u00ed grafu\u2026";
-    chartDiv.appendChild(loading);
-    card6.appendChild(chartDiv);
-    body.appendChild(card6);
-    loadChart();
+    if (appMetadata) {
+      var card6 = makeCard("Historie scrapov\u00e1n\u00ed");
+      var chartDiv = document.createElement("div");
+      chartDiv.id = "summary-chart-container";
+      var loading = document.createElement("p");
+      loading.id = "chart-loading";
+      loading.textContent = "Na\u010d\u00edt\u00e1n\u00ed grafu\u2026";
+      chartDiv.appendChild(loading);
+      card6.appendChild(chartDiv);
+      body.appendChild(card6);
+      loadChart();
+    }
   }
 
   function makeCard(title) {
@@ -820,7 +830,7 @@
       })
       .catch(function () {
         var el = document.getElementById("summary-chart-container");
-        if (el) el.textContent = "Nepoda\u0159ilo se na\u010d\u00edst historii.";
+        if (el) el.textContent = "Historie nen\u00ed k dispozici.";
       });
   }
 

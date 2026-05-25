@@ -34,4 +34,8 @@ if [[ $failed -gt 0 ]]; then
     echo "==> $failed runner(s) selhalo." >&2
     exit 1
 fi
+
+echo "=== BUILD ==="
+python3 "$ROOT/build/build_data.py"
+
 echo "==> Vše dokončeno."

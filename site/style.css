@@ -99,11 +99,16 @@ a:hover { text-decoration: underline; }
 .settings-panel h3 { margin-bottom: 8px; font-size: 1rem; }
 .settings-panel p { margin-bottom: 12px; font-size: 0.8rem; color: var(--clr-text-muted); }
 
+#threshold-inputs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 6px 24px;
+}
+
 .threshold-row {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 6px;
 }
 
 .threshold-row label {
@@ -112,7 +117,7 @@ a:hover { text-decoration: underline; }
 }
 
 .threshold-row input {
-    width: 80px;
+    width: 120px;
     padding: 3px 6px;
     border: 1px solid var(--clr-border);
     border-radius: 3px;
@@ -130,7 +135,8 @@ a:hover { text-decoration: underline; }
     justify-content: center;
 }
 
-.ag-theme-alpine {
+.ag-theme-alpine,
+.ag-theme-alpine-dark {
     --ag-background-color: var(--clr-bg);
     --ag-header-background-color: var(--clr-surface);
     --ag-odd-row-background-color: var(--clr-surface-alt);
@@ -140,56 +146,67 @@ a:hover { text-decoration: underline; }
     --ag-header-foreground-color: var(--clr-accent);
     --ag-secondary-foreground-color: var(--clr-text-muted);
     --ag-input-border-color: var(--clr-border);
+    --ag-input-background-color: var(--clr-surface);
     --ag-selected-row-background-color: var(--clr-selected);
     --ag-popup-background-color: var(--clr-surface);
     --ag-control-panel-background-color: var(--clr-surface);
     --ag-subheader-background-color: var(--clr-surface);
+    --ag-menu-background-color: var(--clr-surface);
     --ag-input-focus-border-color: var(--clr-accent);
     --ag-checkbox-checked-color: var(--clr-accent);
     --ag-range-selection-border-color: var(--clr-accent);
 }
 
-.ag-theme-alpine .ag-popup {
+.ag-theme-alpine .ag-popup,
+.ag-theme-alpine .ag-menu,
+.ag-theme-alpine-dark .ag-popup,
+.ag-theme-alpine-dark .ag-menu {
     background: var(--clr-surface);
 }
 
-.ag-theme-alpine .ag-filter-toolpanel,
-.ag-theme-alpine .ag-filter,
-.ag-theme-alpine .ag-simple-filter-body-wrapper,
-.ag-theme-alpine .ag-filter-wrapper,
-.ag-theme-alpine .ag-set-filter-list,
-.ag-theme-alpine .ag-mini-filter {
+.ag-theme-alpine-dark .ag-filter-toolpanel,
+.ag-theme-alpine-dark .ag-filter,
+.ag-theme-alpine-dark .ag-simple-filter-body-wrapper,
+.ag-theme-alpine-dark .ag-filter-wrapper,
+.ag-theme-alpine-dark .ag-set-filter-list,
+.ag-theme-alpine-dark .ag-mini-filter {
     background-color: var(--clr-surface);
     color: var(--clr-text);
 }
 
-.ag-theme-alpine .ag-picker-field-wrapper {
-    background-color: var(--clr-bg);
+.ag-theme-alpine-dark .ag-picker-field-wrapper {
+    background-color: var(--clr-surface);
     border-color: var(--clr-border);
 }
 
-.ag-theme-alpine .ag-select .ag-picker-field-display {
+.ag-theme-alpine-dark .ag-select .ag-picker-field-display {
     color: var(--clr-text);
 }
 
-.ag-theme-alpine input[type="text"],
-.ag-theme-alpine input[type="number"],
-.ag-theme-alpine .ag-input-field-input {
-    background-color: var(--clr-bg);
+.ag-theme-alpine-dark input[type="text"],
+.ag-theme-alpine-dark input[type="number"],
+.ag-theme-alpine-dark .ag-input-field-input,
+.ag-theme-alpine-dark .ag-text-field-input {
+    background-color: var(--clr-surface);
     color: var(--clr-text);
     border-color: var(--clr-border);
 }
 
-.ag-theme-alpine .ag-filter-condition {
-    background-color: var(--clr-surface);
-}
-
-.ag-theme-alpine .ag-select-list {
+.ag-theme-alpine-dark .ag-floating-filter-input {
     background-color: var(--clr-surface);
     color: var(--clr-text);
 }
 
-.ag-theme-alpine .ag-select-list-item:hover {
+.ag-theme-alpine-dark .ag-filter-condition {
+    background-color: var(--clr-surface);
+}
+
+.ag-theme-alpine-dark .ag-select-list {
+    background-color: var(--clr-surface);
+    color: var(--clr-text);
+}
+
+.ag-theme-alpine-dark .ag-select-list-item:hover {
     background-color: var(--clr-hover);
 }
 
