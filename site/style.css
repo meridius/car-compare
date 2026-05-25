@@ -307,3 +307,86 @@ button {
 
 a { text-decoration: none; }
 a:hover { text-decoration: underline; }
+
+/* ── Custom Set Filter ── */
+.set-filter {
+    padding: 8px;
+    min-width: 180px;
+}
+
+.set-filter-search {
+    width: 100%;
+    padding: 4px 6px;
+    margin-bottom: 6px;
+    border: 1px solid;
+    border-radius: 3px;
+    font-size: 0.85rem;
+}
+
+.set-filter-btns {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 6px;
+}
+
+.set-filter-btn {
+    flex: 1;
+    padding: 3px 8px;
+    font-size: 0.8rem;
+    border: 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.set-filter-list {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.set-filter-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 0;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.set-filter-item input[type="checkbox"] {
+    margin: 0;
+}
+
+[data-theme="dark"] .set-filter-search,
+.set-filter-search {
+    background: #1a1a2e;
+    border-color: #0f3460;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .set-filter-btn,
+.set-filter-btn {
+    background: #16213e;
+    border-color: #0f3460;
+    color: #e0e0e0;
+}
+
+[data-theme="dark"] .set-filter-btn:hover,
+.set-filter-btn:hover {
+    background: #0f3460;
+}
+
+[data-theme="light"] .set-filter-search {
+    background: #fff;
+    border-color: #ccc;
+    color: #222;
+}
+
+[data-theme="light"] .set-filter-btn {
+    background: #fff;
+    border-color: #ccc;
+    color: #333;
+}
+
+[data-theme="light"] .set-filter-btn:hover {
+    background: #e8e8e8;
+}
