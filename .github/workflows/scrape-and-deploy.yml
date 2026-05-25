@@ -37,6 +37,8 @@ jobs:
       - run: ./bin/run_all.sh
 
       - run: python build/build_data.py
+        env:
+          BUILD_TRIGGER: ${{ github.event_name }}
 
       - name: Commit data if changed
         run: |

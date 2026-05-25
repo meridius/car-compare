@@ -511,6 +511,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
     """Match each row to closest auth entry. Updates 'Model auta' in-place. Returns df."""
     import pandas as pd
 
+    df["Spárováno"] = "Ne"
     matched_count = 0
     unmatched_count = 0
 
@@ -550,6 +551,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
         if candidates:
             best = max(candidates, key=lambda a: _score_match(scraped, a))
             df.at[idx, "Model auta"] = best["entry"]
+            df.at[idx, "Spárováno"] = "Ano"
             matched_count += 1
         else:
             df.at[idx, "Model auta"] = _format_unmatched(brand, cleaned_base, engine_vol, engine_type)

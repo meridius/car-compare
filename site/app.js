@@ -215,6 +215,7 @@
     { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
     { field: "Kola", filter: "agSetColumnFilter", w: 70 },
     { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
+    { field: "Spárováno", filter: "agSetColumnFilter", w: 80 },
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
@@ -227,6 +228,9 @@
   var gridApi = null;
   var colRanges = {};
   var userThresholds = {};
+  var appMetadata = null;
+  var chartLoaded = false;
+  var summaryRendered = false;
 
   function hslToRgb(h, s, l) {
     s /= 100; l /= 100;
@@ -533,6 +537,12 @@
       },
       animateRows: false,
       enableCellTextSelection: true,
+      getRowStyle: function (params) {
+        if (params.data && params.data["Spárováno"] === "Ne") {
+          return { borderLeft: "3px solid #f59e0b" };
+        }
+        return null;
+      },
       onFilterChanged: onFilterChanged,
       onDragStopped: saveColState,
       onGridReady: function (params) {
@@ -551,9 +561,279 @@
     agGrid.createGrid(gridDiv, gridOptions);
   }
 
+  // ── Summary modal ──
+
+  window.toggleSummary = function () {
+    var overlay = document.getElementById("summary-overlay");
+    overlay.classList.toggle("hidden");
+    if (!overlay.classList.contains("hidden") && !summaryRendered) {
+      renderSummary();
+      summaryRendered = true;
+    }
+  };
+
+  window.closeSummary = function () {
+    document.getElementById("summary-overlay").classList.add("hidden");
+  };
+
+  window.closeSummaryBackdrop = function (e) {
+    if (e.target === document.getElementById("summary-overlay")) {
+      window.closeSummary();
+    }
+  };
+
+  function fmtDate(iso) {
+    if (!iso) return "\u2014";
+    var d = new Date(iso);
+    return d.toLocaleDateString("cs-CZ") + " " + d.toLocaleTimeString("cs-CZ", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  function fmtNum(n) {
+    return n != null ? Number(n).toLocaleString("cs-CZ") : "\u2014";
+  }
+
+  function renderSummary() {
+    var body = document.getElementById("summary-body");
+    while (body.firstChild) body.removeChild(body.firstChild);
+
+    if (appMetadata) {
+      var trigger = appMetadata.trigger === "schedule" ? "Automatick\u00fd" : "Manu\u00e1ln\u00ed";
+
+      // Build info card
+      var card1 = makeCard("Posledn\u00ed sestaven\u00ed");
+      addStat(card1, "Datum", fmtDate(appMetadata.buildDate));
+      addStat(card1, "Spu\u0161t\u011bn\u00ed", trigger);
+      addStat(card1, "Celkem aut", fmtNum(appMetadata.totalCars));
+      body.appendChild(card1);
+
+      // Source breakdown
+      if (appMetadata.sources) {
+        var card2 = makeCard("Zdroje dat");
+        var tbl = makeTable(["Zdroj", "Elektrick\u00e9", "Spalovac\u00ed", "Celkem"]);
+        var srcKeys = Object.keys(appMetadata.sources).sort();
+        for (var i = 0; i < srcKeys.length; i++) {
+          var s = appMetadata.sources[srcKeys[i]];
+          addRow(tbl, [srcKeys[i], fmtNum(s.electric), fmtNum(s.combustion), fmtNum(s.total)]);
+        }
+        card2.appendChild(tbl);
+        body.appendChild(card2);
+      }
+
+      // Match statistics
+      if (appMetadata.matching) {
+        var card3 = makeCard("P\u00e1rov\u00e1n\u00ed s referen\u010dn\u00edmi modely");
+        var tbl3 = makeTable(["Typ", "Sp\u00e1rov\u00e1no", "Nesp\u00e1rov\u00e1no", "Celkem", "%"]);
+        var types = [["electric", "Elektrick\u00e9"], ["combustion", "Spalovac\u00ed"]];
+        for (var i = 0; i < types.length; i++) {
+          var m = appMetadata.matching[types[i][0]];
+          if (!m) continue;
+          var pct = m.total > 0 ? Math.round(100 * m.matched / m.total) : 0;
+          addRow(tbl3, [types[i][1], fmtNum(m.matched), fmtNum(m.unmatched), fmtNum(m.total), pct + " %"]);
+        }
+        card3.appendChild(tbl3);
+        body.appendChild(card3);
+      }
+
+      // Reference data
+      if (appMetadata.referenceData) {
+        var card4 = makeCard("Referen\u010dn\u00ed data");
+        var tbl4 = makeTable(["Typ", "Soubor", "Model\u016f"]);
+        var rd = appMetadata.referenceData;
+        if (rd.combustion) addRow(tbl4, ["Spalovac\u00ed", rd.combustion.file, fmtNum(rd.combustion.count)]);
+        if (rd.electric) addRow(tbl4, ["Elektrick\u00e9", rd.electric.file, fmtNum(rd.electric.count)]);
+        card4.appendChild(tbl4);
+        var link = document.createElement("p");
+        link.style.cssText = "margin-top:8px;font-size:0.85rem";
+        var a = document.createElement("a");
+        a.href = "reference.html";
+        a.textContent = "Zobrazit referen\u010dn\u00ed modely \u2192";
+        link.appendChild(a);
+        card4.appendChild(link);
+        body.appendChild(card4);
+      }
+    } else {
+      var noData = makeCard("");
+      var p = document.createElement("p");
+      p.textContent = "Metadata nejsou k dispozici (star\u0161\u00ed form\u00e1t dat).";
+      noData.appendChild(p);
+      body.appendChild(noData);
+    }
+
+    // Type/Fuel matrix from loaded grid data
+    if (gridApi) {
+      var matrix = {};
+      gridApi.forEachNode(function (node) {
+        if (!node.data) return;
+        var typ = node.data["Typ"] || "\u2014";
+        var pal = node.data["Palivo"] || "\u2014";
+        if (!matrix[typ]) matrix[typ] = {};
+        matrix[typ][pal] = (matrix[typ][pal] || 0) + 1;
+      });
+      var allFuels = {};
+      var typKeys = Object.keys(matrix).sort();
+      for (var t = 0; t < typKeys.length; t++) {
+        var fuels = Object.keys(matrix[typKeys[t]]);
+        for (var f = 0; f < fuels.length; f++) allFuels[fuels[f]] = true;
+      }
+      var fuelList = Object.keys(allFuels).sort();
+      var card5 = makeCard("Matice Typ \u00d7 Palivo");
+      var hdr5 = ["Typ"];
+      for (var f = 0; f < fuelList.length; f++) hdr5.push(fuelList[f]);
+      var tbl5 = makeTable(hdr5);
+      for (var t = 0; t < typKeys.length; t++) {
+        var cells = [typKeys[t]];
+        for (var f = 0; f < fuelList.length; f++) {
+          cells.push(fmtNum(matrix[typKeys[t]][fuelList[f]] || 0));
+        }
+        addRow(tbl5, cells);
+      }
+      card5.appendChild(tbl5);
+      body.appendChild(card5);
+    }
+
+    // Chart container
+    var card6 = makeCard("Historie scrapov\u00e1n\u00ed");
+    var chartDiv = document.createElement("div");
+    chartDiv.id = "summary-chart-container";
+    var loading = document.createElement("p");
+    loading.id = "chart-loading";
+    loading.textContent = "Na\u010d\u00edt\u00e1n\u00ed grafu\u2026";
+    chartDiv.appendChild(loading);
+    card6.appendChild(chartDiv);
+    body.appendChild(card6);
+    loadChart();
+  }
+
+  function makeCard(title) {
+    var div = document.createElement("div");
+    div.className = "summary-card";
+    if (title) {
+      var h3 = document.createElement("h3");
+      h3.textContent = title;
+      div.appendChild(h3);
+    }
+    return div;
+  }
+
+  function addStat(parent, label, value) {
+    var span = document.createElement("span");
+    span.className = "summary-stat";
+    var lbl = document.createElement("span");
+    lbl.className = "label";
+    lbl.textContent = label + ": ";
+    var val = document.createElement("span");
+    val.className = "value";
+    val.textContent = value;
+    span.appendChild(lbl);
+    span.appendChild(val);
+    parent.appendChild(span);
+  }
+
+  function makeTable(headers) {
+    var tbl = document.createElement("table");
+    tbl.className = "summary-table";
+    var tr = document.createElement("tr");
+    for (var i = 0; i < headers.length; i++) {
+      var th = document.createElement("th");
+      th.textContent = headers[i];
+      tr.appendChild(th);
+    }
+    tbl.appendChild(tr);
+    return tbl;
+  }
+
+  function addRow(tbl, cells) {
+    var tr = document.createElement("tr");
+    for (var i = 0; i < cells.length; i++) {
+      var td = document.createElement("td");
+      td.textContent = cells[i];
+      tr.appendChild(td);
+    }
+    tbl.appendChild(tr);
+  }
+
+  function loadChart() {
+    if (chartLoaded) {
+      fetchAndRenderChart();
+      return;
+    }
+    var script = document.createElement("script");
+    script.src = "https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js";
+    script.onload = function () {
+      chartLoaded = true;
+      fetchAndRenderChart();
+    };
+    script.onerror = function () {
+      var el = document.getElementById("chart-loading");
+      if (el) el.textContent = "Nepoda\u0159ilo se na\u010d\u00edst Chart.js.";
+    };
+    document.head.appendChild(script);
+  }
+
+  function fetchAndRenderChart() {
+    fetch("data/scrape_history.json")
+      .then(function (r) { return r.json(); })
+      .then(function (history) {
+        var container = document.getElementById("summary-chart-container");
+        if (!container) return;
+        while (container.firstChild) container.removeChild(container.firstChild);
+        if (!history || !history.length) {
+          container.textContent = "\u017d\u00e1dn\u00e1 historick\u00e1 data.";
+          return;
+        }
+        var canvas = document.createElement("canvas");
+        container.appendChild(canvas);
+
+        var labels = history.map(function (h) { return h.date; });
+        var totals = history.map(function (h) { return h.total; });
+        var elecData = history.map(function (h) {
+          return h.matching && h.matching.electric ? h.matching.electric.total : 0;
+        });
+        var combData = history.map(function (h) {
+          return h.matching && h.matching.combustion ? h.matching.combustion.total : 0;
+        });
+
+        var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+        var gridColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
+        var textColor = isDark ? "#94a3b8" : "#64748b";
+
+        new Chart(canvas, {
+          type: "line",
+          data: {
+            labels: labels,
+            datasets: [
+              { label: "Celkem", data: totals, borderColor: "#3b82f6", backgroundColor: "rgba(59,130,246,0.1)", fill: true, tension: 0.3 },
+              { label: "Spalovac\u00ed", data: combData, borderColor: "#f97316", backgroundColor: "transparent", tension: 0.3 },
+              { label: "Elektrick\u00e9", data: elecData, borderColor: "#22c55e", backgroundColor: "transparent", tension: 0.3 },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { labels: { color: textColor } } },
+            scales: {
+              x: { ticks: { color: textColor }, grid: { color: gridColor } },
+              y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true },
+            },
+          },
+        });
+      })
+      .catch(function () {
+        var el = document.getElementById("summary-chart-container");
+        if (el) el.textContent = "Nepoda\u0159ilo se na\u010d\u00edst historii.";
+      });
+  }
+
   fetch("data/cars.json")
     .then(function (r) { return r.json(); })
-    .then(init)
+    .then(function (json) {
+      if (json && json.metadata && json.data) {
+        appMetadata = json.metadata;
+        init(json.data);
+      } else {
+        init(json);
+      }
+    })
     .catch(function (err) {
       document.getElementById("grid").textContent = "Chyba načítání dat: " + err.message;
     });

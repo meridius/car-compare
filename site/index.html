@@ -19,6 +19,8 @@
             <button id="btn-clear" onclick="clearFilters()">Vymazat filtry</button>
             <button id="btn-reset-cols" onclick="resetColOrder()">Reset sloupců</button>
             <button id="btn-settings" onclick="toggleSettings()">Nastavení barev</button>
+            <button id="btn-summary" onclick="toggleSummary()">Přehled dat</button>
+            <a href="reference.html" class="nav-link">Referenční modely</a>
         </div>
     </header>
     <div id="settings-panel" class="settings-panel hidden">
@@ -29,6 +31,15 @@
         <button onclick="resetThresholds()">Výchozí</button>
     </div>
     <div id="grid" class="ag-theme-alpine"></div>
+    <div id="summary-overlay" class="modal-overlay hidden" onclick="closeSummaryBackdrop(event)">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Přehled datasetu</h2>
+                <button class="modal-close" onclick="closeSummary()">&times;</button>
+            </div>
+            <div id="summary-body"></div>
+        </div>
+    </div>
     <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/dist/ag-grid-community.min.js"></script>
     <script src="app.js"></script>
 </body>

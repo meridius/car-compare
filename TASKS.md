@@ -4,11 +4,6 @@ Work on the following tasks. Check off each item as you complete it. Commit and 
 
 ## Website
 
-- [x] filters for cols with non-numeric values should be dropdowns with unique values from the dataset (e.g. "Karoserie" types, "Stav" status)
-    - this doesn't apply to "Model auta", "Odkaz" and "Extra" which should remain free text filters
-    - such filters should allow multi-select and empty/non-empty options
-- [x] all col headers must be aligned center
-
 ## Data
 
 - you may have to unify combustion/data/makes-and-models.csv and electric/data/new_cars_specs.csv into a single source of truth

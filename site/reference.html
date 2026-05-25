@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="cs" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referenční modely</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/styles/ag-grid.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/styles/ag-theme-alpine.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Referenční modely</h1>
+        <div class="controls">
+            <span id="row-count"></span>
+            <button id="btn-theme" onclick="toggleTheme()" title="Přepnout motiv">☾</button>
+            <button id="btn-clear" onclick="clearFilters()">Vymazat filtry</button>
+            <button id="btn-reset-cols" onclick="resetColOrder()">Reset sloupců</button>
+            <a href="index.html" class="nav-link">Zpět na porovnání</a>
+        </div>
+    </header>
+    <div id="grid" class="ag-theme-alpine"></div>
+    <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/dist/ag-grid-community.min.js"></script>
+    <script src="reference.js"></script>
+</body>
+
+</html>
