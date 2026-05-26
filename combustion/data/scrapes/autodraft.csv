@@ -1,295 +1,295 @@
 Model auta,Cena (Kč),Nájezd (km),Rok výroby,Palivo,Objem motoru,Typ motoru,Hybrid typ,Výkon (kW),Převodovka,Dvouspojková převodovka,Filtr pevných částic,Kola,Náhon 4x4,Karoserie,Výbava,Záruka,Extra,Stav,Zdroj,Spárováno,Odkaz na auto
-Škoda Karoq 1.5 TSI,352000,235235,2019,Nafta,2.0,TDI,,110,Automat,Ano,,"ALU 18""",Ano,,,,,Dostupný,Autodraft.cz,Ano,
-Audi A4 Avant 35 TFSI (Kombi),598000,41941,2022,Benzín,2.0,TSI,,110,Automat,Ano,,,Ne,,,Ano,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,443000,147337,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Mercedes-Benz C 300d,852000,53155,2023,Nafta,,,,195,Automat,,,,Ne,,AVANTGARDE,Ano,,Dostupný,Autodraft.cz,Ne,
-Mercedes-Benz C 220d,735000,42158,2022,Nafta,,,,147,Automat,,,,Ano,,AVANTGARDE,Ano,,Dostupný,Autodraft.cz,Ne,
-Porsche 911 Targa 4S 3.0 Turbo,3362000,58801,2021,Benzín,3.0,Turbo,,331,Manual,,,,Ano,,,,+ 7st. manuální převodovka Porsche Ceramic Composite Brake Sport-Chrono paket,Dostupný,Autodraft.cz,Ne,
-Mercedes-Benz GLB 200 (5místná verze),932000,15039,2024,Nafta,,,,110,Automat,,,ALU 18'',Ano,,,Ano,,Dostupný,Autodraft.cz,Ano,
-VW Arteon Shooting Brake 2.0 TDI,394000,152047,2017,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,448000,103235,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,527000,88886,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,429000,160801,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Audi A8 60 Bi- 4.0 TFSI,1395000,95542,2022,Benzín,4.0,TFSI,,338,Automat,,,ALU 20'',Ano,,S-Line,Ano,,Dostupný,Autodraft.cz,Ne,
-"Škoda Kodiaq iV (Gen 2, PHEV)",876000,57833,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),497000,136130,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,Variant,Alltrack,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,424000,165536,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,449000,118926,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),549000,24070,2025,Benzín,1.5,TSI,,85,Manual,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,457000,130744,2023,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,386000,188678,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf 8 eHybrid (PHEV),457000,83944,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),368000,179879,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,449000,170463,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),409000,129600,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),458000,139528,2023,Benzín,1.5,TSI,,110,,,,ALU 18'',Ne,Variant,Highline,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,398000,169394,2020,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,597000,118854,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,508000,166802,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),399000,162870,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,626000,90413,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),547000,161327,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,498000,125512,2020,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),262000,210939,2021,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Highline,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),495000,87717,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,587000,166022,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Life 1.5 TSI (Gen 2),567000,79421,2022,Benzín,1.5,TSI,,110,Automat,Ano,,,Ne,,Life,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,446000,119673,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),596000,8102,2025,Benzín,1.5,TSI,,110,Manual,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,459000,188269,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf 8 eHybrid (PHEV),396000,162993,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,596000,100728,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),496000,152205,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,549000,125849,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),469000,43642,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Arteon Shooting Brake 2.0 TDI,710000,98498,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,686000,89367,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Caddy 1.5 TSI,517000,57939,2021,Benzín,1.5,TSI,,84,,,,,Ne,,,,57 939 km 2 2021 517 000 Kč,Dostupný,Autodraft.cz,Ne,
-Škoda Octavia Combi iV (PHEV),656000,73705,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),420000,129953,2021,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),526000,74424,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,590000,18451,2024,Benzín,1.5,TSI,,110,Manual,,,ALU 17''/ Phoenix-Orange Premium Metallic,Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,769000,21732,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Seat Ateca 1.5 TSI,498000,93642,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),338000,180351,2022,Nafta,2.0,TDI,,110,,,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),472000,103478,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,398000,169820,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,636000,142825,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),467000,119773,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,492000,151961,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),712000,82768,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Allspace,Highline,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,496000,113680,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),769000,25767,2025,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,646000,98666,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),452000,148276,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Zamluvené,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,478000,110367,2019,Nafta,2.0,TDI,,140,Automat,Ano,,,Ano,,Laurin & Klement,,Webasto,Dostupný,Autodraft.cz,Ano,
-VW T6 Multivan 2.0 TDI,922000,127027,2019,Nafta,2.0,TDI,PHEV,146,Automat,Ano,,,Ano,,PanAmericana,,,Dostupný,Autodraft.cz,Ne,
-Škoda Octavia Combi iV (PHEV),558000,136918,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),548000,159739,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,558000,128736,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,554000,152545,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,687000,72782,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,432000,95954,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Seat Tarraco 1.5 TSI (5místná verze),531000,105097,2021,Nafta,2.0,TDI,,110,Manual,,,ALU 18'',Ne,,Xcellence,,,Zamluvené,Autodraft.cz,Ano,
-VW Taigo 1.0 TSI,542000,92341,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,452000,153650,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,642000,91875,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,529000,108805,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,457000,75314,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17''+ zimní sada,Ne,,Style,,,Zamluvené,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",916000,25059,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,464000,19277,2021,Benzín,1.5,TSI,,110,,,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",662000,164051,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,527000,141997,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),698000,97880,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,422000,163285,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),716000,97629,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),392000,115757,2020,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),609000,71411,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Sharan 2.0 TDI (5místná verze),427000,148736,2015,Nafta,2.0,TDI,,103,Automat,Ano,,ALU 18'',Ne,,,,Int. dětské sedačky,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),274000,88902,2011,Benzín,1.4,TSI,,103,Automat,,,ALU 17'',Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),686000,66905,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''/ Webasto,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",906000,49198,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",969000,34602,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,436000,176886,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,288000,264776,2019,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Seat Ateca 1.5 TSI,424000,129063,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Seat Ateca 1.5 TSI,398000,167337,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Cupra Formentor 1.5 TSI,685000,46380,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),458000,107591,2017,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-VW Arteon Shooting Brake 2.0 TDI,786000,35371,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,452000,85374,2022,Benzín,1.5,TSI,,110,,,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,472000,170207,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,582000,146543,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 18'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,596000,66758,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,609000,110838,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,476000,161604,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Transporter T6 2.0 TDI,832000,69299,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ne,
-Škoda Octavia Combi 1.5 TSI,596000,71258,2022,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 18''+ zimní pneu,Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,468000,104676,2022,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,496000,164503,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 19'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW T-Roc 1.5 TSI,527000,132685,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,Style,,,Prodané,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,476000,132918,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,526000,127892,2020,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,679000,18481,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,611000,25041,2024,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-VW T-Roc 1.5 TSI,542000,22800,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,682000,51069,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,679000,62809,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Transporter 2.0 TDI,860000,55151,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,,,,,Dostupný,Autodraft.cz,Ne,
-Seat Tarraco 1.5 TSI (5místná verze),849000,47708,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),495000,131031,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",827000,128729,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),457000,84874,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",952000,49056,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,585000,121177,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,,Style,,Webasto,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),390000,175122,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,652000,126827,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),410000,156441,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",539000,178193,2018,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,347000,62761,2020,Nafta,1.6,TDI,,85,,,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),440000,138396,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,586000,124429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'' + ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,535000,151618,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,429000,198075,2023,Nafta,2.0,TDI,,110,,,,ALU 19''+ ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Audi A3 Hatchback 35 TFSI,462000,49118,2021,Benzín,,TFSI,,81,,,,ALU 17''+ zimní sada,Ne,Sportback,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb Combi 1.5 TSI (Gen 4),672000,62770,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,626000,19717,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,597000,102984,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní sada,Ano,Combi,Style,,,Prodané,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),729000,57328,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Seat Leon Hatchback 1.5 TSI,447000,110842,2022,Benzín,1.5,eTSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,FR-Line,,,Dostupný,Autodraft.cz,Ano,
-Seat Alhambra 1.4 TSI,541000,108914,2021,Benzín,1.4,TSI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,Style,,,Zamluvené,Autodraft.cz,Ne,
-VW Passat B8 Variant Elegance 2.0 TDI,452000,162291,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,649000,140782,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto Tangerine Orange,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),432000,159932,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),446000,59991,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,687000,62040,2021,Benzín,2.0,TSI,,206,Automat,Ano,,ALU 17'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),432000,147851,2022,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,Tažné,Zamluvené,Autodraft.cz,Ano,
-VW Golf Hatchback 1.5 TSI (Gen 8),447000,126486,2022,Benzín,1.5,TSI,,110,,,,ALU 18''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,591000,151675,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Combi (Gen 3) 1.0 TSI,252000,92956,2022,Benzín,1.0,TSI,,70,,,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,437000,166692,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),522000,162170,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",570000,186254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,,,Webasto,Prodané,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),732000,61666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,541000,70922,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),744000,59358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",777000,111589,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,Webasto,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),532000,150005,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,569000,147262,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),599000,92662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,562000,125232,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",879000,36202,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,528000,133659,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,527000,166134,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Combi,Laurin & Klement,,,Zamluvené,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),431999,96926,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb Combi 1.5 TSI (Gen 4),525000,176340,2022,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),528000,175843,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,Webasto,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,689000,121111,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,Webasto,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,499000,139118,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,529000,147106,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,461000,154254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi 1.5 TSI,597000,21937,2023,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Audi Q5 TDI,1066000,25035,2024,Nafta,,TDI,,150,Automat,Ano,,ALU 20'',Ano,Sportback,S-Line,,Webasto,Zamluvené,Autodraft.cz,Ne,
-"Škoda Kodiaq iV (Gen 2, PHEV)",1115000,21171,2025,Nafta,2.0,TDI,,142,Automat,Ano,,ALU 19',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,590000,145142,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,520000,219363,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,363999,29389,2022,Benzín,1.0,,,59,,,,,Ne,,,,Oranžová Phoenix metalíza,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,328000,92969,2022,Benzín,1.0,TSI,,81,,,,ALU,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),415000,149919,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),417000,178115,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Seat Ateca 1.5 TSI,442000,155493,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,551000,142154,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),420999,148941,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),436000,110444,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,332000,79739,2022,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,521000,163383,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),517000,89662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Taigo 1.0 TSI,396000,33039,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,499000,163113,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),438000,161666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",679000,158232,2020,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 20'',Ano,,,,Webasto,Dostupný,Autodraft.cz,Ano,
-Škoda Scala 1.0 TSI,299000,113826,2023,Benzín,1.0,TSI,,81,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Ford Tourneo Custom 2.0 EcoBlue,962000,29124,2025,Nafta,2.0,EcoBlue,,100,,,,,Ne,,,,Tažné,Dostupný,Autodraft.cz,Ne,
-Škoda Superb 3 Combi Style 2.0 TDI,583000,76892,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb Combi 1.5 TSI (Gen 4),435000,110947,2022,Benzín,1.5,TSI,,110,,,,2x sad ALU 17'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,496000,154835,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),436000,152746,2023,Nafta,2.0,TDI,,110,Automat,,,,Ne,Combi,Style,,Webasto,Zamluvené,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),341000,181960,2022,Nafta,2.0,TDI,,110,,,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Seat Ateca 1.5 TSI,452000,149824,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Audi A6 sport 2.0 TFSI,722000,89954,2022,Benzín,2.0,TFSI,,195,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ne,
-Cupra Formentor 1.5 TSI,563000,87942,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-Audi A4 Avant 35 TFSI (Kombi),580000,86995,2022,Nafta,2.0,TDI,,120,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",789000,78848,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,615000,28062,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),680000,117023,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),528000,150516,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,439000,150524,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Prodané,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),398000,170266,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ano,Combi,Style,,,Prodané,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,538000,174429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,472000,182681,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",569000,157541,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,Style,,Facelift,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",717000,160816,2024,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),399000,160983,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,532000,182499,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,558000,119838,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,528000,140342,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,613000,160053,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Zamluvené,Autodraft.cz,Ano,
-Hyundai i20 1.0 T-GDI,362000,63871,2024,Benzín,1.0,T-GDI,,74,,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ne,
-Škoda Superb 3 Combi Style 2.0 TDI,688000,70742,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 16'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",569000,150449,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,,,Webasto,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),442000,168780,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",534000,150331,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,330000,73202,2024,Benzín,1.0,,,59,,,,ALU 15'',Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,416000,157618,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,,,,Zamluvené,Autodraft.cz,Ano,
-Cupra Formentor 1.5 TSI,627000,94978,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-Audi A4 Avant 35 TFSI (Kombi),649000,95528,2022,Nafta,,TDI,,150,Automat,Ano,,2x sada ALU 18'',Ano,,S-Line,,,Zamluvené,Autodraft.cz,Ano,
-Audi A6 Sport 2.0 TDI,682000,97551,2021,Nafta,2.0,TDI,,150,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,,,,Zamluvené,Autodraft.cz,Ne,
-VW Tiguan Allspace 2.0 TDI (5místná verze),786000,64745,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Cupra Formentor 1.5 TSI,682000,61572,2022,Benzín,2.0,TSI,,228,Automat,Ano,,ALU 19'',Ano,,,,,Zamluvené,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),782000,96436,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,395000,142394,2020,Nafta,2.0,TDI,,88,Automat,Ano,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,547000,137223,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),442000,111876,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-VW Touran 1.5 TSI (5místná verze),589000,62378,2021,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,399000,113121,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",846000,78926,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),434000,105438,2021,Nafta,2.0,TDI,,110,,,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Taigo 1.0 TSI,522000,74556,2022,Benzín,1.5,TSI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),457000,140127,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,620000,104355,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,598000,44314,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),627000,50480,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,641000,29632,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),730000,26471,2025,Nafta,2.0,TDI,PHEV,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Exclusive,,,Dostupný,Autodraft.cz,Ano,
-Škoda Fabia Hatchback (Gen 4) 1.0 TSI,398000,13112,2024,Benzín,1.0,,,59,,,,,Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-Škoda Karoq 1.5 TSI,736000,38174,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia 4 Lim. Style 1.5 TSI,596000,36870,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,515000,142128,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Variant,Elegance,,,Prodané,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",775998,123830,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,497000,167439,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,619000,159274,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",496000,183774,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ano,,,,,Prodané,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),550000,150606,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Allspace,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",629000,165351,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",766000,95836,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,580000,143910,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,,Alltrack,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,677000,117368,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,Combi,Laurin & Klement,,,Zamluvené,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,466000,121447,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",492000,190906,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,
-VW Arteon Shooting Brake 2.0 TDI,553000,162084,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Zamluvené,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),558000,71898,2022,Nafta,2.0,TDI,,110,,,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,399000,171186,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),482000,161899,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,R-Line,,,Prodané,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,459000,134289,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,550000,118415,2022,Nafta,2.0,TDI,,147,Automat,,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,611996,81098,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,404000,168798,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,616000,99409,2023,Nafta,2.0,TDI,,147,Automat,Ano,,,Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Octavia Combi iV (PHEV),415000,161462,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),370000,185358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU,Ne,Variant,,,Webasto,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",757000,81747,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,476000,142120,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,
-MG ZS 1.5 VTi-tech (Benzín),296000,108182,2023,Benzín,1.5,,,78,Automat,,,ALU 17'',Ne,,,,Aut. Virtual Cockpit,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,490000,162936,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Life 1.5 TSI (Gen 2),512000,108254,2022,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),899000,25359,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18'',Ano,Allspace,Elegance,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,416998,185574,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",742000,99799,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",720000,115945,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,442000,147715,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,494000,188382,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,496000,141871,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,,,,Dostupný,Autodraft.cz,Ano,
-Audi A4 Avant 35 TFSI (Kombi),692000,61688,2023,Nafta,,TDI,,150,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,S-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,426000,180450,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,388000,152429,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,618000,154535,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,
-VW Golf Variant 1.5 eTSI (Gen 8),417000,149859,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",598000,156154,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-VW Passat B8 Variant Elegance 2.0 TDI,432000,156572,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,
-VW Tiguan Allspace 2.0 TDI (5místná verze),649000,147181,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,432000,174498,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,
-"Škoda Kodiaq iV (Gen 2, PHEV)",690000,100903,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,
-Škoda Superb 3 Combi Style 2.0 TDI,409000,171979,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,352000,235235,2019,Nafta,2.0,TDI,,110,Automat,Ano,,"ALU 18""",Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A4 Avant 35 TFSI (Kombi),598000,41941,2022,Benzín,2.0,TSI,,110,Automat,Ano,,,Ne,,,Ano,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,443000,147337,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Mercedes-Benz C 300d,852000,53155,2023,Nafta,,,,195,Automat,,,,Ne,,AVANTGARDE,Ano,,Odstraněno,Autodraft.cz,Ne,
+Mercedes-Benz C 220d,735000,42158,2022,Nafta,,,,147,Automat,,,,Ano,,AVANTGARDE,Ano,,Odstraněno,Autodraft.cz,Ne,
+Porsche 911 Targa 4S 3.0 Turbo,3362000,58801,2021,Benzín,3.0,Turbo,,331,Manual,,,,Ano,,,,+ 7st. manuální převodovka Porsche Ceramic Composite Brake Sport-Chrono paket,Odstraněno,Autodraft.cz,Ne,
+Mercedes-Benz GLB 200 (5místná verze),932000,15039,2024,Nafta,,,,110,Automat,,,ALU 18'',Ano,,,Ano,,Odstraněno,Autodraft.cz,Ano,
+VW Arteon Shooting Brake 2.0 TDI,394000,152047,2017,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,448000,103235,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,527000,88886,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,429000,160801,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A8 60 Bi- 4.0 TFSI,1395000,95542,2022,Benzín,4.0,TFSI,,338,Automat,,,ALU 20'',Ano,,S-Line,Ano,,Odstraněno,Autodraft.cz,Ne,
+"Škoda Kodiaq iV (Gen 2, PHEV)",876000,57833,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),497000,136130,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,Variant,Alltrack,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,424000,165536,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,449000,118926,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),549000,24070,2025,Benzín,1.5,TSI,,85,Manual,,,ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,457000,130744,2023,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,386000,188678,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf 8 eHybrid (PHEV),457000,83944,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),368000,179879,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,449000,170463,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),409000,129600,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),458000,139528,2023,Benzín,1.5,TSI,,110,,,,ALU 18'',Ne,Variant,Highline,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,398000,169394,2020,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,597000,118854,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,508000,166802,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),399000,162870,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,626000,90413,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),547000,161327,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,498000,125512,2020,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),262000,210939,2021,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Highline,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),495000,87717,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,587000,166022,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Life 1.5 TSI (Gen 2),567000,79421,2022,Benzín,1.5,TSI,,110,Automat,Ano,,,Ne,,Life,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,446000,119673,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),596000,8102,2025,Benzín,1.5,TSI,,110,Manual,,,,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,459000,188269,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf 8 eHybrid (PHEV),396000,162993,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,596000,100728,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),496000,152205,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,549000,125849,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),469000,43642,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Arteon Shooting Brake 2.0 TDI,710000,98498,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ne,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,686000,89367,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Caddy 1.5 TSI,517000,57939,2021,Benzín,1.5,TSI,,84,,,,,Ne,,,,57 939 km 2 2021 517 000 Kč,Odstraněno,Autodraft.cz,Ne,
+Škoda Octavia Combi iV (PHEV),656000,73705,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),420000,129953,2021,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,Variant,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),526000,74424,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,590000,18451,2024,Benzín,1.5,TSI,,110,Manual,,,ALU 17''/ Phoenix-Orange Premium Metallic,Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,769000,21732,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Seat Ateca 1.5 TSI,498000,93642,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),338000,180351,2022,Nafta,2.0,TDI,,110,,,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),472000,103478,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,398000,169820,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,636000,142825,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),467000,119773,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,492000,151961,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),712000,82768,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Allspace,Highline,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,496000,113680,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),769000,25767,2025,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,646000,98666,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),452000,148276,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,478000,110367,2019,Nafta,2.0,TDI,,140,Automat,Ano,,,Ano,,Laurin & Klement,,Webasto,Odstraněno,Autodraft.cz,Ano,
+VW T6 Multivan 2.0 TDI,922000,127027,2019,Nafta,2.0,TDI,PHEV,146,Automat,Ano,,,Ano,,PanAmericana,,,Odstraněno,Autodraft.cz,Ne,
+Škoda Octavia Combi iV (PHEV),558000,136918,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),548000,159739,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,558000,128736,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,554000,152545,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,687000,72782,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,432000,95954,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Seat Tarraco 1.5 TSI (5místná verze),531000,105097,2021,Nafta,2.0,TDI,,110,Manual,,,ALU 18'',Ne,,Xcellence,,,Odstraněno,Autodraft.cz,Ano,
+VW Taigo 1.0 TSI,542000,92341,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,452000,153650,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,642000,91875,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,529000,108805,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,457000,75314,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17''+ zimní sada,Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",916000,25059,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,464000,19277,2021,Benzín,1.5,TSI,,110,,,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",662000,164051,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,527000,141997,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),698000,97880,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,422000,163285,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),716000,97629,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),392000,115757,2020,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),609000,71411,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Sharan 2.0 TDI (5místná verze),427000,148736,2015,Nafta,2.0,TDI,,103,Automat,Ano,,ALU 18'',Ne,,,,Int. dětské sedačky,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),274000,88902,2011,Benzín,1.4,TSI,,103,Automat,,,ALU 17'',Ne,,Highline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),686000,66905,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''/ Webasto,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",906000,49198,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",969000,34602,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,436000,176886,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,288000,264776,2019,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Seat Ateca 1.5 TSI,424000,129063,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Seat Ateca 1.5 TSI,398000,167337,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Cupra Formentor 1.5 TSI,685000,46380,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),458000,107591,2017,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 17'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Arteon Shooting Brake 2.0 TDI,786000,35371,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,452000,85374,2022,Benzín,1.5,TSI,,110,,,,ALU 16''+ zimní sada,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,472000,170207,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,582000,146543,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 18'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,596000,66758,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,609000,110838,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,476000,161604,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Transporter T6 2.0 TDI,832000,69299,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ne,
+Škoda Octavia Combi 1.5 TSI,596000,71258,2022,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 18''+ zimní pneu,Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,468000,104676,2022,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,496000,164503,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 19'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW T-Roc 1.5 TSI,527000,132685,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,476000,132918,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,526000,127892,2020,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,679000,18481,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,611000,25041,2024,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+VW T-Roc 1.5 TSI,542000,22800,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,682000,51069,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,679000,62809,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Transporter 2.0 TDI,860000,55151,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,,,,,Odstraněno,Autodraft.cz,Ne,
+Seat Tarraco 1.5 TSI (5místná verze),849000,47708,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),495000,131031,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",827000,128729,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),457000,84874,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",952000,49056,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,585000,121177,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,,Style,,Webasto,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),390000,175122,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,652000,126827,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),410000,156441,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",539000,178193,2018,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,347000,62761,2020,Nafta,1.6,TDI,,85,,,,,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),440000,138396,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,586000,124429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'' + ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,535000,151618,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,429000,198075,2023,Nafta,2.0,TDI,,110,,,,ALU 19''+ ALU 17'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Audi A3 Hatchback 35 TFSI,462000,49118,2021,Benzín,,TFSI,,81,,,,ALU 17''+ zimní sada,Ne,Sportback,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb Combi 1.5 TSI (Gen 4),672000,62770,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,626000,19717,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,597000,102984,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní sada,Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),729000,57328,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Seat Leon Hatchback 1.5 TSI,447000,110842,2022,Benzín,1.5,eTSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,FR-Line,,,Odstraněno,Autodraft.cz,Ano,
+Seat Alhambra 1.4 TSI,541000,108914,2021,Benzín,1.4,TSI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,Style,,,Odstraněno,Autodraft.cz,Ne,
+VW Passat B8 Variant Elegance 2.0 TDI,452000,162291,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,649000,140782,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto Tangerine Orange,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),432000,159932,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),446000,59991,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,687000,62040,2021,Benzín,2.0,TSI,,206,Automat,Ano,,ALU 17'',Ano,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),432000,147851,2022,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,Tažné,Odstraněno,Autodraft.cz,Ano,
+VW Golf Hatchback 1.5 TSI (Gen 8),447000,126486,2022,Benzín,1.5,TSI,,110,,,,ALU 18''+ zimní sada,Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,591000,151675,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Combi (Gen 3) 1.0 TSI,252000,92956,2022,Benzín,1.0,TSI,,70,,,,,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,437000,166692,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),522000,162170,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",570000,186254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,,,Webasto,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),732000,61666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,541000,70922,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),744000,59358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",777000,111589,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,Webasto,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),532000,150005,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,569000,147262,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),599000,92662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,562000,125232,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",879000,36202,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,528000,133659,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,527000,166134,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Combi,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),431999,96926,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb Combi 1.5 TSI (Gen 4),525000,176340,2022,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),528000,175843,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,Webasto,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,689000,121111,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,Webasto,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,499000,139118,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,529000,147106,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,461000,154254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi 1.5 TSI,597000,21937,2023,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Audi Q5 TDI,1066000,25035,2024,Nafta,,TDI,,150,Automat,Ano,,ALU 20'',Ano,Sportback,S-Line,,Webasto,Odstraněno,Autodraft.cz,Ne,
+"Škoda Kodiaq iV (Gen 2, PHEV)",1115000,21171,2025,Nafta,2.0,TDI,,142,Automat,Ano,,ALU 19',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,590000,145142,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,520000,219363,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,363999,29389,2022,Benzín,1.0,,,59,,,,,Ne,,,,Oranžová Phoenix metalíza,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,328000,92969,2022,Benzín,1.0,TSI,,81,,,,ALU,Ne,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),415000,149919,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),417000,178115,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Seat Ateca 1.5 TSI,442000,155493,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,551000,142154,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),420999,148941,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),436000,110444,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,332000,79739,2022,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,521000,163383,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),517000,89662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Taigo 1.0 TSI,396000,33039,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,499000,163113,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),438000,161666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",679000,158232,2020,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 20'',Ano,,,,Webasto,Odstraněno,Autodraft.cz,Ano,
+Škoda Scala 1.0 TSI,299000,113826,2023,Benzín,1.0,TSI,,81,,,,,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Ford Tourneo Custom 2.0 EcoBlue,962000,29124,2025,Nafta,2.0,EcoBlue,,100,,,,,Ne,,,,Tažné,Odstraněno,Autodraft.cz,Ne,
+Škoda Superb 3 Combi Style 2.0 TDI,583000,76892,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb Combi 1.5 TSI (Gen 4),435000,110947,2022,Benzín,1.5,TSI,,110,,,,2x sad ALU 17'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,496000,154835,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),436000,152746,2023,Nafta,2.0,TDI,,110,Automat,,,,Ne,Combi,Style,,Webasto,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),341000,181960,2022,Nafta,2.0,TDI,,110,,,,2x sada ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Seat Ateca 1.5 TSI,452000,149824,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A6 sport 2.0 TFSI,722000,89954,2022,Benzín,2.0,TFSI,,195,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ne,
+Cupra Formentor 1.5 TSI,563000,87942,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A4 Avant 35 TFSI (Kombi),580000,86995,2022,Nafta,2.0,TDI,,120,Automat,Ano,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",789000,78848,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,615000,28062,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17'',Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),680000,117023,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),528000,150516,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,439000,150524,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),398000,170266,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ano,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,538000,174429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,472000,182681,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",569000,157541,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,Style,,Facelift,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",717000,160816,2024,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),399000,160983,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,532000,182499,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,558000,119838,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,528000,140342,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,613000,160053,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Hyundai i20 1.0 T-GDI,362000,63871,2024,Benzín,1.0,T-GDI,,74,,,,ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ne,
+Škoda Superb 3 Combi Style 2.0 TDI,688000,70742,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 16'',Ne,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",569000,150449,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,,,Webasto,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),442000,168780,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",534000,150331,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,330000,73202,2024,Benzín,1.0,,,59,,,,ALU 15'',Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,416000,157618,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Cupra Formentor 1.5 TSI,627000,94978,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A4 Avant 35 TFSI (Kombi),649000,95528,2022,Nafta,,TDI,,150,Automat,Ano,,2x sada ALU 18'',Ano,,S-Line,,,Odstraněno,Autodraft.cz,Ano,
+Audi A6 Sport 2.0 TDI,682000,97551,2021,Nafta,2.0,TDI,,150,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,,,,Odstraněno,Autodraft.cz,Ne,
+VW Tiguan Allspace 2.0 TDI (5místná verze),786000,64745,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Cupra Formentor 1.5 TSI,682000,61572,2022,Benzín,2.0,TSI,,228,Automat,Ano,,ALU 19'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),782000,96436,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,395000,142394,2020,Nafta,2.0,TDI,,88,Automat,Ano,,,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,547000,137223,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),442000,111876,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+VW Touran 1.5 TSI (5místná verze),589000,62378,2021,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,Highline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,399000,113121,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",846000,78926,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),434000,105438,2021,Nafta,2.0,TDI,,110,,,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Taigo 1.0 TSI,522000,74556,2022,Benzín,1.5,TSI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),457000,140127,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,620000,104355,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,598000,44314,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),627000,50480,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,641000,29632,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),730000,26471,2025,Nafta,2.0,TDI,PHEV,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Exclusive,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,398000,13112,2024,Benzín,1.0,,,59,,,,,Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Karoq 1.5 TSI,736000,38174,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia 4 Lim. Style 1.5 TSI,596000,36870,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,515000,142128,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",775998,123830,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,497000,167439,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,619000,159274,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",496000,183774,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),550000,150606,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Allspace,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",629000,165351,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",766000,95836,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,580000,143910,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,,Alltrack,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,677000,117368,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,Combi,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,466000,121447,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",492000,190906,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Arteon Shooting Brake 2.0 TDI,553000,162084,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),558000,71898,2022,Nafta,2.0,TDI,,110,,,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,399000,171186,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),482000,161899,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,459000,134289,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,550000,118415,2022,Nafta,2.0,TDI,,147,Automat,,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,611996,81098,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,404000,168798,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,616000,99409,2023,Nafta,2.0,TDI,,147,Automat,Ano,,,Ano,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Octavia Combi iV (PHEV),415000,161462,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),370000,185358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU,Ne,Variant,,,Webasto,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",757000,81747,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,476000,142120,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,Variant,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+MG ZS 1.5 VTi-tech (Benzín),296000,108182,2023,Benzín,1.5,,,78,Automat,,,ALU 17'',Ne,,,,Aut. Virtual Cockpit,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,490000,162936,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Life 1.5 TSI (Gen 2),512000,108254,2022,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),899000,25359,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18'',Ano,Allspace,Elegance,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,416998,185574,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",742000,99799,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",720000,115945,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,442000,147715,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,494000,188382,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,496000,141871,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,,,,Odstraněno,Autodraft.cz,Ano,
+Audi A4 Avant 35 TFSI (Kombi),692000,61688,2023,Nafta,,TDI,,150,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,S-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,426000,180450,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,388000,152429,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,618000,154535,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Sportline,,,Odstraněno,Autodraft.cz,Ano,
+VW Golf Variant 1.5 eTSI (Gen 8),417000,149859,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",598000,156154,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+VW Passat B8 Variant Elegance 2.0 TDI,432000,156572,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Odstraněno,Autodraft.cz,Ano,
+VW Tiguan Allspace 2.0 TDI (5místná verze),649000,147181,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,R-Line,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,432000,174498,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Odstraněno,Autodraft.cz,Ano,
+"Škoda Kodiaq iV (Gen 2, PHEV)",690000,100903,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Odstraněno,Autodraft.cz,Ano,
+Škoda Superb 3 Combi Style 2.0 TDI,409000,171979,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Odstraněno,Autodraft.cz,Ano,
 VW Tiguan Life 1.5 TSI (Gen 2),504000,107704,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15015-volkswagen-tiguan-1-5-tsi-96kw-alu-17.html
 "Škoda Kodiaq iV (Gen 2, PHEV)",922000,41898,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Laurin & Klement,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15709-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-laurin-klement-alu-19.html
 VW Passat B8 Variant Elegance 2.0 TDI,472000,115262,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15750-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
@@ -303,3 +303,294 @@ VW Golf Variant 1.5 eTSI (Gen 8),383000,121480,2023,Nafta,2.0,TDI,,110,,,,ALU 16
 Seat Tarraco 1.5 TSI (5místná verze),591000,158826,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,FR,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15733-seat-tarraco-2-0-tdi-110kw-dsg-fr-alu-19.html
 VW Tiguan Life 1.5 TSI (Gen 2),479000,98729,2020,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,,,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15769-volkswagen-tiguan-comfortline-1-5-tsi-96kw-man-alu-17.html
 VW Golf Variant 1.5 eTSI (Gen 8),380000,166164,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Odstraněno,Autodraft.cz,,https://www.autodraft.cz/detail/15964-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Karoq 1.5 TSI,352000,235235,2019,Nafta,2.0,TDI,,110,Automat,Ano,,"ALU 18""",Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/10773-skoda-karoq-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Audi A4 Avant 35 TFSI (Kombi),598000,41941,2022,Benzín,2.0,TSI,,110,Automat,Ano,,,Ne,,,Ano,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14485-audi-a4-avant-2-0-tsi-110kw-s-tronic-2-roky-plna-zaruka-v-cene.html
+Škoda Karoq 1.5 TSI,443000,147337,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14724-skoda-karoq-style-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Mercedes-Benz C 220d,852000,53155,2023,Nafta,,,,195,Automat,,,,Ne,,AVANTGARDE,Ano,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14743-mercedes-benz-c-300d-195kw-avantgarde.html
+Mercedes-Benz C 220d,735000,42158,2022,Nafta,,,,147,Automat,,,,Ano,,AVANTGARDE,Ano,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14745-mercedes-benz-c-220d-4matic-kombi-147kw-4x4-avantgarde.html
+Porsche 911 Targa 4S 3.0 Turbo,3362000,58801,2021,Benzín,3.0,Turbo,,331,Manual,,,,Ano,,,,+ 7st. manuální převodovka Porsche Ceramic Composite Brake Sport-Chrono paket,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14789-porsche-911-targa-4s-3-0-bi-turbo-331kw-4x4-7st-manualni-prevodovka-porsche-ceramic-composite-brake-sport-chrono-paket.html
+Mercedes-Benz GLB 200 (5místná verze),932000,15039,2024,Nafta,,,,110,Automat,,,ALU 18'',Ano,,,Ano,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14801-mercedes-benz-glb-200d-4matic-4x4-110kw-alu-18.html
+VW Arteon Shooting Brake 2.0 TDI,394000,152047,2017,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14837-volkswagen-arteon-2-0-bitdi-176kw-4x4-dsg-elegance-4motion-alu-18.html
+VW Passat B8 Variant Elegance 2.0 TDI,448000,103235,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14838-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16.html
+Škoda Karoq 1.5 TSI,527000,88886,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14861-skoda-karoq-2-0-tdi-85kw-dsg-alu-17.html
+Škoda Karoq 1.5 TSI,429000,160801,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14862-skoda-karoq-2-0-tdi-85kw-dsg-alu-17.html
+Audi A8 60 Bi- 4.0 TFSI,1395000,95542,2022,Benzín,4.0,TFSI,,338,Automat,,,ALU 20'',Ano,,S-Line,Ano,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14868-audi-a8-60-tfsi-4-0-bi-turbo-338kw-4x4-quattro-s-line-alu-20.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",876000,57833,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14892-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-laurin-klement-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),497000,136130,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,Variant,Alltrack,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14914-volkswagen-golf-variant-4motion-2-0-tdi-147kw-4x4-dsg-alltrack-2x-sada-alu-17.html
+Škoda Karoq 1.5 TSI,424000,165536,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14934-skoda-karoq-2-0-tdi-85kw-dsg-alu-17.html
+Škoda Karoq 1.5 TSI,449000,118926,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14936-skoda-karoq-2-0-tdi-85kw-dsg-alu-17.html
+VW Golf Hatchback 1.5 TSI (Gen 8),549000,24070,2025,Benzín,1.5,TSI,,85,Manual,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14951-volkswagen-golf-goal-1-5-tsi-85kw-man-alu-16.html
+Škoda Karoq 1.5 TSI,457000,130744,2023,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14957-skoda-karoq-2-0-tdi-85kw-man-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,386000,188678,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14966-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Golf 8 eHybrid (PHEV),457000,83944,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14969-volkswagen-golf-8-2-0-tdi-110kw-dsg-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),368000,179879,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14981-volkswagen-golf-8-variant-life-2-0-tdi-110kw-dsg-alu-16.html
+Škoda Karoq 1.5 TSI,449000,170463,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14983-skoda-karoq-style-2-0-tdi-110kw-4x4-dsg-alu-18.html
+VW Golf Variant 1.5 eTSI (Gen 8),409000,129600,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,Life,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/14993-volkswagen-golf-8-variant-life-2-0-tdi-110kw-dsg-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),458000,139528,2023,Benzín,1.5,TSI,,110,,,,ALU 18'',Ne,Variant,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15008-volkswagen-golf-8-variant-highline-1-5-tsi-110kw-alu-18.html
+VW Passat B8 Variant Elegance 2.0 TDI,398000,169394,2020,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15010-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg.html
+Škoda Karoq 1.5 TSI,597000,118854,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15022-skoda-karoq-2-0-tdi-110kw-4x4-dsg-sportline-alu-19.html
+Škoda Superb 3 Combi Style 2.0 TDI,508000,166802,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15024-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),399000,162870,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15025-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,626000,90413,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15027-volkswagen-passat-b8-variant-elegance-2-0-tdi-147kw-dsg-r-line-alu-18-alu-16.html
+Škoda Octavia Combi iV (PHEV),547000,161327,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15029-skoda-octavia-4-combi-rs-2-0-tdi-147kw-dsg-alu-19.html
+Škoda Karoq 1.5 TSI,498000,125512,2020,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15037-skoda-karoq-style-2-0-tdi-140kw-4x4-dsg-alu-19-zimni-sada.html
+VW Golf Variant 1.5 eTSI (Gen 8),262000,210939,2021,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15039-volkswagen-golf-7-variant-highline-1-5-tsi-110kw-dsg-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),495000,87717,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15043-volkswagen-golf-8-variant-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,587000,166022,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15046-skoda-superb-3-combi-2-0-tdi-147kw-dsg-sportline-alu-19.html
+VW Tiguan Life 1.5 TSI (Gen 2),567000,79421,2022,Benzín,1.5,TSI,,110,Automat,Ano,,,Ne,,Life,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15049-volkswagen-tiguan-life-1-5-tsi-110kw-dsg.html
+VW Passat B8 Variant Elegance 2.0 TDI,446000,119673,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15050-volkswagen-passat-b8-variant-elegance-2-0-tdi-110kw-dsg-alu-17.html
+VW Golf Hatchback 1.5 TSI (Gen 8),596000,8102,2025,Benzín,1.5,TSI,,110,Manual,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15051-volkswagen-golf-8-1-5-tsi-110kw-man-.html
+Škoda Superb 3 Combi Style 2.0 TDI,459000,188269,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15057-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+VW Golf 8 eHybrid (PHEV),396000,162993,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15058-volkswagen-golf-8-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,596000,100728,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15062-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-18.html
+VW Touran 1.5 TSI (5místná verze),496000,152205,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15067-volkswagen-touran-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Karoq 1.5 TSI,549000,125849,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15075-skoda-karoq-2-0-tdi-110kw-4x4-dsg-style-alu-18-alu-17.html
+VW Golf Hatchback 1.5 TSI (Gen 8),469000,43642,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15076-volkswagen-golf-8-hatchback-1-5-tsi-96kw-man-alu-16.html
+VW Arteon Shooting Brake 2.0 TDI,710000,98498,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15078-volkswagen-arteon-shooting-brake-2-0-tdi-147kw-dsg-r-line-alu-20.html
+Škoda Superb 3 Combi Style 2.0 TDI,686000,89367,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15079-skoda-superb-3-combi-style-2-0-tdi-147kw-4x4-dsg-2x-sada-alu-18.html
+VW Caddy 1.5 TSI,517000,57939,2021,Benzín,1.5,TSI,,84,,,,,Ne,,,,57 939 km 2 2021 517 000 Kč,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15086-volkswagen-caddy-kombi-1-5-tsi-84kw.html
+Škoda Octavia Combi iV (PHEV),656000,73705,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15089-skoda-octavia-4-combi-scout-2-0-tdi-110kw-4x4-dsg-alu-18-zimni-pneu.html
+VW Golf Variant 1.5 eTSI (Gen 8),420000,129953,2021,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15090-volkswagen-golf-8-variant-style-1-5-tsi-96kw-man-alu-17.html
+Škoda Octavia Combi iV (PHEV),526000,74424,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15094-skoda-octavia-4-lim-style-2-0-tdi-110kw-4x4-dsg-alu-17.html
+Škoda Octavia Combi 1.5 TSI,590000,18451,2024,Benzín,1.5,TSI,,110,Manual,,,ALU 17''/ Phoenix-Orange Premium Metallic,Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15095-skoda-octavia-4-combi-style-1-5-tsi-110kw-man-alu-17-phoenix-orange-premium-metallic.html
+Škoda Superb 3 Combi Style 2.0 TDI,769000,21732,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15108-skoda-superb-4-combi-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+Seat Ateca 1.5 TSI,498000,93642,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15113-seat-ateca-x-perience-2-0-tdi-110kw-dsg-alu-18.html
+VW Golf Variant 1.5 eTSI (Gen 8),338000,180351,2022,Nafta,2.0,TDI,,110,,,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15139-volkswagen-golf-8-variant-2-0-tdi-110kw-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),472000,103478,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15146-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,398000,169820,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15154-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,636000,142825,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15159-skoda-superb-3-combi-2-0-tdi-147kw-dsg-sportline-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),467000,119773,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15162-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,492000,151961,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15163-volkswagen-passat-b8-variant-4motion-2-0-tdi-147kw-4x4-dsg-alu-17.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),712000,82768,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Allspace,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15175-volkswagen-tiguan-allspace-highline-4motion-2-0-tdi-147kw-4x4-dsg-alu-18-zimni-pneu.html
+VW Passat B8 Variant Elegance 2.0 TDI,496000,113680,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15182-volkswagen-passat-b8-variant-business-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),769000,25767,2025,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15185-volkswagen-tiguan-2-0-tdi-110kw-dsg-2025-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,646000,98666,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15186-skoda-superb-combi-style-2-0-tdi-147kw-4x4-dsg-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),452000,148276,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15187-volkswagen-golf-8-variant-style-2-0-tsi-140kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,478000,110367,2019,Nafta,2.0,TDI,,140,Automat,Ano,,,Ano,,Laurin & Klement,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15192-skoda-superb-3-lim-2-0-tdi-140kw-4x4-dsg-laurin-klement-webasto.html
+VW T6 Multivan 2.0 TDI,922000,127027,2019,Nafta,2.0,TDI,PHEV,146,Automat,Ano,,,Ano,,PanAmericana,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15193-volkswagen-t6-multivan-2-0-tdi-146kw-4x4-dsg-panamericana-4motion-7-mist.html
+Škoda Octavia Combi iV (PHEV),558000,136918,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15198-skoda-octavia-4-combi-2-0-tdi-147kw-4x4-dsg-scout-alu-18-alu-17.html
+Škoda Octavia Combi iV (PHEV),548000,159739,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15200-skoda-octavia-4-combi-2-0-tdi-147kw-4x4-dsg-scout-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,558000,128736,2022,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15204-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-2x-sada-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,554000,152545,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15206-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,687000,72782,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15207-skoda-superb-3-sedan-2-0-tdi-147kw-dsg-style-premium-alu-18.html
+Škoda Octavia Combi 1.5 TSI,432000,95954,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15219-skoda-octavia-4-combi-1-5-tsi-110kw-man-alu-16.html
+Seat Tarraco 1.5 TSI (5místná verze),531000,105097,2021,Nafta,2.0,TDI,,110,Manual,,,ALU 18'',Ne,,Xcellence,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15225-seat-tarraco-xcellence-2-0-tdi-110kw-man-alu-18.html
+VW Taigo 1.0 TSI,542000,92341,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15226-volkswagen-taigo-1-5-tsi-110kw-dsg-r-line-alu-18-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,452000,153650,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15233-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-18-zimni-sada.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,642000,91875,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15239-skoda-octavia-4-rs-sedan-2-0-tdi-147kw-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,529000,108805,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15240-skoda-superb-3-sedan-style-2-0-tdi-110kw-dsg-alu-18-alu-17.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,457000,75314,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17''+ zimní sada,Ne,,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15242-skoda-octavia-4-sedan-style-1-5-tsi-110kw-man-alu-17-zimni-sada.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",916000,25059,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15243-skoda-kodiaq-style-2-0-tdi-147kw-4x4-dsg-2x-sada-alu-18.html
+Škoda Octavia Combi 1.5 TSI,464000,19277,2021,Benzín,1.5,TSI,,110,,,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15246-skoda-octavia-4-combi-1-5-tsi-110kw-alu-16.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",662000,164051,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15248-skoda-kodiaq-style-2-0-tdi-147kw-4x4-dsg-alu-19-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,527000,141997,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15251-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),698000,97880,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15252-volkswagen-tiguan-2-0-tdi-110kw-dsg-elegance-alu-18-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,422000,163285,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15257-volkswagen-passat-b8-variant-business-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),716000,97629,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15261-volkswagen-tiguan-4motion-2-0-tdi-147kw-4x4-dsg-elegance-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),392000,115757,2020,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15264-volkswagen-golf-7-variant-comfortline-1-5-tsi-96kw-alu-17.html
+Škoda Octavia Combi iV (PHEV),609000,71411,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15277-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-sportline-alu-18-zimni-sada.html
+VW Sharan 2.0 TDI (5místná verze),427000,148736,2015,Nafta,2.0,TDI,,103,Automat,Ano,,ALU 18'',Ne,,,,Int. dětské sedačky,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15290-volkswagen-sharan-2-0-tdi-cup-103kw-dsg-7-mist-alu-18-int-detske-sedacky.html
+VW Touran 1.5 TSI (5místná verze),274000,88902,2011,Benzín,1.4,TSI,,103,Automat,,,ALU 17'',Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15291-volkswagen-touran-1-4-tsi-highline-103kw-alu-17.html
+Škoda Octavia Combi iV (PHEV),686000,66905,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''/ Webasto,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15298-skoda-octavia-4-rs-combi-2-0-tdi-147kw-dsg-alu-18-webasto.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",906000,49198,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15302-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-sportline-alu-19.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",969000,34602,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15303-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-sportline-alu-20.html
+VW Passat B8 Variant Elegance 2.0 TDI,436000,176886,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15304-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,288000,264776,2019,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15307-volkswagen-passat-b8-variant-comfortline-2-0-tdi-140kw-dsg-alu-16.html
+Seat Ateca 1.5 TSI,424000,129063,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15310-seat-ateca-style-2-0-tdi-110kw-dsg-alu-17.html
+Seat Ateca 1.5 TSI,398000,167337,2020,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15316-seat-ateca-style-2-0-tdi-110kw-dsg-alu-17.html
+Cupra Formentor 1.5 TSI,685000,46380,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15318-cupra-formentor-2-0-tsi-140kw-4x4-dsg-alu-19.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),458000,107591,2017,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15324-volkswagen-tiguan-2-0-tdi-140kw-4x4-dsg-4motion-alu-17.html
+VW Arteon Shooting Brake 2.0 TDI,786000,35371,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15327-volkswagen-arteon-shooting-brake-2-0-tdi-110kw-dsg-r-line-alu-18.html
+Škoda Octavia Combi 1.5 TSI,452000,85374,2022,Benzín,1.5,TSI,,110,,,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15328-skoda-octavia-4-combi-1-5-tsi-110kw-alu-16-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,472000,170207,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15340-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,582000,146543,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 18'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15342-volkswagen-passat-b8-variant-elegance-2-0-tdi-147kw-dsg-r-line-alu-17-alu-18.html
+VW Passat B8 Variant Elegance 2.0 TDI,596000,66758,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15348-volkswagen-passat-b8-variant-elegance-2-0-tdi-110kw-dsg-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,609000,110838,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15349-volkswagen-passat-b8-variant-elegance-4motion-2-0-tdi-147kw-4x4-dsg-r-line-alu-19.html
+VW Passat B8 Variant Elegance 2.0 TDI,476000,161604,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15353-volkswagen-passat-b8-variant-4motion-2-0-tdi-147kw-4x4-dsg-alu-17.html
+VW T6 Multivan 2.0 TDI,832000,69299,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15360-volkswagen-transporter-t6-combi-2-0-tdi-110kw-dsg-9-mist.html
+Škoda Octavia Combi 1.5 TSI,596000,71258,2022,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 18''+ zimní pneu,Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15362-skoda-octavia-4-combi-1-5-tsi-e-tec-110kw-dsg-sportline-alu-18-zimni-pneu.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,468000,104676,2022,Nafta,2.0,TDI,,85,Manual,,,ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15363-skoda-octavia-4-sedan-sportline-2-0-tdi-85kw-man-alu-17.html
+Škoda Karoq 1.5 TSI,496000,164503,2023,Nafta,2.0,TDI,,85,Automat,Ano,,ALU 19'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15382-skoda-karoq-style-2-0-tdi-85kw-dsg-alu-19.html
+VW T-Roc 1.5 TSI,527000,132685,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,Style,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15384-volkswagen-t-roc-style-1-5-tsi-110kw-dsg-alu-18-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,476000,132918,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15388-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,526000,127892,2020,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15389-volkswagen-passat-b8-variant-elegance-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Octavia Combi 1.5 TSI,679000,18481,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15392-skoda-octavia-4-combi-selection-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,611000,25041,2024,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15394-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+VW T-Roc 1.5 TSI,542000,22800,2022,Benzín,1.5,TSI,,110,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15395-volkswagen-t-roc-1-5-tsi-110kw-man-alu-17.html
+Škoda Karoq 1.5 TSI,682000,51069,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15396-skoda-karoq-sportline-1-5-tsi-110kw-dsg-alu-18-alu-17.html
+Škoda Karoq 1.5 TSI,679000,62809,2023,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15397-skoda-karoq-sportline-1-5-tsi-110kw-dsg-alu-18-zimni-sada.html
+VW Transporter 2.0 TDI,860000,55151,2024,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15402-volkswagen-transporter-2-0-tdi-110kw-dsg-9-mist.html
+Seat Tarraco 1.5 TSI (5místná verze),849000,47708,2023,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15407-seat-tarraco-xperience-2-0-tsi-140kw-4x4-dsg-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),495000,131031,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15413-volkswagen-golf-8-variant-r-line-2-0-tdi-110kw-dsg-alu-18-zimni-sada.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",827000,128729,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15422-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-laurin-klement-alu-20.html
+VW Golf Hatchback 1.5 TSI (Gen 8),457000,84874,2023,Benzín,1.5,TSI,,96,Manual,,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15423-volkswagen-golf-8-1-5-tsi-96kw-man-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",952000,49056,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15429-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-laurin-klement-alu-19-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,585000,121177,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ne,,Style,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15444-skoda-superb-3-sedan-style-2-0-tdi-147kw-dsg-webasto-2x-sada-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),390000,175122,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15451-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,652000,126827,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15464-skoda-superb-3-combi-scout-2-0-tdi-147kw-4x4-dsg-alu-19.html
+Škoda Octavia Combi iV (PHEV),410000,156441,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15481-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-alu-16.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",539000,178193,2018,Nafta,2.0,TDI,,140,Automat,Ano,,ALU 19''+ zimní sada,Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15487-skoda-kodiaq-2-0-tdi-140kw-4x4-dsg-sportline-alu-19-zimni-sada.html
+Škoda Octavia Combi 1.5 TSI,347000,62761,2020,Nafta,1.6,TDI,,85,,,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15495-skoda-octavia-3-combi-1-6-tdi-85kw.html
+VW Golf Variant 1.5 eTSI (Gen 8),440000,138396,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15497-volkswagen-golf-8-variant-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,586000,124429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'' + ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15505-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-19-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,535000,151618,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15511-volkswagen-passat-b8-variant-2-0-tdi-147kw-dsg-r-line-alu-17-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,429000,198075,2023,Nafta,2.0,TDI,,110,,,,ALU 19''+ ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15521-volkswagen-passat-b8-variant-2-0-tdi-110kw-r-line-alu-19-alu-17.html
+Audi A3 Hatchback 35 TFSI,462000,49118,2021,Benzín,,TFSI,,81,,,,ALU 17''+ zimní sada,Ne,Sportback,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15523-audi-a3-sportback-30-tfsi-81kw-alu-17-zimni-sada.html
+Škoda Superb Combi 1.5 TSI (Gen 4),672000,62770,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15535-skoda-superb-3-combi-style-2-0-tsi-140kw-dsg-alu-17-zimni-sada.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,626000,19717,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15553-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,597000,102984,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ zimní sada,Ano,Combi,Style,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15568-skoda-superb-3-combi-style-2-0-tdi-147kw-4x4-dsg-alu-18-zimni-sada.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),729000,57328,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15588-volkswagen-tiguan-elegance-4motion-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Seat Leon Hatchback 1.5 TSI,447000,110842,2022,Benzín,1.5,eTSI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,FR-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15590-seat-leon-sp-1-5-etsi-110kw-dsg-fr-line-alu-18-alu-17.html
+Seat Alhambra 1.4 TSI,541000,108914,2021,Benzín,1.4,TSI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15596-seat-alhambra-style-1-4-tsi-110kw-dsg-7-mist-alu-16-zimni-sada.html
+VW Passat B8 Variant Elegance 2.0 TDI,452000,162291,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15605-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-2x-sada-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,649000,140782,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto Tangerine Orange,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15612-skoda-superb-3-combi-scout-2-0-tdi-147kw-4x4-dsg-webasto-tangerine-orange-alu-18-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),432000,159932,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15620-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-2x-sada-alu-16.html
+VW Golf Hatchback 1.5 TSI (Gen 8),446000,59991,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15652-volkswagen-golf-style-1-5-tsi-96kw-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,687000,62040,2021,Benzín,2.0,TSI,,206,Automat,Ano,,ALU 17'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15653-volkswagen-passat-b8-variant-elegance-4motion-2-0-tsi-206kw-4x4-dsg-alu-17.html
+Škoda Octavia Combi iV (PHEV),432000,147851,2022,Nafta,2.0,TDI,,110,Automat,Ano,,,Ne,Combi,,,Tažné,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15654-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-tazne.html
+VW Golf Hatchback 1.5 TSI (Gen 8),447000,126486,2022,Benzín,1.5,TSI,,110,,,,ALU 18''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15664-volkswagen-golf-style-1-5-tsi-110kw-alu-18-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,591000,151675,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15673-skoda-superb-3-scout-combi-2-0-tdi-147kw-4x4-dsg-alu-18-alu-17.html
+Škoda Fabia Combi (Gen 3) 1.0 TSI,252000,92956,2022,Benzín,1.0,TSI,,70,,,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15693-skoda-fabia-combi-1-0-tsi-70kw.html
+VW Passat B8 Variant Elegance 2.0 TDI,437000,166692,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15694-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+VW Touran 1.5 TSI (5místná verze),522000,162170,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15695-volkswagen-touran-comfortline-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",570000,186254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 18'',Ano,,,,Webasto,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15708-skoda-kodiaq-facelift-2-0-tdi-110kw-4x4-dsg-webasto-alu-19-alu-18.html
+Škoda Octavia Combi iV (PHEV),732000,61666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15710-skoda-octavia-4-combi-scout-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,541000,70922,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15711-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17.html
+Škoda Octavia Combi iV (PHEV),744000,59358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní pneu,Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15712-skoda-octavia-4-combi-scout-2-0-tdi-110kw-4x4-dsg-alu-18-zimni-pneu.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",777000,111589,2024,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15723-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-style-webasto-alu-18-alu-17.html
+VW Touran 1.5 TSI (5místná verze),532000,150005,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15729-volkswagen-touran-comfortline-2-0-tdi-110kw-dsg-7-mist-alu-17-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,569000,147262,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15742-skoda-superb-3-combi-style-2-0-tdi-147kw-4x4-dsg-alu-18-alu-17.html
+VW Touran 1.5 TSI (5místná verze),599000,92662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15751-volkswagen-touran-comfortline-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,562000,125232,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15754-skoda-superb-3-combi-style-2-0-tdi-147kw-4x4-dsg-alu-18-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",879000,36202,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15755-skoda-kodiaq-style-2-0-tdi-147kw-4x4-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,528000,133659,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15757-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,527000,166134,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Combi,Laurin & Klement,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15768-skoda-superb-3-combi-2-0-tdi-110kw-dsg-laurin-klement-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),431999,96926,2021,Benzín,1.5,TSI,,96,,,,ALU 17'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15774-volkswagen-golf-8-variant-1-5-tsi-96kw-alu-17.html
+Škoda Superb Combi 1.5 TSI (Gen 4),525000,176340,2022,Benzín,1.5,TSI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15775-skoda-superb-3-combi-sportline-1-5-tsi-110kw-dsg-alu-19-alu-17.html
+VW Touran 1.5 TSI (5místná verze),528000,175843,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15781-volkswagen-touran-highline-2-0-tdi-110kw-dsg-r-line-webasto-7-mist-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,689000,121111,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15782-skoda-superb-3-lim-sportline-2-0-tdi-147kw-dsg-webasto-alu-19-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,499000,139118,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15785-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,529000,147106,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15790-skoda-superb-3-combi-laurin-klement-2-0-tdi-110kw-dsg-alu-18-zimni-sada.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,461000,154254,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15801-skoda-octavia-4-sedan-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Octavia Combi 1.5 TSI,597000,21937,2023,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15802-skoda-octavia-4-combi-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+Audi Q5 TDI,1066000,25035,2024,Nafta,,TDI,,150,Automat,Ano,,ALU 20'',Ano,Sportback,S-Line,,Webasto,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15803-audi-q5-sportback-s-line-quattro-40tdi-150kw-4x4-s-tronic-webasto-alu-20.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",1115000,21171,2025,Nafta,2.0,TDI,,142,Automat,Ano,,ALU 19',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15804-skoda-kodiaq-2-0-tdi-142kw-4x4-dsg-sportline-alu-19.html
+Škoda Superb 3 Combi Style 2.0 TDI,590000,145142,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,Combi,Scout,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15816-skoda-superb-3-combi-scout-2-0-tdi-147kw-4x4-dsg-webasto-alu-18-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,520000,219363,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15818-skoda-superb-3-combi-sportline-2-0-tdi-147kw-dsg-alu-19-alu-17.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,363999,29389,2022,Benzín,1.0,,,59,,,,,Ne,,,,Oranžová Phoenix metalíza,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15827-skoda-fabia-1-0-mpi-59kw-oranzova-phoenix-metaliza.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,328000,92969,2022,Benzín,1.0,TSI,,81,,,,ALU,Ne,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15829-skoda-fabia-style-1-0-tsi-81kw-alu.html
+VW Golf Variant 1.5 eTSI (Gen 8),415000,149919,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15832-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),417000,178115,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15837-volkswagen-golf-8-variant-r-line-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+Seat Ateca 1.5 TSI,442000,155493,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15839-seat-ateca-style-2-0-tdi-110kw-4x4-dsg-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,551000,142154,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15843-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-19-alu-17.html
+VW Golf Variant 1.5 eTSI (Gen 8),420999,148941,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15845-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+VW Golf Variant 1.5 eTSI (Gen 8),436000,110444,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15846-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-2x-sada-alu-16.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,332000,79739,2022,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15847-skoda-fabia-1-0-tsi-70kw.html
+VW Passat B8 Variant Elegance 2.0 TDI,521000,163383,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15850-volkswagen-passat-b8-variant-elegance-4motion-2-0-tdi-147kw-4x4-dsg-alu-19.html
+Škoda Octavia Combi iV (PHEV),517000,89662,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15854-skoda-octavia-4-combi-style-2-0-tdi-110kw-dsg-alu-17-alu-16.html
+VW Taigo 1.0 TSI,396000,33039,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15855-volkswagen-taigo-1-0-tsi-70kw.html
+VW Passat B8 Variant Elegance 2.0 TDI,499000,163113,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15858-volkswagen-passat-b8-variant-2-0-tdi-147kw-dsg-r-line-alu-17.html
+Škoda Octavia Combi iV (PHEV),438000,161666,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15861-skoda-octavia-4-combi-style-2-0-tdi-110kw-dsg-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",679000,158232,2020,Nafta,2.0,TDI,,176,Automat,Ano,,ALU 20'',Ano,,,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15862-skoda-kodiaq-rs-2-0-tdi-176kw-4x4-dsg-webasto-alu-20.html
+Škoda Scala 1.0 TSI,299000,113826,2023,Benzín,1.0,TSI,,81,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15863-skoda-scala-1-0-tsi-81kw.html
+Ford Tourneo Custom 2.0 EcoBlue,962000,29124,2025,Nafta,2.0,EcoBlue,,100,,,,,Ne,,,,Tažné,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15865-ford-tourneo-custom-2-0-ecoblue-100kw-9-mist-tazne.html
+Škoda Superb 3 Combi Style 2.0 TDI,583000,76892,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15869-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17.html
+Škoda Superb Combi 1.5 TSI (Gen 4),435000,110947,2022,Benzín,1.5,TSI,,110,,,,2x sad ALU 17'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15871-skoda-superb-3-combi-1-5-tsi-110kw-2x-sad-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,496000,154835,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15873-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Octavia Combi iV (PHEV),436000,152746,2023,Nafta,2.0,TDI,,110,Automat,,,,Ne,Combi,Style,,Webasto,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15879-skoda-octavia-4-combi-2-0-tdi-110kw-style-webasto.html
+VW Golf Variant 1.5 eTSI (Gen 8),341000,181960,2022,Nafta,2.0,TDI,,110,,,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15882-volkswagen-golf-8-variant-2-0-tdi-110kw-2x-sada-alu-16.html
+Seat Ateca 1.5 TSI,452000,149824,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15883-seat-ateca-xperience-2-0-tdi-110kw-dsg-alu-18.html
+Audi A6 2.0 TFSI,722000,89954,2022,Benzín,2.0,TFSI,,195,Automat,Ano,,ALU 18''+ ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15885-audi-a6-avant-sport-2-0-45-etfsi-195kw-s-tronic-alu-18-alu-17.html
+Cupra Formentor 1.5 TSI,563000,87942,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15886-cupra-formentor-2-0-tdi-110kw-4x4-dsg-alu-18-alu-17.html
+Audi A4 Avant 35 TFSI (Kombi),580000,86995,2022,Nafta,2.0,TDI,,120,Automat,Ano,,ALU 17'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15889-audi-a4-avant-2-0-tdi-35-etdi-120kw-s-tronic-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",789000,78848,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15892-skoda-kodiaq-sportline-2-0-tdi-110kw-dsg-alu-19-alu-17.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,615000,28062,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15894-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-17.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),680000,117023,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ano,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15895-volkswagen-tiguan-elegance-4motion-2-0-tdi-110kw-4x4-dsg-alu-19.html
+VW Touran 1.5 TSI (5místná verze),528000,150516,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15896-volkswagen-touran-highline-2-0-tdi-110kw-dsg-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,439000,150524,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15898-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Octavia Combi iV (PHEV),398000,170266,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ano,Combi,Style,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15899-skoda-octavia-4-combi-style-2-0-tdi-110kw-4x4-dsg-2x-sada-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,538000,174429,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15902-skoda-superb-3-combi-laurin-klement-2-0-tdi-147kw-dsg-alu-19-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,472000,182681,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15904-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",569000,157541,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,,Style,,Facelift,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15905-skoda-kodiaq-style-2-0-tdi-110kw-dsg-facelift-alu-18.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",717000,160816,2024,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15907-skoda-kodiaq-2-0-tdi-110kw-dsg-sportline-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),399000,160983,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15912-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,532000,182499,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ano,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15913-skoda-superb-3-combi-sportline-2-0-tdi-147kw-4x4-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,558000,119838,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15914-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-18-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,528000,140342,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15915-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,613000,160053,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ne,Combi,Sportline,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15916-skoda-superb-3-combi-sportline-2-0-tdi-147kw-dsg-alu-19-alu-17.html
+Hyundai i20 1.0 T-GDI,362000,63871,2024,Benzín,1.0,T-GDI,,74,,,,ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15917-hyundai-i20-1-0-t-gdi-74kw-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,688000,70742,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 16'',Ne,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15919-skoda-superb-3-combi-sportline-2-0-tdi-110kw-dsg-alu-19-alu-16.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",569000,150449,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ne,,,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15920-skoda-kodiaq-2-0-tdi-110kw-dsg-webasto-alu-18-zimni-sada.html
+VW Touran 1.5 TSI (5místná verze),442000,168780,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15921-volkswagen-touran-2-0-tdi-110kw-dsg-2x-sada-alu-16.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",534000,150331,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15922-skoda-kodiaq-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,330000,73202,2024,Benzín,1.0,,,59,,,,ALU 15'',Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15923-skoda-fabia-1-0-mpi-59kw-alu-15.html
+VW Passat B8 Variant Elegance 2.0 TDI,416000,157618,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17'',Ne,Variant,,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15924-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-17.html
+Cupra Formentor 1.5 TSI,627000,94978,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15926-cupra-formentor-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Audi A4 Avant 35 TFSI (Kombi),649000,95528,2022,Nafta,,TDI,,150,Automat,Ano,,2x sada ALU 18'',Ano,,S-Line,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15927-audi-a4-40-avant-s-line-quattro-40tdi-150kw-4x4-s-tronic-2x-sada-alu-18.html
+Audi A6 2.0 TDI,682000,97551,2021,Nafta,2.0,TDI,,150,Automat,Ano,,ALU 18''+ ALU 16'',Ne,,,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15928-audi-a6-avant-sport-2-0-40tdi-150kw-s-tronic-alu-18-alu-16.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),786000,64745,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15929-volkswagen-tiguan-r-line-4motion-2-0-tdi-147kw-4x4-dsg-alu-20-alu-18.html
+Cupra Formentor 1.5 TSI,682000,61572,2022,Benzín,2.0,TSI,,228,Automat,Ano,,ALU 19'',Ano,,,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15932-cupra-formentor-vz-2-0-tsi-228kw-4x4-dsg-alu-19.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),782000,96436,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15933-volkswagen-tiguan-r-line-4motion-2-0-tdi-147kw-4x4-dsg-alu-20.html
+Škoda Superb 3 Combi Style 2.0 TDI,395000,142394,2020,Nafta,2.0,TDI,,88,Automat,Ano,,,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15935-skoda-superb-3-combi-2-0-tdi-88kw-dsg.html
+VW Passat B8 Variant Elegance 2.0 TDI,547000,137223,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15941-volkswagen-passat-b8-variant-elegance-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Octavia Combi iV (PHEV),442000,111876,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15942-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-alu-16.html
+VW Touran 1.5 TSI (5místná verze),589000,62378,2021,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,Highline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15944-volkswagen-touran-highline-1-5-tsi-110kw-alu-17-zimni-sada.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,399000,113121,2023,Benzín,1.0,TSI,,70,,,,,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15945-skoda-fabia-1-0-tsi-70kw.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",846000,78926,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15947-skoda-kodiaq-sportline-2-0-tdi-147kw-4x4-dsg-alu-20.html
+Škoda Octavia Combi iV (PHEV),434000,105438,2021,Nafta,2.0,TDI,,110,,,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15948-skoda-octavia-4-combi-style-2-0-tdi-110kw-alu-17.html
+VW Taigo 1.0 TSI,522000,74556,2022,Benzín,1.5,TSI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15950-volkswagen-taigo-r-line-1-5-tsi-110kw-dsg-2x-sada-alu-18.html
+Škoda Octavia Combi iV (PHEV),457000,140127,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15951-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-alu-17-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,620000,104355,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18'',Ne,Combi,Style,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15952-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-18.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,598000,44314,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15953-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+Škoda Octavia Combi iV (PHEV),627000,50480,2025,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15954-skoda-octavia-4-combi-selection-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,641000,29632,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15955-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-17-zimni-sada.html
+Škoda Octavia Combi iV (PHEV),730000,26471,2025,Nafta,2.0,TDI,PHEV,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Exclusive,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15956-skoda-octavia-4-combi-exclusive-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+Škoda Fabia Hatchback (Gen 4) 1.0 TSI,398000,13112,2024,Benzín,1.0,,,59,,,,,Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15957-skoda-fabia-selection-1-0-mpi-59kw.html
+Škoda Karoq 1.5 TSI,736000,38174,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15958-skoda-karoq-sportline-2-0-tsi-140kw-4x4-dsg-alu-18-zimni-sada.html
+Škoda Octavia 4 Lim. Style 1.5 TSI,596000,36870,2025,Benzín,1.5,TSI,MHEV,110,Automat,Ano,,ALU 16'',Ne,,Selection,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15959-skoda-octavia-4-sedan-selection-1-5-tsi-e-tec-110kw-dsg-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,515000,142128,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Variant,Elegance,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15962-volkswagen-passat-b8-variant-elegance-2-0-tdi-110kw-dsg-r-line-alu-18-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",775998,123830,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15963-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-sportline-alu-19-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,497000,167439,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15965-skoda-superb-3-combi-style-2-0-tdi-147kw-dsg-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,619000,159274,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Scout,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15966-skoda-superb-3-combi-scout-2-0-tdi-147kw-4x4-dsg-alu-19.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",496000,183774,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ano,,,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15968-skoda-kodiaq-2-0-tdi-110kw-4x4-dsg-alu-17-zimni-sada.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),550000,150606,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,Allspace,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15969-volkswagen-tiguan-allspace-2-0-tdi-110kw-dsg-alu-19.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",629000,165351,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 20''+ ALU 18'',Ano,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15970-skoda-kodiaq-sportline-2-0-tdi-147kw-4x4-dsg-alu-20-alu-18.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",766000,95836,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15971-skoda-kodiaq-style-2-0-tdi-147kw-4x4-dsg-alu-18-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,580000,143910,2023,Nafta,2.0,TDI,,147,Automat,Ano,,2x sada ALU 17'',Ano,,Alltrack,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15972-volkswagen-passat-b8-alltrack-4motion-2-0-tdi-147kw-4x4-dsg-2x-sada-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,677000,117368,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,Combi,Laurin & Klement,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15973-skoda-superb-3-combi-laurin-klement-2-0-tdi-147kw-4x4-dsg-alu-19-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,466000,121447,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15974-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",492000,190906,2021,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15975-skoda-kodiaq-2-0-tdi-147kw-4x4-dsg-alu-19-alu-17.html
+VW Arteon Shooting Brake 2.0 TDI,553000,162084,2022,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 18'',Ne,,R-Line,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15976-volkswagen-arteon-shooting-brake-2-0-tdi-110kw-dsg-r-line-2x-sada-alu-18.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),558000,71898,2022,Nafta,2.0,TDI,,110,,,,ALU 18''+ ALU 17'',Ne,,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15977-volkswagen-tiguan-elegance-2-0-tdi-110kw-alu-18-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,399000,171186,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15978-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-r-line-2x-sada-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),482000,161899,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ ALU 16'',Ne,Variant,R-Line,,,Prodané,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15979-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-r-line-alu-18-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,459000,134289,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15980-skoda-superb-3-combi-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,550000,118415,2022,Nafta,2.0,TDI,,147,Automat,,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15981-skoda-superb-3-combi-style-2-0-tdi-147kw-alu-17-alu-16.html
+Škoda Superb 3 Combi Style 2.0 TDI,611996,81098,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15982-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17-alu-16.html
+VW Passat B8 Variant Elegance 2.0 TDI,404000,168798,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15983-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+VW Passat B8 Variant Elegance 2.0 TDI,616000,99409,2023,Nafta,2.0,TDI,,147,Automat,Ano,,,Ano,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15984-volkswagen-passat-b8-variant-elegance-4motion-2-0-tdi-147kw-4x4-dsg-r-line.html
+Škoda Octavia Combi iV (PHEV),415000,161462,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16'',Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15985-skoda-octavia-4-combi-2-0-tdi-110kw-dsg-alu-16.html
+VW Golf Variant 1.5 eTSI (Gen 8),370000,185358,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU,Ne,Variant,,,Webasto,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15986-volkswagen-golf-8-variant-2-0-tdi-110kw-dsg-webasto-alu.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",757000,81747,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15987-skoda-kodiaq-style-2-0-tdi-147kw-4x4-dsg-alu-18-alu-17.html
+VW Passat B8 Variant Elegance 2.0 TDI,476000,142120,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ne,Variant,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15988-volkswagen-passat-b8-variant-elegance-2-0-tdi-110kw-dsg-alu-18.html
+MG ZS 1.5 VTi-tech (Benzín),296000,108182,2023,Benzín,1.5,,,78,Automat,,,ALU 17'',Ne,,,,Aut. Virtual Cockpit,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15990-mg-zs-1-5-78kw-aut-virtual-cockpit-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,490000,162936,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 17'',Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15992-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-2x-sada-alu-17.html
+VW Tiguan Life 1.5 TSI (Gen 2),512000,108254,2022,Benzín,1.5,TSI,,110,,,,ALU 17''+ zimní sada,Ne,,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15993-volkswagen-tiguan-1-5-tsi-110kw-alu-17-zimni-sada.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),899000,25359,2024,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 18'',Ano,Allspace,Elegance,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15994-volkswagen-tiguan-allspace-elegance-4motion-2-0-tsi-140kw-4x4-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,416998,185574,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15996-skoda-superb-3-combi-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",742000,99799,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19''+ ALU 17'',Ano,,Sportline,,,Zamluvené,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15998-skoda-kodiaq-sportline-2-0-tdi-110kw-4x4-dsg-alu-19-alu-17.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",720000,115945,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 19'',Ne,,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/15999-skoda-kodiaq-sportline-2-0-tdi-110kw-dsg-alu-19.html
+VW Passat B8 Variant Elegance 2.0 TDI,442000,147715,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16000-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,494000,188382,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 18''+ ALU 17'',Ne,Combi,Laurin & Klement,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16001-skoda-superb-3-combi-2-0-tdi-147kw-dsg-laurin-klement-alu-18-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,496000,141871,2022,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 17'',Ano,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16002-skoda-superb-3-combi-2-0-tdi-147kw-4x4-dsg-alu-17.html
+Audi A4 Avant 35 TFSI (Kombi),692000,61688,2023,Nafta,,TDI,,150,Automat,Ano,,ALU 18''+ ALU 17'',Ano,,S-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16003-audi-a4-avant-s-line-quattro-40tdi-150kw-s-tronic-alu-18-alu-17.html
+Škoda Superb 3 Combi Style 2.0 TDI,426000,180450,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16005-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+VW Passat B8 Variant Elegance 2.0 TDI,388000,152429,2021,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16006-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
+Škoda Superb 3 Combi Style 2.0 TDI,618000,154535,2023,Nafta,2.0,TDI,,147,Automat,Ano,,ALU 19'',Ano,Combi,Sportline,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16007-skoda-superb-3-combi-2-0-tdi-147kw-4x4-dsg-sportline-alu-19.html
+VW Golf Variant 1.5 eTSI (Gen 8),417000,149859,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ ALU 16'',Ne,Variant,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16008-volkswagen-golf-8-variant-style-2-0-tdi-110kw-dsg-alu-17-alu-16.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",598000,156154,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18''+ zimní sada,Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16010-skoda-kodiaq-style-2-0-tdi-110kw-4x4-dsg-alu-18-zimni-sada.html
+VW Passat B8 Variant Elegance 2.0 TDI,432000,156572,2023,Nafta,2.0,TDI,,110,Automat,Ano,,2x sada ALU 16'',Ne,Variant,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16011-volkswagen-passat-b8-variant-2-0-tdi-110kw-dsg-2x-sada-alu-16.html
+VW Tiguan Allspace 2.0 TDI (5místná verze),649000,147181,2022,Benzín,2.0,TSI,,140,Automat,Ano,,ALU 19'',Ano,,R-Line,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16012-volkswagen-tiguan-r-line-4motion-2-0-tsi-140kw-4x4-dsg-alu-19.html
+Škoda Superb 3 Combi Style 2.0 TDI,432000,174498,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 17''+ zimní sada,Ne,Combi,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16014-skoda-superb-3-combi-style-2-0-tdi-110kw-dsg-alu-17-zimni-sada.html
+"Škoda Kodiaq iV (Gen 2, PHEV)",690000,100903,2023,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 18'',Ano,,Style,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16015-skoda-kodiaq-style-2-0-tdi-110kw-4x4-dsg-alu-18.html
+Škoda Superb 3 Combi Style 2.0 TDI,409000,171979,2022,Nafta,2.0,TDI,,110,Automat,Ano,,ALU 16''+ zimní sada,Ne,Combi,,,,Dostupný,Autodraft.cz,Ano,https://www.autodraft.cz/detail/16016-skoda-superb-3-combi-2-0-tdi-110kw-dsg-alu-16-zimni-sada.html
