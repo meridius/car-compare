@@ -191,11 +191,10 @@
   };
 
   var COL_CONFIG = [
-    { field: "Odkaz na auto", hdr: "Odkaz", filter: false, w: 60, pinned: "left", link: true },
+    { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true },
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
-    { field: "Stav", filter: "agSetColumnFilter", w: 110 },
     { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right" },
     { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
     { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right" },
@@ -296,16 +295,25 @@
     };
   }
 
-  function linkRenderer(params) {
-    if (!params.value) return "";
-    var a = document.createElement("a");
-    a.href = params.value;
-    a.target = "_blank";
-    a.rel = "noopener";
-    a.textContent = "\u2197";
-    a.title = params.value;
-    a.style.fontSize = "1.2em";
-    return a;
+  function stavRenderer(params) {
+    var text = params.value || "";
+    var url = params.data && params.data["Odkaz na auto"];
+    var unmatched = params.data && params.data["Spárováno"] === "Ne";
+    var el;
+    if (url) {
+      el = document.createElement("a");
+      el.href = url;
+      el.target = "_blank";
+      el.rel = "noopener";
+      el.textContent = text || "\u2197";
+    } else {
+      el = document.createElement("span");
+      el.textContent = text;
+    }
+    if (unmatched) {
+      el.title = "Nespárováno – auto nebylo nalezeno v referenčních datech";
+    }
+    return el;
   }
 
   function buildColumnDefs() {
@@ -321,9 +329,15 @@
 
       if (cfg.pinned) def.pinned = cfg.pinned;
 
-      if (cfg.link) {
-        def.cellRenderer = linkRenderer;
-        def.cellStyle = { textAlign: "center" };
+      if (cfg.stav) {
+        def.cellRenderer = stavRenderer;
+        def.cellStyle = function (params) {
+          var style = { textAlign: "center" };
+          if (params.data && params.data["Spárováno"] === "Ne") {
+            style.backgroundColor = "rgba(245, 158, 11, 0.15)";
+          }
+          return style;
+        };
       } else if (cfg.num) {
         def.cellStyle = numericCellStyle(cfg.field);
         def.valueFormatter = numericFormatter(cfg.field);
@@ -545,12 +559,6 @@
       },
       animateRows: false,
       enableCellTextSelection: true,
-      getRowStyle: function (params) {
-        if (params.data && params.data["Spárováno"] === "Ne") {
-          return { borderLeft: "3px solid #f59e0b" };
-        }
-        return null;
-      },
       onFilterChanged: onFilterChanged,
       onDragStopped: saveColState,
       onGridReady: function (params) {

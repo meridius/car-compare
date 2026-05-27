@@ -376,11 +376,6 @@ a:hover { text-decoration: underline; }
     margin-top: 8px;
 }
 
-/* ── Unmatched row indicator ── */
-.row-unmatched {
-    border-left: 3px solid #f59e0b !important;
-}
-
 /* ── Navigation ── */
 .nav-link {
     font-size: 0.85rem;
