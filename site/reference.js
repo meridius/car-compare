@@ -398,6 +398,7 @@
 
     var gridDiv = document.getElementById("grid");
     var gridOptions = {
+      theme: "legacy",
       columnDefs: COL_DEFS,
       rowData: data,
       defaultColDef: {

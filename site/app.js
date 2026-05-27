@@ -39,17 +39,19 @@
     this.selected = null;
 
     var valuesMap = {};
-    var hasBlank = false;
+    var blankCount = 0;
     params.api.forEachNode(function (node) {
       if (!node.data) return;
       var val = node.data[params.colDef.field];
-      if (val == null || val === "") hasBlank = true;
-      else valuesMap[val] = true;
+      if (val == null || val === "") blankCount++;
+      else valuesMap[val] = (valuesMap[val] || 0) + 1;
     });
     this.uniqueValues = Object.keys(valuesMap).sort(function (a, b) {
       return a.localeCompare(b, "cs");
     });
-    this.hasBlank = hasBlank;
+    this.hasBlank = blankCount > 0;
+    this.blankCount = blankCount;
+    this.valuesMap = valuesMap;
 
     this.gui = document.createElement("div");
     this.gui.className = "set-filter";
@@ -78,15 +80,50 @@
     this.listDiv = listDiv;
     this.checkboxes = [];
 
+    var fp = params.colDef && params.colDef.filterParams;
+    var groupDefs = fp && fp.groups;
+    this.groupHeaders = [];
+
     if (this.hasBlank) {
-      var blankItem = this._makeItem("(Pr\u00e1zdn\u00e9)", null, true);
+      var blankItem = this._makeItem("(Pr\u00e1zdn\u00e9)", null, true, this.blankCount);
       listDiv.appendChild(blankItem.div);
       this.checkboxes.push(blankItem);
     }
-    for (var i = 0; i < this.uniqueValues.length; i++) {
-      var item = this._makeItem(this.uniqueValues[i], this.uniqueValues[i], true);
-      listDiv.appendChild(item.div);
-      this.checkboxes.push(item);
+
+    if (groupDefs) {
+      var covered = {};
+      for (var g = 0; g < groupDefs.length; g++) {
+        var grp = groupDefs[g];
+        var grpItems = [];
+        var headerEl = document.createElement("div");
+        headerEl.className = "set-filter-group-header";
+        headerEl.textContent = grp.label;
+        listDiv.appendChild(headerEl);
+        for (var k = 0; k < grp.values.length; k++) {
+          var gv = grp.values[k];
+          covered[gv] = true;
+          if (!(gv in this.valuesMap)) continue;
+          var gitem = this._makeItem(gv, gv, true, this.valuesMap[gv]);
+          listDiv.appendChild(gitem.div);
+          this.checkboxes.push(gitem);
+          grpItems.push(gitem);
+        }
+        this.groupHeaders.push({ el: headerEl, items: grpItems });
+      }
+      for (var i = 0; i < this.uniqueValues.length; i++) {
+        var uv = this.uniqueValues[i];
+        if (covered[uv]) continue;
+        var uitem = this._makeItem(uv, uv, true, this.valuesMap[uv]);
+        listDiv.appendChild(uitem.div);
+        this.checkboxes.push(uitem);
+      }
+    } else {
+      for (var i = 0; i < this.uniqueValues.length; i++) {
+        var v = this.uniqueValues[i];
+        var item = this._makeItem(v, v, true, this.valuesMap[v]);
+        listDiv.appendChild(item.div);
+        this.checkboxes.push(item);
+      }
     }
     this.gui.appendChild(listDiv);
 
@@ -96,7 +133,7 @@
     btnNone.addEventListener("click", function () { self._toggleAll(false); });
   };
 
-  SetFilter.prototype._makeItem = function (label, value, checked) {
+  SetFilter.prototype._makeItem = function (label, value, checked, count) {
     var div = document.createElement("label");
     div.className = "set-filter-item";
     var cb = document.createElement("input");
@@ -106,6 +143,12 @@
     span.textContent = label;
     div.appendChild(cb);
     div.appendChild(span);
+    if (count != null) {
+      var badge = document.createElement("span");
+      badge.className = "set-filter-count";
+      badge.textContent = count;
+      div.appendChild(badge);
+    }
     var self = this;
     cb.addEventListener("change", function () { self._apply(); });
     return { div: div, cb: cb, value: value, label: label };
@@ -116,6 +159,14 @@
     for (var i = 0; i < this.checkboxes.length; i++) {
       var item = this.checkboxes[i];
       item.div.style.display = (!q || item.label.toLowerCase().indexOf(q) >= 0) ? "" : "none";
+    }
+    for (var g = 0; g < this.groupHeaders.length; g++) {
+      var gh = this.groupHeaders[g];
+      var anyVisible = false;
+      for (var j = 0; j < gh.items.length; j++) {
+        if (gh.items[j].div.style.display !== "none") { anyVisible = true; break; }
+      }
+      gh.el.style.display = anyVisible ? "" : "none";
     }
   };
 
@@ -190,8 +241,13 @@
     if (this.searchInput) this.searchInput.focus();
   };
 
+  var STAV_GROUPS = [
+    { label: "Dostupné", values: ["Dostupný", "Nové", "Předváděcí", "Ojeté", "Havarované"] },
+    { label: "Nedostupné", values: ["Zamluvené", "Prodané", "Odstraněno"] },
+  ];
+
   var COL_CONFIG = [
-    { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true },
+    { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS },
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
@@ -324,6 +380,7 @@
         field: cfg.field,
         headerName: cfg.hdr || makeHeaderName(cfg.field),
         filter: cfg.filter === "agSetColumnFilter" ? SetFilter : cfg.filter,
+        filterParams: cfg.groups ? { groups: cfg.groups } : undefined,
         width: cfg.w,
       };
 
@@ -563,6 +620,7 @@
       onDragStopped: saveColState,
       onGridReady: function (params) {
         gridApi = params.api;
+        window.__gridApi = params.api;
         var savedCols = loadColState();
         if (savedCols) applyColState(savedCols);
         var urlFilters = loadFiltersFromUrl();

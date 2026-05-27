@@ -97,6 +97,18 @@ Reference data:
 - `combustion/data/makes-and-models.csv` — exact join on "Model auta"
 - `electric/data/new_cars_specs.csv` — prefix match join
 
+### Verifying UI changes
+
+**Mandatory after any `site/` change.** No build step / type check / tests exist, so run the headless-browser verifier and **Read the screenshot** before reporting done:
+
+```bash
+python build/verify_ui.py --page index --scenario grid          # grid view
+python build/verify_ui.py --page index --scenario stav-filter   # opens a filter popup
+python build/verify_ui.py --page reference --scenario grid       # reference page
+```
+
+Exit 0 = no console errors + grid rendered; screenshot lands in `tmp/ui-verify/`. Exit 0 alone isn't enough — Read the PNG to confirm the change looks right. See `docs/conventions.md` → "UI Verification After Changes" for adding new scenarios.
+
 ### GitHub Actions
 
 `.github/workflows/scrape-and-deploy.yml` — daily 6am UTC + manual trigger. Runs scrapers, builds JSON, commits data, deploys Pages.
