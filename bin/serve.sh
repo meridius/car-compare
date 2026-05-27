@@ -14,5 +14,13 @@ if [ ! -f "$DIR/data/cars.json" ]; then
   python3 build/build_data.py
 fi
 
-echo "Serving $DIR at http://localhost:$PORT"
-python3 -m http.server "$PORT" -d "$DIR"
+echo "Serving $DIR at http://localhost:$PORT (no-cache)"
+python3 -c "
+import http.server, functools, os
+os.chdir('$DIR')
+class H(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        self.send_header('Cache-Control', 'no-cache, no-store, must-revalidate')
+        super().end_headers()
+http.server.HTTPServer(('', $PORT), H).serve_forever()
+"

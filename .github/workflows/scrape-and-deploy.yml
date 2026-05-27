@@ -61,6 +61,13 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
+      - name: Cache-bust local assets
+        run: |
+          V=$(git rev-parse --short HEAD)
+          sed -i "s|style\.css\"|style.css?v=$V\"|g" site/*.html
+          sed -i "s|app\.js\"|app.js?v=$V\"|g" site/index.html
+          sed -i "s|reference\.js\"|reference.js?v=$V\"|g" site/reference.html
+
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
