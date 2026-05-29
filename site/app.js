@@ -733,32 +733,72 @@
       body.appendChild(noData);
     }
 
-    // Type/Fuel matrix from loaded grid data
+    // Body type / Drivetrain matrix from loaded grid data
     if (gridApi) {
+      var bodyGroups = {
+        "Kombi": ["Kombi", "Combi", "Variant", "SW", "Touring", "Sports Tourer", "Avant"],
+        "SUV": ["SUV", "CUV", "Terénní"],
+        "Hatchback": ["Hatchback"],
+        "Liftback": ["Liftback", "Sportback"],
+        "Sedan": ["Sedan/limuzína", "Sedan"],
+        "MPV": ["MPV", "VAN", "Allspace"],
+        "Kupé / Kabrio": ["Kupé", "Kabriolet"],
+        "Pick-up": ["Pick-up"],
+      };
+      var bodyLookup = {};
+      var groupOrder = Object.keys(bodyGroups);
+      for (var g = 0; g < groupOrder.length; g++) {
+        var members = bodyGroups[groupOrder[g]];
+        for (var m = 0; m < members.length; m++) bodyLookup[members[m]] = groupOrder[g];
+      }
+
       var matrix = {};
       gridApi.forEachNode(function (node) {
         if (!node.data) return;
-        var typ = node.data["Typ"] || "\u2014";
-        var pal = node.data["Palivo"] || "Elektro";
-        if (!matrix[typ]) matrix[typ] = {};
-        matrix[typ][pal] = (matrix[typ][pal] || 0) + 1;
+        var rawBody = node.data["Karoserie"] || "";
+        var body = bodyLookup[rawBody] || (rawBody ? rawBody : "Nezadáno");
+        var typ = node.data["Typ"] || "";
+        var pal = node.data["Palivo"] || "";
+        var pohon = typ === "Elektrické" ? "Elektro" : (pal || "Nezadáno");
+        if (!matrix[body]) matrix[body] = {};
+        matrix[body][pohon] = (matrix[body][pohon] || 0) + 1;
       });
-      var allFuels = {};
-      var typKeys = Object.keys(matrix).sort();
-      for (var t = 0; t < typKeys.length; t++) {
-        var fuels = Object.keys(matrix[typKeys[t]]);
-        for (var f = 0; f < fuels.length; f++) allFuels[fuels[f]] = true;
+
+      var allPohon = {};
+      var bodyKeys = Object.keys(matrix);
+      for (var b = 0; b < bodyKeys.length; b++) {
+        var fuels = Object.keys(matrix[bodyKeys[b]]);
+        for (var f = 0; f < fuels.length; f++) allPohon[fuels[f]] = true;
       }
-      var fuelList = Object.keys(allFuels).sort();
-      var card5 = makeCard("Matice Typ \u00d7 Palivo");
-      var hdr5 = ["Typ"];
-      for (var f = 0; f < fuelList.length; f++) hdr5.push(fuelList[f]);
+      var pohonOrder = ["Benzín", "Nafta", "Elektro", "LPG + benzín", "CNG + benzín"];
+      var pohonList = pohonOrder.filter(function (p) { return allPohon[p]; });
+      for (var p in allPohon) {
+        if (pohonList.indexOf(p) === -1) pohonList.push(p);
+      }
+
+      // Sort body keys: known groups first (by groupOrder), then alphabetical remainder
+      bodyKeys.sort(function (a, b) {
+        var ia = groupOrder.indexOf(a);
+        var ib = groupOrder.indexOf(b);
+        if (ia === -1) ia = 999;
+        if (ib === -1) ib = 999;
+        return ia !== ib ? ia - ib : a.localeCompare(b);
+      });
+
+      var card5 = makeCard("Karoserie × Pohon");
+      var hdr5 = ["Karoserie"];
+      for (var f = 0; f < pohonList.length; f++) hdr5.push(pohonList[f]);
+      hdr5.push("Celkem");
       var tbl5 = makeTable(hdr5);
-      for (var t = 0; t < typKeys.length; t++) {
-        var cells = [typKeys[t]];
-        for (var f = 0; f < fuelList.length; f++) {
-          cells.push(fmtNum(matrix[typKeys[t]][fuelList[f]] || 0));
+      for (var b = 0; b < bodyKeys.length; b++) {
+        var cells = [bodyKeys[b]];
+        var rowTotal = 0;
+        for (var f = 0; f < pohonList.length; f++) {
+          var val = matrix[bodyKeys[b]][pohonList[f]] || 0;
+          cells.push(fmtNum(val));
+          rowTotal += val;
         }
+        cells.push(fmtNum(rowTotal));
         addRow(tbl5, cells);
       }
       card5.appendChild(tbl5);
@@ -860,7 +900,15 @@
         var canvas = document.createElement("canvas");
         container.appendChild(canvas);
 
-        var labels = history.map(function (h) { return h.date; });
+        var labels = history.map(function (h) {
+          var d = new Date(h.date);
+          if (isNaN(d.getTime())) return h.date;
+          var day = d.getDate();
+          var mon = d.getMonth() + 1;
+          var hh = String(d.getHours()).padStart(2, "0");
+          var mm = String(d.getMinutes()).padStart(2, "0");
+          return day + "." + mon + ". " + hh + ":" + mm;
+        });
         var totals = history.map(function (h) { return h.total; });
         var elecData = history.map(function (h) {
           return h.matching && h.matching.electric ? h.matching.electric.total : 0;
@@ -886,9 +934,22 @@
           options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { labels: { color: textColor } } },
+            plugins: {
+              legend: { labels: { color: textColor } },
+              tooltip: {
+                callbacks: {
+                  title: function (items) {
+                    var idx = items[0].dataIndex;
+                    var h = history[idx];
+                    var d = new Date(h.date);
+                    var label = isNaN(d.getTime()) ? h.date : d.toLocaleString("cs-CZ");
+                    return label + " (" + (h.trigger || "?") + ")";
+                  },
+                },
+              },
+            },
             scales: {
-              x: { ticks: { color: textColor }, grid: { color: gridColor } },
+              x: { ticks: { color: textColor, maxRotation: 45, autoSkip: true }, grid: { color: gridColor } },
               y: { ticks: { color: textColor }, grid: { color: gridColor }, beginAtZero: true },
             },
           },

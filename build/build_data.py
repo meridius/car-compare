@@ -215,7 +215,7 @@ def update_scrape_history(metadata):
             history = []
 
     entry = {
-        "date": metadata["buildDate"][:10],
+        "date": metadata["buildDate"],
         "trigger": metadata["trigger"],
         "sources": metadata["sources"],
         "matching": metadata["matching"],

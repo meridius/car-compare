@@ -1,6 +1,6 @@
 [
  {
-  "date": "2026-05-25",
+  "date": "2026-05-25T06:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -34,7 +34,7 @@
   "total": 7968
  },
  {
-  "date": "2026-05-25",
+  "date": "2026-05-25T09:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -68,7 +68,7 @@
   "total": 7968
  },
  {
-  "date": "2026-05-26",
+  "date": "2026-05-26T06:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -102,7 +102,7 @@
   "total": 7968
  },
  {
-  "date": "2026-05-26",
+  "date": "2026-05-26T09:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -136,7 +136,7 @@
   "total": 15731
  },
  {
-  "date": "2026-05-26",
+  "date": "2026-05-26T12:00:00Z",
   "trigger": "schedule",
   "sources": {
    "Autodraft.cz": {
@@ -170,7 +170,7 @@
   "total": 15731
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T06:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -204,7 +204,7 @@
   "total": 15888
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T09:00:00Z",
   "trigger": "push",
   "sources": {
    "Autodraft.cz": {
@@ -238,7 +238,7 @@
   "total": 15888
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T12:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -272,7 +272,7 @@
   "total": 23529
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T15:00:00Z",
   "trigger": "schedule",
   "sources": {
    "Autodraft.cz": {
@@ -306,7 +306,7 @@
   "total": 23529
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T18:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -340,7 +340,7 @@
   "total": 23819
  },
  {
-  "date": "2026-05-27",
+  "date": "2026-05-27T21:00:00Z",
   "trigger": "push",
   "sources": {
    "Autodraft.cz": {
@@ -374,7 +374,7 @@
   "total": 23819
  },
  {
-  "date": "2026-05-28",
+  "date": "2026-05-28T06:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -408,7 +408,7 @@
   "total": 31322
  },
  {
-  "date": "2026-05-28",
+  "date": "2026-05-28T09:00:00Z",
   "trigger": "schedule",
   "sources": {
    "Autodraft.cz": {
@@ -442,7 +442,7 @@
   "total": 31322
  },
  {
-  "date": "2026-05-29",
+  "date": "2026-05-29T06:00:00Z",
   "trigger": "manual",
   "sources": {
    "Autodraft.cz": {
@@ -476,7 +476,7 @@
   "total": 31806
  },
  {
-  "date": "2026-05-29",
+  "date": "2026-05-29T09:00:00Z",
   "trigger": "schedule",
   "sources": {
    "Autodraft.cz": {

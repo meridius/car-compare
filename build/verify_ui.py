@@ -65,7 +65,17 @@ def scenario_stav_filter(page):
     return ".set-filter"
 
 
-SCENARIOS = {"grid": scenario_grid, "stav-filter": scenario_stav_filter}
+def scenario_summary(page):
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-chart-container canvas", timeout=10000)
+    page.wait_for_timeout(500)
+    page.evaluate("document.getElementById('summary-chart-container').scrollIntoView({block:'center'})")
+    page.wait_for_timeout(200)
+    return "#summary-overlay"
+
+
+SCENARIOS = {"grid": scenario_grid, "stav-filter": scenario_stav_filter, "summary": scenario_summary}
 
 
 def main():
