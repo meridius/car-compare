@@ -100,8 +100,14 @@ async def fetch_detail(session: aiohttp.ClientSession, item_id: int,
         return {}
 
 
-def build_record(item: dict, detail: dict) -> dict:
-    """Combine search-API item and detail-API result into one CSV row."""
+def build_record(item: dict, detail: dict) -> dict | None:
+    """Combine search-API item and detail-API result into one CSV row.
+
+    Returns None when detail fetch failed.
+    """
+    if not detail:
+        return None
+
     brand = item["manufacturer_cb"]["name"]
     model = item["model_cb"]["name"]
     suffix = item.get("additional_model_name") or ""
@@ -186,7 +192,7 @@ async def scrape_sauto():
             *[fetch_detail(session, item["id"], semaphore) for item in items]
         )
 
-    cars = [build_record(item, detail) for item, detail in zip(items, details)]
+    cars = [r for r in (build_record(item, detail) for item, detail in zip(items, details)) if r is not None]
 
     df = pd.DataFrame(cars, columns=COLS)
     df.drop_duplicates(subset="Odkaz na auto", inplace=True)

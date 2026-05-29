@@ -138,3 +138,11 @@ In combustion scrapers, `merge_with_previous()` is called AFTER `match_to_author
 ## electric — Karoserie uses vehicle_body_cb API (sauto) or extract_body_type (autodraft/energycars)
 
 Electric sauto scraper gets body type from `detail.get("vehicle_body_cb")` API field (Czech names: Kombi, SUV, Hatchback) with fallback to `extract_body_type()`. Autodraft and energycars use `extract_body_type()` on model name text. Same pattern as combustion sauto.
+
+## sauto — build_record skips failed detail fetches
+
+`fetch_detail()` returns `{}` on HTTP errors or exceptions. `build_record()` returns `None` when detail is empty, preventing incomplete records (no Stav, Palivo, Výkon, etc.) from entering the CSV. Without this guard, search-API-only data creates rows with only Model/Cena populated.
+
+## all scrapers — merge_with_previous skips empty-link rows
+
+`merge_with_previous()` skips rows with empty `Odkaz na auto` from the previous CSV. Without this, rows that somehow lost their URL (e.g., from old scraper versions that didn't generate links) would accumulate as undedupeable copies on every run — this was the root cause of ~8k CSV growth per 4 days.

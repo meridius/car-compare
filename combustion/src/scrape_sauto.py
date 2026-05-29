@@ -111,8 +111,12 @@ async def fetch_detail(session: aiohttp.ClientSession, item_id: int,
 def build_record(item: dict, detail: dict) -> dict | None:
     """Combine search-API item and detail-API result into one CSV row.
 
-    Returns None for records that should be excluded (wrong fuel, damaged).
+    Returns None for records that should be excluded (wrong fuel, damaged,
+    or when detail fetch failed).
     """
+    if not detail:
+        return None
+
     fuel = (detail.get("fuel_cb") or {}).get("name", "")
     if _EXCLUDED_FUEL_RE.search(fuel):
         return None

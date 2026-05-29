@@ -43,6 +43,8 @@ def merge_with_previous(df: pd.DataFrame, csv_path: Path) -> pd.DataFrame:
     result_rows = []
     for _, row in prev.iterrows():
         link = row["Odkaz na auto"]
+        if not link:
+            continue
         if link in new_by_link.index:
             result_rows.append(new_by_link.loc[link])
         else:
