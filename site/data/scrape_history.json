@@ -814,5 +814,73 @@
    }
   },
   "total": 8575
+ },
+ {
+  "date": "2026-06-02T10:06:35Z",
+  "trigger": "manual",
+  "sources": {
+   "Autodraft.cz": {
+    "electric": 36,
+    "combustion": 327,
+    "total": 363
+   },
+   "Sauto.cz": {
+    "electric": 205,
+    "combustion": 4581,
+    "total": 4786
+   },
+   "EnergyCars.cz": {
+    "electric": 41,
+    "combustion": 0,
+    "total": 41
+   }
+  },
+  "matching": {
+   "combustion": {
+    "matched": 4770,
+    "unmatched": 138,
+    "total": 4908
+   },
+   "electric": {
+    "matched": 268,
+    "unmatched": 14,
+    "total": 282
+   }
+  },
+  "total": 5190
+ },
+ {
+  "date": "2026-06-02T10:06:36Z",
+  "trigger": "schedule",
+  "sources": {
+   "Autodraft.cz": {
+    "electric": 36,
+    "combustion": 327,
+    "total": 363
+   },
+   "Sauto.cz": {
+    "electric": 205,
+    "combustion": 4581,
+    "total": 4786
+   },
+   "EnergyCars.cz": {
+    "electric": 41,
+    "combustion": 0,
+    "total": 41
+   }
+  },
+  "matching": {
+   "combustion": {
+    "matched": 4770,
+    "unmatched": 138,
+    "total": 4908
+   },
+   "electric": {
+    "matched": 268,
+    "unmatched": 14,
+    "total": 282
+   }
+  },
+  "total": 5190
  }
 ]
