@@ -50,6 +50,120 @@ def fix_electric_model(model):
     return m
 
 
+# --- Body / fuel backfill -------------------------------------------------
+# The "Karoserie × Pohon" overview reads scraped Karoserie/Palivo; many cards
+# omit them, dumping the car into the "Nezadáno" bucket. Once a row is matched
+# to a reference model we can derive body (and combustion fuel) deterministically
+# from the model name, falling back to a per-model body map for bodyless names.
+
+_BODY_NAME_RULES = [
+    (re.compile(r'\bShooting Brake\b', re.I), "Kombi"),
+    (re.compile(r'\b(?:Combi|Kombi|Variant|Avant|Tourer|Touring|Sports Tourer|SW)\b', re.I), "Kombi"),
+    (re.compile(r'\b(?:Liftback|Sportback|Fastback)\b', re.I), "Liftback"),
+    (re.compile(r'\bHatchback\b', re.I), "Hatchback"),
+    (re.compile(r'\b(?:Targa|Coup[ée]|Kabrio|Cabrio)\b', re.I), "Kupé"),
+    (re.compile(r'\bSUV\b', re.I), "SUV"),
+    (re.compile(r'\bSedan\b', re.I), "Sedan"),
+]
+
+# Substring (lowercased) -> body, for model names that carry no body keyword.
+# Order matters: more specific tokens first (e.g. "c40" before "c4").
+_BODY_MODEL_MAP = [
+    ("stelvio", "SUV"), ("e-tron", "SUV"), ("bmw ix", "SUV"), ("x1", "SUV"),
+    ("baic x3", "SUV"), ("baic x5", "SUV"), ("c3 aircross", "SUV"), ("formentor", "SUV"),
+    ("ds 7", "SUV"), ("bigster", "SUV"), ("duster", "SUV"), ("kuga", "SUV"),
+    ("kona", "SUV"), ("santa fe", "SUV"), ("tucson", "SUV"), ("korando", "SUV"),
+    ("torres", "SUV"), ("sportage", "SUV"), ("mg hs", "SUV"), ("mg zs", "SUV"),
+    ("glb", "SUV"), ("mokka", "SUV"), ("arkana", "SUV"), ("captur", "SUV"),
+    ("symbioz", "SUV"), ("arona", "SUV"), ("ateca", "SUV"), ("tarraco", "SUV"),
+    ("t-roc", "SUV"), ("taigo", "SUV"), ("tiguan", "SUV"), ("xc60", "SUV"),
+    ("xc40", "SUV"), ("kamiq", "SUV"), ("karoq", "SUV"), ("kodiaq", "SUV"),
+    ("eqa", "SUV"), ("eqb", "SUV"), ("id.4", "SUV"), ("id.5", "SUV"),
+    ("niro", "SUV"), ("kia ev3", "SUV"), ("tavascan", "SUV"), ("model x", "SUV"),
+    ("model y", "SUV"), ("c40", "SUV"), ("leapmotor b10", "SUV"), ("iev7s", "SUV"),
+    ("q4", "SUV"), ("enyaq", "SUV"),
+    ("tourneo", "MPV"), ("staria", "MPV"), ("caddy", "MPV"), ("sharan", "MPV"),
+    ("multivan", "MPV"), ("touran", "MPV"), ("transporter", "MPV"), ("crafter", "MPV"),
+    ("bmw 2", "MPV"),
+    ("a6", "Sedan"), ("a8", "Sedan"), ("bmw 3", "Sedan"), ("c 220", "Sedan"),
+    ("k4", "Sedan"), ("byd seal", "Sedan"), ("eqe", "Sedan"), ("model 3", "Sedan"),
+    ("c5 x", "Liftback"), ("octavia", "Liftback"),
+    ("i20", "Hatchback"), ("scala", "Hatchback"), ("c4", "Hatchback"),
+    ("bmw i3", "Hatchback"), ("cupra born", "Hatchback"), ("fiat 500", "Hatchback"),
+    ("honda e", "Hatchback"), ("mini cooper", "Hatchback"), ("corsa", "Hatchback"),
+    ("zoe", "Hatchback"), ("id.3", "Hatchback"),
+    ("v90", "Kombi"), ("proceed", "Kombi"),
+]
+
+
+def derive_body(model):
+    """Infer canonical body type from a matched model name, or '' if unknown."""
+    if not isinstance(model, str) or not model:
+        return ""
+    for rx, body in _BODY_NAME_RULES:
+        if rx.search(model):
+            return body
+    low = model.lower()
+    for token, body in _BODY_MODEL_MAP:
+        if token in low:
+            return body
+    return ""
+
+
+_FUEL_DIESEL_RE = re.compile(
+    r'\b(?:TDI|dCi|CRDi|BlueHDi|HDi|CDTi|EcoBlue|SKYACTIV-D|BiTDI)\b|\b\d{3}d\b', re.I)
+_FUEL_PETROL_RE = re.compile(
+    r'\b(?:e?TSI|TFSI|T-GDI|GDI|MPI|EcoBoost|PureTech|TCe|MIVEC|SKYACTIV-G|VTi|e-TEC|GME|Turbo)\b'
+    r'|\b\d[.,]\dT\b', re.I)
+
+
+def derive_fuel(model, engine_type, hybrid):
+    """Infer combustion fuel from model name / engine type. Defaults to Benzín
+    (petrol is the unmarked-combustion majority); diesel/LPG/CNG need a marker."""
+    text = f"{model} {engine_type}"
+    low = text.lower()
+    if "eco-g" in low or re.search(r'\bLPG\b', text, re.I):
+        return "LPG + benzín"
+    if re.search(r'\bCNG\b', text, re.I):
+        return "CNG + benzín"
+    paren = re.search(r'\(([^)]*)\)', model)
+    if paren:
+        pl = paren.group(1).lower()
+        if "nafta" in pl or "diesel" in pl:
+            return "Nafta"
+        if "benzín" in pl or "benzin" in pl:
+            return "Benzín"
+    if _FUEL_DIESEL_RE.search(text):
+        return "Nafta"
+    if _FUEL_PETROL_RE.search(text) or "hybrid" in low:
+        return "Benzín"
+    if str(hybrid).upper() in ("HEV", "PHEV", "MHEV"):
+        return "Benzín"
+    return "Benzín"
+
+
+def backfill_body_fuel(df):
+    """Fill empty Karoserie (both suites) and Palivo (combustion) from the
+    matched model name so cars stop landing in the 'Nezadáno' overview bucket."""
+    def cell(idx, col):
+        if col not in df.columns:
+            return ""
+        v = df.at[idx, col]
+        return "" if (v is None or (isinstance(v, float) and v != v)) else str(v)
+
+    for idx in df.index:
+        model = cell(idx, "Model auta")
+        if not cell(idx, "Karoserie").strip():
+            body = derive_body(model)
+            if body:
+                df.at[idx, "Karoserie"] = body
+        if cell(idx, "Typ") == "Spalovací" and not cell(idx, "Palivo").strip():
+            fuel = derive_fuel(model, cell(idx, "Typ motoru"), cell(idx, "Hybrid typ"))
+            if fuel:
+                df.at[idx, "Palivo"] = fuel
+    return df
+
+
 def rematch_combustion(combustion):
     """Strip noise prefixes and re-run authoritative matching over every row."""
     if combustion.empty or "Model auta" not in combustion.columns:
@@ -306,6 +420,9 @@ def main():
 
     print("Joining electric reference...")
     df = join_electric_reference(df, elec_ref)
+
+    print("Backfilling body/fuel for overview...")
+    df = backfill_body_fuel(df)
 
     numeric_cols = [
         "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
