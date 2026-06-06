@@ -49,6 +49,26 @@ AWD_RE = re.compile(
 _ENYAQ_VARIANT_RE = re.compile(r'\biV\s*(80x?|60|50)\b|\b(80x?|60|50)\b', re.IGNORECASE)
 
 
+# sauto sometimes returns model_cb "Ostatní" for models its catalog has not
+# indexed yet (e.g. a just-launched EV). The real model is then buried in
+# additional_model_name as a dealer-typed project code / trim string, which
+# otherwise produces a garbage "Model auta" that no reference entry can match.
+# Recover known cases so these cars still get backed by the reference list.
+_OSTATNI_RECOVERY = [
+    # Kia EV2 Standard Range: project code "QV1" or its unique 42.2 kWh battery.
+    (lambda brand, s: brand == "Kia" and ("QV1" in s.upper() or bool(re.search(r'42[.,]2', s))),
+     "Kia EV2"),
+]
+
+
+def _recover_ostatni_model(brand: str, suffix: str) -> str:
+    """Map a sauto 'Ostatní' listing to a clean model name, or '' if unknown."""
+    for predicate, name in _OSTATNI_RECOVERY:
+        if predicate(brand, suffix):
+            return name
+    return ""
+
+
 def _enyaq_variant(suffix: str) -> str:
     """Extract Enyaq variant string ('iV 50', 'iV 60', 'iV 80', 'iV 80x') from
     the additional_model_name field, or return '' if not found."""
@@ -113,7 +133,8 @@ def build_record(item: dict, detail: dict) -> dict | None:
     suffix = item.get("additional_model_name") or ""
 
     if model == "Ostatní" and suffix:
-        model_base = normalize_model(f"{brand} {suffix}")
+        recovered = _recover_ostatni_model(brand, suffix)
+        model_base = recovered or normalize_model(f"{brand} {suffix}")
         suffix = ""
     else:
         model_base = normalize_model(f"{brand} {model}")

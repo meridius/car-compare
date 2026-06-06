@@ -1,10 +1,65 @@
 import pandas as pd
 import json
 import os
+import re
 import sys
 from datetime import datetime, timezone
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Combustion authoritative matching is re-run at build time so that ALL cars —
+# including listings already removed from source providers (frozen rows that the
+# scraper never re-processes) — get backed by the current reference list.
+sys.path.insert(0, os.path.join(BASE_DIR, "combustion", "src"))
+import utils as comb_utils  # noqa: E402
+
+# Status/promo banners that leak into "Model auta" from autodraft cards and break
+# brand parsing (e.g. "domluvená prohlídka Škoda Karoq 2.0 TDI").
+_NOISE_PREFIX_RE = re.compile(
+    r'^(?:\d+\s*let[áa]\s+z[áa]ruka\s+te[ďd]\s+zdarma'
+    r'|domluven[áa]\s+prohl[íi]dka'
+    r'|z[áa]lohovan[éoa]'
+    r'|zarezervovan[éoa]'
+    r'|rezervov[áa]n[oa]'
+    r'|prodan[éoa]'
+    r'|zamluven[éoa])\s+',
+    re.IGNORECASE,
+)
+
+
+def strip_listing_noise(model):
+    """Remove leading status/promo banners that leaked into the model name."""
+    if not isinstance(model, str):
+        return model
+    prev = None
+    while prev != model:
+        prev = model
+        model = _NOISE_PREFIX_RE.sub("", model).strip()
+    return model
+
+
+def fix_electric_model(model):
+    """Strip noise and heal frozen sauto 'Ostatní' garbage names (mirrors the
+    electric sauto scraper's _recover_ostatni_model, for rows scraped before the
+    fix landed). Kia EV2 = project code 'QV1' or its unique 42.2 kWh battery."""
+    m = strip_listing_noise(model)
+    if isinstance(m, str) and m.startswith("Kia ") and (
+        "QV1" in m.upper() or re.search(r'42[.,]2', m)
+    ):
+        return "Kia EV2"
+    return m
+
+
+def rematch_combustion(combustion):
+    """Strip noise prefixes and re-run authoritative matching over every row."""
+    if combustion.empty or "Model auta" not in combustion.columns:
+        return combustion
+    combustion["Model auta"] = (
+        combustion["Model auta"].map(strip_listing_noise).map(comb_utils.normalize_model)
+    )
+    auth_path = os.path.join(BASE_DIR, "combustion", "data", "makes-and-models.csv")
+    auth_list = comb_utils.load_authoritative_list(auth_path)
+    return comb_utils.match_to_authoritative(combustion, auth_list)
 
 def parse_czech_decimal(val):
     """Parse Czech decimal format: '7,4' -> 7.4, '1,6 (13,8 kWh)' -> 1.6"""
@@ -232,6 +287,11 @@ def main():
     print("Loading scraper CSVs...")
     electric = load_electric_csvs()
     combustion = load_combustion_csvs()
+
+    print("Re-matching combustion against authoritative list...")
+    combustion = rematch_combustion(combustion)
+    if not electric.empty and "Model auta" in electric.columns:
+        electric["Model auta"] = electric["Model auta"].map(fix_electric_model)
 
     print("Merging suites...")
     df = pd.concat([electric, combustion], ignore_index=True)
