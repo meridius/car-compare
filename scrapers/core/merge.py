@@ -13,14 +13,15 @@ def merge_with_previous(df: pd.DataFrame, csv_path: Path) -> pd.DataFrame:
     if "Odkaz na auto" not in prev.columns:
         return df
 
-    new_by_link = df.set_index("Odkaz na auto")
     result_rows = []
     for _, row in prev.iterrows():
         link = row["Odkaz na auto"]
         if not link:
             continue
-        if link in new_by_link.index:
-            result_rows.append(new_by_link.loc[link])
+        # Find the row in the new DataFrame by link, preserving all columns
+        new_rows = df[df["Odkaz na auto"] == link]
+        if len(new_rows) > 0:
+            result_rows.append(new_rows.iloc[0].to_dict())
         else:
             row = row.copy()
             row["Stav"] = "Odstraněno"
@@ -29,5 +30,5 @@ def merge_with_previous(df: pd.DataFrame, csv_path: Path) -> pd.DataFrame:
     prev_links = set(prev["Odkaz na auto"])
     for _, row in df.iterrows():
         if row["Odkaz na auto"] not in prev_links:
-            result_rows.append(row)
+            result_rows.append(row.to_dict())
     return pd.DataFrame(result_rows).reset_index(drop=True)
