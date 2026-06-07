@@ -791,6 +791,9 @@
       for (var f = 0; f < pohonList.length; f++) hdr5.push(pohonList[f]);
       hdr5.push("Celkem");
       var tbl5 = makeTable(hdr5);
+      tbl5.querySelector("tr").lastChild.className = "celkem-col";
+      var colTotals = {};
+      var grandTotal = 0;
       for (var b = 0; b < bodyKeys.length; b++) {
         var cells = [bodyKeys[b]];
         var rowTotal = 0;
@@ -798,10 +801,19 @@
           var val = matrix[bodyKeys[b]][pohonList[f]] || 0;
           cells.push(fmtNum(val));
           rowTotal += val;
+          colTotals[pohonList[f]] = (colTotals[pohonList[f]] || 0) + val;
         }
         cells.push(fmtNum(rowTotal));
-        addRow(tbl5, cells);
+        grandTotal += rowTotal;
+        var tr5 = addRow(tbl5, cells);
+        tr5.lastChild.className = "celkem-col";
       }
+      var totCells = ["Celkem"];
+      for (var f = 0; f < pohonList.length; f++) totCells.push(fmtNum(colTotals[pohonList[f]] || 0));
+      totCells.push(fmtNum(grandTotal));
+      var trTot = addRow(tbl5, totCells);
+      trTot.className = "celkem-row";
+      trTot.lastChild.className = "celkem-col";
       card5.appendChild(tbl5);
       body.appendChild(card5);
     }
@@ -867,6 +879,7 @@
       tr.appendChild(td);
     }
     tbl.appendChild(tr);
+    return tr;
   }
 
   function loadChart() {

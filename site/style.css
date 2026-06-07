@@ -380,6 +380,15 @@ a:hover { text-decoration: underline; }
     color: var(--clr-text);
 }
 
+.summary-table tr.celkem-row td {
+    border-top: 2px solid var(--clr-text-muted);
+    font-weight: 600;
+}
+
+.summary-table .celkem-col {
+    border-left: 2px solid var(--clr-text-muted);
+}
+
 .summary-stat {
     display: inline-block;
     margin-right: 24px;
