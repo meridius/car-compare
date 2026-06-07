@@ -606,6 +606,7 @@
     var gridOptions = {
       columnDefs: buildColumnDefs(),
       rowData: data,
+      rowHeight: 25,
       defaultColDef: {
         sortable: true,
         resizable: true,

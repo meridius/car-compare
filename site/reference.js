@@ -401,6 +401,7 @@
       theme: "legacy",
       columnDefs: COL_DEFS,
       rowData: data,
+      rowHeight: 25,
       defaultColDef: {
         floatingFilter: true,
         wrapHeaderText: true,
