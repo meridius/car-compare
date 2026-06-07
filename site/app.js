@@ -257,7 +257,7 @@
     { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false },
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
-    { field: "Objem motoru", filter: "agSetColumnFilter", w: 80 },
+    { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90 },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
@@ -346,7 +346,7 @@
       if (p.value == null) return "";
       if (field === "Cena (Kč)") return Number(p.value).toLocaleString("cs-CZ") + " Kč";
       if (field === "Nájezd (km)") return Number(p.value).toLocaleString("cs-CZ") + " km";
-      if (field === "Spotřeba (l/100 km)") return p.value.toFixed(1);
+      if (field === "Spotřeba (l/100 km)" || field === "Objem motoru") return p.value.toFixed(1);
       return String(p.value);
     };
   }
