@@ -1,26 +1,72 @@
-# Task list
+# Tasks
 
-Work on the following tasks. Check off each item as you complete it. Commit and push your changes after each task.
+> **Workflow:**
+>
+> 1. Add tasks to `## New`
+> 2. Run `/triage` (or `./bin/triage.sh` non-interactively) — classifies tasks, assigns ID + routing metadata, moves them to the right section
+> 3. Answer questions under `## Needs Scoping` in chat (reply directly under each Q line), then re-run `/triage` to promote to Atomic
+> 4. Run `/work` (or `./bin/work.sh`) to execute next Atomic task; `./bin/work.sh --all` to drain the queue
+>
+> Tasks can declare `· blocked-by: #N` in their metadata — `/work` skips them until the blocker is done.
 
-## Website
+## New
 
-- the "Objem motoru" column should be sortable and filterable as numbers
-- rows in "Referenční modely" page should be the height as on the main page
-- add "Celkem" row to the bottom of the "Karoserie × Pohon" table on the "Přehled datasetu" pop-up
-    - separate both "Celkem" cols/rows with bolder lines
-- use decimals in the "%" col of the "Párování s referenčními modely" table on the "Přehled datasetu" pop-up
+<!-- Add new tasks here, then run /triage -->
 
-## Data
+## Needs Scoping
 
-- fix `merge_with_previous` NaN-link bug: rows present in both the previous and new scrape lose `Odkaz na auto` because `df.set_index("Odkaz na auto").loc[link]` drops the index column — causes link churn on every incremental run (`scrapers/core/merge.py`)
-- fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry — dead guard in `build/build_data.py`, cosmetic/pre-existing
-- you may have to unify combustion/data/makes-and-models.csv and electric/data/new_cars_specs.csv into a single source of truth
-    - This is part of larger refactor and should be worked on separately - when i specifically ask for it.
-- add mobile.de
-- widen the scraping on sauto.cz and other sites to get more data
-- values "Ne" and "Ano" in any field should be converted to their proper case
-- in case the "Spárováno" column has empty values, it should be reported somewhere in the UI, so pairing can be improved, and not just ignored
-- the col "Model auta" should be split into "Značka" and "Model" displayed in that order on the UI as header columns
-- the col "Model auta" should not contain values from the "Objem motoru" and "Typ motoru" columns since those values are already in their respective columns
-    - i know this is what the cars are called in the "Referenční modely" page, but those values should be there as a separate columns too
-- some cols like "Karoserie" should be listed on the "Referenční modely" page as well as are on the main page, so they can be used for matching to scraped cars
+Tasks below need your input. Reply directly under each Q line in chat, then run `/triage` to promote to Atomic.
+
+- [ ] **#1** add mobile.de
+  > ❓ Q1: Requires browser scraping or REST API available?
+  > ❓ Q2: Czech listings only or EU-wide?
+  > ❓ Q3: Same canonical schema, or new fields needed?
+
+- [ ] **#2** widen scraping on sauto.cz and other sites
+  > ❓ Q1: Which filters to relax? (price ceiling, year floor, km ceiling, body types?)
+  > ❓ Q2: Any other sites in scope besides sauto?
+
+- [ ] **#3** split "Model auta" col into "Značka" + "Model" displayed in that order
+  > ❓ Q1: Split client-side in app.js/reference.js, or emit separate fields from build_data.py?
+  > ❓ Q2: Matching and reference enrichment key on "Model auta" — how should they behave post-split?
+
+- [ ] **#4** "Model auta" should not contain Objem motoru / Typ motoru values
+  > ❓ Q1: Strip from scraped names only, or also from reference CSVs?
+  > ❓ Q2: Does stripping break the reference join key for ICE?
+
+- [ ] **#5** add Karoserie (and other cols) to Referenční modely page for matching
+  > ❓ Q1: Which columns specifically — just Karoserie, or also Palivo / Objem / Výkon?
+  > ❓ Q2: Are these already in ice_specs.csv / ev_specs.csv, or need adding to reference CSVs?
+
+## Atomic
+
+Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
+
+- [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
+  > flow:feature-dev · model:haiku · effort:low
+
+- [ ] **#8** Reference page row height = main page row height
+  > flow:ralph · model:haiku · effort:low
+
+- [ ] **#9** Add "Celkem" row to bottom of "Karoserie × Pohon" table in dataset overview; separate Celkem row/col with bolder lines
+  > flow:ralph · model:sonnet · effort:medium
+
+- [ ] **#10** Use decimals in "%" col of "Párování s referenčními modely" table in dataset overview
+  > flow:ralph · model:haiku · effort:low
+
+- [ ] **#11** Fix `merge_with_previous` NaN-link bug: `set_index("Odkaz na auto").loc[link]` drops index col, clobbering link on rows present in both scrapes (`scrapers/core/merge.py`)
+  > flow:ralph · model:haiku · effort:low
+
+- [ ] **#12** Fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry (`build/build_data.py`)
+  > flow:ralph · model:haiku · effort:low
+
+- [ ] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
+  > flow:ralph · model:haiku · effort:low
+
+- [ ] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
+  > flow:ralph · model:sonnet · effort:medium
+
+## Done
+
+- [x] **#7** "Objem motoru" col sortable + filterable as numbers
+  > flow:ralph · model:sonnet · effort:low
