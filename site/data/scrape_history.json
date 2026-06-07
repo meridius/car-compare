@@ -1292,13 +1292,13 @@
   "total": 7939
  },
  {
-  "date": "2026-06-07T19:34:21Z",
-  "trigger": "push",
+  "date": "2026-06-07T21:05:17Z",
+  "trigger": "manual",
   "sources": {
    "Sauto.cz": {
-    "electric": 184,
-    "combustion": 7375,
-    "total": 7559
+    "electric": 185,
+    "combustion": 7388,
+    "total": 7573
    },
    "Autodraft.cz": {
     "electric": 52,
@@ -1313,16 +1313,16 @@
   },
   "matching": {
    "combustion": {
-    "matched": 7645,
+    "matched": 7658,
     "unmatched": 4,
-    "total": 7649
+    "total": 7662
    },
    "electric": {
-    "matched": 274,
+    "matched": 275,
     "unmatched": 2,
-    "total": 276
+    "total": 277
    }
   },
-  "total": 7925
+  "total": 7939
  }
 ]
