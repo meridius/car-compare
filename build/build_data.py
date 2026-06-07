@@ -10,8 +10,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Combustion authoritative matching is re-run at build time so that ALL cars —
 # including listings already removed from source providers (frozen rows that the
 # scraper never re-processes) — get backed by the current reference list.
-sys.path.insert(0, os.path.join(BASE_DIR, "combustion", "src"))
-import utils as comb_utils  # noqa: E402
+sys.path.insert(0, BASE_DIR)
+from scrapers.core import matching as comb_utils  # noqa: E402
+from scrapers.core.normalize import normalize_model as _normalize_model  # noqa: E402
 
 # Status/promo banners that leak into "Model auta" from autodraft cards and break
 # brand parsing (e.g. "domluvená prohlídka Škoda Karoq 2.0 TDI").
@@ -169,9 +170,9 @@ def rematch_combustion(combustion):
     if combustion.empty or "Model auta" not in combustion.columns:
         return combustion
     combustion["Model auta"] = (
-        combustion["Model auta"].map(strip_listing_noise).map(comb_utils.normalize_model)
+        combustion["Model auta"].map(strip_listing_noise).map(_normalize_model)
     )
-    auth_path = os.path.join(BASE_DIR, "combustion", "data", "makes-and-models.csv")
+    auth_path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
     auth_list = comb_utils.load_authoritative_list(auth_path)
     return comb_utils.match_to_authoritative(combustion, auth_list)
 
@@ -188,36 +189,25 @@ def parse_czech_decimal(val):
     except ValueError:
         return None
 
-def load_electric_csvs():
+def load_scraper_csvs():
     dfs = []
-    for name in ["autodraft", "energycars", "sauto"]:
-        path = os.path.join(BASE_DIR, "electric", "data", "scrapes", f"{name}.csv")
+    scrapes = os.path.join(BASE_DIR, "scrapers", "data", "scrapes")
+    for name in ["sauto", "autodraft", "energycars"]:
+        path = os.path.join(scrapes, f"{name}.csv")
         if os.path.exists(path):
             df = pd.read_csv(path)
-            df["Typ"] = "Elektrické"
             dfs.append(df)
-            print(f"  Electric/{name}: {len(df)} rows")
-    return pd.concat(dfs, ignore_index=True) if dfs else pd.DataFrame()
-
-def load_combustion_csvs():
-    dfs = []
-    for name in ["autodraft", "sauto"]:
-        path = os.path.join(BASE_DIR, "combustion", "data", "scrapes", f"{name}.csv")
-        if os.path.exists(path):
-            df = pd.read_csv(path)
-            df["Typ"] = "Spalovací"
-            dfs.append(df)
-            print(f"  Combustion/{name}: {len(df)} rows")
+            print(f"  {name}: {len(df)} rows")
     return pd.concat(dfs, ignore_index=True) if dfs else pd.DataFrame()
 
 def load_combustion_reference():
-    path = os.path.join(BASE_DIR, "combustion", "data", "makes-and-models.csv")
+    path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
     df = pd.read_csv(path)
     df["Spotřeba (l/100 km)"] = df["Spotřeba (l/100 km)"].apply(parse_czech_decimal)
     return df
 
 def load_electric_reference():
-    path = os.path.join(BASE_DIR, "electric", "data", "new_cars_specs.csv")
+    path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ev_specs.csv")
     df = pd.read_csv(path, sep=";")
     for col in ["Kapacita baterie (kWh)"]:
         if col in df.columns:
@@ -399,17 +389,18 @@ def update_scrape_history(metadata):
 
 def main():
     print("Loading scraper CSVs...")
-    electric = load_electric_csvs()
-    combustion = load_combustion_csvs()
+    df = load_scraper_csvs()
+    print(f"  Combined: {len(df)} rows, {len(df.columns)} columns")
 
     print("Re-matching combustion against authoritative list...")
-    combustion = rematch_combustion(combustion)
-    if not electric.empty and "Model auta" in electric.columns:
-        electric["Model auta"] = electric["Model auta"].map(fix_electric_model)
-
-    print("Merging suites...")
-    df = pd.concat([electric, combustion], ignore_index=True)
-    print(f"  Combined: {len(df)} rows, {len(df.columns)} columns")
+    combustion_mask = df["Typ"] == "Spalovací"
+    electric_mask = df["Typ"] == "Elektrické"
+    combustion_part = df[combustion_mask].copy()
+    electric_part = df[electric_mask].copy()
+    combustion_part = rematch_combustion(combustion_part)
+    if not electric_part.empty and "Model auta" in electric_part.columns:
+        electric_part["Model auta"] = electric_part["Model auta"].map(fix_electric_model)
+    df = pd.concat([electric_part, combustion_part], ignore_index=True)
 
     print("Loading reference data...")
     comb_ref = load_combustion_reference()
@@ -470,8 +461,8 @@ def main():
         "sources": count_sources(df),
         "matching": count_matching(df),
         "referenceData": {
-            "combustion": {"file": "makes-and-models.csv", "count": len(comb_ref)},
-            "electric": {"file": "new_cars_specs.csv", "count": len(elec_ref)},
+            "combustion": {"file": "ice_specs.csv", "count": len(comb_ref)},
+            "electric": {"file": "ev_specs.csv", "count": len(elec_ref)},
         },
         "totalCars": len(records),
     }

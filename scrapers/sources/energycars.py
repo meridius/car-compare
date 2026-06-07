@@ -1,37 +1,22 @@
+"""EnergyCars.cz adapter — EV-only listings via Playwright + BeautifulSoup."""
 import asyncio
 import re
-from pathlib import Path
-import pandas as pd
 from bs4 import BeautifulSoup
 from playwright.async_api import async_playwright
 
-from utils import normalize_model, extract_body_type, merge_with_previous
+from scrapers.core import browser, schema
+from scrapers.core.normalize import normalize_model
+from scrapers.core.fields import extract_body_type
 
-COLS = [
-    "Model auta", "Cena (K\u010d)", "N\u00e1jezd (km)", "V\u00fdkon (kW)", "Rok v\u00fdroby",
-    "Tepeln\u00e9 \u010derpadlo", "Kola", "N\u00e1hon 4x4", "Karoserie", "Extra", "Stav", "Zdroj", "Odkaz na auto",
-]
+SOURCE_NAME = "EnergyCars.cz"
+SOURCE_SLUG = "energycars"
+FUELS = {"EV"}
 
 URL = "https://www.energycars.cz/nabidka-vozidel/?ordering=price_asc"
 DETAIL_CONCURRENCY = 5
 
 
-async def load_all(page):
-    """Click any 'load more' button until it disappears."""
-    for label in ["Načíst další", "Zobrazit více", "Načíst více"]:
-        while True:
-            try:
-                btn = page.locator(f'text="{label}"')
-                if await btn.count() > 0 and await btn.is_visible():
-                    await btn.click()
-                    await page.wait_for_timeout(2000)
-                else:
-                    break
-            except Exception:
-                break
-
-
-async def fetch_detail_data(browser, url, semaphore):
+async def fetch_detail_data(browser_obj, url, semaphore):
     """Return (tepelné_čerpadlo, kola, náhon_4x4, detail_model, price) from a car detail page.
 
     Scrapes:
@@ -43,7 +28,7 @@ async def fetch_detail_data(browser, url, semaphore):
     """
     try:
         async with semaphore:
-            page = await browser.new_page()
+            page = await browser_obj.new_page()
             try:
                 await page.goto(url, wait_until="domcontentloaded", timeout=15000)
                 html = await page.content()
@@ -59,7 +44,7 @@ async def fetch_detail_data(browser, url, semaphore):
     tepelne = "Ano" if "Tepelné čerpadlo" in text else "Ne"
 
     # Wheel size: matches "17" kola", "19" kola", "20" kola" etc.
-    kola_match = re.search(r'(\d{2})["\u201d]\s*kola', text)
+    kola_match = re.search(r'(\d{2})["”]\s*kola', text)
     kola = f'{kola_match.group(1)}"' if kola_match else ""
 
     # Drive type from the Motor parameters table
@@ -89,24 +74,18 @@ async def fetch_detail_data(browser, url, semaphore):
     return tepelne, kola, awd, detail_model, price
 
 
-async def scrape_energycars():
+async def scrape():
+    """Scrape EnergyCars.cz and return a list of canonical row dicts."""
     async with async_playwright() as p:
-        browser = await p.chromium.launch(headless=True)
-        page = await browser.new_page()
+        browser_obj = await p.chromium.launch(headless=True)
+        page = await browser_obj.new_page()
 
         print(f"Zpracovávám: {URL}")
         await page.goto(URL)
 
-        # Accept cookies
-        for cookie_text in ["Souhlasím", "Accept all", "Přijmout vše"]:
-            try:
-                await page.click(f'text="{cookie_text}"', timeout=2000)
-                await page.wait_for_timeout(500)
-                break
-            except Exception:
-                pass
+        await browser.accept_cookies(page, ["Souhlasím", "Accept all", "Přijmout vše"])
 
-        await load_all(page)
+        await browser.load_all(page, ["Načíst další", "Zobrazit více", "Načíst více"])
 
         html = await page.content()
         soup = BeautifulSoup(html, "html.parser")
@@ -178,7 +157,9 @@ async def scrape_energycars():
             if battery_kwh:
                 extra_parts.append(f"Baterie {battery_kwh} kWh")
 
-            cars.append({
+            row = schema.blank_row()
+            row.update({
+                "Typ":              schema.TYP_EV,
                 "Model auta":       model,
                 "Cena (Kč)":        price,
                 "Nájezd (km)":      mileage,
@@ -188,17 +169,19 @@ async def scrape_energycars():
                 "Kola":             "",   # filled from detail page
                 "Náhon 4x4":        "",   # filled from detail page
                 "Karoserie":        extract_body_type(model),
+                "Palivo":           "Elektro",
                 "Extra":            " / ".join(extra_parts),
                 "Stav":             "Dostupný",
-                "Zdroj":            "EnergyCars.cz",
+                "Zdroj":            SOURCE_NAME,
                 "Odkaz na auto":    link,
             })
+            cars.append(row)
 
         # Fetch all detail pages concurrently (capped by semaphore)
         print(f"  Načítám detaily pro {len(cars)} aut...")
         semaphore = asyncio.Semaphore(DETAIL_CONCURRENCY)
         detail_results = await asyncio.gather(
-            *[fetch_detail_data(browser, car["Odkaz na auto"], semaphore) for car in cars]
+            *[fetch_detail_data(browser_obj, car["Odkaz na auto"], semaphore) for car in cars]
         )
         for car, (tepelne, kola, awd, detail_model, detail_price) in zip(cars, detail_results):
             car["Tepelné čerpadlo"] = tepelne
@@ -211,15 +194,5 @@ async def scrape_energycars():
             if detail_model and detail_model.startswith(car["Model auta"]) and len(detail_model) > len(car["Model auta"]):
                 car["Model auta"] = detail_model
 
-        df = pd.DataFrame(cars, columns=COLS)
-        df.drop_duplicates(subset="Odkaz na auto", inplace=True)
-        csv_path = Path(__file__).parent.parent / "data" / "scrapes" / "energycars.csv"
-        df = merge_with_previous(df, csv_path)
-        df.to_csv(csv_path, index=False, encoding="utf-8")
-        print(f"Hotovo – uloženo {len(df)} aut do energycars.csv")
-
-        await browser.close()
-
-
-if __name__ == "__main__":
-    asyncio.run(scrape_energycars())
+        await browser_obj.close()
+        return cars

@@ -4,23 +4,23 @@ Work on the following tasks. Check off each item as you complete it. Commit and 
 
 ## Website
 
-- the X-axis of chart in "Historie scrapování" has only dates, which is not very informative as the scraping can happen multiple times a day (given manual triggering of the scrapers)
-- the "Matice Typ × Palivo" should be redone to make more sense
+- the "Objem motoru" column should be sortable and filterable as numbers
+- rows in "Referenční modely" page should be the height as on the main page
+- add "Celkem" row to the bottom of the "Karoserie × Pohon" table on the "Přehled datasetu" pop-up
+    - separate both "Celkem" cols/rows with bolder lines
+- use decimals in the "%" col of the "Párování s referenčními modely" table on the "Přehled datasetu" pop-up
 
 ## Data
 
+- fix `merge_with_previous` NaN-link bug: rows present in both the previous and new scrape lose `Odkaz na auto` because `df.set_index("Odkaz na auto").loc[link]` drops the index column — causes link churn on every incremental run (`scrapers/core/merge.py`)
+- fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry — dead guard in `build/build_data.py`, cosmetic/pre-existing
 - you may have to unify combustion/data/makes-and-models.csv and electric/data/new_cars_specs.csv into a single source of truth
     - This is part of larger refactor and should be worked on separately - when i specifically ask for it.
-- [x] validate that old data are never removed from the CSVs (only marked as "Odstraněno" in the "Stav" column) when the scrapers don't find them anymore. This is crucial for tracking the history of listings and ensuring data integrity over time.
-    - items returned by the scrapers should be merged with the previous CSV data
-- [x] many of cars have empty "Stav" field
-    - Root cause: sauto detail API fetch failures → `build_record()` created incomplete records with no Stav/Palivo/Výkon
-    - Fix: `build_record()` now returns `None` when detail is empty (both electric + combustion)
-    - Cleaned 5,392 broken records from combustion/data/scrapes/sauto.csv
-- [x] there seem to be quite a lot of (potentially) duplicate entries in the CSVs, which should be investigated and resolved to maintain data quality
-    - from history it seems that every four days the number of items in the CSVs increases by about 8k
-    - Root cause: rows without "Odkaz na auto" (URL) couldn't be deduped by `merge_with_previous()` → accumulated as duplicates every scrape run
-    - Fix: (1) `build_record()` rejects empty detail fetches, (2) `merge_with_previous()` skips empty-link rows, (3) cleaned 25,488 linkless/broken rows from all CSVs
-    - Cross-source duplicates (same car on autodraft + sauto) are minimal (4 cars) — not actionable
-    - also some items are still not paired with the "base" vehicles
-    - whole process of data extraction, transformation, and pairing to the "base" vehicles should be thoroughly reviewed
+- add mobile.de
+- widen the scraping on sauto.cz and other sites to get more data
+- values "Ne" and "Ano" in any field should be converted to their proper case
+- in case the "Spárováno" column has empty values, it should be reported somewhere in the UI, so pairing can be improved, and not just ignored
+- the col "Model auta" should be split into "Značka" and "Model" displayed in that order on the UI as header columns
+- the col "Model auta" should not contain values from the "Objem motoru" and "Typ motoru" columns since those values are already in their respective columns
+    - i know this is what the cars are called in the "Referenční modely" page, but those values should be there as a separate columns too
+- some cols like "Karoserie" should be listed on the "Referenční modely" page as well as are on the main page, so they can be used for matching to scraped cars

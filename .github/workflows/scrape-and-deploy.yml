@@ -47,7 +47,7 @@ jobs:
         run: |
           git config user.name "Martin Lukeš"
           git config user.email "martin.meridius@gmail.com"
-          git add electric/data/scrapes/ combustion/data/scrapes/ site/data/
+          git add scrapers/data/scrapes/ site/data/
           git diff --cached --quiet && echo "No changes" || git commit -m "data: daily scrape $(date -u +%Y-%m-%d)"
           git push
 

@@ -4,38 +4,32 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$SCRIPT_DIR/.."
 
-MODE="all"
-EXTRA_ARGS=()
+# Ensure CWD is repo root so `python -m scrapers.run` can resolve the package.
+cd "$ROOT"
 
-while [[ $# -gt 0 ]]; do
-    case "$1" in
-        --electric)    MODE="electric"; shift ;;
-        --combustion)  MODE="combustion"; shift ;;
-        --all)         MODE="all"; shift ;;
-        -s|--scrapers) EXTRA_ARGS+=("-s" "$2"); shift 2 ;;
-        *)             echo "Usage: $0 [--electric|--combustion|--all] [-s SCRAPERS]"
-                       exit 1 ;;
-    esac
-done
+echo "==> Kontroluji Python závislosti..."
+python3 -c "import playwright, pandas, bs4, aiohttp" 2>/dev/null || {
+    echo "    Instaluji chybějící balíčky..."
+    pip install playwright pandas beautifulsoup4 aiohttp
+}
 
-failed=0
-
-if [[ "$MODE" == "electric" || "$MODE" == "all" ]]; then
-    echo "=== ELECTRIC ==="
-    "$ROOT/electric/bin/run_scraper.sh" "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}" || failed=$((failed + 1))
+echo "==> Kontroluji Playwright Chromium prohlížeč..."
+_chromium_ok=$(python3 - 2>/dev/null <<'PYEOF'
+from playwright.sync_api import sync_playwright
+import os, sys
+try:
+    with sync_playwright() as p:
+        print("yes" if os.path.isfile(p.chromium.executable_path) else "no")
+except Exception:
+    print("no")
+PYEOF
+)
+if [ "${_chromium_ok:-no}" != "yes" ]; then
+    echo "    Instaluji Playwright Chromium..."
+    playwright install chromium
 fi
 
-if [[ "$MODE" == "combustion" || "$MODE" == "all" ]]; then
-    echo "=== COMBUSTION ==="
-    "$ROOT/combustion/bin/run_scraper.sh" "${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}" || failed=$((failed + 1))
-fi
-
-if [[ $failed -gt 0 ]]; then
-    echo "==> $failed runner(s) selhalo." >&2
-    exit 1
-fi
-
-echo "=== BUILD ==="
-python3 "$ROOT/build/build_data.py"
+echo "==> Spouštím unified scraper..."
+python3 -m scrapers.run "$@"
 
 echo "==> Vše dokončeno."

@@ -28,27 +28,29 @@ Use `re.IGNORECASE` + `re.fullmatch` / `re.search` / `re.compile` consistently; 
 
 ## Brand Normalisation
 
-All brand-name aliases belong in `utils.BRAND_MAP`. Never add brand replacements inline inside scraper files.
+All brand-name aliases belong in `core/normalize.py` `BRAND_MAP`. Never add brand replacements inline inside source adapters.
 
-Model cleanup patterns (regex fixups) belong in `utils.MODEL_CLEANUP_PATTERNS`.
+Model cleanup patterns (regex fixups) belong in `core/normalize.py` `MODEL_CLEANUP_PATTERNS`.
 
 ## Column Order
 
-The final DataFrame column list must match the order in `{suite}/data/scrape-data-cols.txt`. Never reorder silently.
+The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/schema.py`. Never reorder silently. Adapters emit exactly these 24 columns (use `blank_row()` for the ones they don't fill).
 
 ## Running Scrapers
 
-- Recommend `./electric/bin/run_scraper.sh` or `./combustion/bin/run_scraper.sh` (handles dep check + parallel run).
-- Run individual scrapers only when debugging a single scraper in isolation (`cd electric/src && python3 scrape_*.py`).
+- Recommend `./bin/run_all.sh` (dep check + run all sources), or `./bin/run_all.sh --source <name>` for a subset.
+- Debug a single source with `python -m scrapers.run --source <name>` (sources: `sauto`, `autodraft`, `energycars`).
 
 ## Verification After Changes
 
-After modifying any scraper or `utils.py`, **always run the affected scraper(s)** and verify the CSV output before reporting the task as complete. Check:
+After modifying any source adapter or `core/` module, **always run the affected source(s)** and verify the CSV output before reporting the task as complete. Check:
 
-1. Scraper runs without errors
-2. Column count matches `scrape-data-cols.txt`
+1. `python -m scrapers.run --source <name>` runs without errors
+2. Column count matches `CANONICAL_COLS` in `scrapers/core/schema.py` (24)
 3. New/changed fields are populated (spot-check with `pandas value_counts`)
 4. Existing fields still correct (model, price, mileage)
+
+Parity / regression checks must run on a **fresh** scrape (delete `scrapers/data/scrapes/*.csv` first) — see the `merge_with_previous` gotcha for why a previous CSV can corrupt links.
 
 ## UI Verification After Changes
 

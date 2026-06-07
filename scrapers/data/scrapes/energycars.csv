@@ -1,0 +1,41 @@
+Typ,Model auta,Cena (Kč),Nájezd (km),Rok výroby,Palivo,Objem motoru,Typ motoru,Hybrid typ,Výkon (kW),Převodovka,Dvouspojková převodovka,Filtr pevných částic,Kola,Náhon 4x4,Karoserie,Výbava,Záruka,Tepelné čerpadlo,Spárováno,Extra,Stav,Zdroj
+Elektrické,Audi Q4 e-tron,719900,80622,2021,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 523 km,Dostupný,EnergyCars.cz
+Elektrické,BMW i3,389900,55416,2017,Elektro,,,,125,,,,"19""",Ne,,,,Ano,,Dojezd 250 km / Baterie 32 kWh,Dostupný,EnergyCars.cz
+Elektrické,BMW i3,559000,62923,2019,Elektro,,,,135,,,,"20""",Ne,,,,Ano,,Dojezd 359 km / Baterie 42 kWh,Dostupný,EnergyCars.cz
+Elektrické,BMW iX,1149900,25518,2022,Elektro,,,,240,,,,"21""",Ano,,,,Ano,,Dojezd 425 km / Baterie 76 kWh,Dostupný,EnergyCars.cz
+Elektrické,BYD Seal,1049900,44796,2024,Elektro,,,,390,,,,"19""",Ano,,,,Ne,,Dojezd 520 km / Baterie 84 kWh,Dostupný,EnergyCars.cz
+Elektrické,Fiat 500 e,449900,20637,2023,Elektro,,,,87,,,,"16""",Ne,,,,Ne,,Dojezd 333 km,Dostupný,EnergyCars.cz
+Elektrické,Honda e,449900,27026,2021,Elektro,,,,113,,,,"17""",Ne,,,,Ne,,Dojezd 222 km,Dostupný,EnergyCars.cz
+Elektrické,JAC iEV7S,359900,53669,2020,Elektro,,,,85,,,,,Ne,,,,Ne,,"Dojezd 300 km / Baterie 43,50 kWh",Dostupný,EnergyCars.cz
+Elektrické,Kia EV3,949900,1101,2025,Elektro,,,,150,,,,"17""",Ne,,,,Ne,,Dojezd 605 km,Dostupný,EnergyCars.cz
+Elektrické,Kia Niro,649900,93621,2023,Elektro,,,,150,,,,"17""",Ne,,,,Ne,,Dojezd 463 km / Baterie 64 kWh,Dostupný,EnergyCars.cz
+Elektrické,Mercedes-Benz EQA,699900,49576,2022,Elektro,,,,140,,,,,Ne,,,,Ne,,Dojezd 486 km / Baterie 69 kWh,Dostupný,EnergyCars.cz
+Elektrické,Mercedes-Benz EQE,1149900,37036,2022,Elektro,,,,215,,,,,Ne,,,,Ano,,Dojezd 693 km / Baterie 105 kWh,Dostupný,EnergyCars.cz
+Elektrické,MINI Cooper SE,759900,2754,2024,Elektro,,,,,,,,,Ne,,,,Ne,,Dojezd 305 km / Baterie 40 kWh,Dostupný,EnergyCars.cz
+Elektrické,MINI Cooper,529900,40763,2022,Elektro,,,,135,,,,"17""",Ne,,,,Ano,,Dojezd 234 km,Dostupný,EnergyCars.cz
+Elektrické,Opel Corsa,399900,62619,2021,Elektro,,,,100,,,,"17""",Ne,,,,Ne,,Dojezd 337 km,Dostupný,EnergyCars.cz
+Elektrické,Renault ZOE,399900,8762,2021,Elektro,,,,80,,,,,Ne,,,,Ne,,Dojezd 395 km,Dostupný,EnergyCars.cz
+Elektrické,Škoda Octavia,599900,72316,2020,Elektro,,,,110,,,,"18""",Ne,,,,Ne,,Dojezd 68 km / Baterie 13 kWh,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,449900,134099,2020,Elektro,,,,239,,,,"18""",Ne,,,,Ne,,Dojezd 409 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,599900,131254,2021,Elektro,,,,208,,,,"18""",Ne,,,,Ne,,Dojezd 448 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,749900,67904,2021,Elektro,,,,366,,,,"18""",Ano,,,,Ano,,Dojezd 614 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,749900,122394,2022,Elektro,,,,366,,,,"18""",Ano,,,,Ano,,Dojezd 614 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,799900,47690,2021,Elektro,,,,377,,,,"20""",Ano,,,,Ano,,Dojezd 567 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,699900,40345,2022,Elektro,,,,208,,,,"18""",Ne,,,,Ano,,Dojezd 491 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model 3,529000,139009,2020,Elektro,,,,324,,,,"19""",Ano,,,,Ne,,Dojezd 560 km,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model X,679900,142875,2017,Elektro,,,,306,,,,"20""",Ano,,,,Ne,,Dojezd 489 km / Baterie 90 kWh,Dostupný,EnergyCars.cz
+Elektrické,Tesla Model Y,819900,120853,2023,Elektro,,,,378,,,,"19""",Ano,,,,Ano,,Dojezd 542 km,Dostupný,EnergyCars.cz
+Elektrické,VW Crafter,399900,88331,2021,Elektro,,,,100,,,,,Ne,,,,Ne,,Dojezd 173 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,559900,28983,2022,Elektro,,,,107,,,,"19""",Ne,,,,Ne,,Dojezd 427 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,720000,9387,2024,Elektro,,,,150,,,,"18""",Ne,,,,Ne,,Dojezd 434 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,559900,81002,2022,Elektro,,,,107,,,,"18""",Ne,,,,Ne,,Dojezd 427 km / Baterie 62 kWh,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,559900,53317,2022,Elektro,,,,150,,,,"18""",Ne,,,,Ne,,Dojezd 427 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,569900,15846,2021,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 426 km / Baterie 62 kWh,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,669900,28155,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ne,,Dojezd 553 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,669900,49455,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ano,,Dojezd 553 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3 Pro Performance,519900,37306,2021,Elektro,,,,150,,,,"18""",Ne,,,,Ano,,Dojezd 427 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.3,799900,43169,2023,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 559 km / Baterie 82 kWh,Dostupný,EnergyCars.cz
+Elektrické,VW ID.4,749900,67207,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ne,,Dojezd 537 km,Dostupný,EnergyCars.cz
+Elektrické,VW ID.5 GTX,799900,62144,2022,Elektro,,,,220,,,,"20""",Ano,,,,Ne,,Dojezd 517 km,Dostupný,EnergyCars.cz
+Elektrické,Volvo C40,819990,38063,2022,Elektro,,,,,,,,"19""",Ano,,,,Ne,,Dojezd 449 km / Baterie 78 kWh,Dostupný,EnergyCars.cz
+Elektrické,Volvo XC40,684990,52414,2022,Elektro,,,,170,,,,"19""",Ne,,,,Ne,,Dojezd 425 km / Baterie 63 kWh,Dostupný,EnergyCars.cz

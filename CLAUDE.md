@@ -4,76 +4,61 @@ This file gives AI coding assistants (Claude, Copilot, etc.) essential context a
 
 ## Project Overview
 
-Python web scrapers collecting Czech car listings, exported to CSV. Two suites: **electric** and **combustion**.
+One fuel-agnostic Python scraper suite collecting Czech car listings, exported to CSV. A single unified package (`scrapers/`) with a shared `core/` and one adapter per source. Each row carries a `Typ` column (`Elektrické` / `Spalovací`) — there are no separate electric/combustion trees.
 
-### Electric (3 scrapers)
+### Sources
 
-| Site                                       | Script                              | Output                                 |
-| ------------------------------------------ | ----------------------------------- | -------------------------------------- |
-| [autodraft.cz](https://www.autodraft.cz)   | `electric/src/scrape_autodraft.py`  | `electric/data/scrapes/autodraft.csv`  |
-| [energycars.cz](https://www.energycars.cz) | `electric/src/scrape_energycars.py` | `electric/data/scrapes/energycars.csv` |
-| [sauto.cz](https://www.sauto.cz)           | `electric/src/scrape_sauto.py`      | `electric/data/scrapes/sauto.csv`      |
-
-### Combustion (2 scrapers)
-
-| Site                                     | Script                               | Output                                  |
-| ---------------------------------------- | ------------------------------------ | --------------------------------------- |
-| [autodraft.cz](https://www.autodraft.cz) | `combustion/src/scrape_autodraft.py` | `combustion/data/scrapes/autodraft.csv` |
-| [sauto.cz](https://www.sauto.cz)         | `combustion/src/scrape_sauto.py`     | `combustion/data/scrapes/sauto.csv`     |
+| Site                                       | Adapter                          | Fuels    | Output                                |
+| ------------------------------------------ | -------------------------------- | -------- | ------------------------------------- |
+| [sauto.cz](https://www.sauto.cz)           | `scrapers/sources/sauto.py`      | EV + ICE | `scrapers/data/scrapes/sauto.csv`     |
+| [autodraft.cz](https://www.autodraft.cz)   | `scrapers/sources/autodraft.py`  | EV + ICE | `scrapers/data/scrapes/autodraft.csv` |
+| [energycars.cz](https://www.energycars.cz) | `scrapers/sources/energycars.py` | EV       | `scrapers/data/scrapes/energycars.csv`|
 
 ## Documentation
 
 Read these before making changes:
 
-- @docs/architecture.md — system design, data flow, scraper comparison
+- @docs/architecture.md — system design, data flow, source comparison
 - @docs/conventions.md — code style, async patterns, rules
 - @docs/gotchas.md — non-obvious behaviors; **update this file whenever you discover something surprising**
 
 ## Running the Scrapers
 
 ```bash
-./bin/run_all.sh                       # Both suites (default --all)
-./bin/run_all.sh --electric            # Electric only
-./bin/run_all.sh --combustion          # Combustion only
-./electric/bin/run_scraper.sh          # Electric suite directly
-./combustion/bin/run_scraper.sh        # Combustion suite directly
-# Debug single scraper:
-cd electric/src && python3 scrape_autodraft.py
-cd combustion/src && python3 scrape_sauto.py
+./bin/run_all.sh                       # All sources (dep check + run)
+./bin/run_all.sh --source sauto        # One source (repeat --source to add more)
+python -m scrapers.run                 # All sources, no dep check
+python -m scrapers.run --source sauto  # Debug a single source
 ```
+
+Sources: `sauto`, `autodraft`, `energycars`.
 
 ## Quick Reference
 
-**Add brand alias** → `BRAND_MAP` in `electric/src/utils.py` and `combustion/src/utils.py`
+**Add brand alias** → `BRAND_MAP` in `scrapers/core/normalize.py`
 
-**Add column** → extraction logic in scraper + `{suite}/data/scrape-data-cols.txt` + DataFrame key
+**Add column** → `CANONICAL_COLS` in `scrapers/core/schema.py` + populate it in the relevant adapter (`scrapers/sources/*.py`)
 
-**Adjust energycars concurrency** → `DETAIL_CONCURRENCY` in `electric/src/scrape_energycars.py`
+**Field extraction** (engine vol/type, hybrid, body, trim, DCT, GPF, AWD, clean_extra) → `scrapers/core/fields.py`
+
+**Authoritative model matching** (ICE) → `scrapers/core/matching.py`
+
+**Concurrency knobs** → `DETAIL_CONCURRENCY` in `scrapers/sources/energycars.py`; `fetch_all_details(session, urls, concurrency=20)` in `scrapers/core/http.py` (sauto)
 
 ## CSV Schema
 
-### Electric (13 columns)
-
-Defined in `electric/data/scrape-data-cols.txt`.
+One canonical 24-column schema for every source, defined in `scrapers/core/schema.py` (`CANONICAL_COLS`). Adapters fill the columns they have; the rest stay blank (`blank_row()`).
 
 ```text
-Model auta | Cena (Kč) | Nájezd (km) | Výkon (kW) | Rok výroby
-Tepelné čerpadlo | Kola | Náhon 4x4 | Karoserie | Extra | Stav | Zdroj | Odkaz na auto
+Typ | Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
+Palivo | Objem motoru | Typ motoru | Hybrid typ | Výkon (kW)
+Převodovka | Dvouspojková převodovka | Filtr pevných částic
+Kola | Náhon 4x4 | Karoserie | Výbava | Záruka | Tepelné čerpadlo
+Spárováno | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
-### Combustion (21 columns)
-
-Defined in `combustion/data/scrape-data-cols.txt`.
-
-```text
-Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
-Palivo | Objem motoru | Typ motoru | Hybrid typ
-Výkon (kW) | Převodovka | Dvouspojková převodovka | Filtr pevných částic
-Kola | Náhon 4x4 | Karoserie | Výbava | Záruka
-Extra | Stav | Zdroj | Odkaz na auto
-```
-
-Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars)*
+`Typ` values: `Elektrické` · `Spalovací`.
+Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars)*.
 
 ## Dashboard (GitHub Pages)
 
@@ -86,16 +71,16 @@ Static AG Grid site at `site/`. No build step — plain HTML/JS/CSS.
 
 ### Build Script
 
-`build/build_data.py` merges 5 scraper CSVs + 2 reference data files → `site/data/cars.json`.
+`build/build_data.py` concatenates the 3 scraper CSVs + 2 reference files → `site/data/cars.json`. It imports `scrapers.core.matching` to re-match ICE rows against the reference list.
 
 ```bash
 python build/build_data.py
 ```
 
-Reference data:
+Reference data (per fuel, joined by `Typ`):
 
-- `combustion/data/makes-and-models.csv` — exact join on "Model auta"
-- `electric/data/new_cars_specs.csv` — prefix match join
+- `scrapers/data/reference/ice_specs.csv` — exact join on "Model auta" (ICE)
+- `scrapers/data/reference/ev_specs.csv` — prefix-match join (EV)
 
 ### Verifying UI changes
 
@@ -111,7 +96,7 @@ Exit 0 = no console errors + grid rendered; screenshot lands in `tmp/ui-verify/`
 
 ### GitHub Actions
 
-`.github/workflows/scrape-and-deploy.yml` — daily 6am UTC + manual trigger. Runs scrapers, builds JSON, commits data, deploys Pages.
+`.github/workflows/scrape-and-deploy.yml` — daily 6am UTC + manual trigger. Runs `python -m scrapers.run`, builds JSON, commits `scrapers/data/scrapes/` + `site/data/`, deploys Pages.
 
 ## Dependencies
 
