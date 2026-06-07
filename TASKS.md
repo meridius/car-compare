@@ -42,9 +42,6 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
 
 Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
 
-- [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
-  > flow:feature-dev · model:haiku · effort:low
-
 - [ ] **#8** Reference page row height = main page row height
   > flow:ralph · model:haiku · effort:low
 
@@ -65,6 +62,9 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [ ] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
   > flow:ralph · model:sonnet · effort:medium
+
+- [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
+  > flow:feature-dev · model:haiku · effort:low
 
 ## Done
 

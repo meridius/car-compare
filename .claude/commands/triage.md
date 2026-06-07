@@ -35,7 +35,7 @@ After the agent returns results, update `TASKS.md`:
 
 1. Find the highest existing task ID (`**#N**`) anywhere in the file. Assign next sequential IDs to incoming tasks.
 
-2. For each Atomic task, add to `## Atomic`:
+2. For each Atomic task, append to the END of `## Atomic` (after the last existing item):
 
    ```
    - [ ] **#N** <task text>
@@ -44,7 +44,7 @@ After the agent returns results, update `TASKS.md`:
 
    Append `· blocked-by: #N` to the metadata line if `blocked_by` is non-empty.
 
-3. For each Needs Scoping task, add to `## Needs Scoping`:
+3. For each Needs Scoping task, append to the END of `## Needs Scoping` (after the last existing item):
 
    ```
    - [ ] **#N** <task text>
