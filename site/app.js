@@ -702,7 +702,7 @@
         for (var i = 0; i < types.length; i++) {
           var m = appMetadata.matching[types[i][0]];
           if (!m) continue;
-          var pct = m.total > 0 ? Math.round(100 * m.matched / m.total) : 0;
+          var pct = m.total > 0 ? (100 * m.matched / m.total).toFixed(1) : "0.0";
           addRow(tbl3, [types[i][1], fmtNum(m.matched), fmtNum(m.unmatched), fmtNum(m.total), pct + " %"]);
         }
         card3.appendChild(tbl3);

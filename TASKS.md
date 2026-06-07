@@ -42,9 +42,6 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
 
 Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
 
-- [ ] **#10** Use decimals in "%" col of "Párování s referenčními modely" table in dataset overview
-  > flow:ralph · model:haiku · effort:low
-
 - [ ] **#11** Fix `merge_with_previous` NaN-link bug: `set_index("Odkaz na auto").loc[link]` drops index col, clobbering link on rows present in both scrapes (`scrapers/core/merge.py`)
   > flow:ralph · model:haiku · effort:low
 
@@ -61,6 +58,9 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:feature-dev · model:haiku · effort:low
 
 ## Done
+
+- [x] **#10** Use decimals in "%" col of "Párování s referenčními modely" table in dataset overview
+  > flow:ralph · model:haiku · effort:low
 
 - [x] **#9** Add "Celkem" row to bottom of "Karoserie × Pohon" table in dataset overview; separate Celkem row/col with bolder lines
   > flow:ralph · model:sonnet · effort:medium
