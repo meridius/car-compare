@@ -25,7 +25,7 @@ def merge_with_previous(df: pd.DataFrame, csv_path: Path) -> pd.DataFrame:
         else:
             row = row.copy()
             row["Stav"] = "Odstraněno"
-            result_rows.append(row)
+            result_rows.append(row.to_dict())
     # Add genuinely new listings (not in prev) at the end
     prev_links = set(prev["Odkaz na auto"])
     for _, row in df.iterrows():
