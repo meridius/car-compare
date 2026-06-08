@@ -320,14 +320,91 @@ def count_matching(df):
         result[key] = {"matched": int(matched), "unmatched": int(total - matched), "total": int(total)}
     return result
 
-def build_reference_json(comb_ref, elec_ref):
+# Per-listing spec columns whose value is fixed for a given car configuration and
+# so make sense on the reference page. Engine vol/type/hybrid for combustion come
+# from the authoritative model string (deterministic, immune to per-listing
+# extraction noise); Karoserie/Výkon are aggregated from matched listings by mode
+# (most-common value) — listings are the only source and mode smooths noise.
+
+def _mode_nonempty(values):
+    """Most-common non-empty / non-null value across an iterable, or None.
+
+    Ties resolve to the first value encountered (deterministic for stable input)."""
+    counts = {}
+    for v in values:
+        if v is None or v == "":
+            continue
+        if isinstance(v, float) and v != v:  # NaN
+            continue
+        counts[v] = counts.get(v, 0) + 1
+    if not counts:
+        return None
+    return max(counts, key=lambda k: counts[k])
+
+
+def build_ice_listing_specs(df):
+    """Map exact combustion 'Model auta' (authoritative string) → mode of
+    Karoserie / Palivo / Výkon (kW) across its matched listings."""
+    ice = df[df["Typ"] == "Spalovací"]
+    out = {}
+    for model, grp in ice.groupby("Model auta"):
+        out[model] = {
+            "Karoserie": _mode_nonempty(grp["Karoserie"]),
+            "Palivo": _mode_nonempty(grp["Palivo"]),
+            "Výkon (kW)": _mode_nonempty(grp["Výkon (kW)"]),
+        }
+    return out
+
+
+def build_ev_listing_specs(df, elec_ref):
+    """Map electric reference 'Model auta' → mode of Karoserie / Výkon (kW) across
+    listings whose scraped model starts with that reference name (longest prefix —
+    same bucketing as join_electric_reference)."""
+    ev = df[df["Typ"] == "Elektrické"]
+    ref_models = sorted(elec_ref["Model auta"].tolist(), key=len, reverse=True)
+    buckets = {}
+    for _, row in ev.iterrows():
+        model = str(row.get("Model auta", ""))
+        for rm in ref_models:
+            if model.startswith(rm):
+                b = buckets.setdefault(rm, {"Karoserie": [], "Výkon (kW)": []})
+                b["Karoserie"].append(row.get("Karoserie"))
+                b["Výkon (kW)"].append(row.get("Výkon (kW)"))
+                break
+    return {
+        rm: {"Karoserie": _mode_nonempty(b["Karoserie"]),
+             "Výkon (kW)": _mode_nonempty(b["Výkon (kW)"])}
+        for rm, b in buckets.items()
+    }
+
+
+def build_reference_json(comb_ref, elec_ref, df):
     """Build combined reference data JSON for the reference page."""
     records = []
 
+    ice_path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
+    auth_by_entry = {r["entry"]: r for r in comb_utils.load_authoritative_list(ice_path)}
+    ice_specs = build_ice_listing_specs(df)
+    ev_specs = build_ev_listing_specs(df, elec_ref)
+
     for _, row in comb_ref.iterrows():
+        model = row.get("Jednoznačná varianta vozu", "")
+        auth = auth_by_entry.get(model, {})
+        listing = ice_specs.get(model, {})
+        engine_type = auth.get("engine_type", "") or ""
+        hybrid = auth.get("hybrid", "") or ""
+        vol = auth.get("engine_vol", "") or ""
+        palivo = listing.get("Palivo") or derive_fuel(model, engine_type, hybrid)
+        karoserie = listing.get("Karoserie") or auth.get("body", "") or ""
         rec = {
-            "Model auta": row.get("Jednoznačná varianta vozu", ""),
+            "Model auta": model,
             "Typ": "Spalovací",
+            "Palivo": palivo,
+            "Karoserie": karoserie,
+            "Výkon (kW)": listing.get("Výkon (kW)"),
+            "Objem motoru": float(vol) if vol else None,
+            "Typ motoru": engine_type,
+            "Hybrid typ": hybrid,
             "Spotřeba (l/100 km)": parse_czech_decimal(row.get("Spotřeba (l/100 km)", "")),
             "Objem kufru (l)": row.get("Objem kufru (l)", None),
             "Hlučnost (dB)": row.get("Hlučnost (dB)", None),
@@ -336,9 +413,17 @@ def build_reference_json(comb_ref, elec_ref):
         records.append(rec)
 
     for _, row in elec_ref.iterrows():
+        model = row.get("Model auta", "")
+        listing = ev_specs.get(model, {})
         rec = {
-            "Model auta": row.get("Model auta", ""),
+            "Model auta": model,
             "Typ": "Elektrické",
+            "Palivo": "Elektro",
+            "Karoserie": listing.get("Karoserie") or "",
+            "Výkon (kW)": listing.get("Výkon (kW)"),
+            "Objem motoru": None,
+            "Typ motoru": "",
+            "Hybrid typ": "",
             "Objem kufru (l)": row.get("Objem kufru (l)", None),
             "Hlučnost (dB)": row.get("Hlučnost (dB)", None),
             "Kapacita baterie (kWh)": parse_czech_decimal(row.get("Kapacita baterie (kWh)", "")),
@@ -476,7 +561,7 @@ def main():
     print(f"Final columns ({len(final_cols)}): {final_cols}")
 
     print("Building reference JSON...")
-    build_reference_json(comb_ref, elec_ref)
+    build_reference_json(comb_ref, elec_ref, df)
 
     print("Updating scrape history...")
     update_scrape_history(metadata)
