@@ -23,8 +23,10 @@ run_once() {
 
 if [[ "${1:-}" == "--all" ]]; then
   while true; do
-    OUTPUT="$(run_once "$PROMPT_ALL")"
-    echo "$OUTPUT"
+    tmpfile=$(mktemp)
+    run_once "$PROMPT_ALL" | tee "$tmpfile"
+    OUTPUT=$(cat "$tmpfile")
+    rm -f "$tmpfile"
     if echo "$OUTPUT" | grep -qE "No unblocked Atomic tasks|only feature-dev tasks remain"; then
       # Print any skipped feature-dev tasks as a reminder
       echo ""
