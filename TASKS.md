@@ -38,6 +38,35 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
   > ❓ Q1: Which columns specifically — just Karoserie, or also Palivo / Objem / Výkon?
   > ❓ Q2: Are these already in ice_specs.csv / ev_specs.csv, or need adding to reference CSVs?
 
+- [ ] **#16** https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333 has 2002, but is really a 2022 model year — need to detect and fix these cases
+  > ❓ Q1: Should we add detection/correction logic to the sauto scraper itself (in scrapers/sources/sauto.py) or to the build/post-processing pipeline (build_data.py)?
+  > ❓ Q2: Do you have a pattern/rule for detecting 2-digit year swaps (e.g., all cases where year is 19XX but listing content suggests 20XX), or should we look for specific API field mismatches (in_operation_date vs manufacturing_date)?
+  > ❓ Q3: Should corrected years be logged/tracked, or just silently fixed?
+
+- [ ] **#17** https://www.sauto.cz/osobni/detail/dacia/bigster/210225179 has model year 1900, but is actually 2026 - detect and fix these cases
+  > ❓ Q1: Is this part of the same fix as task 16, or a separate edge case (year = 1900 vs year = 19XX)? Should we apply both a swap-correction (19XX → 20XX) and a clamp/validation (1900 is invalid)?
+  > ❓ Q2: What's the valid year range for this scraper (should be roughly 2021–2026 based on vehicle_age_from filter, correct)?
+  > ❓ Q3: Should invalid years be rejected entirely (return None/skip row) or repaired (e.g., infer from in_operation_date fallback)?
+
+- [ ] **#18** web UI should display set filters above the table on both pages
+  > ❓ Q1: Should the filter display be a persistent bar above the grid, or a modal/collapsible section? (e.g., 'Active filters: Typ=Elektrické Palivo=Benzín [×] [×]')
+  > ❓ Q2: Should clicking a filter tag remove that filter, or only show it for reference?
+  > ❓ Q3: Does this need to appear on both index and reference pages, or just one?
+
+- [ ] **#19** many reference models are missing data in various cols
+  > ❓ Q1: Which columns in the reference data are missing (e.g., Objem kufru, Hlučnost, Kapacita baterie)? Should we prioritize filling any particular ones?
+  > ❓ Q2: Is the ask to manually audit/add the missing data to the reference CSVs (ice_specs.csv / ev_specs.csv), or to detect/flag the gaps in the UI?
+  > ❓ Q3: For EV vs ICE — are different sets of columns expected to be populated?
+
+- [ ] **#20** reorder cols in the reference table to match the main table for easier visual scanning
+  > ❓ Q1: Should the reference table match the column order of the main cars table exactly, or follow a different but more logical order?
+  > ❓ Q2: Which columns are currently in the reference table (site/reference.html / build_reference_json() output)? What is the desired order?
+
+- [ ] **#21** there should be automated tests for data integrity issues like mismatch between data in Model col and relevant cols, format of all data in each col
+  > ❓ Q1: Should these tests run as part of the scrape pipeline (e.g., post-build in build_data.py, or in scrapers/core/), as CI/CD checks, or both?
+  > ❓ Q2: What specific mismatches concern you (e.g., model year format, price format, 19XX year swaps, missing required fields)?
+  > ❓ Q3: Should failing tests block the build/deploy, or only warn/log?
+
 ## Atomic
 
 Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
@@ -53,6 +82,9 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
+
+- [ ] **#22** scroll bars in tables are very thin and hard to use since they are hidden behind the page scroll bar
+  > flow:ralph · model:haiku · effort:low
 
 ## Done
 
