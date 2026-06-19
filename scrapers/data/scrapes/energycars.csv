@@ -1,7 +1,7 @@
 Typ,Model auta,Cena (Kč),Nájezd (km),Rok výroby,Palivo,Objem motoru,Typ motoru,Hybrid typ,Výkon (kW),Převodovka,Dvouspojková převodovka,Filtr pevných částic,Kola,Náhon 4x4,Karoserie,Výbava,Záruka,Tepelné čerpadlo,Spárováno,Extra,Stav,Zdroj,Odkaz na auto
 Elektrické,Audi Q4 e-tron,709900,80622,2021,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 523 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/audi-q4-e-tron/
 Elektrické,BMW i3,389900,55416,2017,Elektro,,,,125,,,,"19""",Ne,,,,Ano,,Dojezd 250 km / Baterie 32 kWh,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/bmw-i3-2/
-Elektrické,BMW i3,559000,65403,2019,Elektro,,,,135,,,,"20""",Ne,,,,Ano,,Dojezd 359 km / Baterie 42 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/bmw-i3/
+Elektrické,BMW i3,499900,65403,2019,Elektro,,,,135,,,,"20""",Ne,,,,Ano,,Dojezd 359 km / Baterie 42 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/bmw-i3/
 Elektrické,BMW iX,1149900,25518,2022,Elektro,,,,240,,,,"21""",Ano,,,,Ano,,Dojezd 425 km / Baterie 76 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/bmw-ix/
 Elektrické,BYD Seal,1049900,44796,2024,Elektro,,,,390,,,,"19""",Ano,,,,Ne,,Dojezd 520 km / Baterie 84 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/byd-seal/
 Elektrické,Fiat 500 e,449900,20637,2023,Elektro,,,,87,,,,"16""",Ne,,,,Ne,,Dojezd 333 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/fiat-500-e/
@@ -9,7 +9,7 @@ Elektrické,Honda e,449900,27026,2021,Elektro,,,,113,,,,"17""",Ne,,,,Ne,,Dojezd 
 Elektrické,JAC iEV7S,359900,53669,2020,Elektro,,,,85,,,,,Ne,,,,Ne,,"Dojezd 300 km / Baterie 43,50 kWh",Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/jac-iev7s/
 Elektrické,Kia EV3,949900,1101,2025,Elektro,,,,150,,,,"17""",Ne,,,,Ne,,Dojezd 605 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/kia-ev3/
 Elektrické,Kia Niro,649900,93621,2023,Elektro,,,,150,,,,"17""",Ne,,,,Ne,,Dojezd 463 km / Baterie 64 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/kia-niro/
-Elektrické,Mercedes-Benz EQA,699900,49576,2022,Elektro,,,,140,,,,,Ne,,,,Ne,,Dojezd 486 km / Baterie 69 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/mercedes-benz-eqa/
+Elektrické,Mercedes-Benz EQA,699900,49576,2022,Elektro,,,,140,,,,,Ne,,,,Ne,,Dojezd 486 km / Baterie 69 kWh,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/mercedes-benz-eqa/
 Elektrické,Mercedes-Benz EQE,1149900,37036,2022,Elektro,,,,215,,,,,Ne,,,,Ano,,Dojezd 693 km / Baterie 105 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/mercedes-benz-eqe/
 Elektrické,MINI Cooper SE,749900,4254,2024,Elektro,,,,,,,,,Ne,,,,Ne,,Dojezd 305 km / Baterie 40 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/mini-cooper-se/
 Elektrické,MINI Cooper,529900,40763,2022,Elektro,,,,135,,,,"17""",Ne,,,,Ano,,Dojezd 234 km,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/mini-cooper/
@@ -32,7 +32,7 @@ Elektrické,VW ID.3,649900,28155,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ne,,Dojezd 
 Elektrické,VW ID.3,559900,53317,2022,Elektro,,,,150,,,,"18""",Ne,,,,Ne,,Dojezd 427 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-5/
 Elektrické,VW ID.3,569900,15846,2021,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 426 km / Baterie 62 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-6/
 Elektrické,VW ID.3,669900,49455,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ano,,Dojezd 553 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-7/
-Elektrické,VW ID.3,669900,49455,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ano,,Dojezd 553 km,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-8/
+Elektrické,VW ID.3,669900,58498,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ano,,Dojezd 553 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-8/
 Elektrické,VW ID.3 Pro Performance,519900,37306,2021,Elektro,,,,150,,,,"18""",Ne,,,,Ano,,Dojezd 427 km,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3-pro-performance/
 Elektrické,VW ID.3,799900,43169,2023,Elektro,,,,150,,,,"20""",Ne,,,,Ne,,Dojezd 559 km / Baterie 82 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-3/
 Elektrické,VW ID.4,749900,67207,2022,Elektro,,,,150,,,,"19""",Ne,,,,Ne,,Dojezd 537 km,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/volkswagen-id-4/
@@ -42,3 +42,4 @@ Elektrické,Volvo XC40,684990,52414,2022,Elektro,,,,170,,,,"19""",Ne,,,,Ne,,Doje
 Elektrické,MINI Electric,519900,62044,,Elektro,,,,135,,,,"17""",Ne,,,,Ano,,Dojezd 234 km,Odstraněno,EnergyCars.cz,https://www.energycars.cz/vuz/mini-electric/
 Elektrické,MINI Cooper SE,519900,62044,,Elektro,,,,,,,,"17""",Ne,,,,Ano,,Dojezd 234 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/mini-cooper-se-2/
 Elektrické,MG ZS,529900,38245,2024,Elektro,,,,130,,,,"17""",Ne,,,,Ne,,Dojezd 320 km,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/mg-zs/
+Elektrické,Maxus eDeliver 9,799900,15787,2022,Elektro,,,,150,,,,,Ne,,,,Ne,,Dojezd 300 km / Baterie 89 kWh,Dostupný,EnergyCars.cz,https://www.energycars.cz/vuz/maxus-edeliver-9/
