@@ -38,12 +38,12 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
   > ❓ Q1: Which columns specifically — just Karoserie, or also Palivo / Objem / Výkon?
   > ❓ Q2: Are these already in ice_specs.csv / ev_specs.csv, or need adding to reference CSVs?
 
-- [ ] **#16** https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333 has 2002, but is really a 2022 model year — need to detect and fix these cases
+- [ ] **#16** <https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333> has 2002, but is really a 2022 model year — need to detect and fix these cases
   > ❓ Q1: Should we add detection/correction logic to the sauto scraper itself (in scrapers/sources/sauto.py) or to the build/post-processing pipeline (build_data.py)?
   > ❓ Q2: Do you have a pattern/rule for detecting 2-digit year swaps (e.g., all cases where year is 19XX but listing content suggests 20XX), or should we look for specific API field mismatches (in_operation_date vs manufacturing_date)?
   > ❓ Q3: Should corrected years be logged/tracked, or just silently fixed?
 
-- [ ] **#17** https://www.sauto.cz/osobni/detail/dacia/bigster/210225179 has model year 1900, but is actually 2026 - detect and fix these cases
+- [ ] **#17** <https://www.sauto.cz/osobni/detail/dacia/bigster/210225179> has model year 1900, but is actually 2026 - detect and fix these cases
   > ❓ Q1: Is this part of the same fix as task 16, or a separate edge case (year = 1900 vs year = 19XX)? Should we apply both a swap-correction (19XX → 20XX) and a clamp/validation (1900 is invalid)?
   > ❓ Q2: What's the valid year range for this scraper (should be roughly 2021–2026 based on vehicle_age_from filter, correct)?
   > ❓ Q3: Should invalid years be rejected entirely (return None/skip row) or repaired (e.g., infer from in_operation_date fallback)?
@@ -67,6 +67,45 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
   > ❓ Q2: What specific mismatches concern you (e.g., model year format, price format, 19XX year swaps, missing required fields)?
   > ❓ Q3: Should failing tests block the build/deploy, or only warn/log?
 
+- [ ] **#23** Průměrná cena ročního servisu za 5 let (average annual service cost over 5 years)
+  > ❓ Q1: Should this be a scraped/enriched field on listings, a reference model spec column, or a standalone dashboard metric aggregating service cost data?
+  > ❓ Q2: Where is the service cost data sourced from — external API, manual reference CSV, or estimated/derived from engine type/volume?
+  > ❓ Q3: Does this apply to both EV and ICE, or ICE only?
+
+- [ ] **#25** AI sumarizace referenčního modelu podle toho, co lidi píšou na netu: jeho +/-, spolehlivost, komfort — navrhni kvantifikaci (AI summary of reference model from web sentiment: pros/cons, reliability, comfort — propose quantification)
+  > ❓ Q1: Is the web scraping/sentiment analysis part of this task, or do you want a design proposal only for how to store + display AI-generated summaries?
+  > ❓ Q2: Where should this appear — reference page, per-listing detail modal, or a separate review/sentiment dashboard?
+  > ❓ Q3: Should quantified scores (reliability: 1–5, comfort: 1–5) be stored in ev_specs.csv / ice_specs.csv, or computed on-the-fly in build_data.py?
+
+- [ ] **#27** servisní interval (service interval)
+  > ❓ Q1: Is this a scraped field from listings, a static reference model spec, or derived from engine type/fuel?
+  > ❓ Q2: Should it apply to both EV and ICE?
+
+- [ ] **#28** nová stránka s přehledem převodovek: popisky (new page with transmission overview: descriptions)
+  > ❓ Q1: Should this show unique transmission types (DSG, CVT, Manual, eCVT, etc.) from the dataset as a filterable/sortable table, or a static lookup page of transmission specs?
+  > ❓ Q2: What columns/structure for each transmission type — just name + description, or include ratings/quality scores (from #31) and example cars?
+
+- [ ] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search by: brand, model, year, power, engine volume, engine type, trim level)
+  > ❓ Q1: Is this a UI search/filter feature for the reference page, or a backend refinement to the reference enrichment logic in build_data.py?
+  > ❓ Q2: Should trim level matching use the existing "Výbava" column, or require a separate trim extraction/schema change?
+
+- [ ] **#30** větší počet válců a větší objem znamená větší spolehlivost (more cylinders + bigger volume = more reliability — scoring rule)
+  > ❓ Q1: Is this a manual scoring rule to encode as a new "Reliability" score column (1–5), or a sorting/filtering heuristic for the UI?
+  > ❓ Q2: Should this apply to all ICE cars, or only those matched to reference models with cylinder/volume data?
+
+- [ ] **#31** převodovky — kvalita: eCVT dobré (řemen), CVT špatné (planetové), ZF hydraulická, AISIN, DSG mokré ne suché, planetové, mechatronické nejsou úplně dobré (transmission quality rating rules)
+  > ❓ Q1: Should transmission quality be a scored column (1–5 or Good/Fair/Poor) in ice_specs.csv, or UI-only display logic when rendering listings?
+  > ❓ Q2: Where is transmission brand/subtype data sourced from — extracted from listings, enriched in reference CSVs, or matched via a new lookup table?
+
+- [ ] **#32** rozvody motoru: lepší jsou řetězy než řemeny, nebrat namáčené řemeny (engine timing: chains better than belts, avoid wet belts — rating rule)
+  > ❓ Q1: Is this a new "Engine Timing Type" column extracted from listings + enriched in reference, or a quality scoring rule applied to matched models?
+  > ❓ Q2: How is wet vs. dry belt info sourced — extracted from Extra text, stored in reference CSV, or inferred from engine model/year?
+
+- [ ] **#33** stav km a problémy na technické: portál občana/portál dopravy, cebia, car vertical (mileage state & inspection problems via external portals)
+  > ❓ Q1: Should this be a new data source integrated into the scrape pipeline, or a post-build enrichment joined by VIN/registration number to existing listings?
+  > ❓ Q2: Which external API/portal should be queried — all four, or prioritize by availability/data quality?
+  > ❓ Q3: Should tech inspection results (pass/fail/defects) appear as a new column on listings, or linked as a detail modal per car?
+
 ## Atomic
 
 Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
@@ -85,6 +124,12 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [ ] **#22** scroll bars in tables are very thin and hard to use since they are hidden behind the page scroll bar
   > flow:ralph · model:haiku · effort:low
+
+- [ ] **#24** počet válců (number of cylinders) — new column
+  > flow:feature-dev · model:sonnet · effort:medium
+
+- [ ] **#26** typ převodovky (transmission type) — new column
+  > flow:feature-dev · model:sonnet · effort:medium
 
 ## Done
 
