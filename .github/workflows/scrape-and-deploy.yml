@@ -89,6 +89,10 @@ jobs:
 
   deploy:
     needs: build
+    # Pages only deploys from main; on a feature-branch workflow_dispatch the
+    # github-pages environment's branch policy blocks the job and it fails.
+    # Skip it on non-main refs so branch runs stay green.
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
