@@ -37,6 +37,9 @@ def run_source(source_module):
     SCRAPES_DIR.mkdir(parents=True, exist_ok=True)
     csv_path = SCRAPES_DIR / f"{source_module.SOURCE_SLUG}.csv"
     df = merge_with_previous(df, csv_path)
+    # Reindex to the canonical schema so column order is stable and any column added
+    # since the previous CSV (e.g. "Skóre shody") is present/blank on preserved rows.
+    df = df.reindex(columns=CANONICAL_COLS)
     df.to_csv(csv_path, index=False, encoding="utf-8")
     print(f"Hotovo – uloženo {len(df)} aut do {source_module.SOURCE_SLUG}.csv")
     return csv_path

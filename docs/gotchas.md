@@ -159,6 +159,16 @@ Cars not matching any reference entry are reformatted as "Brand Model EngVol Eng
 
 `_model_base_match()` compares the first word of scraped vs reference model base. This handles cases where scraped has extra suffixes ("Golf 8 Variant" → first word "Golf" matches reference "Golf"). Can produce false positives for single-letter model names but the scoring step disambiguates.
 
+### tri-state confidence: Ano / Nejisté / Ne (not binary)
+
+`classify_match()` (pure, unit-tested in `tests/test_matching.py`) returns a `state` plus a numeric score; `match_to_authoritative()` writes both to `Spárováno` and the `Skóre shody` column:
+
+- **Ano** — confident: best candidate scores ≥ `STRONG_FLOOR` (1) **and** beats the runner-up by ≥ `MARGIN_REQ` (1). "Model auta" set to the auth entry.
+- **Nejisté** — a candidate was found but the match is weak (score < floor: 0 = no discriminating field, < 0 = the row's own fields contradict the entry) or ambiguous (tie between distinct variants like "1.2" vs "1.2 Turbo"). The best-guess entry is still written, but flagged — these are **not** reliably one specific model.
+- **Ne** — no candidate at all; name reformatted via `_format_unmatched()`, `Skóre shody` left blank.
+
+Before this change the matcher stamped `Ano` on the single highest-scoring candidate regardless of score (`max()` with no floor/margin guard), so ~25% of "matches" were coin-flips or contradictions hidden behind a 99.8% match rate. Thresholds are module constants in `core/matching.py`; after tuning, run `./bin/test.sh` — the data-integrity test asserts the distribution stays honest (no `Ano` row scores ≤ 0; uncertainty is surfaced). EV is not scored (prefix join), so EV `Spárováno` is only Ano/Ne and `Skóre shody` is blank.
+
 ---
 
 ## core — merge_with_previous
@@ -175,11 +185,11 @@ Cars not matching any reference entry are reformatted as "Brand Model EngVol Eng
 
 `merge_with_previous()` skips previous-CSV rows with an empty `Odkaz na auto`. Without this, rows that somehow lost their URL would accumulate as undedupeable copies on every run — this was the root cause of ~8k CSV growth per 4 days.
 
-### KNOWN BUG — clobbers Odkaz on rows present in both scrapes
+### Odkaz clobber on rows present in both scrapes — FIXED (#11)
 
-For rows present in BOTH the previous and the new scrape, `merge_with_previous()` does `df.set_index("Odkaz na auto").loc[link]` — which returns the row **without** the index column. So the merged row gets `Odkaz na auto` = NaN. On the next run those empty-link rows are skipped (see above), causing churn. Pre-existing (predates the unification); slated for a separate fix.
+Previously `merge_with_previous()` did `df.set_index("Odkaz na auto").loc[link]`, which dropped the index column and left the merged row with `Odkaz na auto` = NaN; those empty-link rows were then skipped on the next run, causing churn. Fixed in `core/merge.py` by selecting with a boolean mask (`df[df["Odkaz na auto"] == link].iloc[0]`), which keeps the link column.
 
-**Consequence:** parity / regression checks MUST run on FRESH scrapes (delete `scrapers/data/scrapes/*.csv` first) so no previous CSV exists — otherwise the merge corrupts links and the numbers lie.
+**Still recommended:** run parity / regression checks on FRESH scrapes (delete `scrapers/data/scrapes/*.csv` first). Not because of the (now-fixed) link bug, but because merge carries forward each removed row's last authoritative "Model auta" — a changed reference list won't re-match already-removed rows.
 
 ---
 

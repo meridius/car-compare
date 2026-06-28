@@ -46,19 +46,33 @@ The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/sc
 After modifying any source adapter or `core/` module, **always run the affected source(s)** and verify the CSV output before reporting the task as complete. Check:
 
 1. `python -m scrapers.run --source <name>` runs without errors
-2. Column count matches `CANONICAL_COLS` in `scrapers/core/schema.py` (24)
+2. Column count matches `CANONICAL_COLS` in `scrapers/core/schema.py` (25)
 3. New/changed fields are populated (spot-check with `pandas value_counts`)
 4. Existing fields still correct (model, price, mileage)
 
-Parity / regression checks must run on a **fresh** scrape (delete `scrapers/data/scrapes/*.csv` first) — see the `merge_with_previous` gotcha for why a previous CSV can corrupt links.
+Parity / regression checks should run on a **fresh** scrape (delete `scrapers/data/scrapes/*.csv` first) — see the `merge_with_previous` gotcha (the link-clobber bug is fixed, but merge still carries forward old matched names).
+
+## Testing
+
+Fast offline net — **stdlib `unittest`, no extra deps, no network.** Run after any change to `core/`, `build/`, or the reference CSVs:
+
+```bash
+./bin/test.sh            # matching golden tests + data-integrity invariants
+./bin/test.sh -v         # verbose
+```
+
+- `tests/test_matching.py` — pins `classify_match()` tri-state behaviour (Ano / Nejisté / Ne, score floor, tie/contradiction handling).
+- `tests/test_data_integrity.py` — invariants over the built `site/data/cars.json` (no confident `Ano` scoring ≤ 0, `Spárováno` enum, honest match-rate band). Builds `cars.json` if missing.
+
+**Fast inner loop:** `python build/build_data.py` (offline, ~9s against existing CSVs) + `./bin/test.sh` (<1s) verifies matching / build / enrichment changes **without a network scrape**. Only `sources/*.py` adapter changes need a real scrape.
 
 ## UI Verification After Changes
 
 After modifying anything under `site/` (`app.js`, `reference.js`, `style.css`, HTML),
 **always run `build/verify_ui.py`** for the affected page/scenario and **Read the resulting
 screenshot** before reporting the task as complete. This is mandatory — the site has no build
-step, no type checking, and no tests, so a console error or visual regression is otherwise
-invisible.
+step and no type checking, so a console error or visual regression is otherwise
+invisible (the `unittest` suite covers data/logic, not rendering).
 
 ```bash
 python3 build/verify_ui.py --page index --scenario grid          # default grid view

@@ -268,27 +268,74 @@ def _format_unmatched(brand: str, model_base: str, engine_vol: str, engine_type:
     return " ".join(p for p in parts if p)
 
 
+# Confidence thresholds for promoting a candidate to a confident "Ano".
+# A match is only trusted (Spárováno="Ano") when the winning candidate scores at
+# least STRONG_FLOOR *and* beats the runner-up by at least MARGIN_REQ. Otherwise
+# the model is still our best guess but flagged "Nejisté" (uncertain) — typically
+# thin data (score<=0, contradicts the row's own fields) or a tie between distinct
+# variants (e.g. "1.2" vs "1.2 Turbo"). Tune here; tests assert the resulting band.
+STRONG_FLOOR = 1
+MARGIN_REQ = 1
+
+
+def find_candidates(scraped: dict, auth_list: list[dict]) -> list[dict]:
+    """Auth entries whose brand (incl. alias) and model base match the scraped car."""
+    brand_low = scraped["brand"].lower()
+    alias = _BRAND_MATCH_ALIASES.get(brand_low)
+    return [
+        a for a in auth_list
+        if (a["brand"].lower() == brand_low or a["brand"].lower() == alias)
+        and _model_base_match(scraped["model_base"], a["model_base"])
+    ]
+
+
+def classify_match(scraped: dict, auth_list: list[dict]) -> dict:
+    """Classify a scraped car against the auth list. Pure — no DataFrame, unit-testable.
+
+    Returns {"state", "score", "margin", "entry"}:
+      - state "Ano"     — confident: best score >= STRONG_FLOOR and clear margin
+      - state "Nejisté" — candidate found but weak/ambiguous (thin data or tie)
+      - state "Ne"      — no candidate at all (caller reformats the name)
+    score/margin/entry are None when state == "Ne".
+    """
+    candidates = find_candidates(scraped, auth_list)
+    if not candidates:
+        return {"state": "Ne", "score": None, "margin": None, "entry": None}
+
+    scored = sorted(
+        ((_score_match(scraped, a), a) for a in candidates),
+        key=lambda x: x[0], reverse=True,
+    )
+    best_score, best = scored[0]
+    margin = (best_score - scored[1][0]) if len(scored) > 1 else None
+    confident = best_score >= STRONG_FLOOR and (margin is None or margin >= MARGIN_REQ)
+    return {
+        "state": "Ano" if confident else "Nejisté",
+        "score": best_score,
+        "margin": margin,
+        "entry": best["entry"],
+    }
+
+
 def match_to_authoritative(df, auth_list: list[dict]):
-    """Match each row to closest auth entry. Updates 'Model auta' in-place. Returns df."""
+    """Match each row to closest auth entry. Sets 'Model auta', 'Spárováno' (tri-state
+    Ano/Nejisté/Ne) and 'Skóre shody' (match confidence). Returns df."""
     import pandas as pd
 
     df["Spárováno"] = "Ne"
-    matched_count = 0
-    unmatched_count = 0
+    if "Skóre shody" not in df.columns:
+        df["Skóre shody"] = ""
+    counts = {"Ano": 0, "Nejisté": 0, "Ne": 0}
 
     for idx in df.index:
         model_auta = str(df.at[idx, "Model auta"])
         brand, remainder = _parse_brand(model_auta)
 
         body_col = str(df.at[idx, "Karoserie"]) if pd.notna(df.at[idx, "Karoserie"]) else ""
-        body_from_model = _extract_body_from_model(remainder)
-        body = body_col or body_from_model
+        body = body_col or _extract_body_from_model(remainder)
 
         engine_vol = str(df.at[idx, "Objem motoru"]) if pd.notna(df.at[idx, "Objem motoru"]) else ""
         engine_type = str(df.at[idx, "Typ motoru"]) if pd.notna(df.at[idx, "Typ motoru"]) else ""
-        hybrid = str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else ""
-        fuel = str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else ""
-
         cleaned_base = _clean_model_for_matching(remainder)
 
         scraped = {
@@ -297,26 +344,21 @@ def match_to_authoritative(df, auth_list: list[dict]):
             "body": body,
             "engine_vol": engine_vol,
             "engine_type": engine_type,
-            "hybrid": hybrid,
-            "fuel": fuel,
+            "hybrid": str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else "",
+            "fuel": str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else "",
         }
 
-        brand_low = brand.lower()
-        alias = _BRAND_MATCH_ALIASES.get(brand_low)
-        candidates = [
-            a for a in auth_list
-            if (a["brand"].lower() == brand_low or a["brand"].lower() == alias)
-            and _model_base_match(cleaned_base, a["model_base"])
-        ]
-
-        if candidates:
-            best = max(candidates, key=lambda a: _score_match(scraped, a))
-            df.at[idx, "Model auta"] = best["entry"]
-            df.at[idx, "Spárováno"] = "Ano"
-            matched_count += 1
-        else:
+        res = classify_match(scraped, auth_list)
+        counts[res["state"]] += 1
+        if res["state"] == "Ne":
             df.at[idx, "Model auta"] = _format_unmatched(brand, cleaned_base, engine_vol, engine_type)
-            unmatched_count += 1
+            df.at[idx, "Spárováno"] = "Ne"
+            df.at[idx, "Skóre shody"] = ""
+        else:
+            df.at[idx, "Model auta"] = res["entry"]
+            df.at[idx, "Spárováno"] = res["state"]
+            df.at[idx, "Skóre shody"] = res["score"]
 
-    print(f"  Párování: {matched_count} spárováno, {unmatched_count} nespárováno z {len(df)}")
+    print(f"  Párování: {counts['Ano']} Ano, {counts['Nejisté']} Nejisté, "
+          f"{counts['Ne']} Ne z {len(df)}")
     return df

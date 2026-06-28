@@ -7,7 +7,7 @@ One fuel-agnostic scraper suite (`scrapers/`) collects Czech car listings and wr
 ```text
 scrapers/
   core/
-    schema.py     CANONICAL_COLS (24), TYP_EV/TYP_ICE, blank_row()
+    schema.py     CANONICAL_COLS (25), TYP_EV/TYP_ICE, blank_row()
     normalize.py  BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model()
     fields.py     ICE field extraction (engine vol/type, hybrid, body, trim, DCT, GPF, AWD, clean_extra)
     matching.py   load_authoritative_list(), match_to_authoritative() — ICE auth matching
@@ -35,7 +35,7 @@ Each adapter exposes `SOURCE_NAME`, `SOURCE_SLUG`, `FUELS`, and an async `scrape
 ## Data Flow
 
 ```text
-source.scrape()  → canonical rows (24-col dicts)
+source.scrape()  → canonical rows (25-col dicts)
 pipeline.run_source():
    DataFrame(rows, columns=CANONICAL_COLS)
    → drop_duplicates(subset="Odkaz na auto")
@@ -61,14 +61,14 @@ CSVs are **merged incrementally**: listings in the old CSV but absent from the n
 
 ## Column Schema
 
-One canonical 24-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
+One canonical 25-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
 
 ```text
 Typ, Model auta, Cena (Kč), Nájezd (km), Rok výroby,
 Palivo, Objem motoru, Typ motoru, Hybrid typ, Výkon (kW),
 Převodovka, Dvouspojková převodovka, Filtr pevných částic,
 Kola, Náhon 4x4, Karoserie, Výbava, Záruka, Tepelné čerpadlo,
-Spárováno, Extra, Stav, Zdroj, Odkaz na auto
+Spárováno, Skóre shody, Extra, Stav, Zdroj, Odkaz na auto
 ```
 
 EV rows leave the ICE-only columns blank (Palivo, Objem motoru, Typ motoru, Hybrid typ, Převodovka, Dvouspojková převodovka, Filtr pevných částic, Výbava, Záruka). ICE rows leave `Tepelné čerpadlo` blank. `blank_row()` seeds every column to `""`.
@@ -108,8 +108,10 @@ Each ICE car is matched against `scrapers/data/reference/ice_specs.csv` (`core/m
     - Parse brand + model_base from "Model auta"
     - Find candidates: brand must match (with `_BRAND_MATCH_ALIASES` for SsangYong↔KGM) AND model_base must match
     - Score candidates by weighted multi-field matching: body(3), engine_vol(2), engine_type(2), hybrid(3), fuel(1)
-    - **Matched** → "Model auta" set to full auth string (e.g. "Škoda Karoq 1.5 TSI"); `Spárováno` set
-    - **Unmatched** → reformatted as "Brand Model EngVol EngType" via `_format_unmatched()`
+    - Classify via `classify_match()` into tri-state `Spárováno` + numeric `Skóre shody`:
+        - **Ano** (confident: best score ≥ `STRONG_FLOOR` and beats runner-up by ≥ `MARGIN_REQ`) → "Model auta" set to full auth string (e.g. "Škoda Karoq 1.5 TSI")
+        - **Nejisté** (candidate found but weak/contradictory/tie) → best-guess auth string written, flagged uncertain
+        - **Ne** (no candidate) → reformatted as "Brand Model EngVol EngType" via `_format_unmatched()`
 
 Body types use synonym groups (`_BODY_GROUPS`): Kombi↔Combi↔Variant↔SW↔Avant↔Touring.
 

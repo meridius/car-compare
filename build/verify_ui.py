@@ -75,7 +75,45 @@ def scenario_summary(page):
     return "#summary-overlay"
 
 
-SCENARIOS = {"grid": scenario_grid, "stav-filter": scenario_stav_filter, "summary": scenario_summary}
+def scenario_sparovano(page):
+    """Filter to uncertain+unmatched rows and scroll the match columns into view,
+    so the tri-state Spárováno coloring (amber=Nejisté, red=Ne) and the new
+    'Skóre shody' confidence column are visible in the screenshot."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate(
+        "window.__gridApi.setFilterModel("
+        "{ 'Spárováno': { filterType: 'set', values: ['Nejisté', 'Ne'] } });"
+        "window.__gridApi.ensureColumnVisible('Skóre shody');"
+    )
+    page.wait_for_timeout(400)
+    return None
+
+
+def scenario_overview_matching(page):
+    """Open the dataset overview and scroll the 'Párování s referenčními modely'
+    card into view, so the tri-state matching table (Spárováno / Nejisté /
+    Nespárováno) is captured."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-overlay", timeout=10000)
+    page.wait_for_timeout(300)
+    page.evaluate(
+        "var h=[].slice.call(document.querySelectorAll('#summary-overlay *'))"
+        ".find(function(e){return (e.textContent||'').trim()==="
+        "'Párování s referenčními modely';});"
+        "if(h){h.scrollIntoView({block:'center'});}"
+    )
+    page.wait_for_timeout(200)
+    return "#summary-overlay"
+
+
+SCENARIOS = {
+    "grid": scenario_grid,
+    "stav-filter": scenario_stav_filter,
+    "summary": scenario_summary,
+    "sparovano": scenario_sparovano,
+    "overview-matching": scenario_overview_matching,
+}
 
 
 def main():

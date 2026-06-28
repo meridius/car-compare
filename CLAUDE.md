@@ -47,18 +47,20 @@ Sources: `sauto`, `autodraft`, `energycars`.
 
 ## CSV Schema
 
-One canonical 24-column schema for every source, defined in `scrapers/core/schema.py` (`CANONICAL_COLS`). Adapters fill the columns they have; the rest stay blank (`blank_row()`).
+One canonical 25-column schema for every source, defined in `scrapers/core/schema.py` (`CANONICAL_COLS`). Adapters fill the columns they have; the rest stay blank (`blank_row()`).
 
 ```text
 Typ | Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
 Palivo | Objem motoru | Typ motoru | Hybrid typ | Výkon (kW)
 Převodovka | Dvouspojková převodovka | Filtr pevných částic
 Kola | Náhon 4x4 | Karoserie | Výbava | Záruka | Tepelné čerpadlo
-Spárováno | Extra | Stav | Zdroj | Odkaz na auto
+Spárováno | Skóre shody | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
 `Typ` values: `Elektrické` · `Spalovací`.
 Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars)*.
+
+`Spárováno` (ICE): `Ano` · `Nejisté` · `Ne` — tri-state match confidence (EV: `Ano` · `Ne` only). `Skóre shody` = numeric match score (higher = more reliable; blank for EV and `Ne` rows). See `classify_match()` in `scrapers/core/matching.py`.
 
 ## Dashboard (GitHub Pages)
 

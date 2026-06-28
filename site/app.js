@@ -275,7 +275,8 @@
     { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
     { field: "Kola", filter: "agSetColumnFilter", w: 70 },
     { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
-    { field: "Spárováno", filter: "agSetColumnFilter", w: 80 },
+    { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true },
+    { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody" },
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
@@ -351,10 +352,18 @@
     };
   }
 
+  // Tri-state Spárováno background: red = no reference match, amber = uncertain
+  // (weak/ambiguous), none = confident match.
+  function sparovanoBg(v) {
+    if (v === "Ne") return "rgba(239, 68, 68, 0.18)";
+    if (v === "Nejisté") return "rgba(245, 158, 11, 0.18)";
+    return "";
+  }
+
   function stavRenderer(params) {
     var text = params.value || "";
     var url = params.data && params.data["Odkaz na auto"];
-    var unmatched = params.data && params.data["Spárováno"] === "Ne";
+    var sp = params.data && params.data["Spárováno"];
     var el;
     if (url) {
       el = document.createElement("a");
@@ -366,8 +375,10 @@
       el = document.createElement("span");
       el.textContent = text;
     }
-    if (unmatched) {
+    if (sp === "Ne") {
       el.title = "Nespárováno – auto nebylo nalezeno v referenčních datech";
+    } else if (sp === "Nejisté") {
+      el.title = "Nejisté spárování – málo dat nebo nejednoznačná shoda; zkontrolujte";
     }
     return el;
   }
@@ -390,9 +401,15 @@
         def.cellRenderer = stavRenderer;
         def.cellStyle = function (params) {
           var style = { textAlign: "center" };
-          if (params.data && params.data["Spárováno"] === "Ne") {
-            style.backgroundColor = "rgba(245, 158, 11, 0.15)";
-          }
+          var bg = params.data ? sparovanoBg(params.data["Spárováno"]) : "";
+          if (bg) style.backgroundColor = bg;
+          return style;
+        };
+      } else if (cfg.sparovano) {
+        def.cellStyle = function (params) {
+          var style = { textAlign: "center" };
+          var bg = sparovanoBg(params.value);
+          if (bg) style.backgroundColor = bg;
           return style;
         };
       } else if (cfg.num) {
@@ -697,13 +714,14 @@
       // Match statistics
       if (appMetadata.matching) {
         var card3 = makeCard("P\u00e1rov\u00e1n\u00ed s referen\u010dn\u00edmi modely");
-        var tbl3 = makeTable(["Typ", "Sp\u00e1rov\u00e1no", "Nesp\u00e1rov\u00e1no", "Celkem", "%"]);
+        var tbl3 = makeTable(["Typ", "Sp\u00e1rov\u00e1no", "Nejist\u00e9", "Nesp\u00e1rov\u00e1no", "Celkem", "%"]);
         var types = [["electric", "Elektrick\u00e9"], ["combustion", "Spalovac\u00ed"]];
         for (var i = 0; i < types.length; i++) {
           var m = appMetadata.matching[types[i][0]];
           if (!m) continue;
+          var uncertain = m.uncertain || 0;
           var pct = m.total > 0 ? (100 * m.matched / m.total).toFixed(1) : "0.0";
-          addRow(tbl3, [types[i][1], fmtNum(m.matched), fmtNum(m.unmatched), fmtNum(m.total), pct + " %"]);
+          addRow(tbl3, [types[i][1], fmtNum(m.matched), fmtNum(uncertain), fmtNum(m.unmatched), fmtNum(m.total), pct + " %"]);
         }
         card3.appendChild(tbl3);
         body.appendChild(card3);

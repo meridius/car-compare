@@ -9,7 +9,7 @@ CANONICAL_COLS = [
     "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ", "Výkon (kW)",
     "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
     "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Tepelné čerpadlo",
-    "Spárováno", "Extra", "Stav", "Zdroj", "Odkaz na auto",
+    "Spárováno", "Skóre shody", "Extra", "Stav", "Zdroj", "Odkaz na auto",
 ]
 
 

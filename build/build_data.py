@@ -267,8 +267,12 @@ def join_electric_reference(df, ref):
             electric[dst_col] = None
         electric[dst_col] = electric[dst_col].astype(object)
 
+    # EV is matched here by prefix join. Default every EV row to "Ne" (explicit, not
+    # null) so unmatched EVs render consistently with the tri-state coloring; matched
+    # rows are overwritten with "Ano" in the loop below. (Fixes EV null vs ICE "Ne".)
     if "Spárováno" not in electric.columns:
         electric["Spárováno"] = "Ne"
+    electric["Spárováno"] = electric["Spárováno"].replace("", "Ne").fillna("Ne")
 
     ref_lookup = {}
     for _, row in ref.iterrows():
@@ -309,15 +313,26 @@ def count_sources(df):
     return sources
 
 def count_matching(df):
-    """Count matched/unmatched per type."""
+    """Count matched (Ano) / uncertain (Nejisté) / unmatched (Ne) per type.
+
+    'uncertain' is the tri-state middle bucket: a candidate was found but the match
+    is weak or ambiguous (see matching.classify_match). EV has no Nejisté state so
+    its uncertain count is always 0."""
     result = {}
     for typ in ["Spalovací", "Elektrické"]:
         mask = df["Typ"] == typ
         subset = df[mask]
-        matched = (subset.get("Spárováno", pd.Series()) == "Ano").sum()
+        col = subset.get("Spárováno", pd.Series(dtype=str))
+        matched = int((col == "Ano").sum())
+        uncertain = int((col == "Nejisté").sum())
         total = len(subset)
         key = "combustion" if typ == "Spalovací" else "electric"
-        result[key] = {"matched": int(matched), "unmatched": int(total - matched), "total": int(total)}
+        result[key] = {
+            "matched": matched,
+            "uncertain": uncertain,
+            "unmatched": int(total - matched - uncertain),
+            "total": int(total),
+        }
     return result
 
 # Per-listing spec columns whose value is fixed for a given car configuration and
@@ -504,6 +519,7 @@ def main():
         "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
         "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
+        "Skóre shody",
     ]
     for col in numeric_cols:
         if col in df.columns:
@@ -516,7 +532,7 @@ def main():
         "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ",
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
         "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Spárováno",
-        "Tepelné čerpadlo",
+        "Skóre shody", "Tepelné čerpadlo",
         "Extra", "Stav", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
