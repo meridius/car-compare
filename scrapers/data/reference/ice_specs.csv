@@ -1,302 +1,302 @@
-Jednoznačná varianta vozu,Značka,Model,Výbava,Generace,Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd
-DFSK Fengon 5 1.5 CVT,DFSK,Fengon,,,,,1.5,,Benzín,,"9,0",385,71,
-Alfa Romeo Giulia 2.0 GME,Alfa Romeo,Giulia,,,,,2.0,,Benzín,,"7,4",480,69,
-Alfa Romeo Giulia 2.2 JTDM,Alfa Romeo,Giulia,,,,,2.2,,Nafta,,"5,3",480,70,
-Alfa Romeo Stelvio 2.0 GME,Alfa Romeo,Stelvio,,,SUV,,2.0,,Benzín,,"8,9",525,71,
-Alfa Romeo Stelvio 2.2 JTDM,Alfa Romeo,Stelvio,,,SUV,,2.2,,Nafta,,"6,1",525,71,
-Audi A3 Hatchback 35 TFSI,Audi,A3,,,Hatchback,,,TFSI,Benzín,,"5,2",380,68,
-Audi A3 Hatchback 40 TFSI e,Audi,A3,,,Hatchback,,,TFSI,Benzín,PHEV,"1,4",280,67,
-Audi A3 Sedan 35 TFSI,Audi,A3,,,Sedan,,,TFSI,Benzín,,"5,0",425,68,
-Audi A4 Sedan 35 TFSI,Audi,A4,,,Sedan,,,TFSI,Benzín,,"5,8",460,68,
-Audi A4 Avant 35 TFSI,Audi,A4,,,Kombi,,,TFSI,Benzín,,"6,3",495,69,
-Audi Q2 35 TFSI,Audi,Q2,,,,,,TFSI,Benzín,,"5,8",405,69,
-Audi Q2 40 TFSI Quattro,Audi,Q2,,,,,,TFSI,Benzín,,"7,2",355,70,
-Audi Q3 35 TFSI,Audi,Q3,,,SUV,,,TFSI,Benzín,,"6,5",530,69,
-Audi Q3 Sportback 35 TFSI,Audi,Q3,,,Sportback,,,TFSI,Benzín,,"6,3",488,69,
-Audi Q3 45 TFSI e,Audi,Q3,,,,,,TFSI,Benzín,PHEV,"1,6",380,68,
-BAIC X3 1.5T 6MT,BAIC,X3,,,SUV,,1.5,,Benzín,,"6,9",390,70,
-BAIC X5 1.5T CVT,BAIC,X5,,,SUV,,1.5,,Benzín,,"7,4",410,71,
-BAIC Beijing X55 1.5 Turbo 7DCT,BAIC,Beijing X55,,,,,1.5,Turbo,Benzín,,"8,0",380,70,
-Bestune T90 1.5T 7DCT,Bestune,T90,,,,,1.5,,Benzín,,"7,2",540,70,
-Bestune T90 1.5T PHEV,Bestune,T90,,,,,1.5,,Benzín,PHEV,"1,5",490,68,
-BMW 118i Hatchback,BMW,118i,,F40,Hatchback,,,,Benzín,,"5,7",380,68,
-BMW 218i Active Tourer,BMW,218i,,,MPV,,,,Benzín,,"6,2",470,68,
-BMW X1 sDrive18i,BMW,X1,,U11,SUV,,,,Benzín,,"6,3",540,69,
-BMW X1 xDrive30e,BMW,X1,,U11,SUV,,,,Benzín,PHEV,"1,0",490,68,
-BMW X2 sDrive20i,BMW,X2,,U10,SUV,,,,Benzín,,"6,0",515,69,
-Chery Tiggo 7 Pro 1.5T,Chery,Tiggo,,,,,1.5,,Benzín,,"7,8",475,70,
-Chevrolet Equinox 1.5T AWD,Chevrolet,Equinox,,,,,1.5,,Benzín,,"8,4",840,71,
-Citroën C4 1.2 PureTech,Citroën,C4,,,Fastback,,1.2,PureTech,Benzín,,"5,4",380,68,
-Citroën C5 Aircross 1.2 MHEV,Citroën,C5 Aircross,,,,,1.2,,Benzín,MHEV,"5,7",580,69,
-Citroën C5 Aircross Plug-In Hybrid,Citroën,C5 Aircross,,,,,,,Benzín,PHEV,"1,4",460,68,
-Citroën C5 X 1.2 PureTech,Citroën,C5,,,Liftback,,1.2,PureTech,Benzín,,"6,0",545,68,
-Citroën C5 X Plug-In Hybrid,Citroën,C5,,,Liftback,,,,Benzín,PHEV,"1,3",485,67,
-Citroën Grand C4 SpaceTourer 2.0 BlueHDi,Citroën,Grand C4,,,Hatchback,,2.0,BlueHDi,Nafta,,"5,2",645,70,
-Cupra Ateca 1.5 TSI,Cupra,Ateca,,,SUV,,1.5,TSI,Benzín,,"6,6",510,70,
-Cupra Ateca 2.0 TSI 4Drive,Cupra,Ateca,,,SUV,,2.0,TSI,Benzín,,"8,7",485,72,
-Cupra Formentor 1.5 TSI,Cupra,Formentor,,,SUV,,1.5,TSI,Benzín,,"6,4",450,69,
-Cupra Formentor 1.4 e-Hybrid,Cupra,Formentor,,,SUV,,1.4,,Benzín,PHEV,"1,4",345,68,
-Cupra Leon Hatchback 1.5 TSI,Cupra,Leon,,,Hatchback,,1.5,TSI,Benzín,,"5,6",380,68,
-Cupra Leon Sportstourer 1.5 TSI,Cupra,Leon,,,Kombi,,1.5,TSI,Benzín,,"5,8",620,69,
-Cupra Leon ST 1.4 e-Hybrid,Cupra,Leon ST,,,,,1.4,,Benzín,PHEV,"1,3",470,67,
-Dacia Duster ECO-G 100 LPG,Dacia,Duster,,Gen 3,SUV,,,,LPG + benzín,,"7,8",474,69,
-Dacia Duster Hybrid 140,Dacia,Duster,,Gen 3,SUV,,,,Benzín,HEV,"4,8",430,68,
-Dongfeng Forthing T5 EVO 1.5T,Dongfeng,Forthing T5 EVO,,,,,1.5,,Benzín,,"6,6",480,71,
-Dongfeng U-Tour 1.5T Petrol,Dongfeng,U-Tour,,,,,1.5,,Benzín,,"6,6",620,70,
-Dongfeng U-Tour 1.5T Hybrid,Dongfeng,U-Tour,,,,7,1.5,,Benzín,HEV,"5,8",620,68,
-DR 5 1.5 Bi-Fuel,DR,5,,,,,1.5,,LPG + benzín,,"8,5",340,71,
-DS 4 1.2 PureTech,DS,4,,,,,1.2,PureTech,Benzín,,"5,9",430,68,
-DS 4 E-Tense,DS,4 E-Tense,,,,,,,Benzín,PHEV,"1,3",390,67,
-DS 7 Crossback 2.0 BlueHDi,DS,7,,,SUV,,2.0,BlueHDi,Nafta,,"5,5",555,69,
-DS 7 Crossback E-Tense,DS,7,,,SUV,,,,Benzín,PHEV,"1,5",555,68,
-Fiat Talento L1H1 2.0 EcoJet,Fiat,Talento L1H1,,,,,2.0,,Benzín,,"6,5",1000,72,
-Ford Focus Hatchback 1.0 EcoBoost,Ford,Focus,,,Hatchback,,1.0,EcoBoost,Benzín,,"5,1",375,68,
-Ford Focus Kombi 1.0 EcoBoost,Ford,Focus,,,Kombi,,1.0,EcoBoost,Benzín,,"5,3",608,69,
-Ford Focus ST 2.3 EcoBoost,Ford,Focus ST,,,,,2.3,EcoBoost,Benzín,,"8,0",375,74,
-Ford Kuga 1.5 EcoBoost,Ford,Kuga,,,SUV,,1.5,EcoBoost,Benzín,,"6,6",512,69,
-Ford Kuga 2.5 Duratec FHEV,Ford,Kuga,,,SUV,,2.5,,Benzín,HEV,"5,4",475,68,
-Ford Kuga 2.5 Duratec PHEV,Ford,Kuga,,,SUV,,2.5,,Benzín,PHEV,"1,0",475,67,
-Ford Mondeo Liftback 2.0 EcoBlue,Ford,Mondeo,,,Hatchback,,2.0,EcoBlue,Nafta,,"5,0",550,68,
-Ford Mondeo Kombi 2.0 Hybrid,Ford,Mondeo,,,Kombi,,2.0,,Benzín,HEV,"5,6",525,67,
-Ford Puma 1.0 EcoBoost MHEV,Ford,Puma,,,SUV,,1.0,EcoBoost,Benzín,MHEV,"5,3",456,69,
-Ford S-MAX 2.5 Duratec FHEV,Ford,S-MAX,,,,,2.5,,Benzín,HEV,"6,4",700,69,
-Geely Haoyue Pro 1.5T,Geely,Haoyue Pro,,,,7,1.5,,Benzín,,"8,7",150,70,
-Honda Civic Hatchback 2.0 e:HEV,Honda,Civic,,Gen 11,Hatchback,,2.0,,Benzín,HEV,"4,7",410,68,
-Honda Civic Type R 2.0 VTEC,Honda,Civic Type R,,,,,2.0,,Benzín,,"8,2",410,74,
-Hyundai i30 Hatchback 1.0 T-GDI,Hyundai,i30,,,Hatchback,,1.0,T-GDI,Benzín,,"5,4",395,68,
-Hyundai i30 Kombi 1.5 T-GDI MHEV,Hyundai,i30,,,Kombi,,1.5,T-GDI,Benzín,MHEV,"5,8",602,69,
-Hyundai Kona 1.0 T-GDI,Hyundai,Kona,,,SUV,,1.0,T-GDI,Benzín,,"5,8",466,69,
-Hyundai Santa Fe 1.6 T-GDI Hybrid,Hyundai,Santa Fe,,Gen 5,SUV,,1.6,T-GDI,Benzín,HEV,"6,9",725,69,
-Hyundai Tucson 1.6 T-GDI MHEV,Hyundai,Tucson,,,SUV,,1.6,T-GDI,Benzín,MHEV,"6,5",577,69,
-Hyundai Tucson 1.6 T-GDI PHEV,Hyundai,Tucson,,,SUV,,1.6,T-GDI,Benzín,PHEV,"1,4",558,68,
-Jaecoo 7 1.6 TGDI AWD,Jaecoo,7,,,,,1.6,TGDI,Benzín,,"8,0",340,70,
-Jaecoo 7 1.5 TGDI PHEV,Jaecoo,7,,,,,1.5,TGDI,Benzín,PHEV,"1,2",584,68,
-Jaguar E-Pace P200 MHEV,Jaguar,E-Pace P200,,,,,,,Benzín,MHEV,"8,0",494,70,
-Jaguar E-Pace P300e PHEV,Jaguar,E-Pace P300e,,,,,,,Benzín,PHEV,"2,0",405,69,
-Jeep Compass 1.5 MHEV,Jeep,Compass,,,,,1.5,,Benzín,MHEV,"5,6",438,70,
-Jeep Compass 1.3 PHEV 4xe,Jeep,Compass,,,,,1.3,,Benzín,PHEV,"1,9",420,69,
-Jeep Renegade 1.5 MHEV,Jeep,Renegade,,,,,1.5,,Benzín,MHEV,"5,7",351,71,
-KGM Korando 1.5 GDI-T 2WD,KGM,Korando,,,SUV,,1.5,GDI,Benzín,,"7,5",551,85,
-KGM Tivoli 1.5 GDI-T,KGM,Tivoli,,,,,1.5,GDI,Benzín,,"7,0",427,70,
-KGM Torres 1.5 GDI-T 2WD,KGM,Torres,,,SUV,,1.5,GDI,Benzín,,"8,5",703,71,
-Kia Ceed Hatchback 1.5 T-GDI,Kia,Ceed,,,Hatchback,,1.5,T-GDI,Benzín,,"5,5",395,68,
-Kia Ceed SW 1.5 T-GDI,Kia,Ceed,,,Kombi,,1.5,T-GDI,Benzín,,"5,7",625,69,
-Kia Ceed SW 1.6 GDI PHEV,Kia,Ceed,,,Kombi,,1.6,GDI,Benzín,PHEV,"1,3",437,67,
-Kia ProCeed 1.5 T-GDI,Kia,ProCeed,,,Shooting Brake,,1.5,T-GDI,Benzín,,"5,7",594,69,
-Kia XCeed 1.5 T-GDI,Kia,XCeed,,,SUV,,1.5,T-GDI,Benzín,,"6,0",426,69,
-Kia XCeed 1.6 GDI PHEV,Kia,XCeed,,,,,1.6,GDI,Benzín,PHEV,"1,4",291,68,
-Kia K4 2.0 MPI,Kia,K4,,,Sedan,,2.0,,Benzín,,"6,5",470,68,
-Kia Niro 1.6 GDI HEV,Kia,Niro,,,SUV,,1.6,GDI,Benzín,HEV,"4,4",451,67,
-Kia Sportage 1.6 T-GDI MHEV,Kia,Sportage,,,SUV,,1.6,T-GDI,Benzín,MHEV,"6,4",562,69,
-Kia Sportage 1.6 T-GDI PHEV,Kia,Sportage,,,SUV,,1.6,T-GDI,Benzín,PHEV,"1,1",540,68,
-Kia Stinger 3.3 T-GDI AWD,Kia,Stinger,,,,,3.3,T-GDI,Benzín,,"10,5",406,73,
-Land Rover Discovery Sport D165 MHEV,Land Rover,Discovery,,,,,,,Benzín,MHEV,"6,4",780,70,
-Land Rover Discovery Sport P300e PHEV,Land Rover,Discovery,,,,,,,Benzín,PHEV,"1,6",541,68,
-Mazda 3 Hatchback 2.0 e-Skyactiv G,Mazda,3,,,Hatchback,,2.0,,Benzín,,"5,5",351,68,
-Mazda 3 Sedan 2.0 e-Skyactiv X,Mazda,3,,,Sedan,,2.0,,Benzín,,"5,0",450,67,
-Mazda 6 Sedan 2.0 Skyactiv-G,Mazda,6,,,Sedan,,2.0,SKYACTIV-G,Benzín,,"6,2",480,68,
-Mazda 6 Wagon 2.5 Skyactiv-G,Mazda,6,,,Kombi,,2.5,SKYACTIV-G,Benzín,,"7,0",522,69,
-Mazda CX-30 2.0 e-Skyactiv G,Mazda,CX-30,,,,,2.0,,Benzín,,"5,9",430,68,
-Mazda CX-5 2.0 Skyactiv-G,Mazda,CX-5,,,,,2.0,SKYACTIV-G,Benzín,,"6,8",506,69,
-Mercedes-Benz CLA Coupé 180,Mercedes-Benz,CLA,,,Kupé,,,,Benzín,,"5,9",460,68,
-Mercedes-Benz CLA Shooting Brake 200,Mercedes-Benz,CLA,,,Shooting Brake,,,,Benzín,,"6,1",505,69,
-Mercedes-Benz GLB 200 5míst,Mercedes-Benz,GLB,,,SUV,5,,,Benzín,,"6,9",570,69,
-Mercedes-Benz GLB 200 7míst,Mercedes-Benz,GLB,,,SUV,7,,,Benzín,,"6,9",500,69,
-Mercedes-Benz Třídy A Hatchback 180,Mercedes-Benz,Třídy A,,,Hatchback,,,,Benzín,,"5,8",355,68,
-Mercedes-Benz Třídy A Sedan 180,Mercedes-Benz,Třídy A,,,Sedan,,,,Benzín,,"5,5",405,67,
-Mercedes-Benz Třídy B 180,Mercedes-Benz,Třídy B,,,MPV,,,,Benzín,,"6,0",455,68,
-MG HS 1.5 T-GDI,MG,HS,,,SUV,,1.5,T-GDI,Benzín,,"7,6",507,70,
-MG EHS Plug-In Hybrid,MG,EHS,,,,,,,Benzín,PHEV,"1,8",448,68,
-MG ZS 1.5 VTi-tech,MG,ZS,,,SUV,,1.5,,Benzín,,"6,6",448,70,
-Mini Clubman Cooper,Mini,Clubman Cooper,,,,,,,Benzín,,"5,9",360,69,
-Mini Cooper 3D Hatchback,Mini,Cooper 3D,,,Hatchback,,,,Benzín,,"5,6",211,68,
-Mini Countryman Cooper,Mini,Countryman Cooper,,,,,,,Benzín,,"6,2",505,69,
-Mitsubishi ASX 1.0 TSI,Mitsubishi,ASX,,,,,1.0,TSI,Benzín,,"5,8",422,68,
-Mitsubishi ASX 1.6 MIVEC,Mitsubishi,ASX,,,,,1.6,MIVEC,Benzín,,"7,0",419,70,
-Mitsubishi Eclipse Cross PHEV,Mitsubishi,Eclipse Cross,,,,,,,Benzín,PHEV,"2,0",359,68,
-Nissan Juke 1.0 DIG-T,Nissan,Juke,,,,,1.0,,Benzín,,"5,9",422,69,
-Nissan Juke 1.6 Hybrid,Nissan,Juke,,,,,1.6,,Benzín,HEV,"5,0",354,68,
-Nissan Qashqai 1.3 DIG-T MHEV,Nissan,Qashqai,,,,,1.3,,Benzín,MHEV,"6,3",504,69,
-Nissan Qashqai 1.5 e-Power,Nissan,Qashqai,,,,,1.5,,Benzín,HEV,"5,3",479,67,
-Nissan X-Trail 1.5 VC-T 5míst,Nissan,X-Trail,,,,5,1.5,,Benzín,,"5,8",585,68,
-Nissan X-Trail 1.5 VC-T 7míst,Nissan,X-Trail,,,,7,1.5,,Benzín,,"6,2",485,68,
-Omoda 5 1.6 T-GDI,Omoda,5,,,,,1.6,T-GDI,Benzín,,"7,5",378,69,
-Opel Astra Hatchback 1.2 Turbo,Opel,Astra,,,Hatchback,,1.2,Turbo,Benzín,,"5,4",422,68,
-Opel Astra Sports Tourer 1.2 Turbo,Opel,Astra,,,Kombi,,1.2,Turbo,Benzín,,"5,6",597,69,
-Opel Frontera Hybrid,Opel,Frontera,,,,,,,Benzín,HEV,"5,5",460,69,
-Opel Grandland X 1.2 Turbo,Opel,Grandland,,,,,1.2,Turbo,Benzín,,"6,5",514,69,
-Opel Insignia Grand Sport 2.0 CDTI,Opel,Insignia,,,Grand Sport,,2.0,CDTi,Nafta,,"5,2",490,68,
-Opel Insignia Sports Tourer 2.0 CDTI,Opel,Insignia,,,Kombi,,2.0,CDTi,Nafta,,"5,5",560,69,
-GWM Haval Jolion Pro Hybrid 1.5,GWM Haval,Jolion Pro,,,,,1.5,,Benzín,HEV,"6,0",255,70,
-GWM Haval H6 1.5T,GWM Haval,H6,,,,,1.5,,Benzín,,"9,1",510,71,
-Peugeot 2008 1.2 PureTech,Peugeot,2008,,,,,1.2,PureTech,Benzín,,"5,4",434,69,
-Peugeot 308 Hatchback 1.2 PureTech,Peugeot,308,,,Hatchback,,1.2,PureTech,Benzín,,"5,5",412,68,
-Peugeot 308 SW 1.2 PureTech,Peugeot,308,,,Kombi,,1.2,PureTech,Benzín,,"5,7",608,69,
-Peugeot 5008 1.2 PureTech MHEV,Peugeot,5008,,,,,1.2,PureTech,Benzín,MHEV,"5,8",748,69,
-Peugeot 508 Fastback 1.2 PureTech,Peugeot,508,,,Fastback,,1.2,PureTech,Benzín,,"5,9",487,68,
-Peugeot 508 SW 1.5 BlueHDi,Peugeot,508,,,Kombi,,1.5,BlueHDi,Nafta,,"4,9",530,69,
-Renault Arkana 1.3 TCe MHEV,Renault,Arkana,,,SUV,,1.3,TCe,Benzín,MHEV,"5,8",513,69,
-Renault Arkana E-Tech Hybrid,Renault,Arkana E-Tech,,,SUV,,,e-TEC,Benzín,HEV,"4,8",480,68,
-Renault Captur 1.0 TCe,Renault,Captur,,,SUV,,1.0,TCe,Benzín,,"5,8",422-536,68,
-Renault Captur E-Tech Plug-In Hybrid,Renault,Captur E-Tech,,,SUV,,,e-TEC,Benzín,PHEV,"1,4",265-379,67,
-Renault Kadjar 1.3 TCe,Renault,Kadjar,,,,,1.3,TCe,Benzín,,"6,2",472,69,
-Renault Koleos 2.0 dCi 4WD,Renault,Koleos,,,,,2.0,dCi,Nafta,,"6,8",579,70,
-Renault Mégane Hatchback 1.3 TCe,Renault,Mégane,,,Hatchback,,1.3,TCe,Benzín,,"5,6",384,68,
-Renault Talisman Sedan 2.0 BlueHDi,Renault,Talisman,,,Sedan,,2.0,BlueHDi,Nafta,,"5,2",608,68,
-Renault Talisman Grandtour 2.0 dCi,Renault,Talisman,,,,,2.0,dCi,Nafta,,"5,5",572,69,
-Seat Arona 1.0 TSI,Seat,Arona,,,SUV,,1.0,TSI,Benzín,,"5,2",400,69,
-Seat Arona 1.0 TGI,Seat,Arona,,,SUV,,1.0,,CNG + benzín,,"5,2 (3,5 kg)",282,69,
-Seat Ateca 1.5 TSI,Seat,Ateca,,,SUV,,1.5,TSI,Benzín,,"6,4",510,69,
-Seat Leon Hatchback 1.5 TSI,Seat,Leon,,,Hatchback,,1.5,TSI,Benzín,,"5,5",380,68,
-Seat Leon Sportstourer 1.5 TSI,Seat,Leon,,,Kombi,,1.5,TSI,Benzín,,"5,7",620,69,
-Seat Tarraco 1.5 TSI,Seat,Tarraco,,,SUV,5,1.5,TSI,Benzín,,"6,9",760,69,
-Seat Tarraco 1.4 e-Hybrid,Seat,Tarraco,,,SUV,,1.4,,Benzín,PHEV,"1,5",610,68,
-Škoda Fabia Hatchback 1.0 TSI,Škoda,Fabia,,Gen 4,Hatchback,,1.0,TSI,Benzín,,"5,0",380,68,
-Škoda Fabia Combi 1.0 TSI,Škoda,Fabia,,Gen 3,Kombi,,1.0,TSI,Benzín,,"5,2",530,69,
-Škoda Kamiq 1.0 TSI,Škoda,Kamiq,,,SUV,,1.0,TSI,Benzín,,"5,3",400,69,
-Škoda Karoq 1.5 TSI,Škoda,Karoq,,,SUV,,1.5,TSI,Benzín,,"6,2",521,69,
-Škoda Kodiaq 1.5 TSI,Škoda,Kodiaq,,Gen 2,SUV,5,1.5,TSI,Benzín,,"6,0",910,70,
-Škoda Kodiaq iV,Škoda,Kodiaq iV,,Gen 2,SUV,,,,Benzín,PHEV,"1,4",745,68,
-Škoda Octavia Liftback 1.5 TSI,Škoda,Octavia,,,Hatchback,,1.5,TSI,Benzín,,"5,4",600,68,
-Škoda Octavia Combi 1.5 TSI,Škoda,Octavia,,,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,
-Škoda Octavia Combi iV,Škoda,Octavia,,,Kombi,,,,Benzín,PHEV,"1,2",490,67,
-Škoda Octavia Combi Selection 1.5 TSI,Škoda,Octavia,Selection,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,
-Škoda Octavia Combi Style 1.5 TSI,Škoda,Octavia,Style,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,
-Škoda Octavia Style 1.5 TSI,Škoda,Octavia,Style,Gen 4,Liftback,,1.5,TSI,Benzín,,"5,4",600,68,
-Škoda Scala 1.0 TSI,Škoda,Scala,,,Hatchback,,1.0,TSI,Benzín,,"5,2",467,68,
-Škoda Superb Liftback 1.5 TSI,Škoda,Superb,,Gen 4,Hatchback,,1.5,TSI,Benzín,,"5,4",645,68,
-Škoda Superb Combi 1.5 TSI,Škoda,Superb,,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",690,69,
-Škoda Superb Combi iV,Škoda,Superb,,Gen 4,Kombi,,,,Benzín,PHEV,"1,2",510,67,
-Škoda Superb Combi Style 2.0 TDI,Škoda,Superb,Style,Gen 3,Kombi,,2.0,TDI,Nafta,,"4,9",660,69,
-Škoda Superb Combi Style 1.5 TSI,Škoda,Superb,Style,B9,Kombi,,1.5,TSI,Benzín,,"5,6",690,69,
-SsangYong Rexton 2.2 e-XDI,SsangYong,Rexton,,,,5,2.2,,Benzín,,"7,9",784,70,
-SsangYong Tivoli 1.5 GDI-T,SsangYong,Tivoli,,,,,1.5,GDI,Benzín,,"7,0",427,70,
-SsangYong Torres 1.5 GDI-T,SsangYong,Torres,,,SUV,,1.5,GDI,Benzín,,"8,5",703,71,
-Subaru Forester 2.0i e-Boxer,Subaru,Forester,,,,,,,Benzín,HEV,"6,7",508,69,
-Subaru XV 1.6i Petrol,Subaru,XV,,,,,,,Benzín,,"7,2",385,70,
-Subaru XV 2.0i e-Boxer,Subaru,XV,,,,,,,Benzín,HEV,"6,9",340,69,
-Toyota Corolla Hatchback 1.8 Hybrid,Toyota,Corolla,,,Hatchback,,1.8,,Benzín,HEV,"4,4",361,67,
-Toyota Corolla TS Kombi 2.0 Hybrid,Toyota,Corolla TS,,,Kombi,,2.0,,Benzín,HEV,"4,6",596,68,
-Toyota Rav4 2.5 Hybrid,Toyota,Rav4,,,,,2.5,,Benzín,HEV,"5,6",580,69,
-Toyota Rav4 2.5 Plug-In Hybrid,Toyota,Rav4,,,,,2.5,,Benzín,PHEV,"1,0",520,68,
-Volvo XC40 B3 MHEV,Volvo,XC40,,,SUV,,,,Benzín,MHEV,"6,7",452,69,
-VW Arteon Liftback 2.0 TSI,VW,Arteon,,,Hatchback,,2.0,TSI,Benzín,,"7,2",563,68,
-VW Arteon Shooting Brake 2.0 TDI,VW,Arteon,,,Shooting Brake,,2.0,TDI,Nafta,,"5,2",565,69,
-VW Golf Hatchback 1.5 TSI,VW,Golf,,Gen 8,Hatchback,,1.5,TSI,Benzín,,"5,4",381,68,
-VW Golf Variant 1.5 eTSI,VW,Golf,,Gen 8,Kombi,,1.5,eTSI,Benzín,MHEV,"5,6",611,69,
-VW Golf 8 eHybrid,VW,Golf,,,,,,,Benzín,PHEV,"1,2",273,67,
-VW Passat Variant 1.5 eTSI,VW,Passat,,B9,Kombi,,1.5,eTSI,Benzín,MHEV,"5,4",690,68,
-VW Passat Variant Elegance 2.0 TDI,VW,Passat,Elegance,B8,Kombi,,2.0,TDI,Nafta,,"4,9",650,68,
-VW Passat GTE,VW,Passat,,B8,,,,,Benzín,PHEV,"1,5",483,67,
-VW Polo 1.0 TSI,VW,Polo,,,,,1.0,TSI,Benzín,,"5,2",351,68,
-VW Sharan 2.0 TDI,VW,Sharan,,,MPV,5,2.0,TDI,Nafta,,"6,2",955,70,
-VW T-Cross 1.0 TSI,VW,T-Cross,,,,,1.0,TSI,Benzín,,"5,8",385-455,69,
-VW T-Roc 1.5 TSI,VW,T-Roc,,,SUV,,1.5,TSI,Benzín,,"6,0",445,69,
-VW Taigo 1.0 TSI,VW,Taigo,,,SUV,,1.0,TSI,Benzín,,"5,5",440,69,
-VW Tiguan 1.5 eTSI,VW,Tiguan,,Gen 3,SUV,,1.5,eTSI,Benzín,MHEV,"6,2",615,69,
-VW Tiguan Allspace 2.0 TDI,VW,Tiguan,,,SUV,5,2.0,TDI,Nafta,,"5,8",760,70,
-VW Tiguan Life 1.5 TSI,VW,Tiguan,Life,Gen 2,SUV,,1.5,TSI,Benzín,,"6,8",615,70,
-VW Touran 1.5 TSI,VW,Touran,,,MPV,5,1.5,TSI,Benzín,,"6,5",743,69,
-VW Touran Comfortline 1.5 TSI,VW,Touran,Comfortline,,MPV,5,1.5,TSI,Benzín,,"6,5",743,69,
-Alfa Romeo Junior 1.2 Turbo,Alfa Romeo,Junior,,,,,1.2,Turbo,Benzín,,"5,8",400,69,
-Alfa Romeo Tonale 1.5,Alfa Romeo,Tonale,,,,,1.5,,Benzín,,"6,8",500,70,
-Audi A1 2.0 TFSI,Audi,A1,,,,,2.0,TFSI,Benzín,,"7,5",335,72,
-Audi A5 2.0 TDI,Audi,A5,,,,,2.0,TDI,Nafta,,"5,0",495,68,
-Audi A5 2.0 TFSI,Audi,A5,,,,,2.0,TFSI,Benzín,,"6,5",495,69,
-Audi A6 2.0 TDI,Audi,A6,,,Sedan,,2.0,TDI,Nafta,,"5,2",530,68,
-Audi A6 2.0 TFSI,Audi,A6,,,Sedan,,2.0,TFSI,Benzín,,"6,8",530,69,
-Audi A6 3.0 TDI,Audi,A6,,,Sedan,,3.0,TDI,Nafta,,"6,5",530,69,
-Audi A8 60 Bi- 4.0 TFSI,Audi,A8,,,Sedan,,4.0,TFSI,Benzín,,"10,5",505,70,
-Audi Q5 TDI,Audi,Q5,,,,,,TDI,Nafta,,"6,0",520,69,
-BAIC X35 1.5,BAIC,X35,,,SUV,,1.5,,Benzín,,"7,2",350,71,
-BAIC X7 1.5,BAIC,X7,,,,,1.5,,Benzín,,"8,0",450,71,
-BAIC X75 1.5,BAIC,X75,,,,,1.5,,Benzín,,"8,2",500,71,
-BMW 1 1.5,BMW,1,,,,,1.5,,Benzín,,"5,7",380,68,
-BMW 1 2.0,BMW,1,,,,,2.0,,Benzín,,"6,8",380,69,
-BMW 2 1.5,BMW,2,,,MPV,,1.5,,Benzín,,"6,2",470,68,
-BMW 2 2.0,BMW,2,,,MPV,,2.0,,Benzín,,"7,0",470,69,
-BMW 3 2.0,BMW,3,,,Sedan,,2.0,,Benzín,,"6,2",480,68,
-BMW 5 2.0,BMW,5,,,,,2.0,,Benzín,,"6,0",520,68,
-BMW X3 2.0,BMW,X3,,,,,2.0,,Benzín,,"7,5",550,69,
-Chevrolet TrailBlazer AWD 1.3,Chevrolet,TrailBlazer,,,,,1.3,,Benzín,,"7,0",530,70,
-Citroën C3 Aircross 1.2,Citroën,C3 Aircross,,,SUV,,1.2,,Benzín,,"5,8",460,69,
-Citroën Jumpy 2.0,Citroën,Jumpy,,,,,2.0,,Benzín,,"6,2",1000,72,
-Dacia Bigster 1.2 TCe,Dacia,Bigster,,,SUV,,1.2,TCe,Benzín,,"5,6",667,69,
-Dacia Bigster 1.8,Dacia,Bigster,,,SUV,,1.8,,Benzín,,"5,3",667,69,
-Dacia Jogger 1.6,Dacia,Jogger,,,,,1.6,,Benzín,,"4,8",708,69,
-Dongfeng DF 6 2.3 dCi,Dongfeng,DF,,,,,2.3,dCi,Nafta,,"8,5",800,72,
-Dongfeng Fengon 5 1.5 Turbo,Dongfeng,Fengon,,,,,1.5,Turbo,Benzín,,"9,0",385,71,
-Dongfeng Mage E2 1.5,Dongfeng,Mage E2,,,,,1.5,,Benzín,,"6,5",480,70,
-Dongfeng Mage 1.5 Turbo,Dongfeng,Mage,,,,,1.5,Turbo,Benzín,,"6,5",480,70,
-EVO Cross4 2.0 Turbo,EVO,Cross4,,,,,2.0,Turbo,Benzín,,"9,5",420,72,
-Fiat 600 1.2 Turbo,Fiat,600,,,,,1.2,Turbo,Benzín,,"5,5",385,69,
-Fiat Grande Panda 1.2,Fiat,Grande Panda,,,,,1.2,,Benzín,,"5,0",361,68,
-Fiat Scudo 2.0 MTJ,Fiat,Scudo,,,,,2.0,MTJ,Benzín,,"6,5",1000,72,
-Fiat Tipo 1.6,Fiat,Tipo,,,,,1.6,,Benzín,,"5,8",440,69,
-Ford Fiesta 1.5,Ford,Fiesta,,,,,1.5,,Benzín,,"6,5",311,73,
-Ford Ranger 2.0 EcoBlue,Ford,Ranger,,,,,2.0,EcoBlue,Nafta,,"8,5",1000,73,
-Ford Tourneo Custom 2.0 EcoBlue,Ford,Tourneo Custom,,,MPV,,2.0,EcoBlue,Nafta,,"7,5",1100,72,
-Ford Transit Custom 2.0 dCi,Ford,Transit Custom,,,,,2.0,dCi,Nafta,,"7,5",1100,72,
-Genesis G70 2.2,Genesis,G70,,,,,2.2,,Benzín,,"7,5",330,69,
-Honda CR-V 1.5,Honda,CR-V,,,,,1.5,,Benzín,,"7,8",561,69,
-Honda ZR-V 2.0,Honda,ZR-V,,,,,2.0,,Benzín,,"5,0",380,68,
-Hyundai Staria 2.2 CRDi,Hyundai,Staria,,,MPV,,2.2,CRDi,Nafta,,"8,5",831,71,
-Hyundai i20 1.0 T-GDI,Hyundai,i20,,,Hatchback,,1.0,T-GDI,Benzín,,"5,3",352,68,
-Hyundai i20 1.6 T-GDI,Hyundai,i20,,,Hatchback,,1.6,T-GDI,Benzín,,"7,0",352,73,
-Jaecoo 5 1.6 TGDI,Jaecoo,5,,,,,1.6,TGDI,Benzín,,"7,5",400,70,
-Kia Sorento 2.2 CRDi,Kia,Sorento,,,,,2.2,CRDi,Nafta,,"7,5",813,70,
-Kia Sorento 2.5,Kia,Sorento,,,,,2.5,,Benzín,,"8,5",813,71,
-Land Rover Range Rover Evoque 2.0,Land Rover,Range Rover Evoque,,,,,2.0,,Benzín,,"8,2",472,70,
-Lexus RX 2.0 Turbo,Lexus,RX,,,,,2.0,Turbo,Benzín,,"9,2",453,70,
-MG MG3 1.5,MG,MG3,,,,,1.5,,Benzín,,"5,3",293,68,
-Mazda CX-60 3.3,Mazda,CX-60,,,,,3.3,,Benzín,,"5,3",570,69,
-Mercedes-Benz C 220d,Mercedes-Benz,C,,,Sedan,,,,Nafta,,"5,0",455,67,
-Mercedes-Benz C 300d,Mercedes-Benz,C,,,,,,,Nafta,,"5,5",455,68,
-Mercedes-Benz GLA 1.3,Mercedes-Benz,GLA,,,,,1.3,,Benzín,,"6,5",435,69,
-Mercedes-Benz GLA 2.0,Mercedes-Benz,GLA,,,,,2.0,,Benzín,,"7,0",435,70,
-Mitsubishi Grandis 1.3,Mitsubishi,Grandis,,,,,1.3,,Benzín,,"6,0",600,70,
-Mitsubishi L200 2.3,Mitsubishi,L200,,,,,2.3,,Benzín,,"8,0",800,73,
-Mitsubishi Outlander 2.4,Mitsubishi,Outlander,,,,,2.4,,Benzín,,"7,8",469,69,
-Opel Mokka 1.2 Turbo,Opel,Mokka,,,SUV,,1.2,Turbo,Benzín,,"6,2",350,69,
-Opel Vivaro 2.0 CDTi,Opel,Vivaro,,,,,2.0,CDTi,Nafta,,"6,5",1000,72,
-Opel Zafira 2.0 CDTi,Opel,Zafira,,,,,2.0,CDTi,Nafta,,"5,8",710,70,
-Peugeot 3008 1.2,Peugeot,3008,,,,,1.2,,Benzín,,"5,6",520,69,
-Peugeot 3008 1.6,Peugeot,3008,,,,,1.6,,Benzín,,"5,8",520,69,
-Peugeot 408 1.2,Peugeot,408,,,,,1.2,,Benzín,,"5,5",536,68,
-Peugeot Expert 2.0 BlueHDi,Peugeot,Expert,,,,,2.0,BlueHDi,Nafta,,"6,0",1000,72,
-Peugeot Traveller 2.0 BlueHDi,Peugeot,Traveller,,,,,2.0,BlueHDi,Nafta,,"6,5",1100,72,
-Porsche 911 Targa 4S 3.0 Turbo,Porsche,911 Targa 4S,,,Kupé,,3.0,Turbo,Benzín,,"10,0",128,74,
-Renault Austral 1.3 TCe,Renault,Austral,,,,,1.3,TCe,Benzín,,"5,8",500,69,
-Renault Clio 1.8 e-TEC,Renault,Clio,,,,,1.8,e-TEC,Benzín,HEV,"4,8",391,68,
-Renault Symbioz 1.8 e-TEC,Renault,Symbioz,,,SUV,,1.8,e-TEC,Benzín,HEV,"4,7",624,68,
-Renault Trafic 1.9,Renault,Trafic,,,,,1.9,,Benzín,,"7,0",1100,72,
-Renault Trafic 2.0 dCi,Renault,Trafic,,,,,2.0,dCi,Nafta,,"7,0",1100,72,
-SWM G1 PRO 1.5 Turbo,SWM,G1 PRO,,,,,1.5,Turbo,Benzín,,"7,5",380,71,
-SWM G5 PRO 1.5 Turbo,SWM,G5 PRO,,,,,1.5,Turbo,Benzín,,"8,0",420,71,
-Seat Alhambra 1.4 TSI,Seat,Alhambra,,,,,1.4,TSI,Benzín,,"7,5",630,69,
-SsangYong Musso 2.2,SsangYong,Musso,,,,,2.2,,Benzín,,"8,5",1000,73,
-Subaru Crosstrek 2.0,Subaru,Crosstrek,,,,,2.0,,Benzín,,"6,5",345,69,
-Subaru Impreza 2.0,Subaru,Impreza,,,,,2.0,,Benzín,,"6,5",345,69,
-Subaru Outback 2.5,Subaru,Outback,,,,,2.5,,Benzín,,"7,3",522,69,
-Suzuki Swace 1.8,Suzuki,Swace,,,,,1.8,,Benzín,,"4,5",596,68,
-Toyota C-HR 1.8,Toyota,C-HR,,,,,1.8,,Benzín,,"4,3",377,67,
-Toyota C-HR 2.0,Toyota,C-HR,,,,,2.0,,Benzín,,"4,7",377,68,
-Toyota Proace 2.0,Toyota,Proace,,,,,2.0,,Benzín,,"6,5",1000,72,
-Toyota Proace Verso 2.0,Toyota,Proace Verso,,,,,2.0,,Benzín,,"6,5",1100,72,
-VW Caddy 1.5 TSI,VW,Caddy,,,MPV,,1.5,TSI,Benzín,,"6,5",834,69,
-VW T6 Multivan 2.0 TDI,VW,T6 Multivan,,,MPV,,2.0,TDI,Nafta,,"7,5",913,70,
-VW Transporter T6 2.0 TDI,VW,Transporter T6,,,MPV,,2.0,TDI,Nafta,,"7,5",900,71,
-Volvo V60 2.0,Volvo,V60,,,,,2.0,,Benzín,,"6,5",529,68,
-Volvo V90 2.0,Volvo,V90,,,Kombi,,2.0,,Benzín,,"6,5",560,68,
-Volvo XC60 2.0,Volvo,XC60,,,SUV,,2.0,,Benzín,,"7,5",468,69,
-Dodge Challenger 3.6,Dodge,Challenger,,,,,3.6,,Benzín,,"10,2",459,72,
-Dodge Charger 3.6,Dodge,Charger,,,,,3.6,,Benzín,,"10,2",467,72,
-Cadillac XT4 2.0,Cadillac,XT4,,,SUV,,2.0,,Benzín,,"9,5",637,,
-Dongfeng Shine 1.5,Dongfeng,Shine,,,,,1.5,,Benzín,,"6,2",506,,
-Lexus LBX 1.5 Hybrid,Lexus,LBX,,,,,1.5,,Benzín,HEV,"4,8",402,,
-Toyota Camry 2.5 Hybrid,Toyota,Camry,,,,,2.5,,Benzín,HEV,"5,0",505,,
-Škoda Karoq 2.0 TDI,Škoda,Karoq,,,SUV,,2.0,TDI,Nafta,,"5,0",521,,
-VW Golf Hatchback 2.0 TDI,VW,Golf,,Gen 8,Hatchback,,2.0,TDI,Nafta,,"5,0",380,,
-Omoda C5 1.6 T-GDI,Omoda,C5,,,,,1.6,T-GDI,Benzín,,"7,5",378,,
-Audi SQ8 4.0 TFSI,Audi,SQ8,,,,,4.0,TFSI,Benzín,,"12,3",605,,
-Renault Grand Scénic 1.3 TCe,Renault,Grand Scénic,,,,,1.3,TCe,Benzín,,"7,0",597,,
+Jednoznačná varianta vozu,Značka,Model,Výbava,Generace,Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd,Cd zdroj
+DFSK Fengon 5 1.5 CVT,DFSK,Fengon,,,MPV,,1.5,,Benzín,,"9,0",385,71,0.33,odhad
+Alfa Romeo Giulia 2.0 GME,Alfa Romeo,Giulia,,,Sedan,,2.0,,Benzín,,"7,4",480,69,0.28,reálné
+Alfa Romeo Giulia 2.2 JTDM,Alfa Romeo,Giulia,,,Sedan,,2.2,,Nafta,,"5,3",480,70,0.28,reálné
+Alfa Romeo Stelvio 2.0 GME,Alfa Romeo,Stelvio,,,SUV,,2.0,,Benzín,,"8,9",525,71,0.33,reálné
+Alfa Romeo Stelvio 2.2 JTDM,Alfa Romeo,Stelvio,,,SUV,,2.2,,Nafta,,"6,1",525,71,0.33,reálné
+Audi A3 Hatchback 35 TFSI,Audi,A3,,,Hatchback,,1.5,TFSI,Benzín,,"5,2",380,68,0.3,reálné
+Audi A3 Hatchback 40 TFSI e,Audi,A3,,,Hatchback,,1.4,TFSI,Benzín,PHEV,"1,4",280,67,0.3,reálné
+Audi A3 Sedan 35 TFSI,Audi,A3,,,Sedan,,1.5,TFSI,Benzín,,"5,0",425,68,0.25,reálné
+Audi A4 Sedan 35 TFSI,Audi,A4,,,Sedan,,2,TFSI,Benzín,,"5,8",460,68,0.26,reálné
+Audi A4 Avant 35 TFSI,Audi,A4,,,Kombi,,2,TFSI,Benzín,,"6,3",495,69,0.28,reálné
+Audi Q2 35 TFSI,Audi,Q2,,,SUV,,1.5,TFSI,Benzín,,"5,8",405,69,0.31,reálné
+Audi Q2 40 TFSI Quattro,Audi,Q2,,,SUV,,2,TFSI,Benzín,,"7,2",355,70,0.32,reálné
+Audi Q3 35 TFSI,Audi,Q3,,,SUV,,1.5,TFSI,Benzín,,"6,5",530,69,0.32,reálné
+Audi Q3 Sportback 35 TFSI,Audi,Q3,,,Sportback,,1.5,TFSI,Benzín,,"6,3",488,69,0.33,reálné
+Audi Q3 45 TFSI e,Audi,Q3,,,SUV,,1.4,TFSI,Benzín,PHEV,"1,6",380,68,0.33,reálné
+BAIC X3 1.5T 6MT,BAIC,X3,,,SUV,,1.5,,Benzín,,"6,9",390,70,0.33,odhad
+BAIC X5 1.5T CVT,BAIC,X5,,,SUV,,1.5,,Benzín,,"7,4",410,71,0.33,odhad
+BAIC Beijing X55 1.5 Turbo 7DCT,BAIC,Beijing X55,,,SUV,,1.5,Turbo,Benzín,,"8,0",380,70,0.33,odhad
+Bestune T90 1.5T 7DCT,Bestune,T90,,,Sedan,,1.5,,Benzín,,"7,2",540,70,0.27,odhad
+Bestune T90 1.5T PHEV,Bestune,T90,,,Sedan,,1.5,,Benzín,PHEV,"1,5",490,68,0.27,odhad
+BMW 118i Hatchback,BMW,118i,,F40,Hatchback,,1.5,,Benzín,,"5,7",380,68,0.26,reálné
+BMW 218i Active Tourer,BMW,218i,,,MPV,,1.5,,Benzín,,"6,2",470,68,0.26,reálné
+BMW X1 sDrive18i,BMW,X1,,U11,SUV,,1.5,,Benzín,,"6,3",540,69,0.26,reálné
+BMW X1 xDrive30e,BMW,X1,,U11,SUV,,1.5,,Benzín,PHEV,"1,0",490,68,0.26,reálné
+BMW X2 sDrive20i,BMW,X2,,U10,SUV,,2,,Benzín,,"6,0",515,69,0.27,reálné
+Chery Tiggo 7 Pro 1.5T,Chery,Tiggo,,,SUV,,1.5,,Benzín,,"7,8",475,70,0.33,odhad
+Chevrolet Equinox 1.5T AWD,Chevrolet,Equinox,,,SUV,,1.5,,Benzín,,"8,4",840,71,0.33,odhad
+Citroën C4 1.2 PureTech,Citroën,C4,,,Fastback,,1.2,PureTech,Benzín,,"5,4",380,68,0.28,odhad
+Citroën C5 Aircross 1.2 MHEV,Citroën,C5 Aircross,,,SUV,,1.2,,Benzín,MHEV,"5,7",580,69,0.33,odhad
+Citroën C5 Aircross Plug-In Hybrid,Citroën,C5 Aircross,,,SUV,,1.6,,Benzín,PHEV,"1,4",460,68,0.33,odhad
+Citroën C5 X 1.2 PureTech,Citroën,C5,,,Liftback,,1.2,PureTech,Benzín,,"6,0",545,68,0.29,reálné
+Citroën C5 X Plug-In Hybrid,Citroën,C5,,,Liftback,,1.6,,Benzín,PHEV,"1,3",485,67,0.29,reálné
+Citroën Grand C4 SpaceTourer 2.0 BlueHDi,Citroën,Grand C4,,,Hatchback,,2.0,BlueHDi,Nafta,,"5,2",645,70,0.3,odhad
+Cupra Ateca 1.5 TSI,Cupra,Ateca,,,SUV,,1.5,TSI,Benzín,,"6,6",510,70,0.34,reálné
+Cupra Ateca 2.0 TSI 4Drive,Cupra,Ateca,,,SUV,,2.0,TSI,Benzín,,"8,7",485,72,0.34,reálné
+Cupra Formentor 1.5 TSI,Cupra,Formentor,,,SUV,,1.5,TSI,Benzín,,"6,4",450,69,0.32,reálné
+Cupra Formentor 1.4 e-Hybrid,Cupra,Formentor,,,SUV,,1.4,,Benzín,PHEV,"1,4",345,68,0.32,reálné
+Cupra Leon Hatchback 1.5 TSI,Cupra,Leon,,,Hatchback,,1.5,TSI,Benzín,,"5,6",380,68,0.275,reálné
+Cupra Leon Sportstourer 1.5 TSI,Cupra,Leon,,,Kombi,,1.5,TSI,Benzín,,"5,8",620,69,0.28,reálné
+Cupra Leon ST 1.4 e-Hybrid,Cupra,Leon ST,,,Kombi,,1.4,,Benzín,PHEV,"1,3",470,67,0.3,odhad
+Dacia Duster ECO-G 100 LPG,Dacia,Duster,,Gen 3,SUV,,1,,LPG + benzín,,"7,8",474,69,0.33,odhad
+Dacia Duster Hybrid 140,Dacia,Duster,,Gen 3,SUV,,1.6,,Benzín,HEV,"4,8",430,68,0.33,odhad
+Dongfeng Forthing T5 EVO 1.5T,Dongfeng,Forthing T5 EVO,,,SUV,,1.5,,Benzín,,"6,6",480,71,0.33,odhad
+Dongfeng U-Tour 1.5T Petrol,Dongfeng,U-Tour,,,MPV,,1.5,,Benzín,,"6,6",620,70,0.33,odhad
+Dongfeng U-Tour 1.5T Hybrid,Dongfeng,U-Tour,,,MPV,7,1.5,,Benzín,HEV,"5,8",620,68,0.33,odhad
+DR 5 1.5 Bi-Fuel,DR,5,,,SUV,,1.5,,LPG + benzín,,"8,5",340,71,0.33,odhad
+DS 4 1.2 PureTech,DS,4,,,Hatchback,,1.2,PureTech,Benzín,,"5,9",430,68,0.3,odhad
+DS 4 E-Tense,DS,4 E-Tense,,,Hatchback,,1.6,,Benzín,PHEV,"1,3",390,67,0.3,odhad
+DS 7 Crossback 2.0 BlueHDi,DS,7,,,SUV,,2.0,BlueHDi,Nafta,,"5,5",555,69,0.33,odhad
+DS 7 Crossback E-Tense,DS,7,,,SUV,,1.6,,Benzín,PHEV,"1,5",555,68,0.33,odhad
+Fiat Talento L1H1 2.0 EcoJet,Fiat,Talento L1H1,,,MPV,,2.0,,Benzín,,"6,5",1000,72,0.33,odhad
+Ford Focus Hatchback 1.0 EcoBoost,Ford,Focus,,,Hatchback,,1.0,EcoBoost,Benzín,,"5,1",375,68,0.273,reálné
+Ford Focus Kombi 1.0 EcoBoost,Ford,Focus,,,Kombi,,1.0,EcoBoost,Benzín,,"5,3",608,69,0.3,odhad
+Ford Focus ST 2.3 EcoBoost,Ford,Focus ST,,,Hatchback,,2.3,EcoBoost,Benzín,,"8,0",375,74,0.273,reálné
+Ford Kuga 1.5 EcoBoost,Ford,Kuga,,,SUV,,1.5,EcoBoost,Benzín,,"6,6",512,69,0.33,odhad
+Ford Kuga 2.5 Duratec FHEV,Ford,Kuga,,,SUV,,2.5,,Benzín,HEV,"5,4",475,68,0.33,odhad
+Ford Kuga 2.5 Duratec PHEV,Ford,Kuga,,,SUV,,2.5,,Benzín,PHEV,"1,0",475,67,0.33,odhad
+Ford Mondeo Liftback 2.0 EcoBlue,Ford,Mondeo,,,Hatchback,,2.0,EcoBlue,Nafta,,"5,0",550,68,0.27,reálné
+Ford Mondeo Kombi 2.0 Hybrid,Ford,Mondeo,,,Kombi,,2.0,,Benzín,HEV,"5,6",525,67,0.3,odhad
+Ford Puma 1.0 EcoBoost MHEV,Ford,Puma,,,SUV,,1.0,EcoBoost,Benzín,MHEV,"5,3",456,69,0.33,odhad
+Ford S-MAX 2.5 Duratec FHEV,Ford,S-MAX,,,MPV,,2.5,,Benzín,HEV,"6,4",700,69,0.33,odhad
+Geely Haoyue Pro 1.5T,Geely,Haoyue Pro,,,SUV,7,1.5,,Benzín,,"8,7",150,70,0.33,odhad
+Honda Civic Hatchback 2.0 e:HEV,Honda,Civic,,Gen 11,Hatchback,,2.0,,Benzín,HEV,"4,7",410,68,0.3,odhad
+Honda Civic Type R 2.0 VTEC,Honda,Civic Type R,,,Hatchback,,2.0,,Benzín,,"8,2",410,74,0.3,odhad
+Hyundai i30 Hatchback 1.0 T-GDI,Hyundai,i30,,,Hatchback,,1.0,T-GDI,Benzín,,"5,4",395,68,0.3,reálné
+Hyundai i30 Kombi 1.5 T-GDI MHEV,Hyundai,i30,,,Kombi,,1.5,T-GDI,Benzín,MHEV,"5,8",602,69,0.3,reálné
+Hyundai Kona 1.0 T-GDI,Hyundai,Kona,,,SUV,,1.0,T-GDI,Benzín,,"5,8",466,69,0.34,reálné
+Hyundai Santa Fe 1.6 T-GDI Hybrid,Hyundai,Santa Fe,,Gen 5,SUV,,1.6,T-GDI,Benzín,HEV,"6,9",725,69,0.34,reálné
+Hyundai Tucson 1.6 T-GDI MHEV,Hyundai,Tucson,,,SUV,,1.6,T-GDI,Benzín,MHEV,"6,5",577,69,0.33,reálné
+Hyundai Tucson 1.6 T-GDI PHEV,Hyundai,Tucson,,,SUV,,1.6,T-GDI,Benzín,PHEV,"1,4",558,68,0.33,reálné
+Jaecoo 7 1.6 TGDI AWD,Jaecoo,7,,,SUV,,1.6,TGDI,Benzín,,"8,0",340,70,0.33,odhad
+Jaecoo 7 1.5 TGDI PHEV,Jaecoo,7,,,SUV,,1.5,TGDI,Benzín,PHEV,"1,2",584,68,0.33,odhad
+Jaguar E-Pace P200 MHEV,Jaguar,E-Pace P200,,,SUV,,2,,Benzín,MHEV,"8,0",494,70,0.33,odhad
+Jaguar E-Pace P300e PHEV,Jaguar,E-Pace P300e,,,SUV,,1.5,,Benzín,PHEV,"2,0",405,69,0.33,odhad
+Jeep Compass 1.5 MHEV,Jeep,Compass,,,SUV,,1.5,,Benzín,MHEV,"5,6",438,70,0.33,odhad
+Jeep Compass 1.3 PHEV 4xe,Jeep,Compass,,,SUV,,1.3,,Benzín,PHEV,"1,9",420,69,0.33,odhad
+Jeep Renegade 1.5 MHEV,Jeep,Renegade,,,SUV,,1.5,,Benzín,MHEV,"5,7",351,71,0.33,odhad
+KGM Korando 1.5 GDI-T 2WD,KGM,Korando,,,SUV,,1.5,GDI,Benzín,,"7,5",551,85,0.33,odhad
+KGM Tivoli 1.5 GDI-T,KGM,Tivoli,,,SUV,,1.5,GDI,Benzín,,"7,0",427,70,0.33,odhad
+KGM Torres 1.5 GDI-T 2WD,KGM,Torres,,,SUV,,1.5,GDI,Benzín,,"8,5",703,71,0.33,odhad
+Kia Ceed Hatchback 1.5 T-GDI,Kia,Ceed,,,Hatchback,,1.5,T-GDI,Benzín,,"5,5",395,68,0.3,reálné
+Kia Ceed SW 1.5 T-GDI,Kia,Ceed,,,Kombi,,1.5,T-GDI,Benzín,,"5,7",625,69,0.3,reálné
+Kia Ceed SW 1.6 GDI PHEV,Kia,Ceed,,,Kombi,,1.6,GDI,Benzín,PHEV,"1,3",437,67,0.3,reálné
+Kia ProCeed 1.5 T-GDI,Kia,ProCeed,,,Shooting Brake,,1.5,T-GDI,Benzín,,"5,7",594,69,0.3,reálné
+Kia XCeed 1.5 T-GDI,Kia,XCeed,,,SUV,,1.5,T-GDI,Benzín,,"6,0",426,69,0.33,reálné
+Kia XCeed 1.6 GDI PHEV,Kia,XCeed,,,SUV,,1.6,GDI,Benzín,PHEV,"1,4",291,68,0.33,reálné
+Kia K4 2.0 MPI,Kia,K4,,,Sedan,,2.0,,Benzín,,"6,5",470,68,0.27,odhad
+Kia Niro 1.6 GDI HEV,Kia,Niro,,,SUV,,1.6,GDI,Benzín,HEV,"4,4",451,67,0.29,reálné
+Kia Sportage 1.6 T-GDI MHEV,Kia,Sportage,,,SUV,,1.6,T-GDI,Benzín,MHEV,"6,4",562,69,0.33,reálné
+Kia Sportage 1.6 T-GDI PHEV,Kia,Sportage,,,SUV,,1.6,T-GDI,Benzín,PHEV,"1,1",540,68,0.33,reálné
+Kia Stinger 3.3 T-GDI AWD,Kia,Stinger,,,Liftback,,3.3,T-GDI,Benzín,,"10,5",406,73,0.3,reálné
+Land Rover Discovery Sport D165 MHEV,Land Rover,Discovery,,,SUV,,2,,Benzín,MHEV,"6,4",780,70,0.33,odhad
+Land Rover Discovery Sport P300e PHEV,Land Rover,Discovery,,,SUV,,1.5,,Benzín,PHEV,"1,6",541,68,0.33,odhad
+Mazda 3 Hatchback 2.0 e-Skyactiv G,Mazda,3,,,Hatchback,,2.0,,Benzín,,"5,5",351,68,0.3,reálné
+Mazda 3 Sedan 2.0 e-Skyactiv X,Mazda,3,,,Sedan,,2.0,,Benzín,,"5,0",450,67,0.28,reálné
+Mazda 6 Sedan 2.0 Skyactiv-G,Mazda,6,,,Sedan,,2.0,SKYACTIV-G,Benzín,,"6,2",480,68,0.27,reálné
+Mazda 6 Wagon 2.5 Skyactiv-G,Mazda,6,,,Kombi,,2.5,SKYACTIV-G,Benzín,,"7,0",522,69,0.28,reálné
+Mazda CX-30 2.0 e-Skyactiv G,Mazda,CX-30,,,SUV,,2.0,,Benzín,,"5,9",430,68,0.33,odhad
+Mazda CX-5 2.0 Skyactiv-G,Mazda,CX-5,,,SUV,,2.0,SKYACTIV-G,Benzín,,"6,8",506,69,0.33,reálné
+Mercedes-Benz CLA Coupé 180,Mercedes-Benz,CLA,,,Kupé,,1.3,,Benzín,,"5,9",460,68,0.23,reálné
+Mercedes-Benz CLA Shooting Brake 200,Mercedes-Benz,CLA,,,Shooting Brake,,1.3,,Benzín,,"6,1",505,69,0.26,reálné
+Mercedes-Benz GLB 200 5míst,Mercedes-Benz,GLB,,,SUV,5,1.3,,Benzín,,"6,9",570,69,0.33,odhad
+Mercedes-Benz GLB 200 7míst,Mercedes-Benz,GLB,,,SUV,7,1.3,,Benzín,,"6,9",500,69,0.33,odhad
+Mercedes-Benz Třídy A Hatchback 180,Mercedes-Benz,Třídy A,,,Hatchback,,1.3,,Benzín,,"5,8",355,68,0.25,reálné
+Mercedes-Benz Třídy A Sedan 180,Mercedes-Benz,Třídy A,,,Sedan,,1.3,,Benzín,,"5,5",405,67,0.22,reálné
+Mercedes-Benz Třídy B 180,Mercedes-Benz,Třídy B,,,MPV,,1.3,,Benzín,,"6,0",455,68,0.24,reálné
+MG HS 1.5 T-GDI,MG,HS,,,SUV,,1.5,T-GDI,Benzín,,"7,6",507,70,0.33,odhad
+MG EHS Plug-In Hybrid,MG,EHS,,,SUV,,1.5,,Benzín,PHEV,"1,8",448,68,0.33,odhad
+MG ZS 1.5 VTi-tech,MG,ZS,,,SUV,,1.5,,Benzín,,"6,6",448,70,0.33,odhad
+Mini Clubman Cooper,Mini,Clubman Cooper,,,Kombi,,1.5,,Benzín,,"5,9",360,69,0.32,reálné
+Mini Cooper 3D Hatchback,Mini,Cooper 3D,,,Hatchback,,1.5,,Benzín,,"5,6",211,68,0.29,reálné
+Mini Countryman Cooper,Mini,Countryman Cooper,,,SUV,,1.5,,Benzín,,"6,2",505,69,0.32,reálné
+Mitsubishi ASX 1.0 TSI,Mitsubishi,ASX,,,SUV,,1.0,TSI,Benzín,,"5,8",422,68,0.33,odhad
+Mitsubishi ASX 1.6 MIVEC,Mitsubishi,ASX,,,SUV,,1.6,MIVEC,Benzín,,"7,0",419,70,0.33,odhad
+Mitsubishi Eclipse Cross PHEV,Mitsubishi,Eclipse Cross,,,SUV,,2.4,,Benzín,PHEV,"2,0",359,68,0.33,odhad
+Nissan Juke 1.0 DIG-T,Nissan,Juke,,,SUV,,1.0,,Benzín,,"5,9",422,69,0.35,reálné
+Nissan Juke 1.6 Hybrid,Nissan,Juke,,,SUV,,1.6,,Benzín,HEV,"5,0",354,68,0.35,reálné
+Nissan Qashqai 1.3 DIG-T MHEV,Nissan,Qashqai,,,SUV,,1.3,,Benzín,MHEV,"6,3",504,69,0.316,reálné
+Nissan Qashqai 1.5 e-Power,Nissan,Qashqai,,,SUV,,1.5,,Benzín,HEV,"5,3",479,67,0.316,reálné
+Nissan X-Trail 1.5 VC-T 5míst,Nissan,X-Trail,,,SUV,5,1.5,,Benzín,,"5,8",585,68,0.33,odhad
+Nissan X-Trail 1.5 VC-T 7míst,Nissan,X-Trail,,,SUV,7,1.5,,Benzín,,"6,2",485,68,0.33,odhad
+Omoda 5 1.6 T-GDI,Omoda,5,,,SUV,,1.6,T-GDI,Benzín,,"7,5",378,69,0.33,odhad
+Opel Astra Hatchback 1.2 Turbo,Opel,Astra,,,Hatchback,,1.2,Turbo,Benzín,,"5,4",422,68,0.26,reálné
+Opel Astra Sports Tourer 1.2 Turbo,Opel,Astra,,,Kombi,,1.2,Turbo,Benzín,,"5,6",597,69,0.25,reálné
+Opel Frontera Hybrid,Opel,Frontera,,,SUV,,1.2,,Benzín,HEV,"5,5",460,69,0.33,odhad
+Opel Grandland X 1.2 Turbo,Opel,Grandland,,,SUV,,1.2,Turbo,Benzín,,"6,5",514,69,0.31,reálné
+Opel Insignia Grand Sport 2.0 CDTI,Opel,Insignia,,,Grand Sport,,2.0,CDTi,Nafta,,"5,2",490,68,0.26,reálné
+Opel Insignia Sports Tourer 2.0 CDTI,Opel,Insignia,,,Kombi,,2.0,CDTi,Nafta,,"5,5",560,69,0.28,reálné
+GWM Haval Jolion Pro Hybrid 1.5,GWM Haval,Jolion Pro,,,SUV,,1.5,,Benzín,HEV,"6,0",255,70,0.33,odhad
+GWM Haval H6 1.5T,GWM Haval,H6,,,SUV,,1.5,,Benzín,,"9,1",510,71,0.33,odhad
+Peugeot 2008 1.2 PureTech,Peugeot,2008,,,SUV,,1.2,PureTech,Benzín,,"5,4",434,69,0.33,odhad
+Peugeot 308 Hatchback 1.2 PureTech,Peugeot,308,,,Hatchback,,1.2,PureTech,Benzín,,"5,5",412,68,0.28,reálné
+Peugeot 308 SW 1.2 PureTech,Peugeot,308,,,Kombi,,1.2,PureTech,Benzín,,"5,7",608,69,0.277,reálné
+Peugeot 5008 1.2 PureTech MHEV,Peugeot,5008,,,SUV,,1.2,PureTech,Benzín,MHEV,"5,8",748,69,0.33,odhad
+Peugeot 508 Fastback 1.2 PureTech,Peugeot,508,,,Fastback,,1.2,PureTech,Benzín,,"5,9",487,68,0.26,reálné
+Peugeot 508 SW 1.5 BlueHDi,Peugeot,508,,,Kombi,,1.5,BlueHDi,Nafta,,"4,9",530,69,0.3,odhad
+Renault Arkana 1.3 TCe MHEV,Renault,Arkana,,,SUV,,1.3,TCe,Benzín,MHEV,"5,8",513,69,0.33,odhad
+Renault Arkana E-Tech Hybrid,Renault,Arkana E-Tech,,,SUV,,1.6,e-TEC,Benzín,HEV,"4,8",480,68,0.33,odhad
+Renault Captur 1.0 TCe,Renault,Captur,,,SUV,,1.0,TCe,Benzín,,"5,8",422-536,68,0.33,odhad
+Renault Captur E-Tech Plug-In Hybrid,Renault,Captur E-Tech,,,SUV,,1.6,e-TEC,Benzín,PHEV,"1,4",265-379,67,0.33,odhad
+Renault Kadjar 1.3 TCe,Renault,Kadjar,,,SUV,,1.3,TCe,Benzín,,"6,2",472,69,0.33,odhad
+Renault Koleos 2.0 dCi 4WD,Renault,Koleos,,,SUV,,2.0,dCi,Nafta,,"6,8",579,70,0.33,odhad
+Renault Mégane Hatchback 1.3 TCe,Renault,Mégane,,,Hatchback,,1.3,TCe,Benzín,,"5,6",384,68,0.3,odhad
+Renault Talisman Sedan 2.0 BlueHDi,Renault,Talisman,,,Sedan,,2.0,BlueHDi,Nafta,,"5,2",608,68,0.27,odhad
+Renault Talisman Grandtour 2.0 dCi,Renault,Talisman,,,Kombi,,2.0,dCi,Nafta,,"5,5",572,69,0.3,odhad
+Seat Arona 1.0 TSI,Seat,Arona,,,SUV,,1.0,TSI,Benzín,,"5,2",400,69,0.32,reálné
+Seat Arona 1.0 TGI,Seat,Arona,,,SUV,,1.0,,CNG + benzín,,"5,2 (3,5 kg)",282,69,0.33,odhad
+Seat Ateca 1.5 TSI,Seat,Ateca,,,SUV,,1.5,TSI,Benzín,,"6,4",510,69,0.34,reálné
+Seat Leon Hatchback 1.5 TSI,Seat,Leon,,,Hatchback,,1.5,TSI,Benzín,,"5,5",380,68,0.275,reálné
+Seat Leon Sportstourer 1.5 TSI,Seat,Leon,,,Kombi,,1.5,TSI,Benzín,,"5,7",620,69,0.28,reálné
+Seat Tarraco 1.5 TSI,Seat,Tarraco,,,SUV,5,1.5,TSI,Benzín,,"6,9",760,69,0.33,reálné
+Seat Tarraco 1.4 e-Hybrid,Seat,Tarraco,,,SUV,,1.4,,Benzín,PHEV,"1,5",610,68,0.33,reálné
+Škoda Fabia Hatchback 1.0 TSI,Škoda,Fabia,,Gen 4,Hatchback,,1.0,TSI,Benzín,,"5,0",380,68,0.28,reálné
+Škoda Fabia Combi 1.0 TSI,Škoda,Fabia,,Gen 3,Kombi,,1.0,TSI,Benzín,,"5,2",530,69,0.3,reálné
+Škoda Kamiq 1.0 TSI,Škoda,Kamiq,,,SUV,,1.0,TSI,Benzín,,"5,3",400,69,0.3,reálné
+Škoda Karoq 1.5 TSI,Škoda,Karoq,,,SUV,,1.5,TSI,Benzín,,"6,2",521,69,0.3,reálné
+Škoda Kodiaq 1.5 TSI,Škoda,Kodiaq,,Gen 2,SUV,5,1.5,TSI,Benzín,,"6,0",910,70,0.282,reálné
+Škoda Kodiaq iV,Škoda,Kodiaq iV,,Gen 2,SUV,,1.5,,Benzín,PHEV,"1,4",745,68,0.295,reálné
+Škoda Octavia Liftback 1.5 TSI,Škoda,Octavia,,,Hatchback,,1.5,TSI,Benzín,,"5,4",600,68,0.24,reálné
+Škoda Octavia Combi 1.5 TSI,Škoda,Octavia,,,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,0.26,reálné
+Škoda Octavia Combi iV,Škoda,Octavia,,,Kombi,,1.4,,Benzín,PHEV,"1,2",490,67,0.287,reálné
+Škoda Octavia Combi Selection 1.5 TSI,Škoda,Octavia,Selection,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,0.26,reálné
+Škoda Octavia Combi Style 1.5 TSI,Škoda,Octavia,Style,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",640,69,0.26,reálné
+Škoda Octavia Style 1.5 TSI,Škoda,Octavia,Style,Gen 4,Liftback,,1.5,TSI,Benzín,,"5,4",600,68,0.24,reálné
+Škoda Scala 1.0 TSI,Škoda,Scala,,,Hatchback,,1.0,TSI,Benzín,,"5,2",467,68,0.29,reálné
+Škoda Superb Liftback 1.5 TSI,Škoda,Superb,,Gen 4,Hatchback,,1.5,TSI,Benzín,,"5,4",645,68,0.23,reálné
+Škoda Superb Combi 1.5 TSI,Škoda,Superb,,Gen 4,Kombi,,1.5,TSI,Benzín,,"5,6",690,69,0.25,reálné
+Škoda Superb Combi iV,Škoda,Superb,,Gen 4,Kombi,,1.5,,Benzín,PHEV,"1,2",510,67,0.25,reálné
+Škoda Superb Combi Style 2.0 TDI,Škoda,Superb,Style,Gen 3,Kombi,,2.0,TDI,Nafta,,"4,9",660,69,0.25,reálné
+Škoda Superb Combi Style 1.5 TSI,Škoda,Superb,Style,B9,Kombi,,1.5,TSI,Benzín,,"5,6",690,69,0.25,reálné
+SsangYong Rexton 2.2 e-XDI,SsangYong,Rexton,,,SUV,5,2.2,,Benzín,,"7,9",784,70,0.33,odhad
+SsangYong Tivoli 1.5 GDI-T,SsangYong,Tivoli,,,SUV,,1.5,GDI,Benzín,,"7,0",427,70,0.33,odhad
+SsangYong Torres 1.5 GDI-T,SsangYong,Torres,,,SUV,,1.5,GDI,Benzín,,"8,5",703,71,0.33,odhad
+Subaru Forester 2.0i e-Boxer,Subaru,Forester,,,SUV,,2,,Benzín,HEV,"6,7",508,69,0.33,odhad
+Subaru XV 1.6i Petrol,Subaru,XV,,,SUV,,1.6,,Benzín,,"7,2",385,70,0.33,odhad
+Subaru XV 2.0i e-Boxer,Subaru,XV,,,SUV,,2,,Benzín,HEV,"6,9",340,69,0.33,odhad
+Toyota Corolla Hatchback 1.8 Hybrid,Toyota,Corolla,,,Hatchback,,1.8,,Benzín,HEV,"4,4",361,67,0.3,reálné
+Toyota Corolla TS Kombi 2.0 Hybrid,Toyota,Corolla TS,,,Kombi,,2.0,,Benzín,HEV,"4,6",596,68,0.31,reálné
+Toyota Rav4 2.5 Hybrid,Toyota,Rav4,,,SUV,,2.5,,Benzín,HEV,"5,6",580,69,0.32,reálné
+Toyota Rav4 2.5 Plug-In Hybrid,Toyota,Rav4,,,SUV,,2.5,,Benzín,PHEV,"1,0",520,68,0.32,reálné
+Volvo XC40 B3 MHEV,Volvo,XC40,,,SUV,,2,,Benzín,MHEV,"6,7",452,69,0.34,reálné
+VW Arteon Liftback 2.0 TSI,VW,Arteon,,,Hatchback,,2.0,TSI,Benzín,,"7,2",563,68,0.265,reálné
+VW Arteon Shooting Brake 2.0 TDI,VW,Arteon,,,Shooting Brake,,2.0,TDI,Nafta,,"5,2",565,69,0.29,odhad
+VW Golf Hatchback 1.5 TSI,VW,Golf,,Gen 8,Hatchback,,1.5,TSI,Benzín,,"5,4",381,68,0.275,reálné
+VW Golf Variant 1.5 eTSI,VW,Golf,,Gen 8,Kombi,,1.5,eTSI,Benzín,MHEV,"5,6",611,69,0.275,reálné
+VW Golf 8 eHybrid,VW,Golf,,,Hatchback,,1.4,,Benzín,PHEV,"1,2",273,67,0.3,odhad
+VW Passat Variant 1.5 eTSI,VW,Passat,,B9,Kombi,,1.5,eTSI,Benzín,MHEV,"5,4",690,68,0.3,odhad
+VW Passat Variant Elegance 2.0 TDI,VW,Passat,Elegance,B8,Kombi,,2.0,TDI,Nafta,,"4,9",650,68,0.3,odhad
+VW Passat GTE,VW,Passat,,B8,Kombi,,1.4,,Benzín,PHEV,"1,5",483,67,0.3,odhad
+VW Polo 1.0 TSI,VW,Polo,,,Hatchback,,1.0,TSI,Benzín,,"5,2",351,68,0.31,reálné
+VW Sharan 2.0 TDI,VW,Sharan,,,MPV,5,2.0,TDI,Nafta,,"6,2",955,70,0.33,odhad
+VW T-Cross 1.0 TSI,VW,T-Cross,,,SUV,,1.0,TSI,Benzín,,"5,8",385-455,69,0.33,odhad
+VW T-Roc 1.5 TSI,VW,T-Roc,,,SUV,,1.5,TSI,Benzín,,"6,0",445,69,0.33,odhad
+VW Taigo 1.0 TSI,VW,Taigo,,,SUV,,1.0,TSI,Benzín,,"5,5",440,69,0.33,odhad
+VW Tiguan 1.5 eTSI,VW,Tiguan,,Gen 3,SUV,,1.5,eTSI,Benzín,MHEV,"6,2",615,69,0.33,odhad
+VW Tiguan Allspace 2.0 TDI,VW,Tiguan,,,SUV,5,2.0,TDI,Nafta,,"5,8",760,70,0.33,odhad
+VW Tiguan Life 1.5 TSI,VW,Tiguan,Life,Gen 2,SUV,,1.5,TSI,Benzín,,"6,8",615,70,0.33,odhad
+VW Touran 1.5 TSI,VW,Touran,,,MPV,5,1.5,TSI,Benzín,,"6,5",743,69,0.33,odhad
+VW Touran Comfortline 1.5 TSI,VW,Touran,Comfortline,,MPV,5,1.5,TSI,Benzín,,"6,5",743,69,0.33,odhad
+Alfa Romeo Junior 1.2 Turbo,Alfa Romeo,Junior,,,SUV,,1.2,Turbo,Benzín,,"5,8",400,69,0.32,reálné
+Alfa Romeo Tonale 1.5,Alfa Romeo,Tonale,,,SUV,,1.5,,Benzín,,"6,8",500,70,0.32,reálné
+Audi A1 2.0 TFSI,Audi,A1,,,Hatchback,,2.0,TFSI,Benzín,,"7,5",335,72,0.32,reálné
+Audi A5 2.0 TDI,Audi,A5,,,Sportback,,2.0,TDI,Nafta,,"5,0",495,68,0.28,reálné
+Audi A5 2.0 TFSI,Audi,A5,,,Sportback,,2.0,TFSI,Benzín,,"6,5",495,69,0.28,reálné
+Audi A6 2.0 TDI,Audi,A6,,,Sedan,,2.0,TDI,Nafta,,"5,2",530,68,0.24,reálné
+Audi A6 2.0 TFSI,Audi,A6,,,Sedan,,2.0,TFSI,Benzín,,"6,8",530,69,0.24,reálné
+Audi A6 3.0 TDI,Audi,A6,,,Sedan,,3.0,TDI,Nafta,,"6,5",530,69,0.24,reálné
+Audi A8 60 Bi- 4.0 TFSI,Audi,A8,,,Sedan,,4.0,TFSI,Benzín,,"10,5",505,70,0.26,reálné
+Audi Q5 TDI,Audi,Q5,,,SUV,,2,TDI,Nafta,,"6,0",520,69,0.3,reálné
+BAIC X35 1.5,BAIC,X35,,,SUV,,1.5,,Benzín,,"7,2",350,71,0.33,odhad
+BAIC X7 1.5,BAIC,X7,,,SUV,,1.5,,Benzín,,"8,0",450,71,0.33,odhad
+BAIC X75 1.5,BAIC,X75,,,SUV,,1.5,,Benzín,,"8,2",500,71,0.33,odhad
+BMW 1 1.5,BMW,1,,,Hatchback,,1.5,,Benzín,,"5,7",380,68,0.26,reálné
+BMW 1 2.0,BMW,1,,,Hatchback,,2.0,,Benzín,,"6,8",380,69,0.26,reálné
+BMW 2 1.5,BMW,2,,,MPV,,1.5,,Benzín,,"6,2",470,68,0.26,reálné
+BMW 2 2.0,BMW,2,,,MPV,,2.0,,Benzín,,"7,0",470,69,0.26,reálné
+BMW 3 2.0,BMW,3,,,Sedan,,2.0,,Benzín,,"6,2",480,68,0.23,reálné
+BMW 5 2.0,BMW,5,,,Sedan,,2.0,,Benzín,,"6,0",520,68,0.23,reálné
+BMW X3 2.0,BMW,X3,,,SUV,,2.0,,Benzín,,"7,5",550,69,0.29,reálné
+Chevrolet TrailBlazer AWD 1.3,Chevrolet,TrailBlazer,,,SUV,,1.3,,Benzín,,"7,0",530,70,0.33,odhad
+Citroën C3 Aircross 1.2,Citroën,C3 Aircross,,,SUV,,1.2,,Benzín,,"5,8",460,69,0.33,odhad
+Citroën Jumpy 2.0,Citroën,Jumpy,,,MPV,,2.0,,Benzín,,"6,2",1000,72,0.33,odhad
+Dacia Bigster 1.2 TCe,Dacia,Bigster,,,SUV,,1.2,TCe,Benzín,,"5,6",667,69,0.33,odhad
+Dacia Bigster 1.8,Dacia,Bigster,,,SUV,,1.8,,Benzín,,"5,3",667,69,0.33,odhad
+Dacia Jogger 1.6,Dacia,Jogger,,,MPV,,1.6,,Benzín,,"4,8",708,69,0.33,odhad
+Dongfeng DF 6 2.3 dCi,Dongfeng,DF,,,MPV,,2.3,dCi,Nafta,,"8,5",800,72,0.33,odhad
+Dongfeng Fengon 5 1.5 Turbo,Dongfeng,Fengon,,,MPV,,1.5,Turbo,Benzín,,"9,0",385,71,0.33,odhad
+Dongfeng Mage E2 1.5,Dongfeng,Mage E2,,,Sedan,,1.5,,Benzín,,"6,5",480,70,0.27,odhad
+Dongfeng Mage 1.5 Turbo,Dongfeng,Mage,,,Sedan,,1.5,Turbo,Benzín,,"6,5",480,70,0.27,odhad
+EVO Cross4 2.0 Turbo,EVO,Cross4,,,SUV,,2.0,Turbo,Benzín,,"9,5",420,72,0.33,odhad
+Fiat 600 1.2 Turbo,Fiat,600,,,SUV,,1.2,Turbo,Benzín,,"5,5",385,69,0.3,reálné
+Fiat Grande Panda 1.2,Fiat,Grande Panda,,,Hatchback,,1.2,,Benzín,,"5,0",361,68,0.3,odhad
+Fiat Scudo 2.0 MTJ,Fiat,Scudo,,,MPV,,2.0,MTJ,Benzín,,"6,5",1000,72,0.33,odhad
+Fiat Tipo 1.6,Fiat,Tipo,,,Hatchback,,1.6,,Benzín,,"5,8",440,69,0.3,odhad
+Ford Fiesta 1.5,Ford,Fiesta,,,Hatchback,,1.5,,Benzín,,"6,5",311,73,0.3,odhad
+Ford Ranger 2.0 EcoBlue,Ford,Ranger,,,,,2.0,EcoBlue,Nafta,,"8,5",1000,73,0.4,reálné
+Ford Tourneo Custom 2.0 EcoBlue,Ford,Tourneo Custom,,,MPV,,2.0,EcoBlue,Nafta,,"7,5",1100,72,0.33,odhad
+Ford Transit Custom 2.0 dCi,Ford,Transit Custom,,,,,2.0,dCi,Nafta,,"7,5",1100,72,0.32,odhad
+Genesis G70 2.2,Genesis,G70,,,Sedan,,2.2,,Benzín,,"7,5",330,69,0.28,reálné
+Honda CR-V 1.5,Honda,CR-V,,,SUV,,1.5,,Benzín,,"7,8",561,69,0.33,odhad
+Honda ZR-V 2.0,Honda,ZR-V,,,SUV,,2.0,,Benzín,,"5,0",380,68,0.33,odhad
+Hyundai Staria 2.2 CRDi,Hyundai,Staria,,,MPV,,2.2,CRDi,Nafta,,"8,5",831,71,0.33,odhad
+Hyundai i20 1.0 T-GDI,Hyundai,i20,,,Hatchback,,1.0,T-GDI,Benzín,,"5,3",352,68,0.3,odhad
+Hyundai i20 1.6 T-GDI,Hyundai,i20,,,Hatchback,,1.6,T-GDI,Benzín,,"7,0",352,73,0.3,odhad
+Jaecoo 5 1.6 TGDI,Jaecoo,5,,,SUV,,1.6,TGDI,Benzín,,"7,5",400,70,0.33,odhad
+Kia Sorento 2.2 CRDi,Kia,Sorento,,,SUV,,2.2,CRDi,Nafta,,"7,5",813,70,0.32,reálné
+Kia Sorento 2.5,Kia,Sorento,,,SUV,,2.5,,Benzín,,"8,5",813,71,0.32,reálné
+Land Rover Range Rover Evoque 2.0,Land Rover,Range Rover Evoque,,,SUV,,2.0,,Benzín,,"8,2",472,70,0.32,reálné
+Lexus RX 2.0 Turbo,Lexus,RX,,,SUV,,2.0,Turbo,Benzín,,"9,2",453,70,0.33,reálné
+MG MG3 1.5,MG,MG3,,,Hatchback,,1.5,,Benzín,,"5,3",293,68,0.3,odhad
+Mazda CX-60 3.3,Mazda,CX-60,,,SUV,,3.3,,Benzín,,"5,3",570,69,0.33,odhad
+Mercedes-Benz C 220d,Mercedes-Benz,C,,,Sedan,,2,,Nafta,,"5,0",455,67,0.24,reálné
+Mercedes-Benz C 300d,Mercedes-Benz,C,,,Sedan,,2,,Nafta,,"5,5",455,68,0.24,reálné
+Mercedes-Benz GLA 1.3,Mercedes-Benz,GLA,,,SUV,,1.3,,Benzín,,"6,5",435,69,0.28,reálné
+Mercedes-Benz GLA 2.0,Mercedes-Benz,GLA,,,SUV,,2.0,,Benzín,,"7,0",435,70,0.28,reálné
+Mitsubishi Grandis 1.3,Mitsubishi,Grandis,,,SUV,,1.3,,Benzín,,"6,0",600,70,0.33,odhad
+Mitsubishi L200 2.3,Mitsubishi,L200,,,,,2.3,,Benzín,,"8,0",800,73,0.32,odhad
+Mitsubishi Outlander 2.4,Mitsubishi,Outlander,,,SUV,,2.4,,Benzín,,"7,8",469,69,0.33,reálné
+Opel Mokka 1.2 Turbo,Opel,Mokka,,,SUV,,1.2,Turbo,Benzín,,"6,2",350,69,0.32,reálné
+Opel Vivaro 2.0 CDTi,Opel,Vivaro,,,MPV,,2.0,CDTi,Nafta,,"6,5",1000,72,0.33,odhad
+Opel Zafira 2.0 CDTi,Opel,Zafira,,,MPV,,2.0,CDTi,Nafta,,"5,8",710,70,0.3,reálné
+Peugeot 3008 1.2,Peugeot,3008,,,SUV,,1.2,,Benzín,,"5,6",520,69,0.33,odhad
+Peugeot 3008 1.6,Peugeot,3008,,,SUV,,1.6,,Benzín,,"5,8",520,69,0.33,odhad
+Peugeot 408 1.2,Peugeot,408,,,Fastback,,1.2,,Benzín,,"5,5",536,68,0.28,reálné
+Peugeot Expert 2.0 BlueHDi,Peugeot,Expert,,,MPV,,2.0,BlueHDi,Nafta,,"6,0",1000,72,0.33,odhad
+Peugeot Traveller 2.0 BlueHDi,Peugeot,Traveller,,,MPV,,2.0,BlueHDi,Nafta,,"6,5",1100,72,0.33,odhad
+Porsche 911 Targa 4S 3.0 Turbo,Porsche,911 Targa 4S,,,Kupé,,3.0,Turbo,Benzín,,"10,0",128,74,0.3,reálné
+Renault Austral 1.3 TCe,Renault,Austral,,,SUV,,1.3,TCe,Benzín,,"5,8",500,69,0.33,odhad
+Renault Clio 1.8 e-TEC,Renault,Clio,,,Hatchback,,1.8,e-TEC,Benzín,HEV,"4,8",391,68,0.3,odhad
+Renault Symbioz 1.8 e-TEC,Renault,Symbioz,,,SUV,,1.8,e-TEC,Benzín,HEV,"4,7",624,68,0.33,odhad
+Renault Trafic 1.9,Renault,Trafic,,,,,1.9,,Benzín,,"7,0",1100,72,0.32,odhad
+Renault Trafic 2.0 dCi,Renault,Trafic,,,,,2.0,dCi,Nafta,,"7,0",1100,72,0.32,odhad
+SWM G1 PRO 1.5 Turbo,SWM,G1 PRO,,,SUV,,1.5,Turbo,Benzín,,"7,5",380,71,0.33,odhad
+SWM G5 PRO 1.5 Turbo,SWM,G5 PRO,,,SUV,,1.5,Turbo,Benzín,,"8,0",420,71,0.33,odhad
+Seat Alhambra 1.4 TSI,Seat,Alhambra,,,MPV,,1.4,TSI,Benzín,,"7,5",630,69,0.33,odhad
+SsangYong Musso 2.2,SsangYong,Musso,,,SUV,,2.2,,Benzín,,"8,5",1000,73,0.33,odhad
+Subaru Crosstrek 2.0,Subaru,Crosstrek,,,SUV,,2.0,,Benzín,,"6,5",345,69,0.33,odhad
+Subaru Impreza 2.0,Subaru,Impreza,,,Hatchback,,2.0,,Benzín,,"6,5",345,69,0.29,reálné
+Subaru Outback 2.5,Subaru,Outback,,,Kombi,,2.5,,Benzín,,"7,3",522,69,0.3,odhad
+Suzuki Swace 1.8,Suzuki,Swace,,,Kombi,,1.8,,Benzín,,"4,5",596,68,0.31,reálné
+Toyota C-HR 1.8,Toyota,C-HR,,,SUV,,1.8,,Benzín,,"4,3",377,67,0.32,reálné
+Toyota C-HR 2.0,Toyota,C-HR,,,SUV,,2.0,,Benzín,,"4,7",377,68,0.318,reálné
+Toyota Proace 2.0,Toyota,Proace,,,,,2.0,,Benzín,,"6,5",1000,72,0.32,odhad
+Toyota Proace Verso 2.0,Toyota,Proace Verso,,,MPV,,2.0,,Benzín,,"6,5",1100,72,0.33,odhad
+VW Caddy 1.5 TSI,VW,Caddy,,,MPV,,1.5,TSI,Benzín,,"6,5",834,69,0.33,odhad
+VW T6 Multivan 2.0 TDI,VW,T6 Multivan,,,MPV,,2.0,TDI,Nafta,,"7,5",913,70,0.33,odhad
+VW Transporter T6 2.0 TDI,VW,Transporter T6,,,MPV,,2.0,TDI,Nafta,,"7,5",900,71,0.33,odhad
+Volvo V60 2.0,Volvo,V60,,,Kombi,,2.0,,Benzín,,"6,5",529,68,0.28,reálné
+Volvo V90 2.0,Volvo,V90,,,Kombi,,2.0,,Benzín,,"6,5",560,68,0.28,reálné
+Volvo XC60 2.0,Volvo,XC60,,,SUV,,2.0,,Benzín,,"7,5",468,69,0.34,reálné
+Dodge Challenger 3.6,Dodge,Challenger,,,Kupé,,3.6,,Benzín,,"10,2",459,72,0.35,reálné
+Dodge Charger 3.6,Dodge,Charger,,,Sedan,,3.6,,Benzín,,"10,2",467,72,0.3,reálné
+Cadillac XT4 2.0,Cadillac,XT4,,,SUV,,2.0,,Benzín,,"9,5",637,,0.33,odhad
+Dongfeng Shine 1.5,Dongfeng,Shine,,,Sedan,,1.5,,Benzín,,"6,2",506,,0.27,odhad
+Lexus LBX 1.5 Hybrid,Lexus,LBX,,,SUV,,1.5,,Benzín,HEV,"4,8",402,,0.34,reálné
+Toyota Camry 2.5 Hybrid,Toyota,Camry,,,Sedan,,2.5,,Benzín,HEV,"5,0",505,,0.27,reálné
+Škoda Karoq 2.0 TDI,Škoda,Karoq,,,SUV,,2.0,TDI,Nafta,,"5,0",521,,0.3,reálné
+VW Golf Hatchback 2.0 TDI,VW,Golf,,Gen 8,Hatchback,,2.0,TDI,Nafta,,"5,0",380,,0.275,reálné
+Omoda C5 1.6 T-GDI,Omoda,C5,,,SUV,,1.6,T-GDI,Benzín,,"7,5",378,,0.33,odhad
+Audi SQ8 4.0 TFSI,Audi,SQ8,,,SUV,,4.0,TFSI,Benzín,,"12,3",605,,0.34,reálné
+Renault Grand Scénic 1.3 TCe,Renault,Grand Scénic,,,MPV,,1.3,TCe,Benzín,,"7,0",597,,0.33,odhad

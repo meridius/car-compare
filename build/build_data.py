@@ -424,6 +424,7 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Objem kufru (l)": row.get("Objem kufru (l)", None),
             "Hlučnost (dB)": row.get("Hlučnost (dB)", None),
             "Cd": parse_czech_decimal(row.get("Cd", "")),
+            "Cd zdroj": row.get("Cd zdroj", ""),
         }
         records.append(rec)
 
@@ -445,6 +446,7 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Dojezd WLTP (km)": row.get("Dojezd komb. letní WLTP (km)", None),
             "Dojezd EV-database (km)": row.get("Dojezd komb. letní EV-database (km)", None),
             "Cd": parse_czech_decimal(row.get("Cd", "")),
+            "Cd zdroj": row.get("Cd zdroj", ""),
             "Tepelné čerpadlo možné": row.get("Tepelné čerpadlo možné (ano/ne)", ""),
         }
         records.append(rec)
