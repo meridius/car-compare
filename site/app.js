@@ -260,21 +260,21 @@
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
-    { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right" },
-    { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
-    { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right" },
-    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false, tip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší." },
-    { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
-    { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
-    { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech." },
+    { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší cena, červená = vyšší." },
+    { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = novější, červená = starší." },
+    { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší nájezd, červená = vyšší." },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false, tip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
+    { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = větší kufr, červená = menší." },
+    { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
+    { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
-    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false, tip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB." },
-    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "Použitelná kapacita trakční baterie." },
-    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší." },
-    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)", tip: "Reálný dojezd dle ev-database.com – realističtější než WLTP." },
-    { field: "Cd", filter: "agNumberColumnFilter", w: 90, num: true, hi: false, hdr: "Odpor\nvzduchu", tip: "Nižší = lepší aerodynamika." },
+    { field: "Cd", filter: "agNumberColumnFilter", w: 90, num: true, hi: false, hdr: "Odpor\nvzduchu (%)", tip: "Nižší = lepší aerodynamika.\nBarva buňky: zelená = nižší (lepší), červená = vyšší." },
+    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false, tip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB.\nBarva buňky: zelená = tišší, červená = hlučnější." },
+    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "Použitelná kapacita trakční baterie.\nBarva buňky: zelená = větší kapacita, červená = menší." },
+    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
+    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)", tip: "Reálný dojezd dle ev-database.com – realističtější než WLTP.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
     { field: "Převodovka", filter: "agSetColumnFilter", w: 110 },
     { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka", tip: "DSG / DCT / S-tronic / PDK – dvě spojky pro sudá a lichá rychlostní stupně.\n+ Rychlé a plynulé řazení, nižší spotřeba.\n– Může škubat při pomalé jízdě a parkování." },
     { field: "Náhon 4x4", filter: "agSetColumnFilter", w: 80 },
@@ -284,8 +284,8 @@
     { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
     { field: "Kola", filter: "agSetColumnFilter", w: 70 },
     { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
-    { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true, tip: "Ano = jistá shoda s referenčním modelem, Nejisté = slabá nebo nejednoznačná shoda, Ne = nespárováno." },
-    { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody", tip: "Číselné skóre spolehlivosti párování. Vyšší = jistější. Prázdné pro Ne (nespárováno) a EV – elektromobily se párují prefixovým spojením bez skórovacího algoritmu." },
+    { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true, tip: "Ano = jistá shoda s referenčním modelem, Nejisté = slabá nebo nejednoznačná shoda, Ne = nespárováno.\nBarva buňky: červená = Ne, oranžová = Nejisté." },
+    { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody", tip: "Číselné skóre spolehlivosti párování. Vyšší = jistější. Prázdné pro Ne (nespárováno) a EV – elektromobily se párují prefixovým spojením bez skórovacího algoritmu.\nBarva buňky: zelená = vyšší skóre, červená = nižší." },
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
@@ -357,6 +357,7 @@
       if (field === "Cena (Kč)") return Number(p.value).toLocaleString("cs-CZ") + " Kč";
       if (field === "Nájezd (km)") return Number(p.value).toLocaleString("cs-CZ") + " km";
       if (field === "Spotřeba (l/100 km)" || field === "Objem motoru") return p.value.toFixed(1);
+      if (field === "Cd") return String(Math.round(Number(p.value) * 100));
       return String(p.value);
     };
   }

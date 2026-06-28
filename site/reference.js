@@ -200,18 +200,18 @@
     { field: "Model auta", filter: "agTextColumnFilter", width: 280 },
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Karoserie", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center" },
-    { field: "Výkon (kW)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn" },
+    { field: "Cd", filter: "agNumberColumnFilter", width: 90, type: "numericColumn", headerName: "Odpor vzduchu (%)", headerTooltip: "Nižší = lepší aerodynamika.\nBarva buňky: zelená = nižší (lepší), červená = vyšší." },
+    { field: "Cd zdroj", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center", headerName: "Zdroj odporu vzduchu", headerTooltip: "reálné = naměřená hodnota (výrobce / Wikipedia / ev-database), odhad = odhad dle tvaru karoserie (~42 % hodnot)." },
+    { field: "Výkon (kW)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn", headerTooltip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: "agNumberColumnFilter", width: 110, type: "numericColumn", headerTooltip: "Zdvihový objem spalovacího motoru v litrech." },
     { field: "Typ motoru", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
     { field: "Hybrid typ", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
-    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší." },
-    { field: "Objem kufru (l)", filter: "agNumberColumnFilter", width: 110, type: "numericColumn" },
-    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn", headerTooltip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB." },
-    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", width: 130, type: "numericColumn", headerTooltip: "Použitelná kapacita trakční baterie." },
-    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší." },
-    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", width: 140, type: "numericColumn", headerTooltip: "Reálný dojezd dle ev-database.com – realističtější než WLTP." },
-    { field: "Cd", filter: "agNumberColumnFilter", width: 90, type: "numericColumn", headerName: "Odpor vzduchu", headerTooltip: "Nižší = lepší aerodynamika." },
-    { field: "Cd zdroj", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center", headerName: "Zdroj odporu", headerTooltip: "reálné = naměřená hodnota (výrobce / Wikipedia / ev-database), odhad = odhad dle tvaru karoserie (~42 % hodnot)." },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
+    { field: "Objem kufru (l)", filter: "agNumberColumnFilter", width: 110, type: "numericColumn", headerTooltip: "Barva buňky: zelená = větší kufr, červená = menší." },
+    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn", headerTooltip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB.\nBarva buňky: zelená = tišší, červená = hlučnější." },
+    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", width: 130, type: "numericColumn", headerTooltip: "Použitelná kapacita trakční baterie.\nBarva buňky: zelená = větší kapacita, červená = menší." },
+    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
+    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", width: 140, type: "numericColumn", headerTooltip: "Reálný dojezd dle ev-database.com – realističtější než WLTP.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
     { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center", headerTooltip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
   ];
 
@@ -393,6 +393,7 @@
     if (params.value == null) return "";
     var n = Number(params.value);
     if (isNaN(n)) return params.value;
+    if (params.colDef && params.colDef.field === "Cd") return Math.round(n * 100) + " %";
     return n.toLocaleString("cs-CZ");
   }
 
