@@ -3,9 +3,9 @@
 > **Workflow:**
 >
 > 1. Add tasks to `## New`
-> 2. Run `/tasks-triage` (or `./bin/ai-tasks-triage.sh` non-interactively) — classifies tasks, assigns ID + routing metadata, moves them to the right section
-> 3. Answer questions under `## Needs Scoping` in chat (reply directly under each Q line), then re-run `/tasks-triage` to promote to Atomic
-> 4. Run `/tasks-work` (or `./bin/ai-tasks-work.sh`) to execute next Atomic task; `./bin/ai-tasks-work.sh --all` to drain the queue
+> 2. Run `/tasks-triage` (or `./bin/ai-tasks-triage.sh` non-interactively) — classifies tasks, assigns ID + routing metadata, moves them to the right section. Policy: **default-and-proceed** — the classifier assumes sensible defaults (recorded in a `📌 assumes:` line) and promotes to Atomic; only genuinely owner-only decisions (new data source, cost, irreversible) go to Needs Scoping.
+> 3. Answer questions under `## Needs Scoping` in chat (reply directly under each Q line), then re-run `/tasks-triage` to promote to Atomic. **Veto any `📌 assumes:` line you disagree with** before running `/tasks-work`.
+> 4. Run `/tasks-work` (or `./bin/ai-tasks-work.sh`) to execute next Atomic task; `./bin/ai-tasks-work.sh --all` to drain the queue. Every feature is **test-driven / test-verified** — `./bin/test.sh` must pass.
 >
 > Tasks can declare `· blocked-by: #N` in their metadata — `/tasks-work` skips them until the blocker is done.
 
@@ -15,7 +15,7 @@
 
 ## Needs Scoping
 
-Tasks below need your input. Reply directly under each Q line in chat, then run `/tasks-triage` to promote to Atomic.
+Tasks below need your input — they are genuinely owner-only decisions (new data source, cost, or product direction). Reply directly under each Q line in chat, then run `/tasks-triage` to promote to Atomic.
 
 - [ ] **#1** add mobile.de
   > ❓ Q1: Requires browser scraping or REST API available?
@@ -25,47 +25,6 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
 - [ ] **#2** widen scraping on sauto.cz and other sites
   > ❓ Q1: Which filters to relax? (price ceiling, year floor, km ceiling, body types?)
   > ❓ Q2: Any other sites in scope besides sauto?
-
-- [ ] **#3** split "Model auta" col into "Značka" + "Model" displayed in that order
-  > ❓ Q1: Split client-side in app.js/reference.js, or emit separate fields from build_data.py?
-  > ❓ Q2: Matching and reference enrichment key on "Model auta" — how should they behave post-split?
-
-- [ ] **#4** "Model auta" should not contain Objem motoru / Typ motoru values
-  > ❓ Q1: Strip from scraped names only, or also from reference CSVs?
-  > ❓ Q2: Does stripping break the reference join key for ICE?
-
-- [ ] **#5** add Karoserie (and other cols) to Referenční modely page for matching
-  > ❓ Q1: Which columns specifically — just Karoserie, or also Palivo / Objem / Výkon?
-  > ❓ Q2: Are these already in ice_specs.csv / ev_specs.csv, or need adding to reference CSVs?
-
-- [ ] **#16** <https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333> has 2002, but is really a 2022 model year — need to detect and fix these cases
-  > ❓ Q1: Should we add detection/correction logic to the sauto scraper itself (in scrapers/sources/sauto.py) or to the build/post-processing pipeline (build_data.py)?
-  > ❓ Q2: Do you have a pattern/rule for detecting 2-digit year swaps (e.g., all cases where year is 19XX but listing content suggests 20XX), or should we look for specific API field mismatches (in_operation_date vs manufacturing_date)?
-  > ❓ Q3: Should corrected years be logged/tracked, or just silently fixed?
-
-- [ ] **#17** <https://www.sauto.cz/osobni/detail/dacia/bigster/210225179> has model year 1900, but is actually 2026 - detect and fix these cases
-  > ❓ Q1: Is this part of the same fix as task 16, or a separate edge case (year = 1900 vs year = 19XX)? Should we apply both a swap-correction (19XX → 20XX) and a clamp/validation (1900 is invalid)?
-  > ❓ Q2: What's the valid year range for this scraper (should be roughly 2021–2026 based on vehicle_age_from filter, correct)?
-  > ❓ Q3: Should invalid years be rejected entirely (return None/skip row) or repaired (e.g., infer from in_operation_date fallback)?
-
-- [ ] **#18** web UI should display set filters above the table on both pages
-  > ❓ Q1: Should the filter display be a persistent bar above the grid, or a modal/collapsible section? (e.g., 'Active filters: Typ=Elektrické Palivo=Benzín [×] [×]')
-  > ❓ Q2: Should clicking a filter tag remove that filter, or only show it for reference?
-  > ❓ Q3: Does this need to appear on both index and reference pages, or just one?
-
-- [ ] **#19** many reference models are missing data in various cols
-  > ❓ Q1: Which columns in the reference data are missing (e.g., Objem kufru, Hlučnost, Kapacita baterie)? Should we prioritize filling any particular ones?
-  > ❓ Q2: Is the ask to manually audit/add the missing data to the reference CSVs (ice_specs.csv / ev_specs.csv), or to detect/flag the gaps in the UI?
-  > ❓ Q3: For EV vs ICE — are different sets of columns expected to be populated?
-
-- [ ] **#20** reorder cols in the reference table to match the main table for easier visual scanning
-  > ❓ Q1: Should the reference table match the column order of the main cars table exactly, or follow a different but more logical order?
-  > ❓ Q2: Which columns are currently in the reference table (site/reference.html / build_reference_json() output)? What is the desired order?
-
-- [ ] **#21** there should be automated tests for data integrity issues like mismatch between data in Model col and relevant cols, format of all data in each col
-  > ❓ Q1: Should these tests run as part of the scrape pipeline (e.g., post-build in build_data.py, or in scrapers/core/), as CI/CD checks, or both?
-  > ❓ Q2: What specific mismatches concern you (e.g., model year format, price format, 19XX year swaps, missing required fields)?
-  > ❓ Q3: Should failing tests block the build/deploy, or only warn/log?
 
 - [ ] **#23** Průměrná cena ročního servisu za 5 let (average annual service cost over 5 years)
   > ❓ Q1: Should this be a scraped/enriched field on listings, a reference model spec column, or a standalone dashboard metric aggregating service cost data?
@@ -81,25 +40,13 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
   > ❓ Q1: Is this a scraped field from listings, a static reference model spec, or derived from engine type/fuel?
   > ❓ Q2: Should it apply to both EV and ICE?
 
-- [ ] **#28** nová stránka s přehledem převodovek: popisky (new page with transmission overview: descriptions)
-  > ❓ Q1: Should this show unique transmission types (DSG, CVT, Manual, eCVT, etc.) from the dataset as a filterable/sortable table, or a static lookup page of transmission specs?
-  > ❓ Q2: What columns/structure for each transmission type — just name + description, or include ratings/quality scores (from #31) and example cars?
-
-- [ ] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search by: brand, model, year, power, engine volume, engine type, trim level)
-  > ❓ Q1: Is this a UI search/filter feature for the reference page, or a backend refinement to the reference enrichment logic in build_data.py?
-  > ❓ Q2: Should trim level matching use the existing "Výbava" column, or require a separate trim extraction/schema change?
-
-- [ ] **#30** větší počet válců a větší objem znamená větší spolehlivost (more cylinders + bigger volume = more reliability — scoring rule)
-  > ❓ Q1: Is this a manual scoring rule to encode as a new "Reliability" score column (1–5), or a sorting/filtering heuristic for the UI?
-  > ❓ Q2: Should this apply to all ICE cars, or only those matched to reference models with cylinder/volume data?
-
 - [ ] **#31** převodovky — kvalita: eCVT dobré (řemen), CVT špatné (planetové), ZF hydraulická, AISIN, DSG mokré ne suché, planetové, mechatronické nejsou úplně dobré (transmission quality rating rules)
   > ❓ Q1: Should transmission quality be a scored column (1–5 or Good/Fair/Poor) in ice_specs.csv, or UI-only display logic when rendering listings?
-  > ❓ Q2: Where is transmission brand/subtype data sourced from — extracted from listings, enriched in reference CSVs, or matched via a new lookup table?
+  > ❓ Q2: Where is transmission brand/subtype data sourced from — extracted from listings, enriched in reference CSVs, or matched via a new lookup table? (Current listings don't reliably distinguish wet/dry DSG, eCVT/CVT.)
 
 - [ ] **#32** rozvody motoru: lepší jsou řetězy než řemeny, nebrat namáčené řemeny (engine timing: chains better than belts, avoid wet belts — rating rule)
   > ❓ Q1: Is this a new "Engine Timing Type" column extracted from listings + enriched in reference, or a quality scoring rule applied to matched models?
-  > ❓ Q2: How is wet vs. dry belt info sourced — extracted from Extra text, stored in reference CSV, or inferred from engine model/year?
+  > ❓ Q2: How is wet vs. dry belt info sourced — extracted from Extra text, stored in reference CSV, or inferred from engine model/year? (Not present in current listing data.)
 
 - [ ] **#33** stav km a problémy na technické: portál občana/portál dopravy, cebia, car vertical (mileage state & inspection problems via external portals)
   > ❓ Q1: Should this be a new data source integrated into the scrape pipeline, or a post-build enrichment joined by VIN/registration number to existing listings?
@@ -108,19 +55,49 @@ Tasks below need your input. Reply directly under each Q line in chat, then run 
 
 ## Atomic
 
-Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run.
+Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run. **Veto any `📌 assumes:` line before running** — the classifier chose that default for you.
 
-- [ ] **#12** Fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry (`build/build_data.py`)
-  > flow:ralph · model:haiku · effort:low
+- [ ] **#3** split "Model auta" col into "Značka" + "Model" displayed in that order
+  > flow:feature-dev · model:sonnet · effort:medium
+  > 📌 assumes: emit "Značka" + "Model" as separate display fields from build_data.py (Značka then Model); keep "Model auta" as the matching/enrichment key (unchanged).
+
+- [ ] **#4** "Model auta" should not contain Objem motoru / Typ motoru values
+  > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #3
+  > 📌 assumes: after the #3 split, the Model display column shows brand+model only; engine vol/type live solely in their own columns; reference join keeps using the full auth string internally (do NOT strip ice_specs.csv).
 
 - [ ] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
   > flow:ralph · model:haiku · effort:low
 
 - [ ] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
   > flow:ralph · model:sonnet · effort:medium
+  > 📌 note: largely addressed by tri-state Spárováno coloring (Ne=red, Nejisté=amber, no more nulls); remaining work is surfacing a count/filter shortcut.
 
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
+
+- [ ] **#16** sauto listing has year 2002 but is really 2022 — detect and fix 2-digit year swaps (<https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333>)
+  > flow:feature-dev · model:sonnet · effort:medium
+  > 📌 assumes: fix in scrapers/sources/sauto.py; detect via in_operation_date / manufacturing_date vs Rok výroby mismatch + 19XX→20XX swap heuristic; log corrected years.
+
+- [ ] **#17** sauto listing has year 1900 but is really 2026 — detect and fix invalid years (<https://www.sauto.cz/osobni/detail/dacia/bigster/210225179>)
+  > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #16
+  > 📌 assumes: same module/logic as #16; clamp years outside [2000 .. current year+1] and repair from in_operation_date; skip the row only if unrepairable.
+
+- [ ] **#18** web UI should display set filters above the table on both pages
+  > flow:feature-dev · model:sonnet · effort:medium
+  > 📌 assumes: persistent bar above the grid showing active filters as chips with an [×] to clear each; on BOTH index and reference pages.
+
+- [ ] **#19** many reference models are missing data in various cols
+  > flow:ralph · model:sonnet · effort:medium
+  > 📌 assumes: codeable part only — add a UI indicator on the reference page flagging models missing key spec columns; do NOT source/enter external data (that's a separate manual task).
+
+- [ ] **#20** reorder cols in the reference table to match the main table for easier visual scanning
+  > flow:ralph · model:sonnet · effort:low
+  > 📌 assumes: reorder reference table columns to match the main cars table's column order.
+
+- [ ] **#21** automated tests for data integrity (mismatch between Model col and relevant cols, format of all data in each col)
+  > flow:ralph · model:sonnet · effort:medium
+  > 📌 assumes: core integrity harness already added (tests/test_data_integrity.py); this extends it with per-column format checks (numeric price/year/km, enum columns, required-field presence).
 
 - [ ] **#22** scroll bars in tables are very thin and hard to use since they are hidden behind the page scroll bar
   > flow:ralph · model:haiku · effort:low
@@ -131,7 +108,26 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [ ] **#26** typ převodovky (transmission type) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
+- [ ] **#28** nová stránka s přehledem převodovek: popisky (new page with transmission overview: descriptions)
+  > flow:feature-dev · model:sonnet · effort:medium
+  > 📌 assumes: static lookup page listing transmission types present in the dataset + seed descriptions; wire quality ratings (#31) in later.
+
+- [ ] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search)
+  > flow:feature-dev · model:sonnet · effort:medium
+  > 📌 assumes: UI search/filter controls on the reference page over existing columns (značka, model, rok, výkon, objem, typ motoru, Výbava as trim); no schema change.
+
+- [ ] **#30** větší počet válců a větší objem znamená větší spolehlivost (more cylinders + bigger volume = more reliability — scoring rule)
+  > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #24
+  > 📌 assumes: add a derived "Spolehlivost" score (1–5) for matched ICE from cylinder count + displacement (more/bigger → higher); needs the #24 cylinders column.
+
 ## Done
+
+- [x] **#12** Fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry (`build/build_data.py`)
+  > flow:ralph · model:haiku · effort:low
+
+- [x] **#5** add Karoserie (and other cols) to Referenční modely page for matching
+  > flow:feature-dev · model:sonnet · effort:medium
+  > done: reference page + reference.json now carry Palivo, Karoserie, Výkon (kW), Objem motoru, Typ motoru, Hybrid typ.
 
 - [x] **#11** Fix `merge_with_previous` NaN-link bug: `set_index("Odkaz na auto").loc[link]` drops index col, clobbering link on rows present in both scrapes (`scrapers/core/merge.py`)
   > flow:ralph · model:haiku · effort:low
