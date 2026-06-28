@@ -18,8 +18,15 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  # One runner per source — true parallelism across servers. Each leg runs its
+  # own adapter, whose internal fuel configurations (EV/ICE, palivo URLs) stay
+  # serial. Legs are write-independent: each writes only its own <slug>.csv.
   scrape:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        source: [sauto, autodraft, energycars]
     steps:
       - uses: actions/checkout@v4
 
@@ -35,9 +42,38 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
 
-      - run: playwright install chromium --with-deps
+      # sauto is aiohttp-only; only the Playwright sources need Chromium.
+      - if: matrix.source != 'sauto'
+        run: playwright install chromium --with-deps
 
-      - run: ./bin/run_all.sh
+      - run: python -m scrapers.run --source ${{ matrix.source }}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: csv-${{ matrix.source }}
+          path: scrapers/data/scrapes/${{ matrix.source }}.csv
+          if-no-files-found: error
+
+  # Join the per-source CSVs, rebuild the dashboard JSON, commit once. Pure
+  # pandas — no browser deps. Runs only if every scrape leg succeeded.
+  build:
+    needs: scrape
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+
+      - run: pip install pandas
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: csv-*
+          merge-multiple: true
+          path: scrapers/data/scrapes
 
       - run: python build/build_data.py
         env:
@@ -52,7 +88,7 @@ jobs:
           git push
 
   deploy:
-    needs: scrape
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages

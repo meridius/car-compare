@@ -26,7 +26,7 @@ scrapers/
       ice_specs.csv   ICE reference (exact join on "Model auta")
       ev_specs.csv    EV reference (prefix-match join)
 
-bin/run_all.sh    dep check + `python -m scrapers.run "$@"`
+bin/run_all.sh    dep check (once) + fan out `python -m scrapers.run --source NAME` per source in parallel
 build/build_data.py  concat CSVs + per-fuel reference enrichment → site/data/cars.json
 ```
 
