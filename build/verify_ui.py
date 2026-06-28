@@ -116,6 +116,45 @@ SCENARIOS = {
 }
 
 
+def check_cd_format(page):
+    """Assert the Cd column renders as a bare integer percent: the '%' sign lives
+    in the header ('… (%)'), cells are plain integers (no '%', no decimals).
+
+    This guards the exact regression that a green screenshot + exit 0 missed once:
+    a per-page valueFormatter still appending ' %' to each cell. Column-virtualised
+    grids only render on-screen columns, so scroll Cd into view via the grid API
+    first, otherwise its cells are absent from the DOM and silently un-checked.
+    """
+    try:
+        page.evaluate("window.__gridApi && window.__gridApi.ensureColumnVisible('Cd')")
+        page.wait_for_timeout(200)
+    except Exception:
+        pass
+    res = page.evaluate(
+        "() => {"
+        "  var cells = Array.prototype.slice.call("
+        "    document.querySelectorAll('.ag-cell[col-id=\"Cd\"]'))"
+        "    .map(function(c){return (c.textContent||'').trim();})"
+        "    .filter(function(s){return s.length;});"
+        "  var h = document.querySelector('.ag-header-cell[col-id=\"Cd\"]');"
+        "  return { cells: cells.slice(0, 80), header: h ? (h.textContent||'') : '' };"
+        "}"
+    )
+    problems = []
+    if "%" not in res["header"]:
+        problems.append("Cd header missing '%' sign: " + repr(res["header"]))
+    if not res["cells"]:
+        problems.append("Cd column has no rendered cells (could not verify format)")
+    for txt in res["cells"]:
+        if "%" in txt:
+            problems.append("Cd cell still contains '%': " + repr(txt))
+            break
+        if not txt.lstrip("-").isdigit():
+            problems.append("Cd cell is not an integer: " + repr(txt))
+            break
+    return problems
+
+
 def main():
     ap = argparse.ArgumentParser(description="Verify dashboard UI in a headless browser.")
     ap.add_argument("--page", choices=PAGE_FILES, default="index")
@@ -156,6 +195,9 @@ def main():
             row_count = page.locator(".ag-row").count()
             if row_count == 0:
                 failures.append("no grid rows rendered (.ag-row count == 0)")
+
+            if args.scenario == "grid":
+                failures.extend(check_cd_format(page))
 
             if target:
                 page.locator(target).screenshot(path=shot_path)

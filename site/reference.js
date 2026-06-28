@@ -393,7 +393,7 @@
     if (params.value == null) return "";
     var n = Number(params.value);
     if (isNaN(n)) return params.value;
-    if (params.colDef && params.colDef.field === "Cd") return Math.round(n * 100) + " %";
+    if (params.colDef && params.colDef.field === "Cd") return String(Math.round(n * 100));
     return n.toLocaleString("cs-CZ");
   }
 
@@ -441,6 +441,7 @@
       onDragStopped: saveColState,
       onGridReady: function (params) {
         gridApi = params.api;
+        window.__gridApi = params.api;
         var savedCols = loadColState();
         if (savedCols) applyColState(savedCols);
         var urlFilters = loadFiltersFromUrl();

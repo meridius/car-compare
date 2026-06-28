@@ -271,6 +271,7 @@
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
     { field: "Cd", filter: "agNumberColumnFilter", w: 90, num: true, hi: false, hdr: "Odpor\nvzduchu (%)", tip: "Nižší = lepší aerodynamika.\nBarva buňky: zelená = nižší (lepší), červená = vyšší." },
+    { field: "Cd zdroj", filter: "agSetColumnFilter", w: 100, hdr: "Zdroj odporu\nvzduchu", tip: "reálné = naměřená hodnota (výrobce / Wikipedia / ev-database), odhad = odhad dle tvaru karoserie (~42 % hodnot)." },
     { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false, tip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB.\nBarva buňky: zelená = tišší, červená = hlučnější." },
     { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "Použitelná kapacita trakční baterie.\nBarva buňky: zelená = větší kapacita, červená = menší." },
     { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší.\nBarva buňky: zelená = delší dojezd, červená = kratší." },

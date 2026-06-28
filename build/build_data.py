@@ -222,9 +222,10 @@ def join_combustion_reference(df, ref):
         "Objem kufru (l)": "Objem kufru (l)",
         "Hlučnost (dB)": "Hlučnost (dB)",
         "Cd": "Cd",
+        "Cd zdroj": "Cd zdroj",
     }
     ref_renamed = ref.rename(columns=ref_cols)
-    add_cols = ["Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)", "Cd"]
+    add_cols = ["Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)", "Cd", "Cd zdroj"]
     combustion_mask = df["Typ"] == "Spalovací"
     combustion = df[combustion_mask].copy()
     other = df[~combustion_mask].copy()
@@ -259,6 +260,7 @@ def join_electric_reference(df, ref):
         "Dojezd komb. letní WLTP (km)": "Dojezd WLTP (km)",
         "Dojezd komb. letní EV-database (km)": "Dojezd EV-database (km)",
         "Cd": "Cd",
+        "Cd zdroj": "Cd zdroj",
         "Tepelné čerpadlo možné (ano/ne)": "Tepelné čerpadlo možné",
     }
 
@@ -538,7 +540,7 @@ def main():
         "Extra", "Stav", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
-        "Cd", "Tepelné čerpadlo možné",
+        "Cd", "Cd zdroj", "Tepelné čerpadlo možné",
     ]
     final_cols = [c for c in ordered_cols if c in df.columns]
     for c in df.columns:
