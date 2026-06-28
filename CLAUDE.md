@@ -33,6 +33,14 @@ python -m scrapers.run --source sauto  # Debug a single source
 
 Sources: `sauto`, `autodraft`, `energycars`.
 
+## Testing
+
+```bash
+./bin/test.sh            # offline: matching golden tests + data-integrity invariants (<1s)
+```
+
+Every feature is **test-driven / test-verified** — `./bin/test.sh` must pass, and any logic change adds a test that fails without it. Fast offline loop for logic/build/UI work: `python build/build_data.py` (~9s) + `./bin/test.sh`; only `scrapers/sources/*.py` changes need a real scrape. See @docs/conventions.md → Testing.
+
 ## Quick Reference
 
 **Add brand alias** → `BRAND_MAP` in `scrapers/core/normalize.py`
