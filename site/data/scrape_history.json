@@ -2074,8 +2074,42 @@
   "total": 10258
  },
  {
-  "date": "2026-06-28T08:44:12Z",
-  "trigger": "schedule",
+  "date": "2026-06-28T08:36:36Z",
+  "trigger": "manual",
+  "sources": {
+   "Sauto.cz": {
+    "electric": 287,
+    "combustion": 9453,
+    "total": 9740
+   },
+   "Autodraft.cz": {
+    "electric": 170,
+    "combustion": 301,
+    "total": 471
+   },
+   "EnergyCars.cz": {
+    "electric": 47,
+    "combustion": 0,
+    "total": 47
+   }
+  },
+  "matching": {
+   "combustion": {
+    "matched": 9736,
+    "unmatched": 18,
+    "total": 9754
+   },
+   "electric": {
+    "matched": 497,
+    "unmatched": 7,
+    "total": 504
+   }
+  },
+  "total": 10258
+ },
+ {
+  "date": "2026-06-28T09:07:50Z",
+  "trigger": "manual",
   "sources": {
    "Sauto.cz": {
     "electric": 289,
@@ -2095,12 +2129,86 @@
   },
   "matching": {
    "combustion": {
-    "matched": 9770,
+    "matched": 7217,
+    "uncertain": 2553,
     "unmatched": 18,
     "total": 9788
    },
    "electric": {
     "matched": 499,
+    "uncertain": 0,
+    "unmatched": 7,
+    "total": 506
+   }
+  },
+  "total": 10294
+ },
+ {
+  "date": "2026-06-28T09:09:29Z",
+  "trigger": "manual",
+  "sources": {
+   "Sauto.cz": {
+    "electric": 289,
+    "combustion": 9487,
+    "total": 9776
+   },
+   "Autodraft.cz": {
+    "electric": 170,
+    "combustion": 301,
+    "total": 471
+   },
+   "EnergyCars.cz": {
+    "electric": 47,
+    "combustion": 0,
+    "total": 47
+   }
+  },
+  "matching": {
+   "combustion": {
+    "matched": 7217,
+    "uncertain": 2553,
+    "unmatched": 18,
+    "total": 9788
+   },
+   "electric": {
+    "matched": 499,
+    "uncertain": 0,
+    "unmatched": 7,
+    "total": 506
+   }
+  },
+  "total": 10294
+ },
+ {
+  "date": "2026-06-28T09:19:15Z",
+  "trigger": "manual",
+  "sources": {
+   "Sauto.cz": {
+    "electric": 289,
+    "combustion": 9487,
+    "total": 9776
+   },
+   "Autodraft.cz": {
+    "electric": 170,
+    "combustion": 301,
+    "total": 471
+   },
+   "EnergyCars.cz": {
+    "electric": 47,
+    "combustion": 0,
+    "total": 47
+   }
+  },
+  "matching": {
+   "combustion": {
+    "matched": 7217,
+    "uncertain": 2553,
+    "unmatched": 18,
+    "total": 9788
+   },
+   "electric": {
+    "matched": 499,
+    "uncertain": 0,
     "unmatched": 7,
     "total": 506
    }
