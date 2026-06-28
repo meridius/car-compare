@@ -95,6 +95,37 @@ class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
         self.assertEqual(out.iloc[1]["Spárováno"], "Ne")
         self.assertEqual(out.iloc[1]["Skóre shody"], "")
 
+    def test_score_assignment_survives_strict_column_dtypes(self):
+        """Regression: pandas 3.x makes a column's dtype strict, and the
+        'Skóre shody' column arrives with different dtypes across the pipeline:
+          - 'string' on a fresh scrape (blank_row seeds "") — rejects ints,
+          - 'float64' after a CSV round-trip in build_data (numeric + NaN) —
+            rejects strings.
+        match_to_authoritative must handle both without raising TypeError."""
+        import warnings
+        import pandas as pd
+        from scrapers.core.schema import blank_row, CANONICAL_COLS
+
+        al = [auth("Škoda Karoq 1.5 TSI", "Škoda", "Karoq", vol="1.5", etype="TSI")]
+        for dtype in ("string", "float64", "object"):
+            with self.subTest(dtype=dtype):
+                r1 = blank_row(); r1.update({"Model auta": "Škoda Karoq",
+                                             "Objem motoru": "1.5", "Typ motoru": "TSI"})
+                df = pd.DataFrame([r1], columns=CANONICAL_COLS)
+                # float64 can't hold "" — use NaN, as a CSV round-trip would.
+                df["Skóre shody"] = (
+                    pd.Series([float("nan")], dtype="float64") if dtype == "float64"
+                    else df["Skóre shody"].astype(dtype)
+                )
+                # pandas 3.x hard-raises TypeError on an incompatible-dtype set;
+                # pandas 2.x only warns (FutureWarning). Promote that warning to
+                # an error so this regression is caught on either version.
+                with warnings.catch_warnings():
+                    warnings.simplefilter("error", FutureWarning)
+                    out = M.match_to_authoritative(df, al)  # must not raise
+                self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
+                self.assertGreaterEqual(int(out.iloc[0]["Skóre shody"]), M.STRONG_FLOOR)
+
 
 if __name__ == "__main__":
     unittest.main()
