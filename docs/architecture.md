@@ -23,8 +23,11 @@ scrapers/
   data/
     scrapes/      per-source output CSVs
     reference/
-      ice_specs.csv   ICE reference (exact join on "Model auta")
-      ev_specs.csv    EV reference (prefix-match join)
+      ice_specs.csv   ICE reference — structured cols (Značka,Model,Výbava,Generace,
+                      Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,
+                      Spotřeba,Objem kufru,Hlučnost,Cd,Cd zdroj); PK = Jednoznačná
+                      varianta vozu (clean, paren-free); exact join on "Model auta"
+      ev_specs.csv    EV reference (comma-delim; …,Cd,Cd zdroj,…); prefix-match join
 
 bin/run_all.sh    dep check (once) + fan out `python -m scrapers.run --source NAME` per source in parallel
 build/build_data.py  concat CSVs + per-fuel reference enrichment → site/data/cars.json
@@ -103,11 +106,11 @@ Extraction must run **before** `clean_extra()`.
 
 Each ICE car is matched against `scrapers/data/reference/ice_specs.csv` (`core/matching.py`):
 
-1. `load_authoritative_list(csv_path)` — parses auth CSV into structured records (brand, model_base, body, engine_vol, engine_type, hybrid, fuel)
+1. `load_authoritative_list(csv_path)` — reads the **structured feature columns** directly (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo, Hybrid typ, Výbava). It does **not** parse the display name — the name (`Jednoznačná varianta vozu`) is the entry/PK only. (Reference CSV is now column-structured; the old name-parsing auth helpers were deleted.)
 2. `match_to_authoritative(df, auth_list)` — for each row:
-    - Parse brand + model_base from "Model auta"
+    - Parse brand + model_base from the **scraped** "Model auta" (listings still arrive as messy strings; only the auth side is pre-structured)
     - Find candidates: brand must match (with `_BRAND_MATCH_ALIASES` for SsangYong↔KGM) AND model_base must match
-    - Score candidates by weighted multi-field matching: body(3), engine_vol(2), engine_type(2), hybrid(3), fuel(1)
+    - Score candidates by weighted multi-field matching: body(3), hybrid(3), engine_vol(2), engine_type(2), trim/Výbava(2), fuel(1) — trim disambiguates kept trim variants (Octavia Style vs Selection)
     - Classify via `classify_match()` into tri-state `Spárováno` + numeric `Skóre shody`:
         - **Ano** (confident: best score ≥ `STRONG_FLOOR` and beats runner-up by ≥ `MARGIN_REQ`) → "Model auta" set to full auth string (e.g. "Škoda Karoq 1.5 TSI")
         - **Nejisté** (candidate found but weak/contradictory/tie) → best-guess auth string written, flagged uncertain

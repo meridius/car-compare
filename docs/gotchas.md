@@ -147,6 +147,19 @@ Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in e
 
 ## core — matching (ICE)
 
+### auth side reads structured columns; scraped side still parses names
+
+`ice_specs.csv` is column-structured, so `load_authoritative_list()` reads the
+feature columns directly — the old auth-side name parsers (`_strip_known_parts`,
+`_extract_auth_body/hybrid/fuel/engine_vol/engine_type`, `_AUTH_HYBRID_MAP`,
+`_AUTH_FUEL_MAP`) were **deleted**. The **scraped** side is unchanged: listings
+arrive messy, so `_parse_brand` / `_clean_model_for_matching` / `_extract_body_from_model`
+still parse the listing's "Model auta". The display name (`Jednoznačná varianta vozu`)
+is a clean, paren-free, **unique PK decoupled from the matching features** — editing
+a name never changes how it matches (the columns do that). Trim (`Výbava`) is scored
+(+2/−1) so kept trim variants (Octavia Style vs Selection) don't tie into `Nejisté`.
+The golden tests build `auth()` dicts directly, so they're insulated from the CSV format.
+
 ### SsangYong↔KGM brand alias
 
 The reference list has some models under "SsangYong" and others under "KGM" (brand was renamed). Sauto returns listings under both names. `_BRAND_MATCH_ALIASES` maps each to the other so matching finds candidates regardless of which brand name the listing uses.
@@ -203,7 +216,19 @@ EV body type comes from `vehicle_body_cb` (sauto) or `extract_body_type()` (auto
 
 `build_reference_json()` adds 6 per-config spec columns (Palivo, Karoserie, Výkon, Objem motoru, Typ motoru, Hybrid typ) to `reference.json`. Sources differ on purpose:
 
-- **Objem motoru / Typ motoru / Hybrid typ (ICE)** — parsed from the authoritative model string via `matching.load_authoritative_list()` (uses the `entry` field). NOT taken from listings: per-listing extraction is noisy — e.g. a listing matched to "Cupra Formentor 1.5 TSI" can carry `Objem motoru` = 2.0. The reference string is the single source of truth.
+- **Objem motoru / Typ motoru / Hybrid typ / Karoserie (ICE)** — read straight from the reference's **dedicated columns** via `matching.load_authoritative_list()` (the CSV is now column-structured; these are no longer regex-parsed out of the name). NOT taken from listings: per-listing extraction is noisy — e.g. a listing matched to "Cupra Formentor 1.5 TSI" can carry `Objem motoru` = 2.0. The reference columns are the single source of truth.
 - **Karoserie / Výkon (kW)** — not encoded in the reference string, so aggregated from matched listings by **mode** (`_mode_nonempty`, most-common value). Blank when a reference model has no listings. ICE keys on exact "Model auta" == auth entry; EV buckets by longest-prefix (same as `join_electric_reference`).
 - **Palivo** — ICE: listing mode → fallback `derive_fuel()` (deterministic, 100% coverage). EV: constant "Elektro".
 - **EV** engine columns (Objem motoru / Typ motoru / Hybrid typ) are always blank (N/A).
+
+### Cd column is real-or-estimated, flagged by "Cd zdroj"
+
+Both reference files carry `Cd` (drag coefficient, replaces the old "Aerodynamická
+modifikace (lepší/horší)") plus a `Cd zdroj` flag: **`reálné`** = a real published
+value (manufacturer press / Wikipedia / ev-database), **`odhad`** = a body-shape
+estimate (`BODY_CD` map: SUV~0.33, sedan~0.27, hatch~0.30, …) used where no reliable
+Cd was findable. ~42% of rows are estimates — paywalled/blocked spec databases
+(automobile-catalog 402, cars-data JS-only) make real per-variant Cd sparse. `Cd
+zdroj` shows on the reference page so estimates are never mistaken for measured data.
+`Cd` is numeric (lower = better); `Cd zdroj` is **not** carried into the main
+`cars.json` grid (reference page only).
