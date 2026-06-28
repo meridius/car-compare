@@ -13,14 +13,16 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from scrapers.core import matching as M  # noqa: E402
 
 
-def auth(entry, brand, base, body="", vol="", etype="", hybrid="", fuel=""):
+def auth(entry, brand, base, body="", vol="", etype="", hybrid="", fuel="", trim=""):
     return {"entry": entry, "brand": brand, "model_base": base, "body": body,
-            "engine_vol": vol, "engine_type": etype, "hybrid": hybrid, "fuel": fuel}
+            "engine_vol": vol, "engine_type": etype, "hybrid": hybrid, "fuel": fuel,
+            "trim": trim}
 
 
-def scraped(brand, base, body="", vol="", etype="", hybrid="", fuel=""):
+def scraped(brand, base, body="", vol="", etype="", hybrid="", fuel="", trim=""):
     return {"brand": brand, "model_base": base, "body": body,
-            "engine_vol": vol, "engine_type": etype, "hybrid": hybrid, "fuel": fuel}
+            "engine_vol": vol, "engine_type": etype, "hybrid": hybrid, "fuel": fuel,
+            "trim": trim}
 
 
 class ClassifyMatchTest(unittest.TestCase):
@@ -75,6 +77,62 @@ class ClassifyMatchTest(unittest.TestCase):
         res = M.classify_match(scraped("Foo", "Bar", vol="1.5", etype="TSI"), al)
         self.assertEqual(res["state"], "Ano")
         self.assertGreaterEqual(res["margin"], M.MARGIN_REQ)
+
+    def test_trim_disambiguates_otherwise_identical_variants(self):
+        # Trim variants are kept as separate reference rows; without trim scoring
+        # they tie (Nejisté). The matching scored trim must break the tie.
+        al = [auth("Škoda Octavia Combi Style 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI", trim="Style"),
+              auth("Škoda Octavia Combi Selection 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI", trim="Selection")]
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="Kombi", vol="1.5", etype="TSI", trim="Style"), al)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Combi Style 1.5 TSI")
+
+
+class LoadAuthoritativeListTest(unittest.TestCase):
+    """The reference CSV now carries structured feature columns; the loader must
+    read them directly instead of regex-parsing the display name."""
+
+    def _write(self, content):
+        import tempfile
+        f = tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False, encoding="utf-8")
+        f.write(content)
+        f.close()
+        self.addCleanup(lambda: os.remove(f.name))
+        return f.name
+
+    _HEADER = ("Jednoznačná varianta vozu,Značka,Model,Výbava,Generace,Karoserie,"
+               "Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,"
+               "Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd\n")
+
+    def test_reads_feature_columns_not_name(self):
+        # The paren-free name alone would parse to blank fuel/body; only reading
+        # the columns yields them. This is the whole point of the restructure.
+        path = self._write(self._HEADER +
+                           "Škoda Karoq 1.5 TSI,Škoda,Karoq,,,SUV,,1.5,TSI,Benzín,,6.2,521,69,0.33\n")
+        r = M.load_authoritative_list(path)[0]
+        self.assertEqual(r["entry"], "Škoda Karoq 1.5 TSI")
+        self.assertEqual(r["brand"], "Škoda")
+        self.assertEqual(r["model_base"], "Karoq")
+        self.assertEqual(r["body"], "SUV")
+        self.assertEqual(r["engine_vol"], "1.5")
+        self.assertEqual(r["engine_type"], "TSI")
+        self.assertEqual(r["fuel"], "Benzín")
+        self.assertEqual(r["hybrid"], "")
+
+    def test_body_is_canonicalized(self):
+        path = self._write(self._HEADER +
+                           "VW Golf Variant 1.5 TSI,VW,Golf,,,Variant,,1.5,TSI,Benzín,,5.6,611,69,0.30\n")
+        r = M.load_authoritative_list(path)[0]
+        self.assertEqual(r["body"], "Kombi")  # Variant -> Kombi synonym group
+
+    def test_reads_trim_column(self):
+        path = self._write(self._HEADER +
+                           "Škoda Octavia Combi Style 1.5 TSI,Škoda,Octavia,Style,Gen 4,Kombi,,1.5,TSI,Benzín,,5.6,640,69,0.27\n")
+        r = M.load_authoritative_list(path)[0]
+        self.assertEqual(r["trim"], "Style")
 
 
 class MatchToAuthoritativeDataFrameTest(unittest.TestCase):

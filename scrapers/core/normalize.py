@@ -15,6 +15,9 @@ MODEL_CLEANUP_PATTERNS = [
     (re.compile(r'\bScout Combi\b'), 'Combi Scout'),
     (re.compile(r'\bRS Combi\b'), 'Combi RS'),
     (re.compile(r'Cee´d', re.IGNORECASE), 'Ceed'),
+    # listings write the ProCeed shooting brake as "Pro_Ceed" / "Pro Ceed";
+    # fold to the reference spelling so they match "Kia ProCeed ...".
+    (re.compile(r'Pro[_\s]?Ceed'), 'ProCeed'),
 ]
 
 

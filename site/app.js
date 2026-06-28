@@ -265,7 +265,7 @@
     { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
     { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
     { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)" },
-    { field: "Aerodynamická modifikace", filter: "agSetColumnFilter", w: 100, hdr: "Aerodyn.\nmodifikace" },
+    { field: "Cd", filter: "agNumberColumnFilter", w: 70, num: true, hi: false },
     { field: "Převodovka", filter: "agSetColumnFilter", w: 110 },
     { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka" },
     { field: "Náhon 4x4", filter: "agSetColumnFilter", w: 80 },

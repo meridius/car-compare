@@ -201,7 +201,7 @@
     { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", width: 130, type: "numericColumn" },
     { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn" },
     { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", width: 140, type: "numericColumn" },
-    { field: "Aerodynamická modifikace", filter: SetFilter, width: 140, headerClass: "ag-header-cell-center" },
+    { field: "Cd", filter: "agNumberColumnFilter", width: 90, type: "numericColumn" },
     { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center" },
   ];
 
@@ -214,6 +214,7 @@
     "Kapacita baterie (kWh)": true,
     "Dojezd WLTP (km)": true,
     "Dojezd EV-database (km)": true,
+    "Cd": false,
   };
 
   // ── HSL gradient coloring for numeric columns ──

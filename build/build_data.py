@@ -208,7 +208,7 @@ def load_combustion_reference():
 
 def load_electric_reference():
     path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ev_specs.csv")
-    df = pd.read_csv(path, sep=";")
+    df = pd.read_csv(path)  # comma-delimited, decimal cells quoted (standardized w/ ICE)
     for col in ["Kapacita baterie (kWh)"]:
         if col in df.columns:
             df[col] = df[col].apply(parse_czech_decimal)
@@ -221,10 +221,10 @@ def join_combustion_reference(df, ref):
         "Spotřeba (l/100 km)": "Spotřeba (l/100 km)",
         "Objem kufru (l)": "Objem kufru (l)",
         "Hlučnost (dB)": "Hlučnost (dB)",
-        "Aerodynamická modifikace (lepší/horší)": "Aerodynamická modifikace",
+        "Cd": "Cd",
     }
     ref_renamed = ref.rename(columns=ref_cols)
-    add_cols = ["Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)", "Aerodynamická modifikace"]
+    add_cols = ["Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)", "Cd"]
     combustion_mask = df["Typ"] == "Spalovací"
     combustion = df[combustion_mask].copy()
     other = df[~combustion_mask].copy()
@@ -258,7 +258,7 @@ def join_electric_reference(df, ref):
         "Kapacita baterie (kWh)": "Kapacita baterie (kWh)",
         "Dojezd komb. letní WLTP (km)": "Dojezd WLTP (km)",
         "Dojezd komb. letní EV-database (km)": "Dojezd EV-database (km)",
-        "Aerodynamická modifikace (lepší/horší)": "Aerodynamická modifikace",
+        "Cd": "Cd",
         "Tepelné čerpadlo možné (ano/ne)": "Tepelné čerpadlo možné",
     }
 
@@ -280,9 +280,9 @@ def join_electric_reference(df, ref):
 
     matched = 0
     for idx, row in electric.iterrows():
-        model = str(row.get("Model auta", ""))
+        model = str(row.get("Model auta", "")).lower()
         for ref_model in ref_models_sorted:
-            if model.startswith(ref_model):
+            if model.startswith(ref_model.lower()):
                 ref_row = ref_lookup[ref_model]
                 for src_col, dst_col in add_cols_map.items():
                     if src_col in ref_row.index:
@@ -379,9 +379,9 @@ def build_ev_listing_specs(df, elec_ref):
     ref_models = sorted(elec_ref["Model auta"].tolist(), key=len, reverse=True)
     buckets = {}
     for _, row in ev.iterrows():
-        model = str(row.get("Model auta", ""))
+        model = str(row.get("Model auta", "")).lower()
         for rm in ref_models:
-            if model.startswith(rm):
+            if model.startswith(rm.lower()):
                 b = buckets.setdefault(rm, {"Karoserie": [], "Výkon (kW)": []})
                 b["Karoserie"].append(row.get("Karoserie"))
                 b["Výkon (kW)"].append(row.get("Výkon (kW)"))
@@ -423,7 +423,7 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Spotřeba (l/100 km)": parse_czech_decimal(row.get("Spotřeba (l/100 km)", "")),
             "Objem kufru (l)": row.get("Objem kufru (l)", None),
             "Hlučnost (dB)": row.get("Hlučnost (dB)", None),
-            "Aerodynamická modifikace": row.get("Aerodynamická modifikace (lepší/horší)", ""),
+            "Cd": parse_czech_decimal(row.get("Cd", "")),
         }
         records.append(rec)
 
@@ -444,7 +444,7 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Kapacita baterie (kWh)": parse_czech_decimal(row.get("Kapacita baterie (kWh)", "")),
             "Dojezd WLTP (km)": row.get("Dojezd komb. letní WLTP (km)", None),
             "Dojezd EV-database (km)": row.get("Dojezd komb. letní EV-database (km)", None),
-            "Aerodynamická modifikace": row.get("Aerodynamická modifikace (lepší/horší)", ""),
+            "Cd": parse_czech_decimal(row.get("Cd", "")),
             "Tepelné čerpadlo možné": row.get("Tepelné čerpadlo možné (ano/ne)", ""),
         }
         records.append(rec)
@@ -519,7 +519,7 @@ def main():
         "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
         "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
-        "Skóre shody",
+        "Skóre shody", "Cd",
     ]
     for col in numeric_cols:
         if col in df.columns:
@@ -536,7 +536,7 @@ def main():
         "Extra", "Stav", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
-        "Aerodynamická modifikace", "Tepelné čerpadlo možné",
+        "Cd", "Tepelné čerpadlo možné",
     ]
     final_cols = [c for c in ordered_cols if c in df.columns]
     for c in df.columns:

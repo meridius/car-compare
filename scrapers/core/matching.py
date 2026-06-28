@@ -43,20 +43,6 @@ _AUTH_BODY_KEYWORDS = [
     "Touring", "SUV", "Crossover", "MPV",
 ]
 
-_AUTH_HYBRID_MAP = {
-    "plug-in hybrid": "PHEV", "plug-in": "PHEV", "phev": "PHEV",
-    "e-hybrid": "PHEV", "ehybrid": "PHEV",
-    "full-hybrid": "HEV", "full hybrid": "HEV", "hev": "HEV",
-    "e-tech hybrid": "HEV",
-    "mhev": "MHEV", "mild hybrid": "MHEV", "mild-hybrid": "MHEV",
-    "elektromobil": "EV", "ev": "EV", "čistě elektrický": "EV",
-}
-
-_AUTH_FUEL_MAP = {
-    "benzín": "Benzín", "diesel": "Nafta", "nafta": "Nafta",
-    "lpg": "LPG", "cng": "CNG",
-}
-
 
 def _parse_brand(text: str) -> tuple[str, str]:
     """Split text into (brand, remainder)."""
@@ -73,83 +59,34 @@ def _canonicalize_body(body: str) -> str:
     return _BODY_CANON.get(body.lower(), body)
 
 
-def _extract_auth_body(text: str) -> str:
-    for kw in _AUTH_BODY_KEYWORDS:
-        if re.search(r'\b' + re.escape(kw) + r'\b', text, re.IGNORECASE):
-            return kw
-    return ""
-
-
-def _extract_auth_hybrid(text: str) -> str:
-    tl = text.lower()
-    for kw, cls in _AUTH_HYBRID_MAP.items():
-        if kw in tl:
-            return cls
-    return ""
-
-
-def _extract_auth_fuel(text: str) -> str:
-    paren = re.search(r'\(([^)]+)\)', text)
-    if paren:
-        for kw, fuel in _AUTH_FUEL_MAP.items():
-            if kw in paren.group(1).lower():
-                return fuel
-    return ""
-
-
-def _extract_auth_engine_vol(text: str) -> str:
-    m = re.search(r'(?<!\d)(\d[.,]\d)\s*(?=[TtA-Z]|l\b|$)', text)
-    if not m:
-        m = re.search(r'(?<!\d)(\d[.,]\d)\b', text)
-    return m.group(1).replace(',', '.') if m else ""
-
-
-def _extract_auth_engine_type(text: str) -> str:
-    for kw in ENGINE_TYPE_KEYWORDS:
-        if re.search(re.escape(kw), text, re.IGNORECASE):
-            return kw
-    return ""
-
-
-def _strip_known_parts(text: str, brand: str) -> str:
-    """Strip brand, body keywords, engine specs, parenthetical, trim from auth entry to get model base."""
-    rest = text
-    if rest.startswith(brand + " "):
-        rest = rest[len(brand):].strip()
-    rest = re.sub(r'\([^)]*\)', '', rest).strip()
-    for kw in _AUTH_BODY_KEYWORDS:
-        rest = re.sub(r'\b' + re.escape(kw) + r'\b', '', rest, flags=re.IGNORECASE)
-    for kw in ENGINE_TYPE_KEYWORDS:
-        rest = re.sub(r'\S*' + re.escape(kw) + r'\S*', '', rest, count=1, flags=re.IGNORECASE)
-    rest = re.sub(r'(?<!\d)\d[.,]\d(?!\d)', '', rest)
-    for kw_label in ("PHEV", "MHEV", "HEV", "Hybrid", "Plug-In", "EV"):
-        rest = re.sub(r'\b' + re.escape(kw_label) + r'\b', '', rest, flags=re.IGNORECASE)
-    rest = re.sub(r'\s{2,}', ' ', rest).strip()
-    return rest
-
-
 def load_authoritative_list(csv_path) -> list[dict]:
-    """Parse authoritative makes-and-models CSV into structured records."""
+    """Parse the structured reference CSV into matching records.
+
+    Feature columns (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo,
+    Hybrid typ, Výbava) are read directly — no regex-parsing of the display name.
+    The display name ('Jednoznačná varianta vozu') is the entry/PK only."""
+    def col(row, name):
+        return (row.get(name) or "").strip()
+
     records = []
     with open(csv_path, encoding="utf-8") as f:
-        reader = csv.reader(f)
-        next(reader)
+        reader = csv.DictReader(f)
         for row in reader:
-            if not row or not row[0].strip():
+            entry = col(row, "Jednoznačná varianta vozu")
+            if not entry:
                 continue
-            entry = row[0].strip()
-            brand, remainder = _parse_brand(entry)
-            rec = {
+            records.append({
                 "entry": entry,
-                "brand": brand,
-                "model_base": _strip_known_parts(entry, brand),
-                "body": _canonicalize_body(_extract_auth_body(entry)),
-                "engine_vol": _extract_auth_engine_vol(entry),
-                "engine_type": _extract_auth_engine_type(entry),
-                "hybrid": _extract_auth_hybrid(entry),
-                "fuel": _extract_auth_fuel(entry),
-            }
-            records.append(rec)
+                "brand": col(row, "Značka"),
+                "model_base": col(row, "Model"),
+                "body": _canonicalize_body(col(row, "Karoserie")),
+                "engine_vol": col(row, "Objem motoru"),
+                "engine_type": col(row, "Typ motoru"),
+                "hybrid": col(row, "Hybrid typ"),
+                "fuel": col(row, "Palivo"),
+                "trim": col(row, "Výbava"),
+                "seats": col(row, "Počet míst"),
+            })
     return records
 
 
@@ -256,6 +193,17 @@ def _score_match(scraped: dict, auth: dict) -> int:
         else:
             score -= 1
 
+    # Trim (Výbava) disambiguates otherwise-identical variants kept as separate
+    # reference rows (e.g. Octavia Style vs Selection). Only scored when both sides
+    # carry a trim, so the many trim-less reference rows are unaffected.
+    st = scraped.get("trim", "")
+    at = auth.get("trim", "")
+    if st and at:
+        if st == at:
+            score += 2
+        else:
+            score -= 1
+
     return score
 
 
@@ -352,6 +300,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
             "engine_type": engine_type,
             "hybrid": str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else "",
             "fuel": str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else "",
+            "trim": str(df.at[idx, "Výbava"]) if "Výbava" in df.columns and pd.notna(df.at[idx, "Výbava"]) else "",
         }
 
         res = classify_match(scraped, auth_list)
