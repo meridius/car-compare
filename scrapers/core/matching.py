@@ -325,6 +325,12 @@ def match_to_authoritative(df, auth_list: list[dict]):
     df["Spárováno"] = "Ne"
     if "Skóre shody" not in df.columns:
         df["Skóre shody"] = ""
+    # Coerce to object dtype before writing: the column may arrive as strict
+    # StringDtype (fresh scrape, seeded "" — pandas 3.x rejects ints) or as
+    # float64 (CSV round-trip in build_data — rejects strings). object accepts
+    # both the "" sentinel and stringified scores; build_data later coerces
+    # "Skóre shody" back to numeric for cars.json.
+    df["Skóre shody"] = df["Skóre shody"].astype(object)
     counts = {"Ano": 0, "Nejisté": 0, "Ne": 0}
 
     for idx in df.index:
@@ -357,7 +363,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
         else:
             df.at[idx, "Model auta"] = res["entry"]
             df.at[idx, "Spárováno"] = res["state"]
-            df.at[idx, "Skóre shody"] = res["score"]
+            df.at[idx, "Skóre shody"] = str(res["score"])
 
     print(f"  Párování: {counts['Ano']} Ano, {counts['Nejisté']} Nejisté, "
           f"{counts['Ne']} Ne z {len(df)}")
