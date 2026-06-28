@@ -3,19 +3,19 @@
 > **Workflow:**
 >
 > 1. Add tasks to `## New`
-> 2. Run `/triage` (or `./bin/triage.sh` non-interactively) — classifies tasks, assigns ID + routing metadata, moves them to the right section
-> 3. Answer questions under `## Needs Scoping` in chat (reply directly under each Q line), then re-run `/triage` to promote to Atomic
-> 4. Run `/work` (or `./bin/work.sh`) to execute next Atomic task; `./bin/work.sh --all` to drain the queue
+> 2. Run `/tasks-triage` (or `./bin/ai-tasks-triage.sh` non-interactively) — classifies tasks, assigns ID + routing metadata, moves them to the right section
+> 3. Answer questions under `## Needs Scoping` in chat (reply directly under each Q line), then re-run `/tasks-triage` to promote to Atomic
+> 4. Run `/tasks-work` (or `./bin/ai-tasks-work.sh`) to execute next Atomic task; `./bin/ai-tasks-work.sh --all` to drain the queue
 >
-> Tasks can declare `· blocked-by: #N` in their metadata — `/work` skips them until the blocker is done.
+> Tasks can declare `· blocked-by: #N` in their metadata — `/tasks-work` skips them until the blocker is done.
 
 ## New
 
-<!-- Add new tasks here, then run /triage -->
+<!-- Add new tasks here, then run /tasks-triage -->
 
 ## Needs Scoping
 
-Tasks below need your input. Reply directly under each Q line in chat, then run `/triage` to promote to Atomic.
+Tasks below need your input. Reply directly under each Q line in chat, then run `/tasks-triage` to promote to Atomic.
 
 - [ ] **#1** add mobile.de
   > ❓ Q1: Requires browser scraping or REST API available?

@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Execute the next unblocked Atomic task from TASKS.md.
 # Implements, verifies, commits, and marks the task done.
-# Usage: ./bin/work.sh [--all]
+# Usage: ./bin/ai-tasks-work.sh [--all]
 #   --all  keep running until no unblocked tasks remain (skips flow:feature-dev tasks)
 
 set -euo pipefail
 cd "$(git rev-parse --show-toplevel)"
 
-PROMPT="$(cat .claude/commands/work.md)"
+PROMPT="$(cat .claude/commands/tasks-work.md)"
 
 # Append instruction to skip feature-dev tasks when running in --all mode
 PROMPT_ALL="$PROMPT
@@ -30,7 +30,7 @@ if [[ "${1:-}" == "--all" ]]; then
     if echo "$OUTPUT" | grep -qE "No unblocked Atomic tasks|only feature-dev tasks remain"; then
       # Print any skipped feature-dev tasks as a reminder
       echo ""
-      echo "Pending feature-dev tasks (run /work interactively):"
+      echo "Pending feature-dev tasks (run /tasks-work interactively):"
       grep -A1 'flow:feature-dev' TASKS.md | grep '^\- \[ \]' || echo "  (none)"
       break
     fi
