@@ -189,6 +189,12 @@
   var COL_DEFS = [
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Model auta", filter: "agTextColumnFilter", width: 280 },
+    { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
+    { field: "Karoserie", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center" },
+    { field: "Výkon (kW)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn" },
+    { field: "Objem motoru", filter: "agNumberColumnFilter", width: 110, type: "numericColumn" },
+    { field: "Typ motoru", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
+    { field: "Hybrid typ", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
     { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn" },
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", width: 110, type: "numericColumn" },
     { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn" },
@@ -201,6 +207,7 @@
 
   // Map numeric column fields to whether higher is better (true) or lower is better (false)
   var NUMERIC_COLS = {
+    "Výkon (kW)": true,
     "Spotřeba (l/100 km)": false,
     "Objem kufru (l)": true,
     "Hlučnost (dB)": false,

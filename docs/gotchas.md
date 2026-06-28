@@ -188,3 +188,12 @@ For rows present in BOTH the previous and the new scrape, `merge_with_previous()
 ### EV body type vs ICE
 
 EV body type comes from `vehicle_body_cb` (sauto) or `extract_body_type()` (autodraft/energycars). ICE uses the same primary/fallback pattern. EV rows are enriched in `build_data.py` via a prefix join against `ev_specs.csv`; ICE rows via an exact join + re-match against `ice_specs.csv`.
+
+### reference page spec columns: auth-string vs listing-mode
+
+`build_reference_json()` adds 6 per-config spec columns (Palivo, Karoserie, Výkon, Objem motoru, Typ motoru, Hybrid typ) to `reference.json`. Sources differ on purpose:
+
+- **Objem motoru / Typ motoru / Hybrid typ (ICE)** — parsed from the authoritative model string via `matching.load_authoritative_list()` (uses the `entry` field). NOT taken from listings: per-listing extraction is noisy — e.g. a listing matched to "Cupra Formentor 1.5 TSI" can carry `Objem motoru` = 2.0. The reference string is the single source of truth.
+- **Karoserie / Výkon (kW)** — not encoded in the reference string, so aggregated from matched listings by **mode** (`_mode_nonempty`, most-common value). Blank when a reference model has no listings. ICE keys on exact "Model auta" == auth entry; EV buckets by longest-prefix (same as `join_electric_reference`).
+- **Palivo** — ICE: listing mode → fallback `derive_fuel()` (deterministic, 100% coverage). EV: constant "Elektro".
+- **EV** engine columns (Objem motoru / Typ motoru / Hybrid typ) are always blank (N/A).
