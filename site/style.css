@@ -416,6 +416,21 @@ a:hover { text-decoration: underline; }
     margin-left: 12px;
 }
 
+/* ── Column header tooltips ── */
+.col-tooltip {
+    background: var(--clr-surface);
+    color: var(--clr-text);
+    border: 1px solid var(--clr-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.5;
+    max-width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    white-space: pre-wrap;
+    pointer-events: none;
+}
+
 @media (max-width: 600px) {
     .modal-content {
         width: 98%;

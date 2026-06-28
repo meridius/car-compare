@@ -241,42 +241,51 @@
     if (this.searchInput) this.searchInput.focus();
   };
 
+  function ColTooltip() {}
+  ColTooltip.prototype.init = function (params) {
+    this.eGui = document.createElement("div");
+    this.eGui.className = "col-tooltip";
+    this.eGui.textContent = params.value;
+  };
+  ColTooltip.prototype.getGui = function () { return this.eGui; };
+  ColTooltip.prototype.destroy = function () {};
+
   var STAV_GROUPS = [
     { label: "Dostupné", values: ["Dostupný", "Nové", "Předváděcí", "Ojeté", "Havarované"] },
     { label: "Nedostupné", values: ["Zamluvené", "Prodané", "Odstraněno"] },
   ];
 
   var COL_CONFIG = [
-    { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS },
+    { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS, tip: "Dostupnost inzerátu: Dostupný / Zamluvené / Chystá se / Prodané / Odstraněno" },
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
     { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right" },
     { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
     { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right" },
-    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false, tip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší." },
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
-    { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true },
+    { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
-    { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90 },
+    { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
-    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false },
-    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
-    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true },
-    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)" },
-    { field: "Cd", filter: "agNumberColumnFilter", w: 70, num: true, hi: false },
+    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", w: 80, num: true, hi: false, tip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB." },
+    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "Použitelná kapacita trakční baterie." },
+    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: true, tip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší." },
+    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)", tip: "Reálný dojezd dle ev-database.com – realističtější než WLTP." },
+    { field: "Cd", filter: "agNumberColumnFilter", w: 90, num: true, hi: false, hdr: "Odpor\nvzduchu", tip: "Nižší = lepší aerodynamika." },
     { field: "Převodovka", filter: "agSetColumnFilter", w: 110 },
-    { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka" },
+    { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka", tip: "DSG / DCT / S-tronic / PDK – dvě spojky pro sudá a lichá rychlostní stupně.\n+ Rychlé a plynulé řazení, nižší spotřeba.\n– Může škubat při pomalé jízdě a parkování." },
     { field: "Náhon 4x4", filter: "agSetColumnFilter", w: 80 },
-    { field: "Filtr pevných částic", filter: "agSetColumnFilter", w: 90, hdr: "Filtr pevn.\nčástic" },
-    { field: "Tepelné čerpadlo", filter: "agSetColumnFilter", w: 80, hdr: "Tepelné\nčerpadlo" },
-    { field: "Tepelné čerpadlo možné", filter: "agSetColumnFilter", w: 90, hdr: "Tep. čerp.\nmožné" },
+    { field: "Filtr pevných částic", filter: "agSetColumnFilter", w: 90, hdr: "Filtr pevn.\nčástic", tip: "GPF (benzín) nebo DPF (nafta) – zachycuje saze z výfukových plynů." },
+    { field: "Tepelné čerpadlo", filter: "agSetColumnFilter", w: 80, hdr: "Tepelné\nčerpadlo", tip: "Efektivní vytápění a chlazení EV. V zimě výrazně šetří kapacitu baterie." },
+    { field: "Tepelné čerpadlo možné", filter: "agSetColumnFilter", w: 90, hdr: "Tep. čerp.\nmožné", tip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
     { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
     { field: "Kola", filter: "agSetColumnFilter", w: 70 },
     { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
-    { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true },
-    { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody" },
+    { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true, tip: "Ano = jistá shoda s referenčním modelem, Nejisté = slabá nebo nejednoznačná shoda, Ne = nespárováno." },
+    { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody", tip: "Číselné skóre spolehlivosti párování. Vyšší = jistější. Prázdné pro Ne (nespárováno) a EV – elektromobily se párují prefixovým spojením bez skórovacího algoritmu." },
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
@@ -419,6 +428,7 @@
         def.cellStyle = { textAlign: cfg.align || "center" };
       }
 
+      if (cfg.tip) def.headerTooltip = cfg.tip;
       defs.push(def);
     }
     return defs;
@@ -631,7 +641,10 @@
         wrapHeaderText: true,
         autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
+        tooltipComponent: ColTooltip,
       },
+      tooltipShowDelay: 400,
+      tooltipMouseTrack: true,
       animateRows: false,
       enableCellTextSelection: true,
       onFilterChanged: onFilterChanged,

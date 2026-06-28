@@ -176,6 +176,15 @@
   SetFilter.prototype.getGui = function () { return this.gui; };
   SetFilter.prototype.destroy = function () {};
 
+  function ColTooltip() {}
+  ColTooltip.prototype.init = function (params) {
+    this.eGui = document.createElement("div");
+    this.eGui.className = "col-tooltip";
+    this.eGui.textContent = params.value;
+  };
+  ColTooltip.prototype.getGui = function () { return this.eGui; };
+  ColTooltip.prototype.destroy = function () {};
+
   SetFilter.prototype.getModelAsString = function () {
     if (!this.filterActive || !this.selected) return "";
     var vals = Array.from(this.selected).map(function (v) { return v == null ? "(Prázdné)" : v; });
@@ -192,18 +201,18 @@
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Karoserie", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center" },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn" },
-    { field: "Objem motoru", filter: "agNumberColumnFilter", width: 110, type: "numericColumn" },
+    { field: "Objem motoru", filter: "agNumberColumnFilter", width: 110, type: "numericColumn", headerTooltip: "Zdvihový objem spalovacího motoru v litrech." },
     { field: "Typ motoru", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
-    { field: "Hybrid typ", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
-    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn" },
+    { field: "Hybrid typ", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší." },
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", width: 110, type: "numericColumn" },
-    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn" },
-    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", width: 130, type: "numericColumn" },
-    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn" },
-    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", width: 140, type: "numericColumn" },
-    { field: "Cd", filter: "agNumberColumnFilter", width: 90, type: "numericColumn" },
-    { field: "Cd zdroj", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center" },
-    { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center" },
+    { field: "Hlučnost (dB)", filter: "agNumberColumnFilter", width: 100, type: "numericColumn", headerTooltip: "Hlučnost kabiny dle WLTP. Nižší = tišší.\n< 65 dB výborné, 65–70 dB dobré, > 70 dB hlučné.\nPrůměrné auto při 120 km/h: cca 68–72 dB." },
+    { field: "Kapacita baterie (kWh)", filter: "agNumberColumnFilter", width: 130, type: "numericColumn", headerTooltip: "Použitelná kapacita trakční baterie." },
+    { field: "Dojezd WLTP (km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší." },
+    { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", width: 140, type: "numericColumn", headerTooltip: "Reálný dojezd dle ev-database.com – realističtější než WLTP." },
+    { field: "Cd", filter: "agNumberColumnFilter", width: 90, type: "numericColumn", headerName: "Odpor vzduchu", headerTooltip: "Nižší = lepší aerodynamika." },
+    { field: "Cd zdroj", filter: SetFilter, width: 120, headerClass: "ag-header-cell-center", headerName: "Zdroj odporu", headerTooltip: "reálné = naměřená hodnota (výrobce / Wikipedia / ev-database), odhad = odhad dle tvaru karoserie (~42 % hodnot)." },
+    { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center", headerTooltip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
   ];
 
   // Map numeric column fields to whether higher is better (true) or lower is better (false)
@@ -416,7 +425,10 @@
         wrapHeaderText: true,
         autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
+        tooltipComponent: ColTooltip,
       },
+      tooltipShowDelay: 400,
+      tooltipMouseTrack: true,
       animateRows: false,
       enableCellTextSelection: true,
       onFilterChanged: function () {
