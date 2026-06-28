@@ -81,6 +81,64 @@ def extract_engine_volume_from_model(text: str) -> str:
     return m.group(1).replace(',', '.') if m else ""
 
 
+# Plausible passenger-car displacement (litres) and EV power floor. Source data
+# is occasionally garbage (sauto reports 14.9 l for a Kia XCeed, 11 kW for a BYD
+# Dolphin Surf); these bounds reject it.
+MIN_ENGINE_VOL = 0.6
+MAX_ENGINE_VOL = 8.0
+MIN_EV_POWER_KW = 20
+
+# hp/PS shorthand that leaks into Extra text (e.g. "156k", "145k") — duplicates
+# the power column and is just noise. 2–3 digits + 'k' as a standalone token.
+_HP_SHORTHAND_RE = re.compile(r'\b\d{2,3}\s*k\b', re.IGNORECASE)
+
+
+def _to_float(v):
+    try:
+        return float(str(v).replace(',', '.'))
+    except (TypeError, ValueError):
+        return None
+
+
+def sanitize_engine_volume(vol, fallback_text: str = "") -> str:
+    """Return a plausible displacement string (one decimal), recover it from
+    fallback_text (the model name), or ''.
+
+    Guards against bad source data such as sauto's 14.9 l for a Kia XCeed (real
+    1.5) or 14 l for a KGM Korando. Values inside [MIN_ENGINE_VOL, MAX_ENGINE_VOL]
+    pass through; anything else is recovered from the model name when possible.
+    """
+    f = _to_float(vol)
+    if f is not None and MIN_ENGINE_VOL <= f <= MAX_ENGINE_VOL:
+        return f"{f:.1f}"
+    rec = _to_float(extract_engine_volume_from_model(fallback_text))
+    if rec is not None and MIN_ENGINE_VOL <= rec <= MAX_ENGINE_VOL:
+        return f"{rec:.1f}"
+    return ""
+
+
+def sanitize_ev_power(power) -> str:
+    """Blank implausibly-low EV power (e.g. sauto's 11 kW for a BYD Dolphin Surf).
+    No modern EV is below ~20 kW; below the floor we'd rather show blank than wrong.
+    """
+    f = _to_float(power)
+    if f is not None and f >= MIN_EV_POWER_KW:
+        return str(int(f)) if f == int(f) else str(f)
+    return ""
+
+
+def clean_ev_suffix(suffix: str, model_base: str) -> str:
+    """Strip a leading duplicate of the model name and hp shorthand from an EV
+    listing suffix before it becomes Extra text (e.g.
+    "BYD Dolphin Surf 156k COMFORT" + "BYD Dolphin Surf" -> "COMFORT")."""
+    s = suffix or ""
+    if model_base:
+        s = re.sub(r'^\s*' + re.escape(model_base) + r'\s*', '', s, count=1, flags=re.IGNORECASE)
+    s = _HP_SHORTHAND_RE.sub('', s)
+    s = re.sub(r'\s{2,}', ' ', s).strip(' /,')
+    return s
+
+
 def extract_engine_type(text: str) -> str:
     """Extract engine technology (TSI, TDI, EcoBoost, etc.)."""
     for kw in ENGINE_TYPE_KEYWORDS:
@@ -157,6 +215,7 @@ _SEAT_COUNT_RE = re.compile(r'\b[79]-?\s*[Mm][íi]st\b')
 _EXTRA_CLEANUP_RES = [
     _ENGINE_VOL_CLEANUP_RE,
     re.compile(r'\d+\s*kW', re.IGNORECASE),
+    _HP_SHORTHAND_RE,
     _AWD_EXTRA_RE,
     _PARTICLE_FILTER_RE,
 ]

@@ -71,6 +71,27 @@ class DataIntegrityTest(unittest.TestCase):
                      if c.get("Spárováno") == "Nejisté" and self._score(c) is None]
         self.assertEqual(offenders, [], f"{len(offenders)} 'Nejisté' rows missing score")
 
+    def test_phev_consumption_blank(self):
+        """PHEV combined consumption is the misleading official WLTP weighted
+        figure (~1 l/100 km) — it must be blank, not stamped onto rows."""
+        offenders = [c for c in self.ice
+                     if c.get("Hybrid typ") == "PHEV"
+                     and c.get("Spotřeba (l/100 km)") not in (None, "")]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} PHEV rows carry consumption (e.g. "
+                         f"{offenders[0]['Model auta'] if offenders else ''})")
+
+    def test_engine_volume_plausible(self):
+        """No ICE row may carry an implausible displacement (sauto's 14.9 bug)."""
+        offenders = []
+        for c in self.ice:
+            v = c.get("Objem motoru")
+            if isinstance(v, (int, float)) and not (0.6 <= v <= 8.0):
+                offenders.append(c)
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows with implausible Objem motoru "
+                         f"(e.g. {offenders[0].get('Objem motoru') if offenders else ''})")
+
     def test_match_rate_is_honest_not_vanity(self):
         """Guard against regression to the old over-confident matcher: uncertainty
         must be surfaced, and the confident rate must be a realistic fraction."""

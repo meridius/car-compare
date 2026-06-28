@@ -103,6 +103,39 @@ The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatch
 
 sauto sometimes returns `model_cb` "Ostatní" for not-yet-indexed models (e.g. a just-launched EV); the real model hides in `additional_model_name` as a project code / trim string. `_recover_ostatni_model()` maps known cases (e.g. Kia EV2 via "QV1" / 42.2 kWh battery) so the car still matches the reference list.
 
+### operating-lease takeovers leak past the `operating_lease=false` filter
+
+Some listings are operating-lease takeovers ("Převzetí Op. Leasingu") whose `price`
+is a buyout fee / akontace, not a purchase price (e.g. a Nissan X-Trail at 12 023 Kč).
+The search filter `operating_lease=false` doesn't catch them. `_is_valid_purchase()`
+(sauto.py) rejects them via detail fields `price_payment_count` /
+`price_original_compensation` / `price_leasing`, plus a `MIN_PRICE_KC = 100000`
+floor backstop (under our year≥2021 / km≤100k filters nothing real is cheaper — the
+3 bogus rows were 12 023 / 17 009 / 60 500, the next legit car jumps to 150 000+).
+Both `build_ev` and `build_ice` drop the row (`return None`).
+
+### implausible engine volume guarded (sauto returns 14.9 l)
+
+sauto's `engine_volume` is occasionally garbage — e.g. 14.9 l for a Kia XCeed
+(real 1.5), 14 l for a KGM Korando. `sanitize_engine_volume()` (core/fields.py)
+rejects anything outside [0.6, 8.0] l, first recovering from the model name
+("XCeed **1.5** T-GDI"), else blanking. Applied in `build_ice` after the cc→l
+conversion. autodraft is unaffected (its volume is name-derived, can't exceed 9.9).
+
+### implausibly-low EV power blanked
+
+sauto returns nonsense EV power for some listings (11 kW for a BYD Dolphin Surf).
+`sanitize_ev_power()` blanks anything below `MIN_EV_POWER_KW = 20` (no modern EV is
+that weak) rather than show a wrong figure. Applied in `build_ev`.
+
+### EV Extra de-duplicated against the model name
+
+`build_ev` runs the listing suffix through `clean_ev_suffix()` before appending it
+to Extra: it strips a leading duplicate of the model name and hp/PS shorthand
+("BYD Dolphin Surf 156k COMFORT" → "COMFORT"). The hp shorthand (`\d{2,3}k`) is also
+stripped from ICE Extra by `clean_extra()` (`_HP_SHORTHAND_RE`); it never matches
+"kWh"/"kW" (no word boundary before W).
+
 ---
 
 ## core — normalize
@@ -220,6 +253,16 @@ EV body type comes from `vehicle_body_cb` (sauto) or `extract_body_type()` (auto
 - **Karoserie / Výkon (kW)** — not encoded in the reference string, so aggregated from matched listings by **mode** (`_mode_nonempty`, most-common value). Blank when a reference model has no listings. ICE keys on exact "Model auta" == auth entry; EV buckets by longest-prefix (same as `join_electric_reference`).
 - **Palivo** — ICE: listing mode → fallback `derive_fuel()` (deterministic, 100% coverage). EV: constant "Elektro".
 - **EV** engine columns (Objem motoru / Typ motoru / Hybrid typ) are always blank (N/A).
+
+### PHEV consumption blanked
+
+Plug-in hybrids' combined consumption is the official WLTP **weighted** figure
+(~1 l/100 km — assumes a fully charged battery), which is misleading as a real-world
+number. `load_combustion_reference()` blanks `Spotřeba (l/100 km)` for every
+`Hybrid typ == PHEV` row; because both the cars.json join and `build_reference_json`
+read that loaded frame, the blank propagates to both pages. The column tooltip on
+both pages explains why. The source `ice_specs.csv` keeps the WLTP value (blanking
+is build-time only). `tests/test_data_integrity.py::test_phev_consumption_blank` pins it.
 
 ### Cd column is real-or-estimated, flagged by "Cd zdroj"
 

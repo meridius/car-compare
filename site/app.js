@@ -263,7 +263,7 @@
     { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší cena, červená = vyšší." },
     { field: "Rok výroby", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = novější, červená = starší." },
     { field: "Nájezd (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší nájezd, červená = vyšší." },
-    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false, tip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
+    { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", w: 100, num: true, hi: false, tip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nU plug-in hybridů (PHEV) je prázdná: oficiální WLTP hodnota (~1 l/100 km) předpokládá nabitou baterii a je zavádějící.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = větší kufr, červená = menší." },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },

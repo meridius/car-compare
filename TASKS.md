@@ -13,34 +13,46 @@
 
 <!-- Add new tasks here, then run /tasks-triage -->
 
+- [ ] **Verze column plumbing** — rename canonical `Výbava` → `Verze` (one column, net 25 cols) and move its display position to right after `Model auta` on BOTH the main grid (`site/app.js`) and reference page (`site/reference.js`). Source of truth = matched reference row's version; unmatched/ambiguous → blank. Touch: `scrapers/core/schema.py`, `scrapers/sources/sauto.py`, `scrapers/sources/autodraft.py`, `scrapers/core/matching.py`, `build/build_data.py`, both JS files. Re-match + `verify_ui.py` both pages.
+
+- [ ] **Reference versioning (data research)** — split reference models into independent rows per version WHERE versions differ in matchable specs (EV battery/power/range — e.g. BYD Dolphin Surf Active/Boost/Comfort, Enyaq tiers); each row carries its own specs + `Verze` value. Populate `Verze` for other models where determinable (editions/trims: First Edition/Essence/Selection). Blank where unknown — do NOT invent. Add `Verze` col to `ev_specs.csv`; rename `ice_specs.csv` `Výbava`→`Verze`. Re-match all scrapes; version assigned only on confident spec match. Fan out per-brand subagents. blocked-by: Verze column plumbing.
+
 ## Needs Scoping
 
 Tasks below need your input — they are genuinely owner-only decisions (new data source, cost, or product direction). Reply directly under each Q line in chat, then run `/tasks-triage` to promote to Atomic.
 
 - [ ] **#1** add mobile.de
   > ❓ Q1: Requires browser scraping or REST API available?
+  I don't know, you investigate.
   > ❓ Q2: Czech listings only or EU-wide?
+  CZ, SK, DE, AT, PL
   > ❓ Q3: Same canonical schema, or new fields needed?
+  Same canonical schema.
 
 - [ ] **#2** widen scraping on sauto.cz and other sites
   > ❓ Q1: Which filters to relax? (price ceiling, year floor, km ceiling, body types?)
+  I don't know, tell me which you have enabled currently and let me decide.
   > ❓ Q2: Any other sites in scope besides sauto?
+  All sites currently with filters.
 
-- [ ] **#23** Průměrná cena ročního servisu za 5 let (average annual service cost over 5 years)
+- [ ] **#23** average annual service cost over 5 years
   > ❓ Q1: Should this be a scraped/enriched field on listings, a reference model spec column, or a standalone dashboard metric aggregating service cost data?
+  This should be a reference model spec column, enriched from external data sources.
   > ❓ Q2: Where is the service cost data sourced from — external API, manual reference CSV, or estimated/derived from engine type/volume?
+  Not sure yet, you investigate and propose a source.
   > ❓ Q3: Does this apply to both EV and ICE, or ICE only?
+  Both.
 
-- [ ] **#25** AI sumarizace referenčního modelu podle toho, co lidi píšou na netu: jeho +/-, spolehlivost, komfort — navrhni kvantifikaci (AI summary of reference model from web sentiment: pros/cons, reliability, comfort — propose quantification)
+- [ ] **#25** AI summary of reference model from web sentiment: pros/cons, reliability, comfort — propose quantification
   > ❓ Q1: Is the web scraping/sentiment analysis part of this task, or do you want a design proposal only for how to store + display AI-generated summaries?
   > ❓ Q2: Where should this appear — reference page, per-listing detail modal, or a separate review/sentiment dashboard?
   > ❓ Q3: Should quantified scores (reliability: 1–5, comfort: 1–5) be stored in ev_specs.csv / ice_specs.csv, or computed on-the-fly in build_data.py?
 
-- [ ] **#27** servisní interval (service interval)
+- [ ] **#27** service interval
   > ❓ Q1: Is this a scraped field from listings, a static reference model spec, or derived from engine type/fuel?
   > ❓ Q2: Should it apply to both EV and ICE?
 
-- [ ] **#31** převodovky — kvalita: eCVT dobré (řemen), CVT špatné (planetové), ZF hydraulická, AISIN, DSG mokré ne suché, planetové, mechatronické nejsou úplně dobré (transmission quality rating rules)
+- [ ] **#31** transmission quality: eCVT good (belt), CVT bad (planetary), ZF hydraulic, AISIN, DSG wet not dry, planetary, mechatronic not great (transmission quality rating rules)
   > ❓ Q1: Should transmission quality be a scored column (1–5 or Good/Fair/Poor) in ice_specs.csv, or UI-only display logic when rendering listings?
   > ❓ Q2: Where is transmission brand/subtype data sourced from — extracted from listings, enriched in reference CSVs, or matched via a new lookup table? (Current listings don't reliably distinguish wet/dry DSG, eCVT/CVT.)
 
@@ -59,7 +71,7 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [ ] **#3** split "Model auta" col into "Značka" + "Model" displayed in that order
   > flow:feature-dev · model:sonnet · effort:medium
-  > 📌 assumes: emit "Značka" + "Model" as separate display fields from build_data.py (Značka then Model); keep "Model auta" as the matching/enrichment key (unchanged).
+  > emit "Značka" + "Model" as separate display fields from build_data.py (Značka then Model); remove "Model auta" col
 
 - [ ] **#4** "Model auta" should not contain Objem motoru / Typ motoru values
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #3

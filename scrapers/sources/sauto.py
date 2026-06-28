@@ -8,6 +8,7 @@ from scrapers.core.fields import (
     extract_body_type, extract_engine_volume, extract_engine_type,
     extract_hybrid_type, extract_trim, extract_warranty, extract_dct,
     extract_particle_filter, extract_awd, clean_extra,
+    sanitize_engine_volume, sanitize_ev_power, clean_ev_suffix,
 )
 
 SOURCE_NAME = "Sauto.cz"
@@ -80,11 +81,36 @@ def _common(item):
     return model_base, suffix, price, mileage, year
 
 
+# Below this, under our year(>=2021)/mileage(<=100k) filters, a figure is never a
+# real purchase price — it's a buyout fee / akontace / monthly scheme.
+MIN_PRICE_KC = 100000
+
+
+def _is_valid_purchase(price, detail):
+    """Reject operating-lease takeovers and deposit-only 'prices'.
+
+    Operating-lease takeovers slip past the `operating_lease=false` search filter;
+    their detail carries a monthly-payment scheme (price_payment_count) or a buyout
+    compensation (price_original_compensation), e.g. the Nissan X-Trail listed at
+    12 023 Kč. A sub-MIN_PRICE_KC figure is the backstop for the rest (Lexus RX
+    17 009, Dodge Durango 60 500).
+    """
+    if (detail.get("price_payment_count") or detail.get("price_original_compensation")
+            or detail.get("price_leasing")):
+        return False
+    try:
+        return float(price) >= MIN_PRICE_KC
+    except (TypeError, ValueError):
+        return True  # no parseable price → don't drop on the floor
+
+
 def build_ev(item, detail):
     """EV canonical row (port of electric/src/scrape_sauto.py build_record)."""
     if not detail:
         return None
     model_base, suffix, price, mileage, year = _common(item)
+    if not _is_valid_purchase(price, detail):
+        return None
     battery_kw = detail.get("battery_capacity") or ""
     vehicle_range = detail.get("vehicle_range") or ""
     if re.search(r'\bEnyaq\b', model_base, re.IGNORECASE) and suffix:
@@ -104,14 +130,15 @@ def build_ev(item, detail):
         extra_parts.append(f"Dojezd {vehicle_range} km")
     if battery_kw:
         extra_parts.append(f"Baterie {battery_kw} kWh")
-    if suffix:
-        extra_parts.append(suffix)
+    suffix_clean = clean_ev_suffix(suffix, model_base)
+    if suffix_clean:
+        extra_parts.append(suffix_clean)
 
     row = schema.blank_row()
     row.update({
         "Typ": schema.TYP_EV,
         "Model auta": model_base, "Cena (Kč)": price, "Nájezd (km)": mileage,
-        "Výkon (kW)": detail.get("engine_power") or "", "Rok výroby": year,
+        "Výkon (kW)": sanitize_ev_power(detail.get("engine_power")), "Rok výroby": year,
         "Palivo": "Elektro", "Tepelné čerpadlo": "Ano",
         "Náhon 4x4": "Ano" if AWD_RE.search(drive_name) else "Ne",
         "Karoserie": body_api or extract_body_type(model_base),
@@ -133,6 +160,8 @@ def build_ice(item, detail):
     if "Havarované" in condition:
         return None
     model_base, suffix, price, mileage, year = _common(item)
+    if not _is_valid_purchase(price, detail):
+        return None
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
     awd = "Ano" if AWD_RE.search(drive_name) else "Ne"
     if awd == "Ne" and extract_awd(suffix) == "Ano":
@@ -146,6 +175,9 @@ def build_ice(item, detail):
         engine_volume = str(raw)
     else:
         engine_volume = extract_engine_volume(suffix)
+    # Guard against bad source data (sauto: 14.9 l for a Kia XCeed, 14 l for a
+    # KGM Korando). Recover from the model name, else blank.
+    engine_volume = sanitize_engine_volume(engine_volume, model_base + " " + suffix)
     body_api = (detail.get("vehicle_body_cb") or {}).get("name", "")
     body_type = body_api or extract_body_type(model_base + " " + suffix)
     extra_text = suffix if suffix else ""

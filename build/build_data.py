@@ -204,6 +204,11 @@ def load_combustion_reference():
     path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
     df = pd.read_csv(path)
     df["Spotřeba (l/100 km)"] = df["Spotřeba (l/100 km)"].apply(parse_czech_decimal)
+    # PHEV combined consumption is the official WLTP weighted figure (~1 l/100 km,
+    # assumes a charged battery) — misleading as a real-world number, so blank it.
+    # Blanking here propagates to both cars.json (join) and reference.json.
+    if "Hybrid typ" in df.columns:
+        df.loc[df["Hybrid typ"].astype(str).str.upper() == "PHEV", "Spotřeba (l/100 km)"] = None
     return df
 
 def load_electric_reference():
@@ -518,6 +523,13 @@ def main():
 
     print("Backfilling body/fuel for overview...")
     df = backfill_body_fuel(df)
+
+    # PHEV combined consumption is the misleading official WLTP weighted figure
+    # (~1 l/100 km, assumes a charged battery). Blank it on every PHEV-tagged row
+    # — this also covers listings mismatched to a non-PHEV reference (whose
+    # Spotřeba the reference-side blank in load_combustion_reference wouldn't catch).
+    if "Hybrid typ" in df.columns and "Spotřeba (l/100 km)" in df.columns:
+        df.loc[df["Hybrid typ"].astype(str).str.upper() == "PHEV", "Spotřeba (l/100 km)"] = None
 
     numeric_cols = [
         "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
