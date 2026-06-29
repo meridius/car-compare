@@ -9,7 +9,7 @@ Spalovací,Alfa Romeo Stelvio 2.0 GME,726000,6319,2023,Benzín,2.0,,,206,Automat
 Spalovací,Alfa Romeo Stelvio 2.2 JTDM,599999,54723,2021,Nafta,2.1,,,140,Automatická,,,,Ne,SUV,,,,Ano,6,JTDM,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/209481567
 Spalovací,Alfa Romeo Stelvio 2.0 GME,734999,29228,2023,Benzín,2.0,,,206,Automatická,,,,Ano,SUV,,,,Ano,6,Ti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/209740011
 Spalovací,Alfa Romeo Stelvio 2.2 JTDM,538900,80930,2021,Nafta,2.1,,,140,Automatická,,,,Ano,SUV,,,,Ano,6,JTD Q4 Bezklíč KAM.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/209843286
-Spalovací,Alfa Romeo Stelvio 2.2 JTDM,690000,48000,2023,Nafta,2.2,,,154,Automatická,,,,Ano,SUV,,,,Ano,6,Super Facelift,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/210301418
+Spalovací,Alfa Romeo Stelvio 2.2 JTDM,690000,48000,2023,Nafta,2.2,,,154,Automatická,,,,Ano,SUV,,,,Ano,6,Super Facelift,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/210301418
 Spalovací,Alfa Romeo Stelvio 2.0 GME,599900,57900,2021,Benzín,2.0,,,206,Automatická,,,,Ano,SUV,,,,Ano,6,280 HP Veloce 8AT Q4,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/stelvio/210613085
 Spalovací,Alfa Romeo Tonale 1.5,705430,34956,2023,Benzín,1.5,,,118,Automatická,,,,Ne,SUV,,,,Ano,6,VELOCE*Kamera*Alcantara*,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/alfa-romeo/tonale/210215669
 Spalovací,Audi A1 2.0 TFSI,674999,19352,2023,Benzín,2.0,TFSI,,152,Automatická,,,,Ne,Hatchback,S Line,,,Ano,8,40 Sportback,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/a1/207600445
@@ -42,7 +42,7 @@ Elektrické,Audi e-tron,658000,47650,2022,Elektro,,,,230,,,,,Ano,SUV,,,Ano,,,Doj
 Elektrické,Audi e-tron,699990,95580,2021,Elektro,,,,230,,,,,Ano,SUV,,,Ano,,,Baterie 71 kWh / 50 QUATTRO 230kw 20ALU SOH100%,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/e-tron/210271316
 Spalovací,Audi Q2 35 TFSI,679000,30000,2024,Benzín,1.5,TFSI,,110,Automatická,,,,Ne,SUV,S Line,,,Ano,8,35,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/208611500
 Spalovací,Audi Q2 35 TFSI,539900,69417,2023,Benzín,1.5,TFSI,,110,Automatická,,,,Ne,SUV,,,,Ano,8,Advanced 7Stronic,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/210082061
-Spalovací,Audi Q2 35 TFSI,569900,36276,2023,Benzín,1.5,TFSI,,109,Automatická,,,,Ne,SUV,,,,Ano,8,Advanced 35 Stronic,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/210292322
+Spalovací,Audi Q2 35 TFSI,569900,36276,2023,Benzín,1.5,TFSI,,109,Automatická,,,,Ne,SUV,,,,Ano,8,Advanced 35 Stronic,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/210292322
 Spalovací,Audi Q2 40 TFSI Quattro,569000,25100,2022,Nafta,2.0,,,110,Automatická,,,,Ano,SUV,Quattro,,,Ano,4,"NAVI,KAMERA",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/210426470
 Spalovací,Audi Q2 35 TFSI,729999,7141,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,CUV,S-Line,,,Nejisté,0,35TFSI NAV,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q2/210576890
 Spalovací,Audi Q3 35 TFSI,699990,31781,2021,Benzín,2.0,TSI,,140,Automatická,,,,Ano,SUV,,,,Ano,2,Advanced,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/audi/q3/202744255
@@ -205,8 +205,8 @@ Elektrické,BMW i3,499000,77500,2021,Elektro,,,,135,,,,,Ne,Sedan/limuzína,,,Ano
 Elektrické,BMW i3,565000,39000,2022,Elektro,,,,135,,,,,Ne,Sedan/limuzína,,,Ano,,,Dojezd 283 km / Baterie 42 kWh / PRODÁNO,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/209308113
 Elektrické,BMW i3,629000,31779,2021,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,"Dojezd 285 km / Baterie 42 kWh / i3s 120Ah, H/K, Navi profi",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/209746152
 Elektrické,BMW i3,569000,17900,2022,Elektro,,,,125,,,,,Ne,Hatchback,,,Ano,,,"Baterie 42 kWh / 120Ah / 42,2kWh / 17.900km",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210586277
-Elektrické,BMW i3,634999,59100,2022,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,Dojezd 281 km / Baterie 42 kWh / i3s 120Ah SUITE H/K KAMERA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210610058
-Elektrické,BMW i3,619999,54900,2021,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,Dojezd 281 km / Baterie 42 kWh / i3s 120Ah SUITE H/K KAMERA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210611051
+Elektrické,BMW i3,634999,59100,2022,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,Dojezd 281 km / Baterie 42 kWh / i3s 120Ah SUITE H/K NAVI PROF,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210610058
+Elektrické,BMW i3,619999,54900,2021,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,Dojezd 281 km / Baterie 42 kWh / i3s 120Ah SUITE H/K NAVI PROF,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210611051
 Elektrické,BMW i3,580000,58900,2022,Elektro,,,,135,,,,,Ne,Hatchback,,,Ano,,,Baterie 42 kWh,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/i3/210620870
 Spalovací,BMW 3 2.0,664296,57398,2022,Benzín,2.0,,,120,Automatická,,,,Ne,Kombi,,,,Ano,1,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/ostatni/210444620
 Spalovací,BMW 1 2.0,568000,73800,2021,Nafta,2.0,,,110,Automatická,,,,Ne,Hatchback,,,,Ano,4,118d Sport Line,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/204706650
@@ -219,7 +219,7 @@ Spalovací,BMW 1 2.0,679000,80400,2022,Benzín,2.0,,,195,Automatická,,,,Ne,Hatc
 Spalovací,BMW 1 1.5,445000,60514,2022,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i A7 Advantage LED+HiFi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210053462
 Spalovací,BMW 1 2.0,599000,75550,2023,Benzín,2.0,,,131,Automatická,,,,Ne,Hatchback,,,,Ano,6,120i M Sport Virtual Pano LED,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210299978
 Spalovací,BMW 1 1.5,488000,80000,2021,Benzín,1.5,,,103,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210498734
-Spalovací,BMW 1 1.5,429000,99666,2021,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210521444
+Spalovací,BMW 1 1.5,399000,99666,2021,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210521444
 Spalovací,BMW 1 1.5,469000,88673,2021,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,Sportline,,,Ano,6,118i AUT**FullLED*DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210538574
 Spalovací,BMW 1 1.5,649000,26763,2023,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210676817
 Spalovací,BMW 1 1.5,649000,29936,2023,Benzín,1.5,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,118i,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/rada-1/210676826
@@ -364,7 +364,7 @@ Spalovací,Chevrolet Equinox 1.5T AWD,380000,98360,2021,Nafta,1.6,,,102,Automati
 Spalovací,Chevrolet Equinox 1.5T AWD,399000,23485,2023,Benzín,1.5,,,127,Automatická,,,,Ano,Kombi,,,,Ano,1,"i , Automat, Navi",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/chevrolet/equinox/209234190
 Spalovací,Chevrolet TrailBlazer AWD 1.3,599000,39920,2023,Benzín,1.3,,,115,Automatická,,,,Ano,SUV,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/chevrolet/ostatni/198444262
 Spalovací,Citroën C3 Aircross 1.2,589900,5,2026,Benzín,1.2,,HEV,107,Automatická,,,,Ne,SUV,,,,Ano,5,Hybrid Automatic MAX,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c3-aircross/210122780
-Spalovací,Citroën C4 1.2 PureTech,559900,2,2026,Benzín,1.2,,,100,Automatická,,,,Ne,Hatchback,,,,Nejisté,1,PLUS Automatic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c4/209128839
+Spalovací,Citroën C4 1.2 PureTech,549900,2,2026,Benzín,1.2,,,100,Automatická,,,,Ne,Hatchback,,,,Nejisté,1,PLUS Automatic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c4/209128839
 Spalovací,Citroën C4 1.2 PureTech,579000,6000,2025,Benzín,1.2,,HEV,107,Automatická,,,,Ne,Hatchback,,,,Nejisté,0,C4 MAX Hybrid Automatic,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c4/209467845
 Spalovací,Citroën C4 1.2 PureTech,625000,2,2026,Benzín,1.2,,HEV,107,Automatická,,,,Ne,Hatchback,,,,Nejisté,0,MAX Hybrid Automatic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c4/210149147
 Spalovací,Citroën C4 1.2 PureTech,612901,5,2026,Benzín,1.2,,HEV,100,Automatická,,,,Ne,Hatchback,,,,Nejisté,0,Hybrid145kAutomaCOLLECTION,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/c4/210334310
@@ -416,7 +416,7 @@ Spalovací,Cupra Ateca 1.5 TSI,744900,,2026,Benzín,1.5,TSI,,110,Automatická,,,
 Spalovací,Cupra Ateca 1.5 TSI,679900,22600,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/209929464
 Spalovací,Cupra Ateca 1.5 TSI,684000,31812,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/209995773
 Spalovací,Cupra Ateca 1.5 TSI,669999,21465,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210038949
-Spalovací,Cupra Ateca 1.5 TSI,688900,21425,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210042447
+Spalovací,Cupra Ateca 1.5 TSI,688900,21425,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210042447
 Spalovací,Cupra Ateca 1.5 TSI,699900,22132,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210076748
 Spalovací,Cupra Ateca 1.5 TSI,687999,19323,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210100730
 Spalovací,Cupra Ateca 2.0 TSI 4Drive,729630,45635,2024,Benzín,2.0,TSI,PHEV,140,Automatická,Ano,,,Ano,SUV,,,,Ano,7,4Drive |*Kamera*,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/cupra/ateca/210207425
@@ -901,7 +901,7 @@ Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,596890,9,2026,Benzín,1.6,T-GDI,,110
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,566890,9,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,7,WG GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209885814
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,566890,9,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,7,WG GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209885817
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,585890,1925,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,7,GO CZECH,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209917695
-Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,379900,81303,2021,Benzín,1.5,T-GDI,MHEV,117,Manuální,,,,Ne,Liftback,Style,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209918391
+Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,349900,81303,2021,Benzín,1.5,T-GDI,MHEV,117,Manuální,,,,Ne,Liftback,Style,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209918391
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,579900,3100,2025,Benzín,1.5,,,103,,,,,Ne,Kombi,N Line,,,Ano,5,Go Czech,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209923050
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,514900,23957,2025,Benzín,1.5,T-GDI,,103,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209925417
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,596890,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,7,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/209927139
@@ -1019,7 +1019,7 @@ Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,484900,15971,2025,Benzín,1.5,T-GDI,
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,569900,7109,2025,Benzín,1.5,T-GDI,,103,Automatická,Ano,,,Ne,Kombi,N-Line,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210471560
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,555890,5,2026,Benzín,1.5,T-GDI,,110,Automatická,Ano,,,Ne,Hatchback,,,,Ano,5,26 HB GO CZECH,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210473189
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,570000,11780,2025,Benzín,1.5,T-GDI,,103,Automatická,,,,Ne,Kombi,N Line,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210473222
-Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,362009,84769,2021,Benzín,1.5,,,118,Automatická,,,,Ne,Hatchback,,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210476198
+Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,362009,84769,2021,Benzín,1.5,,,118,Automatická,,,,Ne,Hatchback,,,,Ano,3,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210476198
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,575000,1700,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,7,,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210480986
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,484999,19128,2025,Benzín,1.5,T-GDI,MHEV,103,Automatická,,,,Ne,Kombi,,,,Ano,11,Smart,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210484682
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,652348,46172,2021,Benzín,2.0,,,206,Manuální,,,,Ne,Hatchback,,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210500927
@@ -1093,7 +1093,7 @@ Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,399000,52898,2021,Benzín,1.5,,,118,M
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,629900,65661,2022,Benzín,2.0,TGDI,,206,Manuální,,,,Ne,Liftback,,,,Ano,2,N Performance,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210659069
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,729990,47712,2022,Benzín,2.0,T-GDI,PHEV,206,Automatická,,,,Ne,Hatchback,,,,Ano,4,DRIVE N,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210659795
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,389000,91923,2021,Benzín,1.5,T-GDI,,117,Automatická,Ano,,,Ne,Hatchback,,,,Ano,5,MildH Family,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210660377
-Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,388000,36316,2023,Benzín,1.5,T-GDI,MHEV,117,Automatická,Ano,,,Ne,Kombi,,,,Ano,11,Smart,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210664907
+Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,388000,36316,2023,Benzín,1.5,T-GDI,MHEV,117,Automatická,Ano,,,Ne,Kombi,,,,Ano,11,Smart,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210664907
 Spalovací,Hyundai i30 Hatchback 1.0 T-GDI,597512,5,2025,Benzín,1.5,T-GDI,,103,Automatická,,,,Ne,Liftback,,,,Ano,5,GO NLINE! AT,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210666716
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,558890,10,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,7,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210670424
 Spalovací,Hyundai i30 Kombi 1.5 T-GDI MHEV,579990,1000,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,7,SMART,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/i30/210678809
@@ -1184,7 +1184,7 @@ Spalovací,Hyundai Kona 1.0 T-GDI,680889,,2026,Benzín,1.6,T-GDI,,110,Automatick
 Spalovací,Hyundai Kona 1.0 T-GDI,700889,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210380552
 Spalovací,Hyundai Kona 1.0 T-GDI,687890,5,2025,Benzín,1.6,TGDI,,102,Manuální,,,,Ne,SUV,Style,,,Ano,2,MT LP TT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210380996
 Spalovací,Hyundai Kona 1.0 T-GDI,569900,31678,2024,Benzín,1.6,T-GDI,,145,Automatická,,,,Ne,SUV,N-Line,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210394898
-Elektrické,Hyundai Kona,689900,27000,2024,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"Dojezd 484 km / Baterie 64 kWh / 64KWH-150KW,REZERVACE",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210401585
+Elektrické,Hyundai Kona,689900,27000,2024,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"Dojezd 484 km / Baterie 64 kWh / 64KWH-150KW,REZERVACE",Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210401585
 Spalovací,Hyundai Kona 1.0 T-GDI,695890,10,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Ano,5,27 MT SMART TECH,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210452303
 Spalovací,Hyundai Kona 1.0 T-GDI,639000,10,2026,Benzín,1.6,TGDI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,2,7 SMART TECH,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210452777
 Spalovací,Hyundai Kona 1.0 T-GDI,639900,10,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Ano,5,2WD NLINE TECH,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210455903
@@ -1385,7 +1385,7 @@ Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,722890,5,2026,Benzín,1.6,TGDI,,110,Aut
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,707890,5,2026,Benzín,1.6,TGDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,4,GO CZECH PLUS,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210059759
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,399000,47000,2021,Benzín,1.6,,,110,Manuální,,,,Ne,SUV,,,,Nejisté,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210068858
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,749980,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,GO Czech! P,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210071423
-Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,664990,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210072008
+Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,664990,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210072008
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,709890,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210073589
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,699990,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210073706
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,730000,10907,2025,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,N-Line,,,Nejisté,7,N- Line,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210075881
@@ -1400,7 +1400,7 @@ Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,717890,,2026,Benzín,1.6,T-GDI,,110,Aut
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,705000,1500,2025,Benzín,1.6,TGDI,,118,Manuální,,,,Ne,SUV,N Line,,,Nejisté,4,6MT 4x2,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133727
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,709890,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133814
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,664990,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133862
-Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,664990,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133898
+Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,664990,,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133898
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,699990,,2026,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,GO Czech!,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210133964
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,579900,28422,2023,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,SUV,,,,Nejisté,7,Smart Navi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210136142
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,689000,2100,2025,Benzín,1.6,TGDI,,118,Manuální,,,,Ne,SUV,,,,Nejisté,4,MT EDICE 20YEARS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210138638
@@ -1512,7 +1512,7 @@ Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,649490,78177,2021,Benzín,1.6,,,169,Aut
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,549900,53100,2023,Benzín,1.6,T-GDI,,110,Automatická,,,,Ne,SUV,,,,Nejisté,7,Smart,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210477920
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,579000,32645,2022,Benzín,1.6,T-GDI,MHEV,110,Automatická,,,,Ne,SUV,N-Line,,,Ano,11,Č,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210480836
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,740000,1700,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,N Line,,,Nejisté,7,6MT GO CZECH,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210481361
-Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,689900,7599,2025,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,REZERVACE,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210489782
+Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,689900,7599,2025,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,REZERVACE,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210489782
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,706890,10,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,SUV,,,,Nejisté,7,TU 26 2WD GO,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210490049
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,744890,10,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,N Line,,,Nejisté,7,TU 26 MT GO,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210490157
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,684890,10,2026,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,,,,Nejisté,7,TU 26 2WD MT GO CZECH +,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210490316
@@ -1564,7 +1564,7 @@ Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,539900,63139,2023,Benzín,1.6,T-GDI,MHE
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,569900,59485,2024,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,N-Line,,,Nejisté,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210583664
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,579900,41139,2023,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,SUV,N-Line,,,Nejisté,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210583685
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,519000,34300,2021,Benzín,1.6,T-GDI,,110,Manuální,,,,Ne,SUV,N-Line,,,Nejisté,7,"i , ČR",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210585050
-Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,449000,55700,2021,Benzín,1.6,T-GDI,,110,Manuální,,,,Ano,SUV,,,,Nejisté,7,SMART,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210585161
+Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,449000,55700,2021,Benzín,1.6,T-GDI,,110,Manuální,,,,Ano,SUV,,,,Nejisté,7,SMART,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210585161
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,489900,99343,2021,Nafta,1.6,CRDi,,100,Automatická,,,,Ano,SUV,Style,,,Nejisté,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210585395
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,738608,1,2026,Benzín,1.6,,,110,Automatická,,,,Ne,SUV,,,,Nejisté,5,GO CZECH! - limitovaná edice -,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210585749
 Spalovací,Hyundai Tucson 1.6 T-GDI MHEV,499900,78522,2022,Benzín,1.6,T-GDI,MHEV,110,Automatická,,,,Ne,SUV,Style,,,Ano,11,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/tucson/210586805
@@ -1843,7 +1843,7 @@ Spalovací,Kia Ceed SW 1.5 T-GDI,589980,5,2025,Benzín,1.5,T-GDI,,103,Manuální
 Spalovací,Kia Ceed SW 1.5 T-GDI,564900,5951,2026,Benzín,1.5,T-GDI,,103,Automatická,Ano,,,Ne,Kombi,SPIN,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210420224
 Spalovací,Kia Ceed SW 1.5 T-GDI,594900,833,2026,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Kombi,TOP,,,Ano,8,+ paket Business,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210494735
 Spalovací,Kia Ceed SW 1.5 T-GDI,564900,3050,2026,Benzín,1.5,T-GDI,,103,Automatická,Ano,,,Ne,Kombi,SPIN,,,Ano,8,automat,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210597512
-Spalovací,Kia Ceed SW 1.5 T-GDI,488980,27432,2024,Benzín,1.5,T-GDI,,103,Manuální,,Ano,,Ne,Kombi,,,,Ano,8,CD EDICE,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210670727
+Spalovací,Kia Ceed SW 1.5 T-GDI,488980,27432,2024,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Kombi,,,,Ano,8,CD EDICE 30,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210670727
 Spalovací,Kia Ceed SW 1.5 T-GDI,489900,4511,2024,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Kombi,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210679943
 Spalovací,Kia Ceed SW 1.5 T-GDI,489900,3065,2024,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Kombi,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210680408
 Spalovací,Kia Ceed SW 1.5 T-GDI,514900,478,2025,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Kombi,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d-sw/210680807
@@ -1969,7 +1969,7 @@ Spalovací,Kia Ceed SW 1.5 T-GDI,369000,98068,2022,Nafta,1.6,CRDi,,100,Manuáln�
 Spalovací,Kia Ceed SW 1.5 T-GDI,455000,68129,2024,Benzín,1.5,TGDI,,118,Automatická,,,,Ne,Kombi,TOP,,,Ano,5,AT ZÁRUKA CARPLAY,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210558407
 Spalovací,Kia Ceed SW 1.5 T-GDI,328000,90500,2022,Benzín,1.5,,,118,Manuální,,,,Ne,Kombi,,,,Ano,6,1. MAJITEL,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210565004
 Spalovací,Kia Ceed SW 1.5 T-GDI,419000,66028,2023,Benzín,1.5,T-GDI,,117,Manuální,,,,Ne,Kombi,TOP,,,Ano,8,6MP-klima,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210566657
-Spalovací,Kia Ceed Hatchback 1.5 T-GDI,449900,25200,2023,Benzín,1.5,T-GDI,,118,Automatická,Ano,,,Ne,Hatchback,TOP,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210567344
+Spalovací,Kia Ceed Hatchback 1.5 T-GDI,449900,25200,2023,Benzín,1.5,T-GDI,,118,Automatická,Ano,,,Ne,Hatchback,,,,Ano,8,zadáno,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210567344
 Spalovací,Kia Ceed SW 1.5 T-GDI,455000,65458,2024,Benzín,1.5,TGDI,,118,Automatická,,,,Ne,Kombi,TOP,,,Ano,5,AT KAMERA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210574709
 Spalovací,Kia Ceed SW 1.5 T-GDI,570000,14173,2025,Benzín,1.5,T-GDI,,103,Automatická,,,,Ne,Kombi,TOP,,,Ano,8,Full LED,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210575483
 Spalovací,Kia Ceed SW 1.5 T-GDI,349000,58981,2021,Benzín,1.5,T-GDI,,117,Manuální,,,,Ne,Kombi,,,,Ano,8,6°MP,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210584492
@@ -1994,13 +1994,13 @@ Spalovací,Kia Ceed SW 1.5 T-GDI,620000,14839,2025,Benzín,1.5,T-GDI,,103,Automa
 Spalovací,Kia Ceed SW 1.5 T-GDI,549800,9950,2023,Benzín,1.5,,,117,Automatická,Ano,,,Ne,Kombi,,,,Ano,6,SW GT- LINE 7,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210668474
 Spalovací,Kia Ceed SW 1.5 T-GDI,570000,11205,2025,Benzín,1.5,T-GDI,,103,Automatická,,,,Ne,Kombi,TOP,,,Ano,8,DPH,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210668720
 Spalovací,Kia Ceed SW 1.6 GDI PHEV,449000,64701,2024,Benzín,1.5,GDI,,118,Automatická,,,,Ne,Kombi,TOP,,,Ano,7,T -,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210672107
-Spalovací,Kia Ceed SW 1.5 T-GDI,379900,44537,2023,Benzín,1.5,T-GDI,,117,Manuální,,,,Ne,Kombi,SPIN,,,Ano,8,1,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210672764
+Spalovací,Kia Ceed SW 1.5 T-GDI,379900,44537,2023,Benzín,1.5,T-GDI,,117,Manuální,,,,Ne,Kombi,SPIN,,,Ano,8,1,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210672764
 Spalovací,Kia Ceed Hatchback 1.5 T-GDI,349900,68217,2023,Benzín,1.5,T-GDI,,117,Manuální,,,,Ne,Hatchback,SPIN,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210674804
 Spalovací,Kia Ceed Hatchback 1.5 T-GDI,319000,57300,2021,Benzín,1.5,T-GDI,,118,Manuální,,,,Ne,Hatchback,,,,Ano,8,"2021,TZ,1.MAJ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210677918
 Spalovací,Kia Ceed Hatchback 1.5 T-GDI,494900,467,2025,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Hatchback,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210677966
 Spalovací,Kia Ceed Hatchback 1.5 T-GDI,469900,6068,2024,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Hatchback,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210678611
 Spalovací,Kia Ceed Hatchback 1.5 T-GDI,469900,4727,2024,Benzín,1.5,T-GDI,,103,Manuální,,,,Ne,Hatchback,SPIN,,,Ano,8,2025 SLEVA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210679004
-Spalovací,Kia Ceed SW 1.5 T-GDI,349900,63000,2022,Benzín,1.5,TGDI,,117,Manuální,,,,Ne,Kombi,SPIN,,,Ano,5,CZ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210680672
+Spalovací,Kia Ceed SW 1.5 T-GDI,349900,63000,2022,Benzín,1.5,TGDI,,117,Manuální,,,,Ne,Kombi,SPIN,,,Ano,5,CZ,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210680672
 Spalovací,Kia Ceed SW 1.5 T-GDI,370000,42214,2022,Benzín,1.5,T-GDI,,118,Manuální,,,,Ne,Kombi,,,,Ano,8,"Silver, Serv.kniha",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210685868
 Elektrické,Kia EV2,699000,5,2026,Elektro,,,,107,,,,,Ne,Hatchback,,,Ano,,,"EV2 Air 42,2kWh+HEAT+WINT",Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev2/210383996
 Elektrické,Kia EV2,679000,5,2026,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"42,2 kWh AIR+HEAT+WINT",Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ev2/210610226
@@ -2119,7 +2119,7 @@ Spalovací,Kia K4 2.0 MPI,656980,5,2026,Benzín,1.6,T-GDI,PHEV,110,Automatická,
 Spalovací,Kia K4 2.0 MPI,742980,5,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,Kombi,TOP,,,Nejisté,-2,CL4 + A17,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/k4/210676271
 Spalovací,Kia K4 2.0 MPI,669980,5,2026,Benzín,1.6,T-GDI,PHEV,110,Automatická,Ano,,,Ne,Kombi,,,,Nejisté,-3,EXCLUSIV,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/k4/210679493
 Spalovací,Kia K4 2.0 MPI,739980,5,2025,Benzín,1.6,T-GDI,,132,Automatická,Ano,Ano,,Ne,Hatchback,TOP,,,Nejisté,-2,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/k4/210685637
-Elektrické,Kia Niro EV,579000,34000,2021,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"Dojezd 484 km / Baterie 64 kWh / 64 kWh, NOVÁ STK",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/niro-ev/210667616
+Elektrické,Kia Niro EV,579000,34000,2021,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"Dojezd 484 km / Baterie 64 kWh / SPIRIT 64 kWh, SOH 97,4%",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/niro-ev/210667616
 Spalovací,Kia Niro 1.6 GDI HEV,499900,44804,2022,Benzín,1.6,T-GDI,,104,Automatická,,,,Ne,Hatchback,Style,,,Nejisté,-1,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/niro/210344522
 Elektrické,Kia EV2,699980,5,2026,Elektro,,,,108,,,,,Ne,Hatchback,,,Ano,,,Baterie 42 kWh,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210137921
 Elektrické,Kia EV2,699900,2000,2026,Elektro,,,,108,,,,,Ne,SUV,,,Ano,,,Dojezd 315 km / Baterie 42 kWh,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/ostatni/210146093
@@ -2235,7 +2235,7 @@ Spalovací,Kia Sportage 1.6 T-GDI MHEV,639900,15125,2024,Benzín,1.6,,,117,Manu�
 Spalovací,Kia Sportage 1.6 T-GDI MHEV,599980,,2026,Benzín,1.6,T-GDI,,110,,,,,Ne,SUV,Comfort,,,Nejisté,7,4x2,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/209930697
 Spalovací,Kia Sportage 1.6 T-GDI MHEV,579900,65358,2022,Benzín,1.6,T-GDI,,132,Automatická,Ano,,,Ano,SUV,,,,Nejisté,7,Exclus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/209972232
 Spalovací,Kia Sportage 1.6 T-GDI MHEV,629000,61043,2023,Benzín,1.6,T-GDI,,110,Automatická,Ano,,,Ne,SUV,TOP,,,Nejisté,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/209979627
-Spalovací,Kia Sportage 1.6 T-GDI MHEV,414900,51122,2021,Nafta,1.6,CRDi,,100,Manuální,,,,Ne,SUV,,,,Nejisté,2,QL / SCR 4x2 TO,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/209981952
+Spalovací,Kia Sportage 1.6 T-GDI MHEV,399900,51122,2021,Nafta,1.6,CRDi,,100,Manuální,,,,Ne,SUV,,,,Nejisté,2,QL / SCR 4x2 TO,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/209981952
 Spalovací,Kia Sportage 1.6 T-GDI MHEV,489900,66664,2021,Nafta,1.6,,,100,Automatická,,,,Ano,SUV,GT-Line,,,Nejisté,3,--1.majitel- STAV,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/210006672
 Spalovací,Kia Sportage 1.6 T-GDI MHEV,379999,95300,2021,Nafta,1.6,CRDi,,100,Manuální,,,,Ne,SUV,,,,Nejisté,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/210007938
 Spalovací,Kia Sportage 1.6 T-GDI PHEV,680000,13431,2025,Benzín,1.6,T-GDI,PHEV,110,Automatická,,,,Ne,SUV,Exclusive,,,Ano,11,Exclusiv,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/sportage/210021117
@@ -2607,7 +2607,7 @@ Spalovací,Mercedes-Benz Třídy A Hatchback 180,649000,48478,2021,Benzín,1.3,,
 Spalovací,Mercedes-Benz Třídy A Hatchback 180,549900,52970,2021,Benzín,1.3,,,100,Automatická,,,,Ne,Hatchback,,,,Ano,6,180 AMG AUTOMAT KŮŽE NAVI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/208915992
 Spalovací,Mercedes-Benz Třídy A Sedan 180,659000,78520,2022,Benzín,1.3,,,120,Automatická,,,,Ano,Sedan/limuzína,,,,Ano,6,A 200 L*AMG,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/208919502
 Spalovací,Mercedes-Benz Třídy A Hatchback 180,652190,50917,2023,Benzín,1.3,,PHEV,120,Automatická,,,,Ne,Hatchback,,,,Ano,5,A 200 Progressive,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209076426
-Spalovací,Mercedes-Benz Třídy A Hatchback 180,645000,30000,2023,Nafta,1.9,,,110,Automatická,,,,Ne,Hatchback,,,,Ano,1,200d AMG CarPlay,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209621646
+Spalovací,Mercedes-Benz Třídy A Hatchback 180,645000,30000,2023,Nafta,1.9,,,110,Automatická,,,,Ne,Hatchback,,,,Ano,1,200d AMG CarPlay,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209621646
 Spalovací,Mercedes-Benz Třídy A Hatchback 180,689000,46028,2024,Nafta,1.9,,,110,Automatická,,,,Ne,Hatchback,,,,Ano,1,"A200D,NIGHT,AMG,ČR,DPH,ZÁRUKA",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209795856
 Spalovací,Mercedes-Benz Třídy A Hatchback 180,652190,32363,2023,Benzín,1.3,,PHEV,120,Automatická,,,,Ne,Hatchback,,,,Ano,5,A 200 Progressive,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209836062
 Spalovací,Mercedes-Benz Třídy A Hatchback 180,641300,25272,2024,Benzín,1.3,,,120,Automatická,,,,Ne,Hatchback,,,,Ano,6,"A 200, 1.majitel, CZ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/tridy-a/209857848
@@ -2697,7 +2697,7 @@ Spalovací,MG HS 1.5 T-GDI,679900,,2025,Benzín,1.5,,,125,Automatická,Ano,,,Ne,
 Spalovací,MG HS 1.5 T-GDI,669000,26,2024,Benzín,1.5,T-GDI,,119,Automatická,,,,Ne,Hatchback,,,,Ano,3,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210071459
 Spalovací,MG HS 1.5 T-GDI,444447,5869,2023,Benzín,1.5,,,119,Manuální,,,,Ne,SUV,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210178265
 Spalovací,MG HS 1.5 T-GDI,599900,14950,2024,Benzín,1.5,,,125,Manuální,,,,Ne,SUV,,,,Ano,6,T TGI EMOTION MAN6*DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210240317
-Spalovací,MG HS 1.5 T-GDI,690000,1500,2026,Benzín,1.5,,PHEV,125,Automatická,Ano,,,Ne,SUV,Exclusive,,,Ano,5,TGi,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210275867
+Spalovací,MG HS 1.5 T-GDI,690000,6000,2026,Benzín,1.5,,PHEV,125,Automatická,Ano,,,Ne,SUV,Exclusive,,,Ano,5,TGi,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210275867
 Spalovací,MG HS 1.5 T-GDI,637053,22049,2025,Benzín,1.5,,,125,Automatická,,,,Ne,SUV,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210278615
 Spalovací,MG HS 1.5 T-GDI,679900,4500,2025,Benzín,1.5,,PHEV,125,Automatická,Ano,,,Ne,SUV,Exclusive,,,Ano,5,T 4×2,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210290750
 Spalovací,MG HS 1.5 T-GDI,509900,12087,2024,Benzín,1.5,,,119,Manuální,,,,Ne,SUV,,,,Ano,6,TGi Essential,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210292262
@@ -2887,7 +2887,7 @@ Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,449000,89600,2021,Benzín,1.3,,MHEV,116
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,629990,2,2025,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T 6MT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/208749514
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,699990,,2026,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T AT 158PS,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/208762071
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,652890,5,2025,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,N-Connecta,,,Ano,5,"Dig-T, 140PS",Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/208995369
-Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,629990,2,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,Acenta,,,Ano,5,DIG-T Automat,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/209027331
+Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,629990,2,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,Acenta,,,Ano,5,DIG-T Automat,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/209027331
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,729890,,2026,Benzín,1.3,,,116,Manuální,,,,Ne,SUV,,,,Ano,5,DIG-T AT N-Conn 2Ton,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/209055417
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,729000,4500,2026,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T X-Tronic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/209127060
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,749000,8000,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,Tekna,,,Ano,5,T 158HP X-TRONIC,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/209244561
@@ -2946,7 +2946,7 @@ Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,722890,,2025,Benzín,1.3,,MHEV,116,Auto
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,733109,19962,2025,Benzín,1.3,,,116,Automatická,,,,Ano,SUV,,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210524525
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,499990,90663,2021,Benzín,1.3,,,116,Manuální,,,,Ne,SUV,Tekna,,,Ano,5,2021 ČR DIG-T +,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210532097
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,679000,10000,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T X-TRONIC,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210543833
-Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,390000,43749,2021,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,,,,Ano,5,DIG-T CzechLi 1.Maj ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210570515
+Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,390000,43749,2021,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,,,,Ano,5,DIG-T CzechLi 1.Maj ČR,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210570515
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,419900,95994,2023,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,,,,Ano,5,DIG-T Visia PLNÝ SERVIS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210574715
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,679000,13414,2025,Benzín,1.3,,MHEV,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,9,AT 1.ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210593279
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,720000,5030,2025,Benzín,1.3,,MHEV,116,Automatická,,,,Ne,SUV,Tekna,,,Ano,9,DIG-T,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210608408
@@ -2956,7 +2956,7 @@ Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,639000,54305,2023,Benzín,1.3,,,116,Aut
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,742890,11,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,5,AT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210657413
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,739328,9,2026,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,Tekna,,,Ano,5,AT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210657416
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,742890,9,2025,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,N-Connecta,,,Ano,5,AT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210660329
-Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,454000,21621,2022,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210661490
+Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,454000,21621,2022,Benzín,1.3,,,103,Manuální,,,,Ne,SUV,N-Connecta,,,Ano,5,DIG-T,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210661490
 Spalovací,Nissan Qashqai 1.3 DIG-T MHEV,744720,9,2026,Benzín,1.3,,,116,Automatická,,,,Ne,SUV,Tekna,,,Ano,5,AT,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/qashqai/210680669
 Spalovací,Nissan X-Trail 1.5 VC-T 5míst,706640,37718,2022,Benzín,1.5,,MHEV,120,Automatická,,,,Ne,SUV,N-Connecta,,,Nejisté,5,VC-T,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/nissan/x-trail/210207983
 Spalovací,Omoda 5 1.6 T-GDI,649000,6000,2025,Benzín,1.6,TGDI,,108,Automatická,,,,Ne,SUV,Premium,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/omoda/5/208189613
@@ -3089,7 +3089,7 @@ Spalovací,Opel Mokka 1.2 Turbo,467990,,2026,Benzín,1.2,,,100,Manuální,,,,Ne,
 Spalovací,Opel Mokka 1.2 Turbo,487016,4820,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition MT6,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209513238
 Spalovací,Opel Mokka 1.2 Turbo,435990,16600,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition ( ),Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209686248
 Spalovací,Opel Mokka 1.2 Turbo,449989,18100,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition ( ),Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209686254
-Spalovací,Opel Mokka 1.2 Turbo,453900,4000,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition MT6,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209717208
+Spalovací,Opel Mokka 1.2 Turbo,444900,4000,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition MT6,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209717208
 Spalovací,Opel Mokka 1.2 Turbo,475000,,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,HIT MT6,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209738472
 Spalovací,Opel Mokka 1.2 Turbo,476990,,2026,Benzín,1.2,,,100,Manuální,,,,Ne,SUV,,,,Ano,6,HIT T ( ) MT6,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209753406
 Spalovací,Opel Mokka 1.2 Turbo,476990,,2026,Benzín,1.2,,,100,Manuální,,,,Ne,SUV,,,,Ano,6,HIT T ( ) MT6,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/209753409
@@ -3159,8 +3159,8 @@ Spalovací,Opel Mokka 1.2 Turbo,463700,,2026,Benzín,1.2,,,100,Manuální,,,,Ne,
 Spalovací,Opel Mokka 1.2 Turbo,459590,5,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,CUV,,,,Ano,3,NEW Edition MT6,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210642428
 Spalovací,Opel Mokka 1.2 Turbo,459990,5,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,CUV,,,,Ano,3,Edition MT6,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210642470
 Spalovací,Opel Mokka 1.2 Turbo,538990,3,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,GS,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210657236
-Spalovací,Opel Mokka 1.2 Turbo,499000,19566,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,GS MT6,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210672362
-Spalovací,Opel Mokka 1.2 Turbo,409900,32000,2025,Benzín,1.2,,,100,Manuální,,,,Ne,SUV,,,,Ano,6,T CZ DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210680417
+Spalovací,Opel Mokka 1.2 Turbo,444011,19566,2025,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,GS MT6,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210672362
+Spalovací,Opel Mokka 1.2 Turbo,409900,32000,2025,Benzín,1.2,,,100,Manuální,,,,Ne,SUV,,,,Ano,6,T CZ DPH,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210680417
 Spalovací,Opel Mokka 1.2 Turbo,518990,5,2026,Benzín,1.2,Turbo,,100,Manuální,,,,Ne,SUV,,,,Ano,8,Edition ( 136,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/mokka/210682529
 Spalovací,Opel Vivaro 2.0 CDTi,629000,74999,2022,Nafta,2.0,,,106,Manuální,,,,Ne,Hatchback,Life,,,Ano,1,*d**CZ*1-MAJ*DPH*,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/vivaro/210332408
 Spalovací,Opel Zafira 2.0 CDTi,699000,56550,2022,Nafta,2.0,CDTi,,106,Manuální,,,,Ne,MPV,,,,Ano,8,"LONG,ZÁRUKA,ČR,DPH",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/zafira/209214270
@@ -3393,8 +3393,8 @@ Spalovací,Seat Ateca 1.5 TSI,649000,10906,2025,Benzín,1.5,TSI,,110,Manuální,
 Spalovací,Seat Ateca 1.5 TSI,679000,32195,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,FR,,,Ano,8,Black ma,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210573755
 Spalovací,Seat Ateca 1.5 TSI,669900,44467,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,FR,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210574688
 Spalovací,Seat Ateca 1.5 TSI,666000,65557,2021,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ano,SUV,FR,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210597065
-Spalovací,Seat Ateca 1.5 TSI,679900,5,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210600317
-Spalovací,Seat Ateca 1.5 TSI,469000,37000,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210602780
+Spalovací,Seat Ateca 1.5 TSI,665000,5,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210600317
+Spalovací,Seat Ateca 1.5 TSI,469000,37000,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,8,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210602780
 Spalovací,Seat Ateca 1.5 TSI,659900,5,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,8,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210623693
 Spalovací,Seat Ateca 1.5 TSI,650000,5,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,8,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210623720
 Spalovací,Seat Ateca 1.5 TSI,589900,49128,2021,Benzín,2.0,TSI,,140,Automatická,,,,Ano,SUV,,,,Ano,5,Experience 4W,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/ateca/210624998
@@ -3415,7 +3415,7 @@ Spalovací,Seat Leon Sportstourer 1.5 TSI,478999,69000,2022,Nafta,2.0,TDI,,110,A
 Spalovací,Seat Leon Hatchback 1.5 TSI,449000,55400,2021,CNG + benzín,1.5,,,110,Automatická,,,,Ne,Hatchback,Style,,,Ano,4,TGI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/209569884
 Spalovací,Seat Leon Sportstourer 1.5 TSI,539000,6000,2025,Benzín,1.5,eTSI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,5,LED,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/209679738
 Spalovací,Seat Leon Sportstourer 1.5 TSI,629900,5,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,,,,Ano,8,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210052766
-Spalovací,Seat Leon Sportstourer 1.5 TSI,615900,5500,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,FR,,,Ano,8,ČR 1.maj DPH,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210058763
+Spalovací,Seat Leon Sportstourer 1.5 TSI,615900,9444,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,FR,,,Ano,8,ČR 1.maj DPH,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210058763
 Spalovací,Seat Leon Sportstourer 1.5 TSI,549990,57321,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,FR,,,Nejisté,0,Nová,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210194828
 Spalovací,Seat Leon Sportstourer 1.5 TSI,549000,19850,2024,Benzín,1.5,eTSI,,110,Automatická,,,,Ne,Kombi,FR,,,Ano,5,**CZ*1-MAJ*DPH**,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210247961
 Spalovací,Seat Leon Hatchback 1.5 TSI,550000,27000,2025,Benzín,1.5,eTSI,,110,Automatická,,,,Ne,Hatchback,FR,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/seat/leon/210257399
@@ -3580,7 +3580,7 @@ Spalovací,Škoda Kamiq 1.0 TSI,474900,67759,2021,Benzín,1.5,TSI,,110,Manuáln�
 Spalovací,Škoda Kamiq 1.0 TSI,599000,29755,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Top Selection,,,Ano,5,KAMIQ 11,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210037497
 Spalovací,Škoda Kamiq 1.0 TSI,685000,3,2026,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Nejisté,0,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210038655
 Spalovací,Škoda Kamiq 1.0 TSI,619000,23675,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210048135
-Spalovací,Škoda Kamiq 1.0 TSI,449000,75792,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Monte Carlo,,,Ano,5,"TZ, Č",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210080045
+Spalovací,Škoda Kamiq 1.0 TSI,449000,75792,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Monte Carlo,,,Ano,5,"TZ, Č",Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210080045
 Spalovací,Škoda Kamiq 1.0 TSI,629900,12317,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210087959
 Spalovací,Škoda Kamiq 1.0 TSI,469000,73404,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Ambition,,,Ano,5,Extra,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210090680
 Spalovací,Škoda Kamiq 1.0 TSI,589000,5,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,5,130 let 6°MP,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210099701
@@ -3631,7 +3631,7 @@ Spalovací,Škoda Kamiq 1.0 TSI,618900,5,2026,Benzín,1.5,TSI,,110,,,,,Ne,SUV,,,
 Spalovací,Škoda Kamiq 1.0 TSI,545500,29685,2021,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Monte Carlo,,,Ano,5,7st,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210377303
 Spalovací,Škoda Kamiq 1.0 TSI,419990,98813,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Ambition,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210378404
 Spalovací,Škoda Kamiq 1.0 TSI,543000,25320,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Monte Carlo,,,Ano,5,-,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210382268
-Spalovací,Škoda Kamiq 1.0 TSI,645000,16539,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,,,,Nejisté,0,MONTE C,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210383246
+Spalovací,Škoda Kamiq 1.0 TSI,634000,16539,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,,,,Nejisté,0,MONTE CA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210383246
 Spalovací,Škoda Kamiq 1.0 TSI,417900,52660,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,5,2xSady k.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210389504
 Spalovací,Škoda Kamiq 1.0 TSI,549877,12400,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,5,"Fresh , ČR, 1.Maj",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210404372
 Spalovací,Škoda Kamiq 1.0 TSI,499900,14080,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Top Selection,,,Ano,5,ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210405011
@@ -3744,7 +3744,7 @@ Spalovací,Škoda Karoq 1.5 TSI,719990,24738,2024,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Karoq 1.5 TSI,731000,,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,130 let,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209133156
 Spalovací,Škoda Karoq 1.5 TSI,599999,24161,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209142567
 Spalovací,Škoda Karoq 1.5 TSI,549900,87827,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209142759
-Spalovací,Škoda Karoq 1.5 TSI,639900,21012,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Selection,,,Ano,8,Fresh,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209160624
+Spalovací,Škoda Karoq 1.5 TSI,639900,21012,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Selection,,,Ano,8,Fresh,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209160624
 Spalovací,Škoda Karoq 1.5 TSI,689000,75091,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,3,+,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209169408
 Spalovací,Škoda Karoq 1.5 TSI,599000,51239,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209169501
 Spalovací,Škoda Karoq 1.5 TSI,599900,46429,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,3,Plus 6MP,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209188152
@@ -3824,7 +3824,7 @@ Spalovací,Škoda Karoq 1.5 TSI,749900,23170,2024,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Karoq 1.5 TSI,560000,38126,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,Zár. 5 let 100000 km,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209629797
 Spalovací,Škoda Karoq 1.5 TSI,678890,38520,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Sportline,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209630010
 Spalovací,Škoda Karoq 1.5 TSI,678890,39150,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Sportline,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209630016
-Spalovací,Škoda Karoq 1.5 TSI,740000,,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209638674
+Spalovací,Škoda Karoq 1.5 TSI,750000,,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209638674
 Spalovací,Škoda Karoq 1.5 TSI,745990,14632,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209640291
 Spalovací,Škoda Karoq 1.5 TSI,655000,13900,2024,Benzín,1.5,TSI,PHEV,110,Automatická,,,,Ne,SUV,Selection,,,Ano,7,Drive,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209643696
 Spalovací,Škoda Karoq 1.5 TSI,719990,5836,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/209644317
@@ -4046,7 +4046,7 @@ Spalovací,Škoda Karoq 1.5 TSI,729989,28900,2025,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Karoq 2.0 TDI,669900,38729,2023,Nafta,2.0,TDI,,110,Manuální,Ano,,,Ano,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210186581
 Spalovací,Škoda Karoq 2.0 TDI,684000,50650,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ano,SUV,,,,Ano,8,Sportli,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210190733
 Spalovací,Škoda Karoq 1.5 TSI,739000,22955,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Sportline,,,Ano,8,-,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210193499
-Spalovací,Škoda Karoq 1.5 TSI,649000,20004,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210201623
+Spalovací,Škoda Karoq 1.5 TSI,639000,20004,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210201623
 Spalovací,Škoda Karoq 2.0 TDI,715000,28962,2025,Nafta,2.0,TDI,PHEV,110,Automatická,,,,Ne,SUV,,,,Ano,7,"Drive, Drive, FullLed",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210203927
 Spalovací,Škoda Karoq 1.5 TSI,699999,57495,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Sportline,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210205844
 Spalovací,Škoda Karoq 1.5 TSI,680000,29577,2025,Benzín,1.5,TSI,PHEV,110,Automatická,,,,Ne,SUV,,,,Ano,7,"Drive, Drive",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210207035
@@ -4062,7 +4062,7 @@ Spalovací,Škoda Karoq 1.5 TSI,599900,36640,2024,Benzín,1.5,TSI,PHEV,110,Manu�
 Spalovací,Škoda Karoq 1.5 TSI,649000,88773,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Style,,,Ano,8,Plus t,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210244007
 Spalovací,Škoda Karoq 1.5 TSI,719990,30820,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210247838
 Spalovací,Škoda Karoq 1.5 TSI,675000,15542,2025,Benzín,1.5,,,110,Automatická,,,,Ne,Kombi,,,,Ano,1,KAROQ SEL TS 110 A7F,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210249560
-Spalovací,Škoda Karoq 1.5 TSI,669000,31221,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Sportline,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210254891
+Spalovací,Škoda Karoq 1.5 TSI,659000,31221,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Sportline,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210254891
 Spalovací,Škoda Karoq 2.0 TDI,598000,97255,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ano,SUV,Style,,,Ano,8,7st.a,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210256343
 Spalovací,Škoda Karoq 1.5 TSI,519000,71850,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210256625
 Spalovací,Škoda Karoq 1.5 TSI,749990,16163,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Top Selection,,,Ano,8,DS,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210261761
@@ -4072,7 +4072,7 @@ Spalovací,Škoda Karoq 1.5 TSI,739990,11784,2025,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Karoq 1.5 TSI,739990,9652,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210268544
 Spalovací,Škoda Karoq 2.0 TDI,609990,99004,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ano,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210268562
 Spalovací,Škoda Karoq 1.5 TSI,719900,20201,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Top Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210269942
-Spalovací,Škoda Karoq 1.5 TSI,549000,71403,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,Ambiente+,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210272540
+Spalovací,Škoda Karoq 1.5 TSI,549000,71403,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,Ambiente+,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210272540
 Spalovací,Škoda Karoq 1.5 TSI,739990,11456,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210279179
 Spalovací,Škoda Karoq 1.5 TSI,659000,23478,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210283766
 Spalovací,Škoda Karoq 1.5 TSI,667900,49365,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210283850
@@ -4120,7 +4120,7 @@ Spalovací,Škoda Karoq 1.5 TSI,679900,23006,2023,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Karoq 1.5 TSI,619990,38196,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,Fresh II.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210367520
 Spalovací,Škoda Karoq 1.5 TSI,639000,31750,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210369095
 Spalovací,Škoda Karoq 1.5 TSI,555000,35200,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210369101
-Spalovací,Škoda Karoq 1.5 TSI,719900,28000,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,3,Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210370433
+Spalovací,Škoda Karoq 1.5 TSI,699990,29900,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,3,Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210370433
 Spalovací,Škoda Karoq 1.5 TSI,665000,34360,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,3,FRESH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210371810
 Spalovací,Škoda Karoq 1.5 TSI,620000,68000,2022,Benzín,1.9,TSI,,140,Automatická,,,,Ano,MPV,,,,Nejisté,0,4x4SPORTLINE,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210372140
 Spalovací,Škoda Karoq 2.0 TDI,595000,50141,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ano,SUV,Style,,,Ano,8,Plus LED,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/karoq/210375215
@@ -4452,7 +4452,7 @@ Spalovací,Škoda Kodiaq 1.5 TSI,699990,98761,2021,Benzín,2.0,TSI,,140,Automati
 Spalovací,Škoda Kodiaq 1.5 TSI,739000,98390,2022,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ano,SUV,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210502841
 Spalovací,Škoda Kodiaq 1.5 TSI,728000,76769,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,SUV,Style,,,Nejisté,0,+*TAŽNÉ*ACC*ČR 1M,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210517307
 Spalovací,Škoda Kodiaq 1.5 TSI,749900,70198,2023,Nafta,2.0,TDI,,147,Automatická,,,,Ano,SUV,Style,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210518717
-Spalovací,Škoda Kodiaq 1.5 TSI,740000,45439,2023,Nafta,2.0,,,110,Automatická,,,,Ne,SUV,TOP,,,Ano,1,stav jako nové,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210521645
+Spalovací,Škoda Kodiaq 1.5 TSI,740000,45439,2023,Nafta,2.0,,,110,Automatická,,,,Ne,SUV,TOP,,,Ano,1,stav jako nové,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210521645
 Spalovací,Škoda Kodiaq 1.5 TSI,735000,44491,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,SUV,Style,,,Nejisté,0,NAVI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210529307
 Spalovací,Škoda Kodiaq 1.5 TSI,699000,97539,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,SUV,Style,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210534008
 Spalovací,Škoda Kodiaq 1.5 TSI,645000,40435,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Ambition,,,Ano,8,Tour,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kodiaq/210559295
@@ -4512,7 +4512,7 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,669990,84613,2021,Nafta,2.0,TDI,,147,Aut
 Spalovací,Škoda Octavia Style 1.5 TSI,599000,15162,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,Plus Navi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207365700
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,638000,29141,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207373734
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,629990,30007,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,2,Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207423744
-Spalovací,Škoda Octavia Combi Style 1.5 TSI,634000,10946,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Style,,,Nejisté,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207445455
+Spalovací,Škoda Octavia Combi Style 1.5 TSI,634000,10946,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Style,,,Nejisté,5,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207445455
 Spalovací,Škoda Octavia Combi 1.5 TSI,659990,25825,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Sportline,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207446940
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,649000,25048,2023,Benzín,1.5,,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,8,Combi M-HEV Plus Navi 1.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207457155
 Spalovací,Škoda Octavia Combi 1.5 TSI,629900,21760,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,,,,Nejisté,8,6°M+NAVI+MATRIX,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207466806
@@ -4558,7 +4558,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,739900,4,2025,Benzín,1.5,TSI,,110,Ma
 Spalovací,Škoda Octavia Style 1.5 TSI,638880,22756,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,M6° Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207941962
 Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,16000,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Ambition,,,Ano,8,PLUS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207941971
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,699000,20200,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,COMBI PLUS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207945154
-Spalovací,Škoda Octavia Combi Style 1.5 TSI,599900,2012,2023,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Sedan/limuzína,Style,,,Nejisté,-3,"ČR,1.MAJ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207964285
+Spalovací,Škoda Octavia Combi Style 1.5 TSI,599900,2112,2023,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Sedan/limuzína,Style,,,Nejisté,-3,"ČR,1.MAJ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207964285
 Spalovací,Škoda Octavia Style 1.5 TSI,740000,9997,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Style,,,Ano,2,150PS +,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207994081
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,629990,22085,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/207999938
 Spalovací,Škoda Octavia Liftback 1.5 TSI,649900,14989,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Liftback,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208006343
@@ -4624,7 +4624,7 @@ Spalovací,Škoda Octavia Combi Style 1.5 TSI,649990,32570,2024,Nafta,2.0,TDI,,1
 Spalovací,Škoda Octavia Liftback 1.5 TSI,499990,20034,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208643954
 Spalovací,Škoda Octavia Liftback 1.5 TSI,649000,24366,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208644431
 Spalovací,Škoda Octavia Liftback 1.5 TSI,659990,40000,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ano,Liftback,,,,Nejisté,0,Fresh,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208654262
-Spalovací,Škoda Octavia Style 1.5 TSI,559990,6075,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208659224
+Spalovací,Škoda Octavia Style 1.5 TSI,559990,6075,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208659224
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,614900,35672,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208661156
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,649990,23424,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208675595
 Spalovací,Škoda Octavia Style 1.5 TSI,734000,20790,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Style,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208675832
@@ -4644,7 +4644,7 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,679990,18531,2023,Nafta,2.0,TDI,,110,Aut
 Spalovací,Škoda Octavia Combi 1.5 TSI,659990,24388,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Sportline,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208729139
 Spalovací,Škoda Octavia Style 1.5 TSI,624360,48325,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Style,,,Ano,2,Extra,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208737125
 Spalovací,Škoda Octavia Combi 1.5 TSI,679000,19634,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,,,,Nejisté,8,Combi .TopSelection,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208737197
-Spalovací,Škoda Octavia Combi Style 1.5 TSI,569900,13226,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208741112
+Spalovací,Škoda Octavia Combi Style 1.5 TSI,569900,13226,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Plus,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208741112
 Spalovací,Škoda Octavia Liftback 1.5 TSI,599999,21609,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Ambition,,,Ano,8,City,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208742684
 Spalovací,Škoda Octavia Liftback 1.5 TSI,679900,22199,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,,,,Nejisté,-5,Ultimate Ed,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208745465
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,699999,17182,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Matrix,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208750272
@@ -4675,7 +4675,7 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,689989,47000,2024,Nafta,2.0,TDI,,110,Aut
 Spalovací,Škoda Octavia Style 1.5 TSI,599000,38451,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208900365
 Spalovací,Škoda Octavia Liftback 1.5 TSI,559900,31537,2024,Benzín,1.5,eTSI,,110,Automatická,,,,Ne,Liftback,Top Selection,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208905984
 Spalovací,Škoda Octavia Combi 1.5 TSI,719000,26225,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,TOP,,,Ano,8,M 6° Select,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208913490
-Spalovací,Škoda Octavia Combi Selection 1.5 TSI,639000,21217,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Selection,,,Nejisté,-3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208913505
+Spalovací,Škoda Octavia Combi Selection 1.5 TSI,629000,21217,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Selection,,,Nejisté,-3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208913505
 Spalovací,Škoda Octavia Style 1.5 TSI,639000,24469,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208914327
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,719000,31299,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208915731
 Spalovací,Škoda Octavia Liftback 1.5 TSI,649000,10330,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Liftback,Top Selection,,,Nejisté,0,DS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/208916910
@@ -4825,7 +4825,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,709900,8775,2024,Nafta,2.0,TDI,,110,A
 Spalovací,Škoda Octavia Liftback 1.5 TSI,629000,24229,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Selection,,,Ano,8,6° MP,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209475006
 Spalovací,Škoda Octavia Liftback 1.5 TSI,579000,23477,2024,Benzín,1.5,TSI,MHEV,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,2,Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209477232
 Spalovací,Škoda Octavia Liftback 1.5 TSI,639000,20237,2025,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209485005
-Spalovací,Škoda Octavia Combi Selection 1.5 TSI,609000,19429,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Selection,,,Nejisté,-3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209485101
+Spalovací,Škoda Octavia Combi Selection 1.5 TSI,599000,19429,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Selection,,,Nejisté,-3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209485101
 Spalovací,Škoda Octavia Combi 1.5 TSI,706000,19528,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,TOP,,,Ano,8,Combi / S,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209486835
 Spalovací,Škoda Octavia Liftback 1.5 TSI,699000,24432,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Top Selection,,,Nejisté,3,.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209486934
 Spalovací,Škoda Octavia Liftback 1.5 TSI,659000,27959,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Liftback,Top Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209486958
@@ -5044,7 +5044,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,369000,68646,2021,Benzín,1.5,TSI,,11
 Spalovací,Škoda Octavia Combi Selection 1.5 TSI,679900,13995,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Selection,,,Ano,2,COMBI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209972625
 Spalovací,Škoda Octavia Liftback 1.5 TSI,675000,38090,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Top Selection,,,Nejisté,-5,11,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209972766
 Spalovací,Škoda Octavia Combi 1.5 TSI,745900,22139,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209973087
-Spalovací,Škoda Octavia Liftback 1.5 TSI,668900,18641,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,TOP,,,Ano,8,Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209979570
+Spalovací,Škoda Octavia Liftback 1.5 TSI,658900,18641,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,TOP,,,Ano,8,Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209979570
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,499888,91828,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Style,,,Ano,2,Combi Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209982123
 Spalovací,Škoda Octavia Combi 1.5 TSI,737900,34765,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209982933
 Spalovací,Škoda Octavia Combi Selection 1.5 TSI,749990,18975,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Selection,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/209987253
@@ -5185,7 +5185,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,10655,2025,Benzín,1.5,TSI,,11
 Spalovací,Škoda Octavia Combi 1.5 TSI,589000,72472,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Nejisté,0,Fresh 7°,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210190688
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,523900,64526,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210194480
 Spalovací,Škoda Octavia Liftback 1.5 TSI,629877,74200,2023,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ne,Liftback,,,,Nejisté,0,RS Challenge Plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210199490
-Spalovací,Škoda Octavia Combi 1.5 TSI,709000,,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,,,,Nejisté,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210201038
+Spalovací,Škoda Octavia Combi 1.5 TSI,717000,,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,,,,Nejisté,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210201038
 Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,29718,2024,Benzín,1.5,TSI,MHEV,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,2,Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210201476
 Spalovací,Škoda Octavia Combi 1.5 TSI,728000,,2026,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,,,,Nejisté,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210201617
 Spalovací,Škoda Octavia Combi 1.5 TSI,728000,,2026,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,,,,Nejisté,8,Classic,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210201785
@@ -5231,14 +5231,14 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,719900,33685,2024,Nafta,2.0,TDI,,110,Aut
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,595989,69000,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi P,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210257864
 Spalovací,Škoda Octavia Liftback 1.5 TSI,699000,9437,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Top Selection,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210258971
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,569000,47585,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210261221
-Spalovací,Škoda Octavia Liftback 1.5 TSI,579000,13011,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Top Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210262154
+Spalovací,Škoda Octavia Liftback 1.5 TSI,579000,13011,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Top Selection,,,Ano,8,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210262154
 Spalovací,Škoda Octavia Combi 1.5 TSI,565000,66900,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Ambition,,,Ano,8,Combi,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210268289
 Spalovací,Škoda Octavia Liftback 1.5 TSI,709990,10216,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Top Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210268307
 Spalovací,Škoda Octavia Liftback 1.5 TSI,629000,29567,2025,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Selection,,,Nejisté,0,MATRIX L,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210268838
 Spalovací,Škoda Octavia Combi 1.5 TSI,749900,50899,2025,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,7DS,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210269876
 Spalovací,Škoda Octavia Combi 1.5 TSI,732000,61666,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ano,Kombi,Scout,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210270464
 Spalovací,Škoda Octavia Liftback 1.5 TSI,539000,20140,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Ambition,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210270755
-Spalovací,Škoda Octavia Style 1.5 TSI,550000,37481,2023,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,2,LED Kessy,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210273023
+Spalovací,Škoda Octavia Style 1.5 TSI,540000,37481,2023,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,2,LED Kessy,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210273023
 Spalovací,Škoda Octavia Combi 1.5 TSI,499000,21100,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Ambition,,,Ano,8,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210279581
 Spalovací,Škoda Octavia Combi 1.5 TSI,719900,31957,2025,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210279623
 Spalovací,Škoda Octavia Combi 1.5 TSI,739900,12283,2025,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210283091
@@ -5255,7 +5255,7 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,749990,24358,2025,Nafta,2.0,TDI,,110,Aut
 Spalovací,Škoda Octavia Combi 1.5 TSI,749990,43759,2025,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Top Selection,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210297203
 Spalovací,Škoda Octavia Combi 1.5 TSI,677900,27061,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,TOP,,,Ano,8,Combi Select,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210298055
 Spalovací,Škoda Octavia Liftback 1.5 TSI,699000,13086,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,3,A7F M-HEV S,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210298148
-Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,23269,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,,,,Nejisté,8,M-HEV SELECTI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210298520
+Spalovací,Škoda Octavia Liftback 1.5 TSI,589000,23269,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,,,,Nejisté,8,M-HEV SELECTI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210298520
 Spalovací,Škoda Octavia Combi 1.5 TSI,534247,95018,2021,Nafta,2.0,,,147,Automatická,,,,Ano,Kombi,,,,Nejisté,1,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210301190
 Spalovací,Škoda Octavia Combi 1.5 TSI,669000,26594,2024,Benzín,1.5,,,110,Manuální,,,,Ne,Kombi,Top Selection,,,Ano,6,OCT.COMBI TS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210305963
 Spalovací,Škoda Octavia Liftback 1.5 TSI,649000,29868,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,,,,Nejisté,0,First Edition,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210307451
@@ -5325,7 +5325,7 @@ Spalovací,Škoda Octavia Style 1.5 TSI,519990,32173,2022,Nafta,2.0,TDI,,110,Man
 Spalovací,Škoda Octavia Style 1.5 TSI,529900,60002,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210371585
 Spalovací,Škoda Octavia Liftback 1.5 TSI,689900,13600,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Sportline,,,Ano,8,M6,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210371792
 Spalovací,Škoda Octavia Liftback 1.5 TSI,749900,27982,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Sedan/limuzína,Sportline,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210376463
-Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,29143,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,3,M-Hev Select,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210376871
+Spalovací,Škoda Octavia Liftback 1.5 TSI,589000,29143,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,3,M-Hev Select,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210376871
 Spalovací,Škoda Octavia Liftback 1.5 TSI,729000,23865,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Liftback,Sportline,,,Ano,8,M-HEV,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210378719
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,479000,63332,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210378779
 Spalovací,Škoda Octavia Combi 1.5 TSI,748900,51181,2025,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,TOP,,,Nejisté,0,Selectio,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210381197
@@ -5338,7 +5338,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,709990,9457,2025,Benzín,1.5,TSI,,110
 Spalovací,Škoda Octavia Combi 1.5 TSI,719900,81419,2023,Nafta,2.0,TDI,,147,Automatická,,,,Ano,Kombi,,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210387893
 Spalovací,Škoda Octavia Combi 1.5 TSI,649990,49309,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Sportline,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210388883
 Spalovací,Škoda Octavia Combi Selection 1.5 TSI,679900,27743,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Selection,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210391367
-Spalovací,Škoda Octavia Liftback 1.5 TSI,449900,35651,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,Ambition,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210395135
+Spalovací,Škoda Octavia Liftback 1.5 TSI,449900,35651,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,Ambition,,,Nejisté,3,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210395135
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,535000,30695,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210396566
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,470000,59132,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi LED,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210398525
 Spalovací,Škoda Octavia Liftback 1.5 TSI,709900,28843,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Sportline,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210399614
@@ -5349,7 +5349,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,689990,17205,2025,Benzín,1.5,TSI,,11
 Spalovací,Škoda Octavia Liftback 1.5 TSI,569990,3833,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210401657
 Spalovací,Škoda Octavia Style 1.5 TSI,445000,80723,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Style,,,Ano,10,LED+PDC,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210403871
 Spalovací,Škoda Octavia Liftback 1.5 TSI,430000,56752,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,Ambition,,,Ano,8,Plus KESSY,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210403877
-Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,27648,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,3,M-Hev Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210405938
+Spalovací,Škoda Octavia Liftback 1.5 TSI,589000,27648,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Sedan/limuzína,TOP,,,Nejisté,3,M-Hev Selecti,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210405938
 Spalovací,Škoda Octavia Liftback 1.5 TSI,719900,15000,2026,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Top Selection,,,Nejisté,3,.,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210406736
 Spalovací,Škoda Octavia Combi 1.5 TSI,699000,13095,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,TOP,,,Nejisté,0,Combi Sel,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210407906
 Spalovací,Škoda Octavia Liftback 1.5 TSI,639000,23431,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Sedan/limuzína,Top Selection,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210410348
@@ -5384,7 +5384,7 @@ Spalovací,Škoda Octavia Liftback 1.5 TSI,599000,14355,2025,Benzín,1.5,TSI,,11
 Spalovací,Škoda Octavia Combi 1.5 TSI,660900,6373,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Top Selection,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210448385
 Spalovací,Škoda Octavia Combi Style 1.5 TSI,589900,76870,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,2,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210449198
 Spalovací,Škoda Octavia Combi 1.5 TSI,559900,66170,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Ambition,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210449561
-Spalovací,Škoda Octavia Combi Style 1.5 TSI,497900,77125,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Combi PLUS,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210450515
+Spalovací,Škoda Octavia Combi Style 1.5 TSI,497900,77125,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Combi PLUS,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210450515
 Spalovací,Škoda Octavia Combi 1.5 TSI,678900,24172,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,TOP,,,Ano,8,Combi Select,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210450521
 Spalovací,Škoda Octavia Combi 1.5 TSI,669900,88215,2022,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ano,Kombi,Sportline,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210450527
 Spalovací,Škoda Octavia Combi Selection 1.5 TSI,639000,22292,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Selection,,,Ano,10,Combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210452936
@@ -5695,7 +5695,7 @@ Spalovací,Škoda Octavia Combi 1.5 TSI,420000,214,2022,Nafta,2.0,TDI,,147,Autom
 Spalovací,Škoda Octavia Combi 1.5 TSI,750000,36000,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210686183
 Spalovací,Škoda Octavia Liftback 1.5 TSI,625000,62629,2022,Nafta,2.0,,,147,Automatická,Ano,,,Ne,Sedan/limuzína,TOP,,,Nejisté,-4,RS HUD NEZ. MATRIX ACC,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210686324
 Spalovací,Škoda Scala 1.0 TSI,646500,,2021,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Hatchback,Style,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/182403536
-Spalovací,Škoda Scala 1.0 TSI,594000,25441,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/205326489
+Spalovací,Škoda Scala 1.0 TSI,594000,25441,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/205326489
 Spalovací,Škoda Scala 1.0 TSI,529990,6052,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Hatchback,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/206415240
 Spalovací,Škoda Scala 1.0 TSI,519000,5720,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Hatchback,Style,,,Ano,5,automat,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/206896761
 Spalovací,Škoda Scala 1.0 TSI,479990,30356,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Hatchback,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/207626047
@@ -5880,7 +5880,7 @@ Spalovací,Škoda Scala 1.0 TSI,564900,27519,2025,Benzín,1.5,TSI,,110,Automatic
 Spalovací,Škoda Scala 1.0 TSI,629900,14030,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,P,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210581501
 Spalovací,Škoda Scala 1.0 TSI,678586,5,2026,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210584210
 Spalovací,Škoda Scala 1.0 TSI,497900,26970,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Hatchback,Top Selection,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210586250
-Spalovací,Škoda Scala 1.0 TSI,468000,54000,2021,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210586703
+Spalovací,Škoda Scala 1.0 TSI,468000,54000,2021,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210586703
 Spalovací,Škoda Scala 1.0 TSI,574900,29027,2025,Benzín,1.5,,,110,Manuální,,,,Ne,Hatchback,Monte Carlo,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210593084
 Spalovací,Škoda Scala 1.0 TSI,519000,12060,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Hatchback,Top Selection,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210593771
 Spalovací,Škoda Scala 1.0 TSI,549000,21045,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/scala/210593786
@@ -5963,7 +5963,7 @@ Spalovací,Škoda Superb Combi Style 2.0 TDI,499990,88314,2022,Nafta,2.0,TDI,,11
 Spalovací,Škoda Superb Combi Style 2.0 TDI,549900,99556,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Liftback,Sportline,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209673177
 Spalovací,Škoda Superb Combi Style 2.0 TDI,715000,58400,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209673267
 Spalovací,Škoda Superb Combi Style 2.0 TDI,579990,81009,2022,Nafta,2.0,TDI,,147,Automatická,,,,Ne,Liftback,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209704617
-Spalovací,Škoda Superb Combi Style 2.0 TDI,528000,54256,2021,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Tažné,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209766486
+Spalovací,Škoda Superb Combi Style 2.0 TDI,528000,54256,2021,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,10,Tažné,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209766486
 Spalovací,Škoda Superb Combi Style 2.0 TDI,656000,89367,2022,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Kombi,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209770458
 Spalovací,Škoda Superb Combi Style 2.0 TDI,566000,100000,2023,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,Matrix,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209784396
 Spalovací,Škoda Superb Liftback 1.5 TSI,729900,22095,2023,Benzín,2.0,TSI,,206,Automatická,Ano,,,Ano,Liftback,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/209816076
@@ -6036,7 +6036,7 @@ Spalovací,Škoda Superb Combi Style 2.0 TDI,749900,50599,2023,Nafta,2.0,TDI,,14
 Spalovací,Škoda Superb Combi 1.5 TSI,499000,68600,2021,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,Ambition,,,Ano,8,combi,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210484145
 Spalovací,Škoda Superb Combi Style 2.0 TDI,699900,63707,2024,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210495215
 Spalovací,Škoda Superb Combi Style 2.0 TDI,729888,76555,2022,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Liftback,Sportline,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210495896
-Spalovací,Škoda Superb Combi Style 2.0 TDI,599000,89000,2021,Nafta,2.0,TDI,,147,Automatická,,,,Ne,Kombi,,,,Ano,8,L&K Weba Tažné,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210503705
+Spalovací,Škoda Superb Combi Style 2.0 TDI,599000,89000,2021,Nafta,2.0,TDI,,147,Automatická,,,,Ne,Kombi,,,,Ano,8,L&K Weba Tažné,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210503705
 Spalovací,Škoda Superb Combi Style 2.0 TDI,649900,71728,2021,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ne,Liftback,Sportline,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210509558
 Spalovací,Škoda Superb Combi Style 2.0 TDI,590000,100000,2023,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,10,ALU,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210519035
 Spalovací,Škoda Superb Combi Style 2.0 TDI,719900,61000,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,++ČR+ZÁRUKA!!!,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210526976
@@ -6071,7 +6071,7 @@ Spalovací,Škoda Superb Combi Style 2.0 TDI,629000,73517,2022,Nafta,2.0,TDI,,14
 Spalovací,Škoda Superb Combi Style 1.5 TSI,488000,82544,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,10,plus,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210623714
 Spalovací,Škoda Superb Combi Style 2.0 TDI,690000,73652,2023,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Sedan/limuzína,Style,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210625694
 Spalovací,Škoda Superb Combi Style 2.0 TDI,548000,87115,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Style,Ano,,Ano,10,Záruka,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210628172
-Spalovací,Škoda Superb Combi Style 2.0 TDI,589900,89000,2022,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Liftback,Style,,,Ano,5,CZ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210631877
+Spalovací,Škoda Superb Combi Style 2.0 TDI,589900,89000,2022,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Liftback,Style,,,Ano,5,CZ,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210631877
 Spalovací,Škoda Superb Combi 1.5 TSI,719888,78708,2023,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Kombi,,,,Nejisté,5,Combi L&K,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210636380
 Spalovací,Škoda Superb Liftback 1.5 TSI,579000,66490,2022,Nafta,2.0,,,110,Automatická,,,,Ne,Liftback,Ambition,,,Ano,1,SUPERB III FC plus 2.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210639080
 Spalovací,Škoda Superb Combi Style 2.0 TDI,749000,88568,2023,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ne,Sedan/limuzína,,,,Ano,3,L&K,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210642551
@@ -6131,7 +6131,7 @@ Spalovací,KGM Korando 1.5 GDI-T 2WD,419000,64211,2022,Benzín,1.5,T-GDI,,120,Au
 Spalovací,KGM Korando 1.5 GDI-T 2WD,399990,62000,2022,Benzín,1.5,,,120,Automatická,,,,Ne,SUV,,,,Ano,6,"tažné,automat,sada kol",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210609797
 Spalovací,KGM Korando 1.5 GDI-T 2WD,525000,9900,2025,Benzín,1.5,,,120,Automatická,,,,Ne,SUV,Style,,,Ano,6,+ 2WD 6AT,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210617585
 Spalovací,KGM Korando 1.5 GDI-T 2WD,573000,8000,2025,Benzín,1.5,GDI,,120,Automatická,,,,Ne,SUV,Style,,,Ano,8,AT 2WD +TECH+ACC,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210618077
-Spalovací,KGM Korando 1.5 GDI-T 2WD,393000,75380,2024,LPG + benzín,1.5,T-GDI,,120,Automatická,,,,Ne,SUV,,,,Ano,3,"LPG, Automat",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210666881
+Spalovací,KGM Korando 1.5 GDI-T 2WD,393000,75380,2024,LPG + benzín,1.5,T-GDI,,120,Automatická,,,,Ne,SUV,,,,Ano,3,"LPG, Automat",Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210666881
 Spalovací,KGM Korando 1.5 GDI-T 2WD,478021,25668,2023,Benzín,1.5,,,120,Automatická,,,,Ne,SUV,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210681626
 Spalovací,SsangYong Rexton 2.2 e-XDI,670000,98030,2022,Nafta,2.2,CRDi,,148,Automatická,,,,Ano,Kombi,,,,Nejisté,-1,*4WD *PANORAMA *A T,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/rexton/210384116
 Spalovací,KGM Tivoli 1.5 GDI-T,397900,20329,2023,Benzín,1.5,,,120,Automatická,,,,Ne,SUV,,,,Nejisté,6,i Black Line,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/tivoli/209429883
@@ -6223,7 +6223,7 @@ Spalovací,Toyota Corolla TS Kombi 2.0 Hybrid,729900,,2025,Benzín,1.8,,HEV,103,
 Spalovací,Toyota Corolla TS Kombi 2.0 Hybrid,689900,44915,2024,Benzín,2.0,,PHEV,144,Automatická,,,,Ne,Kombi,,,,Ano,4,HEV Executive e-CVT,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/corolla/210419327
 Spalovací,Toyota Corolla TS Kombi 2.0 Hybrid,718900,,2026,Benzín,1.8,,HEV,103,Automatická,,,,Ne,Kombi,Comfort,,,Ano,6,Hybrid +tech,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/corolla/210667244
 Spalovací,Toyota Corolla TS Kombi 2.0 Hybrid,718900,,2026,Benzín,1.8,,HEV,103,Automatická,,,,Ne,Kombi,Comfort,,,Ano,6,Hybrid +tech,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/corolla/210667253
-Spalovací,Toyota Proace Verso 2.0,519900,83500,2022,Benzín,1.2,,,130,Automatická,,,,Ne,MPV,,,,Ano,3,T Long 1.maj ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace-city-verso/210655034
+Spalovací,Toyota Proace Verso 2.0,508900,83500,2022,Benzín,1.2,,,130,Automatická,,,,Ne,MPV,,,,Ano,3,T Long 1.maj ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace-city-verso/210655034
 Spalovací,Toyota Proace 2.0,580000,60000,2023,Nafta,2.0,,,106,Manuální,,,,Ne,Kombi,,,,Ano,1,D-4D L2 ČR DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace-verso/209513394
 Spalovací,Toyota Proace 2.0,740000,37533,2023,Nafta,2.0,,,106,Manuální,,,,Ne,VAN,,,,Ano,1,D L2 6MT Combi 9S,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace-verso/209929638
 Spalovací,Toyota Proace 2.0,539000,82965,2022,Nafta,2.0,,,106,Manuální,,,,Ne,Kombi,,,,Ano,1,D TEMPOMAT 8MÍST KLIMA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace-verso/210556286
@@ -6234,7 +6234,7 @@ Spalovací,Toyota Proace 2.0,719900,89158,2022,Nafta,2.0,,,130,Automatická,,,,N
 Spalovací,Toyota Proace Verso 2.0,749900,25500,2023,Nafta,2.0,,,106,Manuální,,,,Ne,MPV,,,,Ano,4,-BUSINESS-9MÍST-ZÁRUKA,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/209729127
 Spalovací,Toyota Proace 2.0,580000,60000,2023,Nafta,2.0,,,106,Manuální,,,,Ne,Kombi,,,,Ano,1,D-4D L2 ČR DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210315494
 Spalovací,Toyota Proace 2.0,719900,34300,2023,Nafta,2.0,,,106,Manuální,,,,Ne,Hatchback,,,,Ano,1,"D-4D , L2, ČR, TZ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210423146
-Spalovací,Toyota Proace 2.0,570000,69000,2022,Nafta,2.0,,,106,Manuální,,,,Ne,Kombi,,,,Ano,1,"T.Proace, D, 6 míst",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210426476
+Spalovací,Toyota Proace 2.0,570000,69000,2022,Nafta,2.0,,,106,Manuální,,,,Ne,Kombi,,,,Ano,1,"T.Proace, D, 6 míst",Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210426476
 Spalovací,Toyota Proace Verso 2.0,620000,63000,2023,Nafta,2.0,,,106,Manuální,,,,Ne,MPV,,,,Ano,4,Toyota Proace Verso L2,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210607625
 Spalovací,Toyota Proace Verso 2.0,720000,82290,2021,Nafta,2.0,,,130,Automatická,,,,Ne,MPV,,,,Ano,4,D-4D,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/proace/210644846
 Spalovací,Toyota Rav4 2.5 Hybrid,719999,27400,2023,Benzín,2.0,,,129,Manuální,,,,Ano,SUV,,,,Nejisté,2,Plný servis Manuál,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/toyota/rav4/209620050
@@ -6259,7 +6259,7 @@ Spalovací,VW Arteon Shooting Brake 2.0 TDI,689900,42469,2022,Nafta,2.0,TDI,,110
 Spalovací,VW Arteon Shooting Brake 2.0 TDI,699000,65030,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210168986
 Spalovací,VW Arteon Shooting Brake 2.0 TDI,668000,87450,2021,Nafta,2.0,TDI,,147,Automatická,Ano,,,Ano,Kombi,,,,Ano,3,Eleg,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210188747
 Spalovací,VW Arteon Liftback 2.0 TSI,675000,51481,2023,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,ACC,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210237476
-Spalovací,VW Arteon Shooting Brake 2.0 TDI,669000,39902,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Elegance,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210426149
+Spalovací,VW Arteon Shooting Brake 2.0 TDI,659000,39902,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,Elegance,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210426149
 Spalovací,VW Arteon Liftback 2.0 TSI,649000,65072,2022,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,ČR DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210485099
 Spalovací,VW Arteon Liftback 2.0 TSI,729000,79063,2023,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Kombi,,,,Ano,3,"( ) , R-li",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210549683
 Spalovací,VW Arteon Liftback 2.0 TSI,614000,61965,2022,Benzín,1.4,TSI,,160,Automatická,,,,Ne,Kombi,Elegance,,,Nejisté,0,PHEV +,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon-shooting-brake/210572228
@@ -6281,7 +6281,7 @@ Spalovací,VW Arteon Shooting Brake 2.0 TDI,660001,52922,2023,Nafta,2.0,TDI,,110
 Spalovací,VW Arteon Liftback 2.0 TSI,639000,93111,2023,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Hatchback,R-Line,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210424028
 Spalovací,VW Arteon Liftback 2.0 TSI,588000,57500,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,R-Line,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210542810
 Spalovací,VW Arteon Liftback 2.0 TSI,739000,43619,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Hatchback,R-Line,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210551852
-Spalovací,VW Arteon Liftback 2.0 TSI,645000,34000,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,R-Line,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210567098
+Spalovací,VW Arteon Liftback 2.0 TSI,645000,34000,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Liftback,R-Line,,,Ano,5,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210567098
 Spalovací,VW Arteon Liftback 2.0 TSI,549990,96565,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Liftback,Elegance,,,Nejisté,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210586262
 Spalovací,VW Arteon Liftback 2.0 TSI,729000,46726,2023,Benzín,2.0,TSI,,140,Automatická,Ano,,,Ne,Liftback,R-Line,,,Ano,8,Kamera,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210609086
 Spalovací,VW Arteon Liftback 2.0 TSI,717000,77674,2022,Nafta,2.0,TDI,,147,Automatická,,,,Ne,Liftback,,,,Nejisté,3,REZERVACE,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210614102
@@ -6322,7 +6322,7 @@ Spalovací,VW Golf Variant 1.5 eTSI,565900,27679,2023,Benzín,1.5,eTSI,MHEV,110,
 Spalovací,VW Golf Hatchback 2.0 TDI,680000,33750,2024,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Kombi,,,,Ano,3,ODPOČET DPH Variant,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209162121
 Spalovací,VW Golf Hatchback 2.0 TDI,430000,72000,2021,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Kombi,Style,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209199123
 Spalovací,VW Golf Hatchback 2.0 TDI,729999,41500,2022,Benzín,2.0,,,221,Automatická,,,,Ne,Hatchback,,,,Ano,4,1 maj.plný servis ZÁRUKA 1 ROK,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209235264
-Spalovací,VW Golf Variant 1.5 eTSI,639990,29666,2024,Benzín,1.5,TSI,MHEV,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,8,Varia,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209392347
+Spalovací,VW Golf Variant 1.5 eTSI,639990,29666,2024,Benzín,1.5,TSI,MHEV,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,8,Varia,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209392347
 Spalovací,VW Golf Variant 1.5 eTSI,679000,15000,2026,Benzín,1.5,eTSI,MHEV,110,Automatická,,,,Ne,Hatchback,,,,Ano,6,People,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209432226
 Spalovací,VW Golf Variant 1.5 eTSI,639900,33384,2024,Benzín,1.5,TSI,MHEV,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,8,Varia,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209436375
 Spalovací,VW Golf Variant 1.5 eTSI,639900,27086,2024,Benzín,1.5,TSI,MHEV,110,Automatická,Ano,,,Ne,Kombi,Style,,,Ano,8,Varia,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209443569
@@ -6339,7 +6339,7 @@ Spalovací,VW Golf Variant 1.5 eTSI,405000,79962,2023,Benzín,1.5,eTSI,,110,Auto
 Spalovací,VW Golf Variant 1.5 eTSI,424900,91956,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Life,,,Ano,4,7 ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/209888964
 Spalovací,VW Golf Hatchback 1.5 TSI,520000,93500,2021,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Hatchback,R-Line,,,Ano,8,EVO BMT,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210073382
 Spalovací,VW Golf Hatchback 1.5 TSI,699000,50044,2023,Benzín,2.0,TSI,,180,Automatická,Ano,,,Ne,Hatchback,,,,Ano,5,GTI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210083189
-Spalovací,VW Golf Hatchback 1.5 TSI,589000,5788,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Hatchback,Life,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210086279
+Spalovací,VW Golf Hatchback 1.5 TSI,579000,5788,2025,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Hatchback,Life,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210086279
 Spalovací,VW Golf Hatchback 1.5 TSI,666000,50018,2022,Benzín,2.0,TSI,,180,Manuální,,,,Ne,Hatchback,,,,Ano,5,GTi,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210096074
 Spalovací,VW Golf Variant 1.5 eTSI,599900,26301,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,4,Variant,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210127940
 Spalovací,VW Golf Hatchback 2.0 TDI,739000,52754,2021,Benzín,2.0,,,221,Automatická,,,,Ne,Hatchback,,,,Ano,4,GTi Clubsport *VIRTUAL*IQ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/golf/210224639
@@ -6405,7 +6405,7 @@ Elektrické,VW ID.3,489000,88760,2021,Elektro,,,,150,,,,,Ne,Hatchback,,,Ano,,,15
 Elektrické,VW ID.4,748000,27000,2023,Elektro,,,,128,,,,,Ne,SUV,,,Ano,,,Baterie 77 kWh / PRO Performance 128kW,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210254756
 Elektrické,VW ID.4,639000,57000,2022,Elektro,,,,125,,,,,Ne,SUV,,,Ano,,,Dojezd 361 km / Baterie 58 kWh / Pure Perf. Pano Matrix Kam ACC,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210530903
 Elektrické,VW ID.4,699900,27330,2022,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,"Dojezd 450 km / Baterie 82 kWh / PRO PERFORMANCE 150 kW, ACC, T",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210571346
-Elektrické,VW ID.4,670000,86000,2022,Elektro,,,,220,,,,,Ano,SUV,,,Ano,,,Baterie 80 kWh / GTX 4x4 220kw Hud displej,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210579482
+Elektrické,VW ID.4,670000,86000,2022,Elektro,,,,220,,,,,Ano,SUV,,,Ano,,,Baterie 80 kWh / GTX 4x4 220kw Hud displej,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210579482
 Elektrické,VW ID.4,679000,88844,2022,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,Baterie 77 kWh / 150kW / ALU 19'' SoH 95.0%,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210600341
 Elektrické,VW ID.4,618000,92669,2021,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,Dojezd 547 km / Baterie 82 kWh / 150kW 1ST PRO PERF. TAŽNÉ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id4/210680339
 Elektrické,VW ID.5,699000,74111,2022,Elektro,,,,150,,,,,Ne,SUV,,,Ano,,,Baterie 82 kWh / Pro 150kW IQ Light Tepelko,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/id5/210643304
@@ -6484,13 +6484,13 @@ Spalovací,VW Passat Variant Elegance 2.0 TDI,639000,45000,2022,Nafta,2.0,TDI,,1
 Spalovací,VW Passat GTE,540000,59000,2022,Benzín,1.5,TSI,,110,Manuální,Ano,,,Ne,Kombi,,,,Ano,5,Head UP disp,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210570077
 Spalovací,VW Passat Variant Elegance 2.0 TDI,499900,79398,2021,Nafta,2.0,TDI,,140,Automatická,,,,Ano,Kombi,Elegance,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210575570
 Spalovací,VW Passat Variant Elegance 2.0 TDI,498000,83953,2022,Nafta,2.0,TDI,,110,Manuální,,,,Ne,Kombi,,,,Ano,8,"Variant,,Busines",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210598256
-Spalovací,VW Passat Variant Elegance 2.0 TDI,629000,81000,2024,Nafta,2.0,,,110,Automatická,,,,Ne,Kombi,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210606647
+Spalovací,VW Passat Variant Elegance 2.0 TDI,629000,81000,2024,Nafta,2.0,,,110,Automatická,,,,Ne,Kombi,,,,Ano,6,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210606647
 Spalovací,VW Passat Variant Elegance 2.0 TDI,460000,89015,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,TAŽNÉ DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210612452
 Spalovací,VW Passat Variant 1.5 eTSI,649990,69418,2024,Benzín,1.5,,,110,Automatická,,,,Ne,Kombi,,,,Nejisté,5,2024 IQLIGHT DPH 69TKM,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210615581
 Spalovací,VW Passat Variant Elegance 2.0 TDI,470000,82685,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,TAŽNÉ DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210620057
 Spalovací,VW Passat Variant Elegance 2.0 TDI,545000,62500,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,"BMT , Business",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210633635
 Spalovací,VW Passat Variant Elegance 2.0 TDI,549000,96350,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,R-Line,,,Ano,7,ČR DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210641666
-Spalovací,VW Passat GTE,714999,26000,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,,,,Ano,5,*TZ*MASAŽ*ACC*360**,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210653486
+Spalovací,VW Passat GTE,714999,26000,2025,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,,,,Ano,5,*CZ* - REZERVACE,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210653486
 Spalovací,VW Passat GTE,549000,92901,2024,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,,,,Ano,5,Busines AUT DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210658235
 Spalovací,VW Passat Variant Elegance 2.0 TDI,499000,71532,2022,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,,,,Ano,8,Business,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210658310
 Spalovací,VW Passat GTE,539900,83248,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,,,,Ano,5,Business ČR,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/passat/210658598
@@ -6531,7 +6531,7 @@ Spalovací,VW T-Roc 1.5 TSI,699000,1000,2026,Benzín,1.5,TSI,,110,Automatická,A
 Spalovací,VW T-Roc 1.5 TSI,665000,22586,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,7,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210397658
 Spalovací,VW T-Roc 1.5 TSI,649000,26137,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210416009
 Spalovací,VW T-Roc 1.5 TSI,679000,18383,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,,Odstraněno,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210416441
-Spalovací,VW T-Roc 1.5 TSI,499000,46399,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,Sport,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210420704
+Spalovací,VW T-Roc 1.5 TSI,489000,46399,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,Sport,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210420704
 Spalovací,VW T-Roc 1.5 TSI,629900,33015,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210430955
 Spalovací,VW T-Roc 1.5 TSI,688490,17338,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,R-Line,,,Ano,8,*Kamera*Navi*,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210437657
 Spalovací,VW T-Roc 1.5 TSI,629000,53547,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Style,,,Ano,3,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210519260
@@ -6544,7 +6544,7 @@ Spalovací,VW T-Roc 1.5 TSI,565000,52000,2023,Benzín,1.5,TSI,,110,Manuální,,,
 Spalovací,VW T-Roc 1.5 TSI,569000,41843,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,8,( ),Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210657464
 Spalovací,VW T-Roc 1.5 TSI,559990,40287,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Style,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210659858
 Spalovací,VW T-Roc 1.5 TSI,658650,29548,2021,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,Sport*Navi*ACC*LED,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/t-roc/210674636
-Spalovací,VW Taigo 1.0 TSI,554000,21258,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Style,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/taigo/209466465
+Spalovací,VW Taigo 1.0 TSI,549000,21258,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Hatchback,Style,,,Nejisté,0,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/taigo/209466465
 Spalovací,VW Taigo 1.0 TSI,739000,2,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/taigo/209526285
 Spalovací,VW Taigo 1.0 TSI,699000,15000,2026,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,5,People,Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/taigo/209526393
 Spalovací,VW Taigo 1.0 TSI,739000,3,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,5,,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/taigo/209581386
@@ -6621,7 +6621,7 @@ Spalovací,VW Tiguan Life 1.5 TSI,624000,45125,2022,Benzín,1.5,TSI,,110,Automat
 Spalovací,VW Tiguan Life 1.5 TSI,729000,36274,2024,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,10,EVO,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210112232
 Spalovací,VW Tiguan Allspace 2.0 TDI,599900,99001,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210163127
 Spalovací,VW Tiguan Life 1.5 TSI,519800,84370,2022,Benzín,1.5,,,110,Manuální,,,,Ne,Kombi,,,,Ano,1,VW Tiguan 6G,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210210503
-Spalovací,VW Tiguan Life 1.5 TSI,639900,62805,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Elegance,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210218603
+Spalovací,VW Tiguan Life 1.5 TSI,619900,62805,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Elegance,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210218603
 Spalovací,VW Tiguan Allspace 2.0 TDI,549000,99997,2022,Nafta,2.0,TDI,,110,Manuální,,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210220760
 Spalovací,VW Tiguan Life 1.5 TSI,654900,53998,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,,,,Ano,8,Allspace,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210221462
 Spalovací,VW Tiguan Allspace 2.0 TDI,691737,51400,2023,Nafta,2.0,,,110,Automatická,,,,Ano,SUV,,,,Ano,6,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210225356
@@ -6629,7 +6629,7 @@ Spalovací,VW Tiguan Life 1.5 TSI,679000,40468,2022,Benzín,1.5,TSI,,110,Automat
 Spalovací,VW Tiguan Life 1.5 TSI,688999,61792,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,Kombi,Elegance,,,Ano,2,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210248048
 Spalovací,VW Tiguan Allspace 2.0 TDI,589000,93663,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210276590
 Spalovací,VW Tiguan Life 1.5 TSI,659000,57067,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Life,,,Ano,10,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210291917
-Spalovací,VW Tiguan Life 1.5 TSI,709000,51903,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210297749
+Spalovací,VW Tiguan Life 1.5 TSI,699000,51903,2023,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,R-Line,,,Ano,7,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210297749
 Spalovací,VW Tiguan Life 1.5 TSI,659900,65014,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,,,,Ano,8,Allspace,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210303758
 Spalovací,VW Tiguan Allspace 2.0 TDI,549000,94000,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210314465
 Spalovací,VW Tiguan Life 1.5 TSI,638900,35382,2023,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,,,,Ano,8,Allspace,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210344360
@@ -6664,7 +6664,7 @@ Spalovací,VW Tiguan Life 1.5 TSI,619000,28371,2024,Benzín,1.5,TSI,,110,Manuál
 Spalovací,VW Tiguan Life 1.5 TSI,649900,55821,2022,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Elegance,,,Ano,7,-,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210622313
 Spalovací,VW Tiguan Allspace 2.0 TDI,619900,78945,2023,Nafta,2.0,TDI,,110,Automatická,,,,Ano,SUV,,,,Ano,8,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210628310
 Spalovací,VW Tiguan Life 1.5 TSI,549000,36611,2021,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Life,,,Ano,10,"ČR, 1.maj",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210657260
-Spalovací,VW Tiguan Life 1.5 TSI,619000,54000,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,Life,,,Ano,5,automat,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210657707
+Spalovací,VW Tiguan Life 1.5 TSI,625000,54100,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,Kombi,Life,,,Ano,5,automat,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210657707
 Spalovací,VW Tiguan Life 1.5 TSI,598000,91855,2022,Benzín,1.5,TSI,,110,Automatická,,,,Ne,SUV,Elegance,,,Ano,7,*ACC*DPH*ČR 1M,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/tiguan/210661043
 Spalovací,VW Touran 1.5 TSI,749000,26900,2022,Benzín,1.5,TSI,,110,Manuální,,,,Ne,Kombi,R-Line,,,Ano,3,EVO 6G,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/touran/197915437
 Spalovací,VW Touran 1.5 TSI,649000,25400,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,MPV,,,,Nejisté,8,7MÍST,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/touran/208712330
@@ -6736,3 +6736,28 @@ Spalovací,Volvo XC60 2.0,749000,62000,2021,Nafta,2.0,,,145,Automatická,,,,Ne,S
 Spalovací,Volvo XC60 2.0,699000,92801,2021,Nafta,2.0,,,145,Automatická,,,,Ano,SUV,,,,Ano,4,B4 MOMENTUM AUT CZ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/xc60/210551939
 Spalovací,Volvo XC60 2.0,699000,48992,2022,Benzín,2.0,,,184,Automatická,,,,Ano,SUV,,,,Ano,6,B5 CORE CZ AUT 1.MAJ,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/xc60/210573740
 Spalovací,Volvo XC60 2.0,685000,87198,2021,Nafta,2.0,,,145,,,,,Ano,SUV,TOP,,,Ano,4,B4 (nafta) / nezáv. .,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volvo/xc60/210660083
+Spalovací,BMW X1 sDrive18i,545720,90234,2021,Nafta,2.0,,,140,Automatická,,,,Ano,SUV,,,,Ano,1,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/bmw/x1/210688799
+Elektrické,Citroën ë-C4,429000,45000,2022,Elektro,,,,100,,,,,Ne,CUV,,,Ano,,,Dojezd 350 km / Baterie 50 kWh / První majitel,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/citroen/e-c4/210539333
+Spalovací,Dacia Bigster 1.2 TCe,630000,19629,2025,Benzín,1.2,,MHEV,103,Manuální,,,,Ne,SUV,,,,Ano,5,"Extreme, Extreme",Předváděcí,Sauto.cz,https://www.sauto.cz/osobni/detail/dacia/bigster/210684866
+Spalovací,Ford Kuga 1.5 EcoBoost,600000,47000,2024,Benzín,1.5,,,137,Automatická,,,,Ne,SUV,Titanium,Ano,,Ano,6,"Aut. , záruka",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ford/kuga/210687725
+Spalovací,Ford Puma 1.0 EcoBoost MHEV,449000,42454,2023,Benzín,1.0,,,114,Automatická,,,,Ne,SUV,ST-Line,,,Ano,5,"automat,ČR,1MAJ",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ford/puma/210687770
+Elektrické,Hyundai Kona,438000,79800,2022,Elektro,,,,100,,,,,Ne,Hatchback,,,Ano,,,Dojezd 305 km / Baterie 39 kWh / EV 100kW Creative SoH 100%,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210432776
+Elektrické,Hyundai Kona,438000,57150,2022,Elektro,,,,100,,,,,Ne,SUV,,,Ano,,,Dojezd 305 km / Baterie 39 kWh / EV 100kW Creative HuD SoH 97%,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/hyundai/kona/210629219
+Spalovací,Kia Ceed SW 1.5 T-GDI,395900,76000,2023,Benzín,1.5,T-GDI,,117,Automatická,,,,Ne,Kombi,TOP,,,Ano,8,CZ DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/cee-d/210687974
+Spalovací,Kia K4 2.0 MPI,680980,10,2026,Benzín,1.6,T-GDI,,110,Automatická,Ano,Ano,,Ne,Kombi,,,,Nejisté,-2,K4 SW CL4 T,Nové,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/k4/210688199
+Spalovací,Kia XCeed 1.5 T-GDI,579000,10000,2025,Benzín,1.6,T-GDI,,110,Automatická,Ano,Ano,,Ne,CUV,,,,Ano,3,XCeed CD ST,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/kia/xcee-d/210688121
+Spalovací,Land Rover Range Rover Evoque 2.0,749999,48000,2022,Benzín,2.0,,,147,Automatická,,,,Ano,SUV,,,,Ano,6,P200 Dynamic SE DPH 1.maj.,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/land-rover/range-rover-evoque/210421115
+Spalovací,Mercedes-Benz CLA Coupé 180,739900,19096,2023,Benzín,1.3,,,120,Automatická,,,,Ne,Kombi,,,,Nejisté,1,200 AMG packet DPH,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mercedes-benz/cla/210596954
+Spalovací,MG EHS Plug-In Hybrid,399990,92643,2022,Benzín,1.5,,,119,Automatická,,,,Ne,SUV,,,,Ano,5,TGI,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/ehs/210688412
+Spalovací,MG HS 1.5 T-GDI,669900,6240,2025,Benzín,1.5,,PHEV,125,Automatická,Ano,,,Ne,Terénní,Exclusive,,,Nejisté,0,T,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/mg/hs/210688355
+Spalovací,Opel Astra Sports Tourer 1.2 Turbo,518033,28906,2025,Benzín,1.2,,HEV,107,Automatická,,,,Ne,Kombi,,,,Ano,5,ST GS Mild-hybrid Automat,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/opel/astra/210687677
+Spalovací,Škoda Kamiq 1.0 TSI,529990,26839,2024,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210688502
+Spalovací,Škoda Kamiq 1.0 TSI,514900,52715,2023,Benzín,1.5,TSI,,110,Manuální,,,,Ne,SUV,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210688514
+Spalovací,Škoda Kamiq 1.0 TSI,619000,14064,2025,Benzín,1.5,TSI,,110,Automatická,Ano,,,Ne,SUV,Monte Carlo,,,Ano,5,,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/kamiq/210688979
+Spalovací,Škoda Octavia Liftback 1.5 TSI,620000,26941,2025,Benzín,1.5,TSI,MHEV,110,Automatická,,,,Ne,Liftback,Selection,,,Ano,7,e-tec,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210684857
+Spalovací,Škoda Octavia Combi 1.5 TSI,645000,98675,2021,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ano,Kombi,Scout,,,Nejisté,0,Combi 11,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/octavia/210688301
+Spalovací,Škoda Superb Combi Style 2.0 TDI,649000,52000,2024,Nafta,2.0,TDI,,110,Automatická,,,,Ne,Kombi,Sportline,,,Ano,7,AUT,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210427097
+Spalovací,Škoda Superb Combi Style 2.0 TDI,629000,37000,2023,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,,,,Ano,8,Matrix Display,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/skoda/superb/210687917
+Spalovací,KGM Korando 1.5 GDI-T 2WD,390000,63839,2022,Benzín,1.5,T-GDI,,120,Manuální,,,,Ne,SUV,,,,Ano,5,"ČR,1.maj",Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210685232
+Spalovací,KGM Korando 1.5 GDI-T 2WD,450000,22535,2022,Benzín,1.5,T-GDI,,120,Automatická,,,,Ne,SUV,Style,Ano,,Ano,5,Záruka,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/ssangyong/korando/210688754
+Spalovací,VW Arteon Shooting Brake 2.0 TDI,679000,88545,2022,Nafta,2.0,TDI,,110,Automatická,Ano,,,Ne,Kombi,R-Line,,,Ano,3,Shooting Br,Ojeté,Sauto.cz,https://www.sauto.cz/osobni/detail/volkswagen/arteon/210688895
