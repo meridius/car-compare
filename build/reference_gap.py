@@ -259,6 +259,7 @@ def _cmd_gaps(a):
         c["projected"] = proj.get(c["prefix"], 0)
     missing = [c for c in clusters if c["klass"] == "missing_ref"]
     norm = [c for c in clusters if c["klass"] == "normalization_gap"]
+    total_missing = len(missing)
     if a.top:
         missing = missing[: a.top]
     outdir = os.path.join(BASE_DIR, "tmp", "ref-gap")
@@ -268,9 +269,9 @@ def _cmd_gaps(a):
         json.dump({"missing_ref": missing, "normalization_gap": norm}, f,
                   ensure_ascii=False, indent=2)
     print(f"Nespárováno {a.fuel.upper()}: {len(unpaired)} inzerátů, "
-          f"{len(clusters)} modelů ({len(missing)} chybí v referencích, "
+          f"{len(clusters)} modelů ({total_missing} chybí v referencích, "
           f"{len(norm)} normalizace).")
-    print(f"Top {len(missing)} chybějících (→ {out}):")
+    print(f"Top {len(missing)} z {total_missing} chybějících (→ {out}):")
     for c in missing:
         print(f"  {c['projected']:5d}  {c['prefix']}   e.g. {c['sample_names'][:2]}")
     if norm:

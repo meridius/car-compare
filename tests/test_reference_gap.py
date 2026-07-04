@@ -78,6 +78,11 @@ class TestProjectAndStub(unittest.TestCase):
         self.assertEqual(row["Model auta"], "Renault Twingo")
         self.assertEqual(row["Kapacita baterie (kWh)"], "")  # spec blank until researched
 
+    def test_ev_ranges_keys_are_all_real_columns(self):
+        cols = rg.ev_columns()
+        for col in rg.EV_RANGES:
+            self.assertIn(col, cols)  # a renamed CSV header must fail loud, not silently skip
+
 
 class TestValidate(unittest.TestCase):
     def _good(self):
