@@ -160,11 +160,12 @@ class TestAppendAndCount(unittest.TestCase):
 
     def test_count_unpaired(self):
         with tempfile.TemporaryDirectory() as d:
-            p = os.path.join(d, "cars.json")
-            json.dump({"data": [
+            import pandas as pd
+            p = os.path.join(d, "cars.parquet")
+            pd.DataFrame([
                 {"Typ": "Elektrické", "Spárováno": "Ne", "Model auta": "X"},
                 {"Typ": "Elektrické", "Spárováno": "Ano", "Model auta": "Y"},
-            ]}, open(p, "w"))
+            ]).to_parquet(p, index=False)
             self.assertEqual(rg.count_unpaired(p, "ev"), 1)
 
     def test_append_adds_missing_trailing_newline(self):

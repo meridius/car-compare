@@ -93,12 +93,18 @@ return its selector to screenshot).
 
 ## Dependencies
 
-Allowed: `playwright`, `pandas`, `beautifulsoup4`, `aiohttp` (sauto only).
+Allowed: `playwright`, `pandas`, `pyarrow`, `beautifulsoup4`, `aiohttp` (sauto only).
 Do not add new libraries without explicit user approval.
 
 ## Output
 
-CSVs are the sole output format. Never suggest databases, extra files, or append modes.
+Parquet is the storage format (decision 001): per-source state is
+`scrapers/data/scrapes/<slug>.parquet` (stringly-typed, zstd), the dashboard
+payload is `site/data/cars.parquet` (typed, snappy) + `cars-meta.json`.
+Neither is committed to git — canonical state lives in the rolling GitHub
+Release `data` with immutable monthly `data-YYYY-MM` snapshots. The frozen
+seed CSVs under `scrapers/data/scrapes/` are bootstrap fallback only.
+Never suggest databases or servers; the pipeline stays file-based.
 
 ## Function Scope
 

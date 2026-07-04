@@ -25,9 +25,9 @@ fi
 # Dependency checks run ONCE, serially, before fan-out — concurrent pip /
 # playwright installs would race on the same cache.
 echo "==> Kontroluji Python závislosti..."
-python3 -c "import playwright, pandas, bs4, aiohttp" 2>/dev/null || {
+python3 -c "import playwright, pandas, pyarrow, bs4, aiohttp" 2>/dev/null || {
     echo "    Instaluji chybějící balíčky..."
-    pip install playwright pandas beautifulsoup4 aiohttp
+    pip install playwright pandas pyarrow beautifulsoup4 aiohttp
 }
 
 echo "==> Kontroluji Playwright Chromium prohlížeč..."

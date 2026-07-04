@@ -198,6 +198,18 @@ Like energycars, mobile.de exposes no availability concept in search results. Th
 merge step still marks vanished listings `Odstraněno`. `attr.gi` (Garantie until
 MM/YYYY) drives `Záruka = "Ano"`.
 
+### CI never scrapes on push (rate-limit guard)
+
+mobile.de rate-limits by IP, so the workflow must not scrape on arbitrary changes.
+Scraping runs **only** on the daily cron or a manual `workflow_dispatch` (which has a
+`skip_scrape` input to deploy without scraping). Pushes to `main` — filtered to paths
+that affect the built site (`site/**`, `build/**`, `scrapers/core/**`,
+`scrapers/data/reference/**`, the workflow file) — **rebuild + redeploy from the state
+already in the rolling `data` release**, no fetch. Mechanics: `scrape` is gated
+`if: github.event_name != 'push' && inputs.skip_scrape != 'true'`; `build` runs when
+scrape succeeded *or* was skipped (`always() && result != 'failure'/'cancelled'`) and
+only pulls the `state-*` artifacts when scrape actually ran.
+
 ### country → the shared "Země" column, not Extra
 
 `attr.cn` (ISO code) maps via `_COUNTRY_MAP` to the Czech country name in the canonical
@@ -208,6 +220,72 @@ the three Czech sources hard-code `Země = "Česko"`, and `build_data.backfill_c
 fills `Česko` on any non-mobile.de row whose `Země` is blank (CSVs written before the
 column existed). The dashboard shows `Země` as a set-filter column and a "Země × Typ"
 card in the dataset overview.
+
+---
+
+## core — storage & payload (parquet)
+
+### state parquet is stringly on purpose
+
+`storage.write_state()` coerces every column to str with blanks `""` — exact
+parity with the old `pd.read_csv(dtype=str).fillna("")` contract. Typed state
+would change merge/matching comparisons (e.g. `row["Stav"] == "Odstraněno"` on
+NaN). The typed payload is built separately in `build_data.write_payload()`.
+
+### payload numeric columns must be float64, never int64
+
+hyparquet decodes parquet int64 as JavaScript BigInt; grid formatters call
+`toFixed` → crash. `write_payload()` casts all numeric cols to float64
+(pinned by `test_no_int64_columns`). Same trap: a numeric-in-the-grid column
+missing from `numeric_cols` stays a *string* after the stringly state read and
+crashes formatters ("Objem motoru" bug) — every `num: true` column in
+`site/app.js` COL_CONFIG must be in `write_payload.numeric_cols`.
+
+### hyparquet import must be version-pinned
+
+The unpinned `cdn.jsdelivr.net/npm/hyparquet/+esm` URL serves a stale cached
+build. `site/app.js` pins `hyparquet@1.26.2`. Payload uses **snappy** (native
+in hyparquet); switching to zstd would require the extra `hyparquet-compressors`
+package in the browser.
+
+### full-buffer fetch on purpose (Pages gzip+Range bug)
+
+GitHub Pages computes `Content-Range` against the *gzipped* byte stream for
+compressible types, corrupting ranged reads (verified live 2026-07). `app.js`
+therefore fetches `cars.parquet` as one ArrayBuffer — no Range requests. If a
+future DuckDB-WASM upgrade needs ranged reads, verify Pages serves `.parquet`
+uncompressed first.
+
+### seed CSVs are frozen, not dead
+
+`storage.read_state()` prefers `<slug>.parquet`, falls back to the git-tracked
+`<slug>.csv`. CI seeds from the rolling `data` release; a fresh clone without
+release access still builds from the seeds. The seeds stop being updated — do
+not "fix" data in them.
+
+### live / archive split (removed listings are lazy-loaded)
+
+`build_data.write_payload()` splits the payload by `Stav`: live listings →
+`cars.parquet` (always loaded), removed (`Stav=="Odstraněno"`) →
+`cars-archived.parquet` (fetched only when the user clicks "Načíst archiv" in
+`app.js`). So the always-loaded payload stays bounded by the live market even as
+removed listings accumulate. `cars-meta.json` carries `archivedCars` so the
+button can show the count (and hides when 0). The archive file is always written
+(empty frame keeps its schema) so the browser fetch never 404s.
+
+### merge keeps removed rows forever by default
+
+`REMOVED_RETENTION_DAYS = None` → `merge_with_previous()` keeps every removed row
+(they become the archive; monthly snapshots are the permanent record). Pass
+`retention_days=N` to cap it if the archive ever needs bounding. This is a
+deliberate reversal of the original "drop after 60 days" — the live/archive split
+removed the size pressure that motivated a hard cap.
+
+### live payload must never contain Odstraněno rows
+
+`test_data_integrity.test_live_payload_has_no_removed_rows` pins it — a removed
+row leaking into `cars.parquet` means it shows without the user loading the
+archive, and doubles up once they do.
 
 ---
 

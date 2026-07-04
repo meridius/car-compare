@@ -1,10 +1,10 @@
-"""Shared post-scrape pipeline: dedup → ICE auth-match → merge-with-previous → write CSV."""
+"""Shared post-scrape pipeline: dedup → ICE auth-match → merge-with-previous → write parquet state."""
 from pathlib import Path
 import pandas as pd
 
 from .schema import CANONICAL_COLS, TYP_ICE
 from .merge import merge_with_previous
-from . import matching
+from . import matching, storage
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SCRAPES_DIR = DATA_DIR / "scrapes"
@@ -24,7 +24,7 @@ def _match_ice(df, auth_list):
 
 
 def run_source(source_module):
-    """Execute a source adapter and persist its CSV via the shared pipeline."""
+    """Execute a source adapter and persist its parquet state via the shared pipeline."""
     import asyncio
     rows = asyncio.run(source_module.scrape())
     df = pd.DataFrame(rows, columns=CANONICAL_COLS)
@@ -35,11 +35,11 @@ def run_source(source_module):
     df = _match_ice(df, auth)
 
     SCRAPES_DIR.mkdir(parents=True, exist_ok=True)
-    csv_path = SCRAPES_DIR / f"{source_module.SOURCE_SLUG}.csv"
-    df = merge_with_previous(df, csv_path)
+    base_path = SCRAPES_DIR / source_module.SOURCE_SLUG
+    df = merge_with_previous(df, base_path)
     # Reindex to the canonical schema so column order is stable and any column added
-    # since the previous CSV (e.g. "Skóre shody") is present/blank on preserved rows.
+    # since the previous state (e.g. "Odstraněno dne") is present/blank on preserved rows.
     df = df.reindex(columns=CANONICAL_COLS)
-    df.to_csv(csv_path, index=False, encoding="utf-8")
-    print(f"Hotovo – uloženo {len(df)} aut do {source_module.SOURCE_SLUG}.csv")
-    return csv_path
+    out_path = storage.write_state(df, base_path)
+    print(f"Hotovo – uloženo {len(df)} aut do {out_path.name}")
+    return out_path

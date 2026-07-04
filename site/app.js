@@ -1,3 +1,9 @@
+// Payload is parquet (129 MB JSON → ~8 MB, decode 9 s → ~1.5 s at 141k rows).
+// hyparquet decodes snappy natively — keep cars.parquet snappy-compressed and
+// this stays the only import. Pin the version: the unpinned jsdelivr URL serves
+// a stale cached build. See docs/decisions/001-scalable-storage.md.
+import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.2/+esm";
+
 (function () {
   "use strict";
 
@@ -257,6 +263,7 @@
 
   var COL_CONFIG = [
     { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS, tip: "Dostupnost inzerátu: Dostupný / Zamluvené / Chystá se / Prodané / Odstraněno" },
+    { field: "Odstraněno dne", filter: "agTextColumnFilter", w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
@@ -304,6 +311,9 @@
   var chartLoaded = false;
   var summaryRendered = false;
   var totalRows = 0;
+  // Removed listings live in a separate cars-archived.parquet, fetched on demand
+  // (decision 001, option C). "unloaded" | "loading" | "loaded".
+  var archiveState = "unloaded";
 
   function hslToRgb(h, s, l) {
     s /= 100; l /= 100;
@@ -589,6 +599,51 @@
     document.getElementById("row-count").textContent = text;
   }
 
+  // Show the "load archive" button once we know how many removed listings exist.
+  // Hidden entirely when there are none. cars.parquet holds only live listings,
+  // so the archive stays out of memory until the user asks for it.
+  function setupArchiveButton() {
+    var btn = document.getElementById("btn-archive");
+    if (!btn) return;
+    var n = (appMetadata && appMetadata.archivedCars) || 0;
+    if (!n) { btn.style.display = "none"; return; }
+    btn.style.display = "";
+    btn.disabled = false;
+    btn.textContent = "Na\u010d\u00edst archiv (" + Number(n).toLocaleString("cs-CZ") + ")";
+  }
+
+  window.loadArchive = function () {
+    if (archiveState !== "unloaded") return;
+    archiveState = "loading";
+    var btn = document.getElementById("btn-archive");
+    if (btn) { btn.disabled = true; btn.textContent = "Na\u010d\u00edt\u00e1m archiv\u2026"; }
+    fetch("data/cars-archived.parquet")
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); })
+      .then(function (buf) { return parquetReadObjects({ file: buf }); })
+      .then(function (rows) {
+        if (gridApi && rows.length) {
+          gridApi.applyTransaction({ add: rows });
+          totalRows += rows.length;
+          // If a Stav filter is active and excludes "Odstran\u011bno", the freshly
+          // added rows would stay hidden \u2014 the user clicked to see them, so
+          // add that value back into the active selection.
+          var model = gridApi.getFilterModel() || {};
+          var stav = model["Stav"];
+          if (stav && stav.values && stav.values.indexOf("Odstran\u011bno") === -1) {
+            stav.values.push("Odstran\u011bno");
+            gridApi.setFilterModel(model);
+          }
+        }
+        archiveState = "loaded";
+        if (btn) btn.textContent = "Archiv na\u010dten (" + Number(rows.length).toLocaleString("cs-CZ") + ")";
+        updateRowCount();
+      })
+      .catch(function () {
+        archiveState = "unloaded";
+        if (btn) { btn.disabled = false; btn.textContent = "Archiv \u2013 chyba, zkusit znovu"; }
+      });
+  };
+
   window.clearFilters = function () {
     localStorage.removeItem(STORAGE_KEY);
     var url = new URL(window.location);
@@ -712,6 +767,9 @@
       addStat(card1, "Datum", fmtDate(appMetadata.buildDate));
       addStat(card1, "Spu\u0161t\u011bn\u00ed", trigger);
       addStat(card1, "Celkem aut", fmtNum(appMetadata.totalCars));
+      if (appMetadata.archivedCars) {
+        addStat(card1, "Archiv (odstraněné)", fmtNum(appMetadata.archivedCars));
+      }
       body.appendChild(card1);
 
       // Source breakdown
@@ -1040,15 +1098,24 @@
       });
   }
 
-  fetch("data/cars.json")
-    .then(function (r) { return r.json(); })
-    .then(function (json) {
-      if (json && json.metadata && json.data) {
-        appMetadata = json.metadata;
-        init(json.data);
-      } else {
-        init(json);
-      }
+  // Full-buffer fetch on purpose: ranged reads of compressible types are
+  // broken on GitHub Pages (Content-Range counts gzipped bytes), and at ~8 MB
+  // there is nothing to gain from partial reads anyway.
+  Promise.all([
+    fetch("data/cars.parquet").then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " (cars.parquet)");
+      return r.arrayBuffer();
+    }),
+    fetch("data/cars-meta.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; }),
+  ])
+    .then(function (results) {
+      return parquetReadObjects({ file: results[0] }).then(function (rows) {
+        appMetadata = results[1];
+        init(rows);
+        setupArchiveButton();
+      });
     })
     .catch(function (err) {
       document.getElementById("grid").textContent = "Chyba načítání dat: " + err.message;

@@ -16,23 +16,33 @@ sys.path.insert(0, ROOT)
 
 from scrapers.core.schema import CANONICAL_COLS  # noqa: E402
 
-CARS_JSON = os.path.join(ROOT, "site", "data", "cars.json")
+CARS_PARQUET = os.path.join(ROOT, "site", "data", "cars.parquet")
+CARS_META = os.path.join(ROOT, "site", "data", "cars-meta.json")
 
 
 def setUpModule():
-    if not os.path.exists(CARS_JSON):
+    if not os.path.exists(CARS_PARQUET):
         subprocess.run([sys.executable, os.path.join(ROOT, "build", "build_data.py")],
                        check=True, cwd=ROOT)
+
+
+def _records(path):
+    """Parquet rows as dicts with NaN mapped to None (JSON-record parity)."""
+    import pandas as pd
+    df = pd.read_parquet(path)
+    return [
+        {k: (None if (isinstance(v, float) and v != v) else v) for k, v in rec.items()}
+        for rec in df.to_dict("records")
+    ]
 
 
 class DataIntegrityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(CARS_JSON, encoding="utf-8") as f:
-            cls.cars = json.load(f)["data"]
+        cls.cars = _records(CARS_PARQUET)
         cls.ice = [c for c in cls.cars if c.get("Typ") == "Spalovací"]
         cls.ev = [c for c in cls.cars if c.get("Typ") == "Elektrické"]
-        cls.assertTrue(cls.ice, "no combustion rows in cars.json")
+        cls.assertTrue(cls.ice, "no combustion rows in cars.parquet")
 
     @staticmethod
     def _score(car):
@@ -113,6 +123,47 @@ class DataIntegrityTest(unittest.TestCase):
         self.assertLess(ano / n, 0.95,
                         f"Ano rate {ano/n:.1%} >= 95% looks like the old vanity matcher")
         self.assertGreater(ano / n, 0.30, f"Ano rate {ano/n:.1%} suspiciously low")
+
+
+CARS_ARCHIVED = os.path.join(ROOT, "site", "data", "cars-archived.parquet")
+
+
+class PayloadContractTest(unittest.TestCase):
+    """Pins the browser-facing artifacts: the live/archive split, dtypes, meta."""
+
+    def test_no_int64_columns_in_either_payload(self):
+        import pyarrow.parquet as pq
+        for path in (CARS_PARQUET, CARS_ARCHIVED):
+            offenders = [f.name for f in pq.read_schema(path) if "int64" in str(f.type)]
+            self.assertEqual(offenders, [],
+                             f"int64 in {os.path.basename(path)} → BigInt in hyparquet: {offenders}")
+
+    def test_meta_sidecar_keys(self):
+        with open(CARS_META, encoding="utf-8") as f:
+            meta = json.load(f)
+        self.assertEqual(
+            set(meta),
+            {"buildDate", "trigger", "sources", "matching", "referenceData",
+             "totalCars", "archivedCars"},
+        )
+        self.assertGreater(meta["totalCars"], 0)
+
+    def test_live_payload_has_no_removed_rows(self):
+        """cars.parquet is the always-loaded live set — removed listings belong
+        in cars-archived.parquet, not here (decision 001, option C)."""
+        offenders = [c for c in _records(CARS_PARQUET) if c.get("Stav") == "Odstraněno"]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} 'Odstraněno' rows leaked into the live payload")
+
+    def test_archive_holds_only_removed_rows(self):
+        archived = _records(CARS_ARCHIVED)
+        bad = [c for c in archived if c.get("Stav") != "Odstraněno"]
+        self.assertEqual(bad, [], f"{len(bad)} non-removed rows in the archive payload")
+
+    def test_meta_archived_count_matches_archive_file(self):
+        with open(CARS_META, encoding="utf-8") as f:
+            meta = json.load(f)
+        self.assertEqual(meta["archivedCars"], len(_records(CARS_ARCHIVED)))
 
 
 if __name__ == "__main__":

@@ -201,16 +201,27 @@ def parse_czech_decimal(val):
     except ValueError:
         return None
 
-def load_scraper_csvs():
+def load_scraper_data(scrapes_dir=None):
+    """Concat per-source state (parquet, seed-CSV fallback — see core/storage.py).
+
+    State files are stringly with "" blanks; mask those back to NaN so the
+    frame is indistinguishable from the old pd.read_csv() one downstream.
+    """
+    from pathlib import Path
+
+    from scrapers.core import storage
+
     dfs = []
-    scrapes = os.path.join(BASE_DIR, "scrapers", "data", "scrapes")
+    scrapes = Path(scrapes_dir or os.path.join(BASE_DIR, "scrapers", "data", "scrapes"))
     for name in ["sauto", "autodraft", "energycars", "mobilede"]:
-        path = os.path.join(scrapes, f"{name}.csv")
-        if os.path.exists(path):
-            df = pd.read_csv(path)
+        df = storage.read_state(scrapes / name)
+        if df is not None:
             dfs.append(df)
             print(f"  {name}: {len(df)} rows")
-    return pd.concat(dfs, ignore_index=True) if dfs else pd.DataFrame()
+    if not dfs:
+        return pd.DataFrame()
+    combined = pd.concat(dfs, ignore_index=True)
+    return combined.mask(combined == "")
 
 def load_combustion_reference():
     path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
@@ -483,16 +494,70 @@ def build_reference_json(comb_ref, elec_ref, df):
     print(f"  Reference: {len(records)} entries → {out_path}")
     return records
 
-def update_scrape_history(metadata):
-    """Append entry to scrape_history.json (rolling 365 entries)."""
-    history_path = os.path.join(BASE_DIR, "site", "data", "scrape_history.json")
+PAYLOAD_NUMERIC_COLS = [
+    "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
+    "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
+    "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
+    "Skóre shody", "Cd",
+]
+
+
+def _coerce_payload(df):
+    """Type a frame for the browser: numeric cols → float64, blanks → null.
+
+    Snappy (in write_payload) + float64: hyparquet decodes snappy natively (no
+    extra browser dep) and int64 would decode to BigInt and break grid
+    formatters (pinned by test_no_int64_columns).
+    """
+    df = df.copy()
+    for col in PAYLOAD_NUMERIC_COLS:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors="coerce").astype("float64")
+    for col in df.columns:
+        if col not in PAYLOAD_NUMERIC_COLS:
+            df[col] = df[col].astype(object).mask(df[col].isna() | (df[col] == ""), None)
+    return df
+
+
+def write_payload(df, metadata, out_dir):
+    """Write the split payload (decision 001, option C): cars.parquet = live
+    listings, cars-archived.parquet = removed ones (Stav="Odstraněno"), plus the
+    cars-meta.json sidecar. The archive is lazy-loaded on demand in the dashboard,
+    so the always-loaded payload stays bounded by the live market.
+    """
+    os.makedirs(out_dir, exist_ok=True)
+    removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
+
+    live_path = os.path.join(out_dir, "cars.parquet")
+    _coerce_payload(df[~removed]).to_parquet(live_path, compression="snappy", index=False)
+
+    archived_path = os.path.join(out_dir, "cars-archived.parquet")
+    # Always write it (empty frame keeps its schema) so the browser fetch never 404s.
+    _coerce_payload(df[removed]).to_parquet(archived_path, compression="snappy", index=False)
+
+    meta_path = os.path.join(out_dir, "cars-meta.json")
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(metadata, f, ensure_ascii=False, separators=(",", ":"))
+    return live_path, archived_path, meta_path
+
+
+def update_scrape_history(metadata, history_path=None, seed_path=None):
+    """Append entry to scrape_history.json (rolling 365 entries).
+
+    The file is no longer git-tracked; when absent (fresh checkout, no release
+    downloaded) it is seeded from the frozen copy in scrapers/data/seed/.
+    """
+    history_path = history_path or os.path.join(BASE_DIR, "site", "data", "scrape_history.json")
+    seed_path = seed_path or os.path.join(BASE_DIR, "scrapers", "data", "seed", "scrape_history.json")
     history = []
-    if os.path.exists(history_path):
-        try:
-            with open(history_path, "r", encoding="utf-8") as f:
-                history = json.load(f)
-        except (json.JSONDecodeError, IOError):
-            history = []
+    for candidate in (history_path, seed_path):
+        if os.path.exists(candidate):
+            try:
+                with open(candidate, "r", encoding="utf-8") as f:
+                    history = json.load(f)
+                break
+            except (json.JSONDecodeError, IOError):
+                history = []
 
     entry = {
         "date": metadata["buildDate"],
@@ -509,8 +574,8 @@ def update_scrape_history(metadata):
     print(f"  History: {len(history)} entries → {history_path}")
 
 def main():
-    print("Loading scraper CSVs...")
-    df = load_scraper_csvs()
+    print("Loading scraper state...")
+    df = load_scraper_data()
     print(f"  Combined: {len(df)} rows, {len(df.columns)} columns")
 
     print("Re-matching combustion against authoritative list...")
@@ -544,25 +609,13 @@ def main():
     if "Hybrid typ" in df.columns and "Spotřeba (l/100 km)" in df.columns:
         df.loc[df["Hybrid typ"].astype(str).str.upper() == "PHEV", "Spotřeba (l/100 km)"] = None
 
-    numeric_cols = [
-        "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
-        "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
-        "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
-        "Skóre shody", "Cd",
-    ]
-    for col in numeric_cols:
-        if col in df.columns:
-            df[col] = pd.to_numeric(df[col], errors="coerce")
-
-    df = df.where(df.notna(), None)
-
     ordered_cols = [
         "Typ", "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby", "Výkon (kW)",
         "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ",
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
         "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Spárováno",
         "Skóre shody", "Tepelné čerpadlo",
-        "Extra", "Stav", "Země", "Zdroj", "Odkaz na auto",
+        "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
         "Cd", "Cd zdroj", "Tepelné čerpadlo možné",
@@ -573,36 +626,33 @@ def main():
             final_cols.append(c)
     df = df[final_cols]
 
-    out_path = os.path.join(BASE_DIR, "site", "data", "cars.json")
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
-
-    records = df.to_dict(orient="records")
-    for rec in records:
-        for k, v in rec.items():
-            if isinstance(v, float) and (v != v):
-                rec[k] = None
-
     trigger = os.environ.get("BUILD_TRIGGER", "manual")
     build_date = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    removed_mask = (df["Stav"].astype(str) == "Odstraněno") if "Stav" in df.columns else pd.Series(False, index=df.index)
+    df_live = df[~removed_mask]
+    archived_count = int(removed_mask.sum())
+
+    # Metadata describes the always-loaded live payload; the archive is separate
+    # and lazy-loaded, so its rows are surfaced only by archivedCars.
     metadata = {
         "buildDate": build_date,
         "trigger": trigger,
-        "sources": count_sources(df),
-        "matching": count_matching(df),
+        "sources": count_sources(df_live),
+        "matching": count_matching(df_live),
         "referenceData": {
             "combustion": {"file": "ice_specs.csv", "count": len(comb_ref)},
             "electric": {"file": "ev_specs.csv", "count": len(elec_ref)},
         },
-        "totalCars": len(records),
+        "totalCars": len(df_live),       # rows in the always-loaded cars.parquet
+        "archivedCars": archived_count,  # rows in the lazy-loaded cars-archived.parquet
     }
+    live_count = len(df_live)
 
-    output = {"metadata": metadata, "data": records}
+    out_dir = os.path.join(BASE_DIR, "site", "data")
+    live_path, _, _ = write_payload(df, metadata, out_dir)
 
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(output, f, ensure_ascii=False, separators=(",", ":"))
-
-    print(f"\nDone: {len(records)} cars → {out_path}")
+    print(f"\nDone: {live_count} live + {archived_count} archived cars → {live_path}")
     print(f"Final columns ({len(final_cols)}): {final_cols}")
 
     print("Building reference JSON...")

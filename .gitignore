@@ -4,3 +4,11 @@ __pycache__/
 tmp/
 
 var/.env
+
+# Data is not tracked in git (docs/decisions/001-scalable-storage.md):
+# per-source parquet state lives in the rolling GitHub Release `data`
+# (frozen seed CSVs stay tracked as bootstrap fallback), the built payload
+# ships only inside the Pages deploy artifact.
+scrapers/data/scrapes/*.parquet
+site/data/*
+!site/data/.gitkeep
