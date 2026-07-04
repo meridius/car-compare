@@ -55,14 +55,21 @@ def strip_listing_noise(model):
 
 
 def fix_electric_model(model):
-    """Strip noise and heal frozen sauto 'Ostatní' garbage names (mirrors the
+    """Strip noise, heal frozen sauto 'Ostatní' garbage names (mirrors the
     electric sauto scraper's _recover_ostatni_model, for rows scraped before the
-    fix landed). Kia EV2 = project code 'QV1' or its unique 42.2 kWh battery."""
+    fix landed), and re-apply normalize_model()'s alias collapsing (e.g. ORA
+    Funky Cat -> GWM Ora 03). normalize_model() runs at scrape time in every
+    adapter, so freshly scraped rows already carry the canonical spelling —
+    but rows already sitting in state/seed CSVs from before an alias existed
+    still have the old name, so it must be re-applied here at build time too.
+    Kia EV2 = project code 'QV1' or its unique 42.2 kWh battery."""
     m = strip_listing_noise(model)
     if isinstance(m, str) and m.startswith("Kia ") and (
         "QV1" in m.upper() or re.search(r'42[.,]2', m)
     ):
         return "Kia EV2"
+    if isinstance(m, str):
+        m = _normalize_model(m)
     return m
 
 

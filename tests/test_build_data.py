@@ -200,5 +200,40 @@ class ElectricReferenceJoinAccentFoldTest(unittest.TestCase):
         self.assertEqual(out["Kapacita baterie (kWh)"].tolist(), [43.8, 43.8])
 
 
+class ElectricModelAliasTest(unittest.TestCase):
+    """GWM Ora 03 / ORA Funky Cat are the same physical car under two market
+    names; ev_specs.csv keeps a single canonical row ("GWM Ora 03"). Freshly
+    scraped rows are collapsed by normalize_model() at scrape time, but rows
+    already sitting in state/seed CSVs from before that alias existed still
+    carry the old spelling — fix_electric_model() re-normalizes at build time
+    so both old and new rows pair to the one remaining reference row."""
+
+    def _ora_ref(self):
+        return pd.DataFrame([{
+            "Model auta": "GWM Ora 03",
+            "Objem kufru (l)": 228,
+            "Hlučnost (dB)": "",
+            "Kapacita baterie (kWh)": 45.4,
+            "Dojezd komb. letní WLTP (km)": 310,
+            "Dojezd komb. letní EV-database (km)": 260,
+            "Cd": 0.33,
+            "Tepelné čerpadlo možné (ano/ne)": "ano",
+        }])
+
+    def test_fix_electric_model_collapses_funky_cat_alias(self):
+        self.assertEqual(B.fix_electric_model("ORA Funky Cat 48 kWh"), "GWM Ora 03 48 kWh")
+        self.assertEqual(B.fix_electric_model("GWM Ora 03 48 kWh"), "GWM Ora 03 48 kWh")
+
+    def test_both_spellings_pair_to_the_same_single_reference_row(self):
+        combined = pd.concat([
+            _ev_df("ORA Funky Cat 48 kWh"),
+            _ev_df("GWM Ora 03 48 kWh"),
+        ], ignore_index=True)
+        combined["Model auta"] = combined["Model auta"].map(B.fix_electric_model)
+        out = B.join_electric_reference(combined, self._ora_ref())
+        self.assertEqual(set(out["Spárováno"]), {"Ano"})
+        self.assertEqual(out["Kapacita baterie (kWh)"].tolist(), [45.4, 45.4])
+
+
 if __name__ == "__main__":
     unittest.main()

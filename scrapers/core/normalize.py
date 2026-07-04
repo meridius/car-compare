@@ -21,6 +21,13 @@ MODEL_CLEANUP_PATTERNS = [
     # listings write the ProCeed shooting brake as "Pro_Ceed" / "Pro Ceed";
     # fold to the reference spelling so they match "Kia ProCeed ...".
     (re.compile(r'Pro[_\s]?Ceed'), 'ProCeed'),
+    # GWM Ora 03 == ORA Funky Cat == Ora Good Cat: same physical car sold under
+    # multiple market names (grow-reference once added both as separate
+    # ev_specs.csv rows, purely because listings arrive under two spellings).
+    # Collapse every spelling to the one row that survives in ev_specs.csv.
+    # Deliberately narrow — this is NOT a general "same platform" rule; distinct
+    # badge-engineered cars (e.g. Škoda Citigo-e / VW e-up!) are left alone.
+    (re.compile(r'(?:GWM\s+)?ORA\s+(?:Funky|Good)\s*Cat', re.IGNORECASE), 'GWM Ora 03'),
 ]
 
 
