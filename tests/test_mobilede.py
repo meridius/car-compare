@@ -96,7 +96,9 @@ class BuildRowTest(unittest.TestCase):
         self.assertEqual(row["Cena (Kč)"], 240000)
         self.assertEqual(row["Nájezd (km)"], 52610)
         self.assertEqual(row["Rok výroby"], "2021")
-        self.assertEqual(row["Výkon (kW)"], 33)
+        # sanitize_ev_power (same guard sauto's build_ev applies) returns a
+        # string, same contract as everywhere else it's used.
+        self.assertEqual(row["Výkon (kW)"], "33")
         self.assertEqual(row["Karoserie"], "Hatchback")
         self.assertIn("Baterie 27 kWh", row["Extra"])
         self.assertIn("Beroun", row["Extra"])
@@ -151,6 +153,22 @@ class BuildRowTest(unittest.TestCase):
         from scrapers.core.schema import CANONICAL_COLS
         row = mobilede._build_row(EV_ITEM, 25.0)
         self.assertEqual(sorted(row.keys()), sorted(CANONICAL_COLS))
+
+    def test_ev_implausible_zero_power_blanked(self):
+        """Real data: ~10 Mobile.de EV rows (Dacia Spring, Hyundai Kona Elektro,
+        Opel Mokka/-e) carry an explicit 'pw': '0 kW' — sauto has an equivalent
+        guard (sanitize_ev_power) that build_row never applied here. Blank beats
+        a wrong number."""
+        item = {**EV_ITEM, "attr": {**EV_ITEM["attr"], "pw": "0 kW"}}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Výkon (kW)"], "")
+
+    def test_ice_power_untouched_by_ev_sanitizer(self):
+        """The EV power floor must not blank a legitimate low-but-real ICE
+        value — sanitize_ev_power only applies to the EV branch."""
+        item = {**ICE_ITEM, "attr": {**ICE_ITEM["attr"], "pw": "0 kW"}}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Výkon (kW)"], 0)
 
 
 class FetchBandedTest(unittest.TestCase):

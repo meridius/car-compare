@@ -15,7 +15,7 @@ from scrapers.core.normalize import normalize_model
 from scrapers.core.fields import (
     extract_body_type, extract_engine_type, extract_hybrid_type, extract_trim,
     extract_warranty, extract_dct, extract_particle_filter, extract_awd,
-    clean_extra, sanitize_engine_volume, clean_ev_suffix,
+    clean_extra, sanitize_engine_volume, sanitize_ev_power, clean_ev_suffix,
 )
 
 SOURCE_NAME = "Mobile.de"
@@ -147,6 +147,10 @@ def _build_row(item, rate):
             extra_parts.append(sub_clean)
         row.update({
             "Typ": schema.TYP_EV, "Palivo": "Elektro",
+            # Some EV listings (Dacia Spring, Hyundai Kona Elektro, Opel
+            # Mokka/-e) carry an explicit 'pw': '0 kW' — same implausible-power
+            # guard sauto applies (sanitize_ev_power, core/fields.py).
+            "Výkon (kW)": sanitize_ev_power(row["Výkon (kW)"]),
             "Extra": " / ".join(p for p in extra_parts if p),
         })
         return row

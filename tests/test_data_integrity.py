@@ -233,11 +233,13 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         Mobile.de EV rows (Dacia Spring, Hyundai Kona Elektro, Opel Mokka/-e)
         carry an explicit 0 kW — the source's 'pw' attr is genuinely "0" for
         these listings. sauto has an equivalent guard (sanitize_ev_power,
-        core/fields.py) that blanks implausible low EV power; mobile.de never
-        calls it, so these zeros pass straight through instead of being
-        blanked. That's a real gap worth fixing in the adapter (see summary),
-        not a test-bound problem — the invariant here is deliberately the
-        weaker >= 0 so it still catches negative/garbage values.
+        core/fields.py) that blanks implausible low EV power; mobile.de's
+        `_build_row` now calls it too (fixed in scrapers/sources/mobilede.py),
+        so fresh scrapes won't reproduce this. The 10 existing rows live in
+        the frozen seed CSV (never re-fixed, see docs/gotchas.md) and only
+        clear once that source has actually re-scraped past this point — the
+        invariant here is deliberately the weaker >= 0 so it still catches
+        negative/garbage values in the meantime.
         """
         offenders = [c for c in self.cars
                      if isinstance(c.get("Výkon (kW)"), (int, float))
@@ -247,8 +249,10 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                          f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
 
     def test_vykon_zero_rows_are_a_known_small_set(self):
-        """Tracks the known Mobile.de 0-kW gap above so a regression that
-        grows it silently is caught, without hard-failing on the existing 10."""
+        """Tracks the known (now-fixed-at-source, see above) Mobile.de 0-kW
+        gap so a regression that grows it silently is caught, without
+        hard-failing on the 10 legacy rows still sitting in the frozen seed
+        CSV."""
         offenders = [c for c in self.cars if c.get("Výkon (kW)") == 0]
         self.assertLessEqual(len(offenders), 15,
                              f"{len(offenders)} rows with 0 kW — Mobile.de EV power gap "
@@ -282,9 +286,9 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         rows never carry "Odstraněno" (that's archive-only, see
         test_live_payload_has_no_removed_rows) and never "Chystá se" in the
         current dataset. "Havarované" is supposed to be filtered out (sauto.py
-        build_ice rejects it) but build_ev has no equivalent guard — see
-        test_no_havarovane_ev_rows below, which pins that gap precisely
-        instead of silently widening this enum to hide it.
+        build_ice rejects it) — build_ev now has the equivalent guard too, see
+        test_no_havarovane_ev_rows below, which pins the one legacy leaked row
+        precisely instead of silently widening this enum to hide it.
         """
         allowed = {"", "Dostupný", "Chystá se", "Zamluvené", "Prodané",
                    "Nové", "Ojeté", "Předváděcí", "Havarované"}
@@ -292,13 +296,15 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         self.assertFalse(bad, f"unexpected Stav values: {bad}")
 
     def test_no_havarovane_ev_rows(self):
-        """Real bug found while writing this test (not fixed here — out of
-        scope for a test-only change, reported to the caller): sauto.py's
-        build_ice rejects condition == 'Havarované' (damaged/wrecked) but
-        build_ev has no equivalent check, so a wrecked EV can leak into the
-        live listings. Current data has exactly one (MG MG4, Sauto.cz). The
-        tolerance below is that one known row, not an open-ended allowance —
-        it still fails if the leak grows."""
+        """Real bug found while writing this test: sauto.py's build_ice
+        rejects condition == 'Havarované' (damaged/wrecked) but build_ev had
+        no equivalent check, so a wrecked EV leaked into the live listings.
+        Fixed at the source in scrapers/sources/sauto.py::build_ev — fresh
+        scrapes won't reproduce it. The one known row (MG MG4, Sauto.cz)
+        still sits in the frozen seed CSV (never re-fixed, see
+        docs/gotchas.md) until that source re-scrapes past this point. The
+        tolerance below is that one known legacy row, not an open-ended
+        allowance — it still fails if the leak grows."""
         offenders = [c for c in self.ev if c.get("Stav") == "Havarované"]
         self.assertLessEqual(len(offenders), 1,
                              f"{len(offenders)} EV rows with Stav=Havarované — sauto.py "

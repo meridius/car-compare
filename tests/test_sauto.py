@@ -83,6 +83,22 @@ class CommonYearRepairTest(unittest.TestCase):
         self.assertEqual(row["Rok výroby"], "2022")
 
 
+class WreckedConditionTest(unittest.TestCase):
+    """build_ice rejects condition == 'Havarované' (wrecked); build_ev must
+    mirror that guard — a wrecked MG MG4 leaked into live EV listings because
+    it didn't (#21 integrity test test_no_havarovane_ev_rows)."""
+
+    def test_build_ev_drops_wrecked_condition(self):
+        item = _make_item()
+        detail = _make_detail(condition_cb={"name": "Havarované"})
+        self.assertIsNone(S.build_ev(item, detail))
+
+    def test_build_ev_keeps_non_wrecked_condition(self):
+        item = _make_item()
+        detail = _make_detail(condition_cb={"name": "Ojeté"})
+        self.assertIsNotNone(S.build_ev(item, detail))
+
+
 class InvalidYearTest(unittest.TestCase):
     """#17: a year outside [2000..current+1] is repaired from the other detail
     date field, or the row is dropped when neither field is usable."""

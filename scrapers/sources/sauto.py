@@ -113,6 +113,9 @@ def build_ev(item, detail):
     """EV canonical row (port of electric/src/scrape_sauto.py build_record)."""
     if not detail:
         return None
+    condition = (detail.get("condition_cb") or {}).get("name", "")
+    if "Havarované" in condition:
+        return None  # wrecked — same guard build_ice has (#21: MG MG4 leak)
     model_base, suffix, price, mileage, year = _common(item, detail)
     if year is None:
         return None  # invalid year, unrepairable — see repair_year() (#17)
@@ -150,7 +153,7 @@ def build_ev(item, detail):
         "Náhon 4x4": "Ano" if AWD_RE.search(drive_name) else "Ne",
         "Karoserie": body_api or extract_body_type(model_base),
         "Extra": " / ".join(extra_parts),
-        "Stav": (detail.get("condition_cb") or {}).get("name", ""),
+        "Stav": condition,
         "Země": "Česko", "Zdroj": SOURCE_NAME, "Odkaz na auto": _listing_link(item),
     })
     return row
