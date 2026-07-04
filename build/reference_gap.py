@@ -145,7 +145,10 @@ def stub_row(cluster, fuel):
 def _num(v):
     if v is None or str(v).strip() == "":
         return None
-    return float(str(v).strip().replace(",", "."))
+    try:
+        return float(str(v).strip().replace(",", "."))
+    except (TypeError, ValueError):
+        return None
 
 
 def validate_rows(rows, fuel, ref_models, unpaired):
@@ -162,8 +165,13 @@ def validate_rows(rows, fuel, ref_models, unpaired):
             problems.append(f"row {i}: prázdné 'Model auta'")
         # numeric ranges
         for col, (lo, hi) in EV_RANGES.items():
-            val = _num(clean.get(col))
-            if val is not None and not (lo <= val <= hi):
+            rawv = str(clean.get(col, "")).strip()
+            if rawv == "":
+                continue
+            val = _num(rawv)
+            if val is None:
+                problems.append(f"row {i} ({model}): {col}='{rawv}' není číslo")
+            elif not (lo <= val <= hi):
                 label = "baterie" if "baterie" in col else col
                 problems.append(f"row {i} ({model}): {label}={val} mimo rozsah {lo}-{hi}")
         # Cd zdroj enum (only when Cd present)

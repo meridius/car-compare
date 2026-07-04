@@ -100,3 +100,12 @@ class TestValidate(unittest.TestCase):
         ok, errs = rg.validate_rows([r1, r2, r3], "ev", ["Fiat Grande Panda"], unpaired)
         self.assertEqual(ok, [])
         self.assertEqual(len(errs), 3)
+
+    def test_rejects_nonnumeric_cell_without_crashing_batch(self):
+        good = self._good()
+        bad = self._good()
+        bad["Model auta"] = "Fiat 500e"
+        bad["Kapacita baterie (kWh)"] = "42 kWh"
+        ok, errs = rg.validate_rows([good, bad], "ev", [], [])
+        self.assertEqual([r["Model auta"] for r in ok], ["Renault Twingo"])  # good row survives
+        self.assertTrue(any("není číslo" in e for e in errs))
