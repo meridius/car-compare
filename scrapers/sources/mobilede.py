@@ -168,3 +168,104 @@ def _build_row(item, rate):
         **extracted,
     })
     return row
+
+
+def _rate_from_cnb_text(text):
+    """EUR row from the CNB daily-fixing text, or None when unparsable."""
+    for line in text.splitlines():
+        parts = line.split("|")
+        if len(parts) == 5 and parts[3] == "EUR":
+            try:
+                return float(parts[4].replace(",", ".")) / float(parts[2])
+            except ValueError:
+                return None
+    return None
+
+
+async def _get_eur_czk_rate(session):
+    """CNB daily EUR/CZK fixing; falls back to a constant so a CNB outage never kills the scrape."""
+    try:
+        async with session.get(CNB_RATE_URL) as resp:
+            resp.raise_for_status()
+            rate = _rate_from_cnb_text(await resp.text())
+            if rate:
+                return rate
+    except Exception:
+        pass
+    print(f"  Varování: kurz ČNB nedostupný, používám {EUR_CZK_FALLBACK}")
+    return EUR_CZK_FALLBACK
+
+
+async def _search(session, params, offset, page_size=PAGE_SIZE):
+    """One search GET; retries once, then propagates (a dead endpoint must abort
+    the source before pipeline writes the CSV, keeping yesterday's file intact)."""
+    query = [(k, str(v)) for k, v in params] + [("ps", str(offset)), ("psz", str(page_size))]
+    for attempt in (1, 2):
+        try:
+            await asyncio.sleep(random.uniform(0.05, 0.2))  # politeness jitter
+            async with session.get(SEARCH_URL, params=query) as resp:
+                resp.raise_for_status()
+                return await resp.json()
+        except Exception:
+            if attempt == 2:
+                raise
+            await asyncio.sleep(1 + random.random())
+
+
+async def _count(session, params):
+    data = await _search(session, params, 0, page_size=1)
+    return data.get("numResultsTotal") or 0
+
+
+async def _fetch_slice(session, params, total, sem):
+    """Page one sub-cap query to its end. Pages are serial inside the slice;
+    the semaphore bounds cross-slice concurrency."""
+    items = []
+    for offset in range(0, min(total, RESULT_CAP), PAGE_SIZE):
+        async with sem:
+            data = await _search(session, params, offset)
+        batch = data.get("items") or []
+        if not batch:
+            break
+        items.extend(batch)
+    return items
+
+
+async def _fetch_banded(session, params, price_lo, price_hi, sem):
+    """Fetch every result by recursively halving the EUR price band while a
+    band would hit the 2000-result cap. Boundary duplicates are deduped by
+    link in pipeline.run_source."""
+    banded = tuple(params) + (("p", f"{price_lo}:{price_hi}"),)
+    total = await _count(session, banded)
+    if total == 0:
+        return []
+    if total < RESULT_CAP or price_hi - price_lo <= 1:
+        return await _fetch_slice(session, banded, total, sem)
+    mid = (price_lo + price_hi) // 2
+    halves = await asyncio.gather(
+        _fetch_banded(session, params, price_lo, mid, sem),
+        _fetch_banded(session, params, mid + 1, price_hi, sem),
+    )
+    return halves[0] + halves[1]
+
+
+async def _scrape_config(session, fuels, countries, extra, rate, sem, label):
+    params = _BASE_PARAMS + tuple(fuels) + tuple(("cn", c) for c in countries) + tuple(extra)
+    eur_ceiling = round(PRICE_CEILING_KC / rate)
+    items = await _fetch_banded(session, params, 0, eur_ceiling, sem)
+    print(f"  {label}: staženo {len(items)} položek")
+    return [r for r in (_build_row(it, rate) for it in items) if r is not None]
+
+
+async def scrape():
+    sem = asyncio.Semaphore(CONCURRENCY)
+    timeout = aiohttp.ClientTimeout(total=90)
+    async with aiohttp.ClientSession(headers=HEADERS, timeout=timeout) as session:
+        rate = await _get_eur_czk_rate(session)
+        print(f"  Kurz EUR/CZK: {rate}")
+        print("Načítám EV inzeráty z Mobile.de API...")
+        ev = await _scrape_config(session, EV_FUELS, EV_COUNTRIES, (), rate, sem, "EV")
+        print("Načítám ICE inzeráty z Mobile.de API...")
+        ice = await _scrape_config(session, ICE_FUELS, ICE_COUNTRIES, ICE_EXTRA,
+                                   rate, sem, "ICE")
+    return ev + ice
