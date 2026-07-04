@@ -138,6 +138,68 @@ stripped from ICE Extra by `clean_extra()` (`_HP_SHORTHAND_RE`); it never matche
 
 ---
 
+## mobile.de
+
+### keyless app endpoint, not the official Search-API
+
+The adapter talks to `https://www.mobile.de/api/s/` — the private endpoint of the
+mobile.de phone apps. It needs **no auth**, only the header
+`X-Mobile-Client: de.mobile.android.app`; without it every request returns
+`400 "Missing or invalid client header"`. The official Search-API
+(`services.mobile.de/search-api`, HTTP Basic) has **no self-service signup** —
+credentials are granted manually by mobile.de customer support. If they're ever
+granted, `var/.env.example` documents the env vars and the adapter should grow a
+second transport. The website HTML and `/consumer/api/` are Akamai-Bot-Manager
+blocked (403 even for headless Playwright) — don't try to browser-scrape this site.
+Caveat: `/api/` is disallowed in robots.txt and undocumented; it can change or start
+enforcing request signing at any time (the CI leg is `continue-on-error` for this
+reason).
+
+### 2000-result cap → recursive price-band slicing
+
+Any query exposes at most 2000 results through pagination (`ps` offset / `psz` page
+size, max 100): past 2000 the API returns empty `items` with HTTP 200.
+`_fetch_banded()` recursively halves the EUR price band (`p=min:max`) until each
+slice's `numResultsTotal` < 2000. Band-boundary duplicates are deduped by link in
+`pipeline.run_source`.
+
+### prices are EUR — converted via CNB daily fixing
+
+`price.grs.amount` (gross EUR) × CNB rate → "Cena (Kč)". The rate comes from the CNB
+daily-fixing text endpoint at scrape time; on any failure a fallback constant
+(`EUR_CZK_FALLBACK = 24.5`) is used, so listing prices can drift ±rate between runs.
+Only `price.type == "FIXED"` is accepted (leasing/financing offers carry other
+types), and sauto's `MIN_PRICE_KC = 100000` backstop applies after conversion.
+
+### fuels are include-only; DE is EV-only
+
+The API has no exclude operator — LPG/CNG/hydrogen are excluded by simply not
+requesting them (`ft=PETROL&ft=DIESEL&ft=ELECTRICITY&ft=HYBRID&ft=HYBRID_DIESEL`
+is the full allowed universe; repeated params are OR). `_build_row` re-checks
+`attr.ft` against `_FUEL_MAP` as belt-and-suspenders. Germany is in `EV_COUNTRIES`
+but **not** `ICE_COUNTRIES`: DE ICE under our filters is ~123k listings (vs ~1.3k
+for CZ+SK+AT+PL), which would swamp the dataset. Hybrids arrive as
+`ft="Hybrid (Benzin/Elektro)"` / `"Hybrid (Diesel/Elektro)"` → Palivo Benzín/Nafta +
+`Hybrid typ` from `extract_hybrid_type(subTitle)`, defaulting to HEV.
+
+### German display strings everywhere
+
+`attr` values are German-formatted display strings, not numbers: `ml` "29.000 km",
+`pw` "110 kW (150 PS)", `cc` "1.499 cm³", `bc` "27 kWh", `fr` "02/2022" —
+`_parse_number()` takes the first integer and strips dot thousands-separators.
+Make names lose their diacritics ("Skoda", "Citroen") — BRAND_MAP restores them,
+otherwise ICE matching finds no brand candidates. Category `attr.c` uses mobile.de's
+own body taxonomy (OffRoad→SUV, EstateCar→Kombi, Limousine→Sedan/limuzína, …) — note
+German "Limousine" lumps sedans with some hatchbacks.
+
+### Stav is always blank
+
+Like energycars, mobile.de exposes no availability concept in search results. The
+merge step still marks vanished listings `Odstraněno`. `attr.gi` (Garantie until
+MM/YYYY) drives `Záruka = "Ano"`.
+
+---
+
 ## core — normalize
 
 ### normalisation order matters

@@ -13,6 +13,7 @@ One fuel-agnostic Python scraper suite collecting Czech car listings, exported t
 | [sauto.cz](https://www.sauto.cz)           | `scrapers/sources/sauto.py`      | EV + ICE | `scrapers/data/scrapes/sauto.csv`     |
 | [autodraft.cz](https://www.autodraft.cz)   | `scrapers/sources/autodraft.py`  | EV + ICE | `scrapers/data/scrapes/autodraft.csv` |
 | [energycars.cz](https://www.energycars.cz) | `scrapers/sources/energycars.py` | EV       | `scrapers/data/scrapes/energycars.csv`|
+| [mobile.de](https://www.mobile.de)         | `scrapers/sources/mobilede.py`   | EV + ICE | `scrapers/data/scrapes/mobilede.csv`  |
 
 ## Documentation
 
@@ -31,7 +32,7 @@ python -m scrapers.run                 # All sources, no dep check
 python -m scrapers.run --source sauto  # Debug a single source
 ```
 
-Sources: `sauto`, `autodraft`, `energycars`.
+Sources: `sauto`, `autodraft`, `energycars`, `mobilede`.
 
 ## Testing
 
@@ -66,7 +67,7 @@ Spárováno | Skóre shody | Extra | Stav | Zdroj | Odkaz na auto
 ```
 
 `Typ` values: `Elektrické` · `Spalovací`.
-Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars)*.
+Status values (`Stav`): `Dostupný` · `Chystá se` · `Zamluvené` · `Prodané` · `Odstraněno` · *(blank for energycars + mobilede)*.
 
 `Spárováno` (ICE): `Ano` · `Nejisté` · `Ne` — tri-state match confidence (EV: `Ano` · `Ne` only). `Skóre shody` = numeric match score (higher = more reliable; blank for EV and `Ne` rows). See `classify_match()` in `scrapers/core/matching.py`.
 
@@ -81,7 +82,7 @@ Static AG Grid site at `site/`. No build step — plain HTML/JS/CSS.
 
 ### Build Script
 
-`build/build_data.py` concatenates the 3 scraper CSVs + 2 reference files → `site/data/cars.json`. It imports `scrapers.core.matching` to re-match ICE rows against the reference list.
+`build/build_data.py` concatenates the 4 scraper CSVs + 2 reference files → `site/data/cars.json`. It imports `scrapers.core.matching` to re-match ICE rows against the reference list.
 
 ```bash
 python build/build_data.py
