@@ -87,10 +87,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
 
-- [ ] **#17** sauto listing has year 1900 but is really 2026 — detect and fix invalid years (<https://www.sauto.cz/osobni/detail/dacia/bigster/210225179>)
-  > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #16
-  > 📌 assumes: same module/logic as #16; clamp years outside [2000 .. current year+1] and repair from in_operation_date; skip the row only if unrepairable.
-
 - [ ] **#19** many reference models are missing data in various cols
   > flow:ralph · model:sonnet · effort:medium
   > 📌 assumes: codeable part only — add a UI indicator on the reference page flagging models missing key spec columns; do NOT source/enter external data (that's a separate manual task).
@@ -128,6 +124,12 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [x] **#18** web UI should display set filters above the table on both pages
   > done: shared `site/filter-chips.js` renders a chip bar (column name + human summary,
   > [×] per chip, "Vymazat vše" at 2+) above the grid on index + reference; hidden when empty.
+
+- [x] **#17** sauto listing has year 1900 but is really 2026 — detect and fix invalid years
+  > done: `repair_year()` extended with a [MIN_VALID_YEAR..current_year+1] clamp — an
+  > out-of-range in_operation_date (e.g. the 1900-01-01 sentinel) falls back to
+  > manufacturing_date; returns `None` when neither field is repairable so
+  > `build_ev`/`build_ice` drop the row instead of publishing a bogus year.
 
 - [x] **#16** sauto listing has year 2002 but is really 2022 — detect and fix 2-digit year swaps
   > done: `repair_year()` in `scrapers/core/fields.py` reconciles item-derived year against the

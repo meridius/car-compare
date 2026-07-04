@@ -109,6 +109,31 @@ class RepairYearTest(unittest.TestCase):
     def test_blank_year_filled_from_candidate(self):
         self.assertEqual(F.repair_year("", "2022-01-01", None, 2026), "2022")
 
+    # -- #17: clamp years outside [MIN_VALID_YEAR .. current_year + 1] --------
+
+    def test_sentinel_in_operation_date_falls_back_to_manufacturing_date(self):
+        # Dacia Bigster example: in_operation_date is the 1900 sentinel,
+        # manufacturing_date carries the real year.
+        self.assertEqual(
+            F.repair_year("1900", "1900-01-01", "2026-01-01", 2026), "2026",
+        )
+
+    def test_out_of_range_year_with_no_candidate_is_unrepairable(self):
+        self.assertIsNone(F.repair_year("1900", None, None, 2026))
+        self.assertIsNone(F.repair_year("1900", "1900-01-01", "1900-01-01", 2026))
+
+    def test_future_year_beyond_current_plus_one_is_invalid(self):
+        self.assertIsNone(F.repair_year("2099", None, None, 2026))
+        self.assertEqual(F.repair_year("2099", "2025-01-01", None, 2026), "2025")
+
+    def test_missing_year_with_no_candidate_stays_blank_not_dropped(self):
+        # No data at all is not the same as an explicit invalid value — leave
+        # it blank, don't signal a row-drop.
+        self.assertEqual(F.repair_year("", None, None, 2026), "")
+
+    def test_in_range_year_with_no_candidate_kept(self):
+        self.assertEqual(F.repair_year("2023", None, None, 2026), "2023")
+
 
 if __name__ == "__main__":
     unittest.main()

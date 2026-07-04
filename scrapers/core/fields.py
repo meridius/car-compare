@@ -134,7 +134,13 @@ def _year_of(date_str) -> int | None:
     return None
 
 
-def repair_year(year_str, in_operation_date, manufacturing_date, current_year) -> str:
+# A "Rok výroby" outside this window (relative to the scrape's current year) is
+# never a real value — e.g. sauto returning the 1900-01-01 sentinel for a Dacia
+# Bigster whose manufacturing_date says 2026. #17.
+MIN_VALID_YEAR = 2000
+
+
+def repair_year(year_str, in_operation_date, manufacturing_date, current_year) -> str | None:
     """Reconcile a scraped 'Rok výroby' against the detail API's own date fields.
 
     sauto's search-index year can drift from the freshly-fetched per-listing
@@ -143,21 +149,44 @@ def repair_year(year_str, in_operation_date, manufacturing_date, current_year) -
     in_operation_date says "2022-01-01" (this also naturally covers 19XX/20XX
     century mixups: whatever the detail fields say wins). The detail fields are
     fetched live at scrape time and are authoritative; year_str may come from a
-    stale cached search-index snapshot. Returns the repaired 4-digit year
-    string, or year_str unchanged when no better data is available.
+    stale cached search-index snapshot.
+
+    Years outside [MIN_VALID_YEAR, current_year + 1] are also invalid on their
+    face (sauto sometimes returns an in_operation_date of "1900-01-01" — a
+    sentinel, not a real registration date). In that case in_operation_date is
+    skipped in favour of manufacturing_date even though it's normally preferred.
+
+    Returns the repaired 4-digit year string; "" when there was never any year
+    data to begin with (nothing to repair, leave the field blank); or None when
+    year_str held an explicit but invalid value that neither detail field can
+    repair — the caller should drop the row rather than publish a bogus year.
     """
+    max_year = current_year + 1
+
+    def in_range(y):
+        return y is not None and MIN_VALID_YEAR <= y <= max_year
+
     op_year = _year_of(in_operation_date)
     mfg_year = _year_of(manufacturing_date)
-    candidate = op_year if op_year is not None else mfg_year
-    if candidate is None:
-        return year_str
+    candidate = op_year if in_range(op_year) else mfg_year if in_range(mfg_year) else None
 
     y = int(year_str) if year_str and str(year_str).isdigit() else None
-    if y != candidate:
-        print(f"Sauto: opraven rok výroby {year_str!r} -> {candidate} "
-              f"(neshoda s in_operation_date/manufacturing_date)")
+
+    if candidate is not None and y != candidate:
+        reason = "neplatný" if not in_range(y) else "neshodující se"
+        print(f"Sauto: opraven {reason} rok výroby {year_str!r} -> {candidate} "
+              f"(dle in_operation_date/manufacturing_date)")
         return str(candidate)
-    return year_str
+
+    if in_range(y):
+        return str(y)
+
+    if y is None:
+        return ""  # no year data at all — legitimately blank, not a defect
+
+    print(f"Sauto: neplatný rok výroby {year_str!r} nelze opravit "
+          f"(in_operation_date/manufacturing_date chybí nebo jsou také neplatné) — řádek zahozen")
+    return None
 
 
 def clean_ev_suffix(suffix: str, model_base: str) -> str:

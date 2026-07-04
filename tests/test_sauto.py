@@ -83,5 +83,38 @@ class CommonYearRepairTest(unittest.TestCase):
         self.assertEqual(row["Rok výroby"], "2022")
 
 
+class InvalidYearTest(unittest.TestCase):
+    """#17: a year outside [2000..current+1] is repaired from the other detail
+    date field, or the row is dropped when neither field is usable."""
+
+    def test_sentinel_year_repaired_from_manufacturing_date(self):
+        # Dacia Bigster example: in_operation_date is the 1900-01-01 sentinel,
+        # manufacturing_date carries the real 2026.
+        item = _make_item(
+            manufacturer_cb={"name": "Dacia", "seo_name": "dacia"},
+            model_cb={"name": "Bigster", "seo_name": "bigster"},
+            additional_model_name="1.2 103kW Journey",
+            in_operation_date="1900-01-01",
+        )
+        detail = _make_detail(
+            fuel_cb={"name": "Benzín"},
+            in_operation_date="1900-01-01",
+            manufacturing_date="2026-01-01",
+        )
+        row = S.build_ice(item, detail)
+        self.assertIsNotNone(row)
+        self.assertEqual(row["Rok výroby"], "2026")
+
+    def test_unrepairable_year_drops_the_row(self):
+        item = _make_item(in_operation_date="1900-01-01")
+        detail = _make_detail(in_operation_date="1900-01-01", manufacturing_date=None)
+        self.assertIsNone(S.build_ev(item, detail))
+        # fuel_cb must be a non-EV/hybrid fuel or build_ice drops it for that
+        # reason first — use a plain ICE fuel so the year-drop path is isolated.
+        ice_detail = _make_detail(fuel_cb={"name": "Benzín"},
+                                   in_operation_date="1900-01-01", manufacturing_date=None)
+        self.assertIsNone(S.build_ice(item, ice_detail))
+
+
 if __name__ == "__main__":
     unittest.main()

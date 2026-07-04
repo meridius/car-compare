@@ -114,6 +114,8 @@ def build_ev(item, detail):
     if not detail:
         return None
     model_base, suffix, price, mileage, year = _common(item, detail)
+    if year is None:
+        return None  # invalid year, unrepairable — see repair_year() (#17)
     if not _is_valid_purchase(price, detail):
         return None
     battery_kw = detail.get("battery_capacity") or ""
@@ -165,6 +167,8 @@ def build_ice(item, detail):
     if "Havarované" in condition:
         return None
     model_base, suffix, price, mileage, year = _common(item, detail)
+    if year is None:
+        return None  # invalid year, unrepairable — see repair_year() (#17)
     if not _is_valid_purchase(price, detail):
         return None
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
