@@ -21,6 +21,14 @@
             <button class="nav-link" onclick="location.href='index.html'">Zpět na porovnání</button>
         </div>
     </header>
+    <div id="ref-search-bar" class="ref-search-bar">
+        <div class="ref-search-input-wrap">
+            <input type="text" id="ref-search-input" class="ref-search-input" autocomplete="off"
+                placeholder="Hledat model… (značka, model, výkon, objem, typ motoru, výbava)">
+            <button type="button" id="ref-search-clear" class="ref-search-clear" title="Vymazat hledání"
+                style="display:none;">×</button>
+        </div>
+    </div>
     <div id="filter-chips-bar" class="filter-chips-bar hidden"></div>
     <div id="grid" class="ag-theme-alpine-dark"></div>
     <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/dist/ag-grid-community.min.js"></script>

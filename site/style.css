@@ -189,6 +189,60 @@ a:hover { text-decoration: underline; }
     color: var(--clr-accent-hover);
 }
 
+/* ── Reference page smart search ── */
+.ref-search-bar {
+    display: flex;
+    align-items: center;
+    padding: 8px 20px;
+    background: var(--clr-surface);
+    border-bottom: 1px solid var(--clr-border);
+}
+
+.ref-search-input-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 480px;
+}
+
+.ref-search-input {
+    width: 100%;
+    padding: 6px 30px 6px 10px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-size: 0.85rem;
+}
+
+.ref-search-input::placeholder {
+    color: var(--clr-text-muted);
+}
+
+.ref-search-input:focus {
+    outline: none;
+    border-color: var(--clr-accent);
+}
+
+.ref-search-clear {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+    padding: 0 6px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 1rem;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.ref-search-clear:hover {
+    background: var(--clr-hover);
+    color: var(--clr-text);
+}
+
 /* ── Grid ── */
 #grid {
     width: 100%;

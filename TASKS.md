@@ -98,15 +98,13 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:feature-dev · model:sonnet · effort:medium
   > 📌 assumes: static lookup page listing transmission types present in the dataset + seed descriptions; wire quality ratings (#31) in later.
 
-- [ ] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search)
-  > flow:feature-dev · model:sonnet · effort:medium
-  > 📌 assumes: UI search/filter controls on the reference page over existing columns (značka, model, rok, výkon, objem, typ motoru, Výbava as trim); no schema change.
-
 - [ ] **#30** větší počet válců a větší objem znamená větší spolehlivost (more cylinders + bigger volume = more reliability — scoring rule)
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #24
   > 📌 assumes: add a derived "Spolehlivost" score (1–5) for matched ICE from cylinder count + displacement (more/bigger → higher); needs the #24 cylinders column.
 
 ## Done
+
+- [x] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search) — DONE 2026-07-05: smart search box above the reference grid (`site/reference.html`/`.js`), accent-insensitive (folds diacritics on both the query and every column's quick-filter text via `getQuickFilterText`) AG Grid quick filter over `Model auta` (značka/model/výbava), `Výkon (kW)`, `Objem motoru`, `Typ motoru`; debounced 200ms, clear (×) button, independent of column filters/filter-chips bar. No schema change (reference has no separate rok výroby column). Verified: `verify_ui.py --page reference --scenario ref-search` (new scenario) PASS.
 
 - [x] **Deduplicate reference rows for the same physical car sold under multiple names** — DONE 2026-07-05: collapsed all name spellings to one canonical `Model auta` via a new `MODEL_CLEANUP_PATTERNS` entry in `scrapers/core/normalize.py` (`ORA Funky Cat` / `GWM Ora Funky Cat` / `Ora Good Cat` → `GWM Ora 03`), applied at scrape time in every adapter (as before) and re-applied in `build/build_data.py::fix_electric_model` at build time so rows already sitting in state/seed CSVs from before the alias existed still collapse onto the single remaining `GWM Ora 03` row in `ev_specs.csv` (the duplicate `ORA Funky Cat` row was deleted — both rows carried identical specs). Chosen over an explicit reference-alias column because it fixes the problem at the source for all four sources and needs no new schema; generalises to any future same-car-different-spelling case without touching `build_data.py`'s join logic again. Verified: `./bin/test.sh` green (126 tests, incl. new `tests/test_normalize.py::OraFunkyCatAliasTest` and `tests/test_build_data.py::ElectricModelAliasTest`); `python build/build_data.py` reports `Electric reference: 15108/17276 matched` (unchanged vs baseline) with the live `GWM Ora 03` row now `Spárováno=Ano`. 📌 discovered by: grow-reference demo (docs/superpowers/grow-reference-RESULTS.md).
 

@@ -195,6 +195,15 @@
   var colRanges = {};
   var totalRowCount = 0;
 
+  // ── Smart search (accent-insensitive quick filter) ──
+  // Strips diacritics + lowercases so "skoda" matches "Škoda". Used both to
+  // build each row/column's quick-filter text and to normalize the user's
+  // query, so both sides fold the same way.
+  function foldAccents(value) {
+    if (value == null) return "";
+    return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
   // Shared columns follow the main grid's order (site/app.js COL_CONFIG) for
   // easier visual scanning between the two pages; reference-only columns
   // (Tepelné čerpadlo možné) go after, keeping their prior relative order.
@@ -386,6 +395,42 @@
     });
   }
 
+  // ── Smart search box (#29) ──
+  // Independent of the column filters / filter-chips bar: quick filter text
+  // is not part of getFilterModel(), so it never shows up as a chip and
+  // clearFilters()/the chips bar never touch it (and vice versa).
+  var SEARCH_DEBOUNCE_MS = 200;
+  var searchDebounceTimer = null;
+
+  function applyQuickFilter(rawQuery) {
+    if (!gridApi) return;
+    gridApi.setGridOption("quickFilterText", foldAccents(rawQuery));
+    updateRowCount();
+  }
+
+  function initSearchBox() {
+    var input = document.getElementById("ref-search-input");
+    var clearBtn = document.getElementById("ref-search-clear");
+    if (!input || !clearBtn) return;
+
+    input.addEventListener("input", function () {
+      clearBtn.style.display = input.value ? "" : "none";
+      clearTimeout(searchDebounceTimer);
+      var query = input.value;
+      searchDebounceTimer = setTimeout(function () {
+        applyQuickFilter(query);
+      }, SEARCH_DEBOUNCE_MS);
+    });
+
+    clearBtn.addEventListener("click", function () {
+      clearTimeout(searchDebounceTimer);
+      input.value = "";
+      clearBtn.style.display = "none";
+      applyQuickFilter("");
+      input.focus();
+    });
+  }
+
   // ── Toolbar actions ──
 
   window.clearFilters = function () {
@@ -449,7 +494,15 @@
         autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
         tooltipComponent: ColTooltip,
+        // Accent-folded quick-filter text so the smart search box matches
+        // "skoda" against "Škoda" regardless of which column holds the hit
+        // (Model auta = značka/model/výbava, Výkon (kW), Objem motoru,
+        // Typ motoru cover the rest of #29's search fields).
+        getQuickFilterText: function (params) {
+          return foldAccents(params.value);
+        },
       },
+      includeHiddenColumnsInQuickFilter: true,
       tooltipShowDelay: 400,
       tooltipMouseTrack: true,
       animateRows: false,
@@ -471,6 +524,7 @@
         var storageFilters = loadFiltersFromStorage();
         var filters = urlFilters || storageFilters;
         if (filters) gridApi.setFilterModel(filters);
+        initSearchBox();
         updateRowCount();
         updateFilterChips();
       },

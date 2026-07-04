@@ -152,6 +152,26 @@ def scenario_filter_chips(page):
     return "#filter-chips-bar"
 
 
+def scenario_ref_search(page):
+    """Type into the reference-page smart search box (#29) and confirm the grid
+    quick-filters down to matching, accent-folded rows (typing "skoda" without
+    diacritics must still find "Škoda")."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    before = page.locator(".ag-row").count()
+    page.fill("#ref-search-input", "skoda")
+    # debounce (200ms) + grid re-filter
+    page.wait_for_timeout(600)
+    after = page.locator(".ag-row").count()
+    if not (after < before):
+        raise AssertionError(f"quick filter did not reduce rows: before={before} after={after}")
+    if after == 0:
+        raise AssertionError("quick filter for 'skoda' matched zero rows")
+    cells = page.locator('.ag-cell[col-id="Model auta"]').all_inner_texts()
+    if not cells or not all("škoda" in c.lower() for c in cells):
+        raise AssertionError(f"visible rows are not all Škoda: {cells[:10]}")
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
@@ -160,6 +180,7 @@ SCENARIOS = {
     "overview-matching": scenario_overview_matching,
     "archive": scenario_archive,
     "filter-chips": scenario_filter_chips,
+    "ref-search": scenario_ref_search,
 }
 
 
