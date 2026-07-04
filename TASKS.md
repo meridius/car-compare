@@ -80,10 +80,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
 
-- [ ] **#19** many reference models are missing data in various cols
-  > flow:ralph · model:sonnet · effort:medium
-  > 📌 assumes: codeable part only — add a UI indicator on the reference page flagging models missing key spec columns; do NOT source/enter external data (that's a separate manual task).
-
 - [ ] **#24** počet válců (number of cylinders) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
@@ -101,6 +97,7 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 ## Done
 
 - [x] **EV data leaks: mobile.de 0 kW + sauto wrecked EV** — DONE 2026-07-05: `scrapers/sources/mobilede.py` now runs EV `Výkon (kW)` through `sanitize_ev_power()` (blanks the ~10 Dacia Spring/Hyundai Kona Elektro/Opel Mokka-e rows carrying a literal `pw: "0 kW"`), and `scrapers/sources/sauto.py::build_ev` now rejects `condition_cb.name == "Havarované"` the same way `build_ice` already did (the leaked wrecked MG MG4). Both mirror an existing proven guard rather than inventing a new one. 📌 discovered by: #21 integrity tests.
+- [x] **#19** many reference models are missing data in various cols — DONE 2026-07-05: codeable part only (per scope note, no external data sourced). `site/reference.js`/`.html`/`style.css` add a missing-spec badge column (⚠ N, tooltip lists the missing Czech column names) computed client-side per row against a key-spec set (ICE: Spotřeba [skipped for PHEV — intentionally blanked], Objem motoru, Typ motoru, Cd, Hlučnost; EV: Kapacita baterie, Dojezd WLTP, Dojezd EV-database, Cd — listing-aggregated columns like Karoserie/Výkon excluded since their blanks reflect no matching listings, not a data gap), plus a header "Neúplné: N / M" toggle button wired as an AG Grid external filter (independent of column filters/quick search, like the existing search box). Observed: 156/390 reference rows (40%) currently miss ≥1 key spec. Verified: `python build/build_data.py` + `verify_ui.py --page reference --scenario grid/ref-search/missing-specs` (new scenario) all exit 0, screenshots confirm badges + toggle.
 
 - [x] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search) — DONE 2026-07-05: smart search box above the reference grid (`site/reference.html`/`.js`), accent-insensitive (folds diacritics on both the query and every column's quick-filter text via `getQuickFilterText`) AG Grid quick filter over `Model auta` (značka/model/výbava), `Výkon (kW)`, `Objem motoru`, `Typ motoru`; debounced 200ms, clear (×) button, independent of column filters/filter-chips bar. No schema change (reference has no separate rok výroby column). Verified: `verify_ui.py --page reference --scenario ref-search` (new scenario) PASS.
 - [x] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)

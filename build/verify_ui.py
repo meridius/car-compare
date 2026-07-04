@@ -157,11 +157,13 @@ def scenario_ref_search(page):
     quick-filters down to matching, accent-folded rows (typing "skoda" without
     diacritics must still find "Škoda")."""
     page.wait_for_selector(".ag-row", timeout=15000)
-    before = page.locator(".ag-row").count()
+    # getDisplayedRowCount, not len(.ag-row): the grid virtualizes rows, so the
+    # DOM count is capped by the viewport and doesn't shrink with the total.
+    before = page.evaluate("window.__gridApi.getDisplayedRowCount()")
     page.fill("#ref-search-input", "skoda")
     # debounce (200ms) + grid re-filter
     page.wait_for_timeout(600)
-    after = page.locator(".ag-row").count()
+    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
     if not (after < before):
         raise AssertionError(f"quick filter did not reduce rows: before={before} after={after}")
     if after == 0:
@@ -169,6 +171,8 @@ def scenario_ref_search(page):
     cells = page.locator('.ag-cell[col-id="Model auta"]').all_inner_texts()
     if not cells or not all("škoda" in c.lower() for c in cells):
         raise AssertionError(f"visible rows are not all Škoda: {cells[:10]}")
+
+
 def scenario_pairing_gap(page):
     """Click the #14 unpaired-listings shortcut button and confirm it toggles
     the Spárováno set filter to {Ne, Nejisté} (merging, not clobbering, an
@@ -215,6 +219,32 @@ def scenario_pairing_gap(page):
     return None
 
 
+def scenario_missing_specs(page):
+    """Click the reference page's "Neúplné: N / M" toggle (#19) and confirm the
+    grid's external filter actually narrows the rows to ones carrying a
+    missing-spec badge (⚠) in the first column. Uses getDisplayedRowCount()
+    rather than counting ".ag-row" — the grid virtualizes rows, so the DOM row
+    count is capped at whatever fits the viewport and doesn't shrink with the
+    total until it drops below that cap."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    before = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    page.click("#btn-incomplete")
+    page.wait_for_timeout(300)
+    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if not (after < before):
+        raise AssertionError(f"incomplete toggle did not reduce rows: before={before} after={after}")
+    if after == 0:
+        raise AssertionError("incomplete toggle matched zero rows")
+    if "active" not in (page.get_attribute("#btn-incomplete", "class") or ""):
+        raise AssertionError("toggle button did not get 'active' class")
+    badges = page.locator(".missing-badge").all_inner_texts()
+    if not badges:
+        raise AssertionError("no missing-spec badges rendered after filtering to incomplete rows")
+    if not all("⚠" in b for b in badges):
+        raise AssertionError(f"visible badges missing the warning glyph: {badges[:10]}")
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
@@ -225,6 +255,7 @@ SCENARIOS = {
     "filter-chips": scenario_filter_chips,
     "ref-search": scenario_ref_search,
     "pairing-gap": scenario_pairing_gap,
+    "missing-specs": scenario_missing_specs,
 }
 
 

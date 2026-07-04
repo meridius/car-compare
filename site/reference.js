@@ -195,6 +195,74 @@
   var colRanges = {};
   var totalRowCount = 0;
 
+  // ── Missing-spec indicator (#19) ──
+  // Flags reference rows missing "key" curated spec columns — the ones a human
+  // fills in by hand (Spotřeba, Objem motoru, Cd, …), not columns aggregated
+  // from live listings (Karoserie, Výkon), which are legitimately blank for a
+  // reference model with no current matches. Purely a presentation layer: no
+  // external data is sourced, this only surfaces gaps that already exist.
+  var ICE_KEY_SPECS = [
+    {
+      field: "Spotřeba (l/100 km)", label: "Spotřeba",
+      // PHEV combined consumption is intentionally blanked at build time
+      // (docs/gotchas.md: WLTP weighted figure is misleading) — not a gap.
+      skip: function (row) { return row["Hybrid typ"] === "PHEV"; },
+    },
+    { field: "Objem motoru", label: "Objem motoru" },
+    { field: "Typ motoru", label: "Typ motoru" },
+    { field: "Cd", label: "Odpor vzduchu (Cd)" },
+    { field: "Hlučnost (dB)", label: "Hlučnost" },
+  ];
+  var EV_KEY_SPECS = [
+    { field: "Kapacita baterie (kWh)", label: "Kapacita baterie" },
+    { field: "Dojezd WLTP (km)", label: "Dojezd WLTP" },
+    { field: "Dojezd EV-database (km)", label: "Dojezd EV-database" },
+    { field: "Cd", label: "Odpor vzduchu (Cd)" },
+  ];
+
+  function isBlankSpec(v) {
+    return v == null || v === "";
+  }
+
+  function computeMissingSpecs(row) {
+    var specs = row["Typ"] === "Elektrické" ? EV_KEY_SPECS : ICE_KEY_SPECS;
+    var missing = [];
+    for (var i = 0; i < specs.length; i++) {
+      var spec = specs[i];
+      if (spec.skip && spec.skip(row)) continue;
+      if (isBlankSpec(row[spec.field])) missing.push(spec.label);
+    }
+    return missing;
+  }
+
+  function missingBadgeRenderer(params) {
+    var count = params.value;
+    if (!count) return "";
+    return '<span class="missing-badge">⚠ ' + count + "</span>";
+  }
+
+  function missingTooltipValueGetter(params) {
+    var missing = params.data && params.data._missing;
+    return missing && missing.length ? "Chybí: " + missing.join(", ") : undefined;
+  }
+
+  var incompleteOnly = false;
+  var incompleteCount = 0;
+
+  function updateIncompleteButton() {
+    var btn = document.getElementById("btn-incomplete");
+    if (!btn) return;
+    btn.textContent = "Neúplné: " + incompleteCount + " / " + totalRowCount;
+    btn.classList.toggle("active", incompleteOnly);
+  }
+
+  window.toggleIncomplete = function () {
+    incompleteOnly = !incompleteOnly;
+    updateIncompleteButton();
+    if (gridApi) gridApi.onFilterChanged();
+    updateRowCount();
+  };
+
   // ── Smart search (accent-insensitive quick filter) ──
   // Strips diacritics + lowercases so "skoda" matches "Škoda". Used both to
   // build each row/column's quick-filter text and to normalize the user's
@@ -208,6 +276,14 @@
   // easier visual scanning between the two pages; reference-only columns
   // (Tepelné čerpadlo možné) go after, keeping their prior relative order.
   var COL_DEFS = [
+    {
+      field: "_missingCount", headerName: "", width: 50, minWidth: 50, maxWidth: 60,
+      resizable: false, filter: false, sortable: true, suppressMovable: false,
+      cellClass: "missing-badge-cell",
+      cellRenderer: missingBadgeRenderer,
+      tooltipValueGetter: missingTooltipValueGetter,
+      headerTooltip: "Počet chybějících klíčových údajů (najeďte myší na ikonu pro seznam)",
+    },
     { field: "Model auta", filter: "agTextColumnFilter", width: 280 },
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
@@ -470,10 +546,18 @@
     computeRanges(data);
     totalRowCount = data.length;
 
+    incompleteCount = 0;
+    for (var r = 0; r < data.length; r++) {
+      var missing = computeMissingSpecs(data[r]);
+      data[r]._missing = missing;
+      data[r]._missingCount = missing.length;
+      if (missing.length) incompleteCount++;
+    }
+
     for (var i = 0; i < COL_DEFS.length; i++) {
       var col = COL_DEFS[i];
-      col.sortable = true;
-      col.resizable = true;
+      if (col.sortable === undefined) col.sortable = true;
+      if (col.resizable === undefined) col.resizable = true;
       if (col.type === "numericColumn") {
         col.valueFormatter = numericValueFormatter;
         if (NUMERIC_COLS.hasOwnProperty(col.field)) {
@@ -507,6 +591,13 @@
       tooltipMouseTrack: true,
       animateRows: false,
       enableCellTextSelection: true,
+      // External filter (#19): independent of column filters/quick search, like
+      // the search box — toggled by the "Neúplné: N / M" button, not part of
+      // getFilterModel() so clearFilters()/the chips bar don't touch it.
+      isExternalFilterPresent: function () { return incompleteOnly; },
+      doesExternalFilterPass: function (node) {
+        return !incompleteOnly || (node.data && node.data._missingCount > 0);
+      },
       onFilterChanged: function () {
         var model = gridApi ? gridApi.getFilterModel() : null;
         saveFiltersToStorage(model);
@@ -525,6 +616,7 @@
         var filters = urlFilters || storageFilters;
         if (filters) gridApi.setFilterModel(filters);
         initSearchBox();
+        updateIncompleteButton();
         updateRowCount();
         updateFilterChips();
       },
