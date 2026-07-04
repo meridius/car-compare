@@ -113,3 +113,30 @@ def classify(cluster, ref_models):
     if any(_prefix_matches(normalize_model(n), ref_low) for n in raws):
         return "normalization_gap"  # a BRAND_MAP/cleanup fix would pair it — not a new row
     return "missing_ref"
+
+
+def _ev_header():
+    path = os.path.join(REF_DIR, REF_FILES["ev"])
+    with open(path, newline="", encoding="utf-8") as f:
+        return next(csv.reader(f))
+
+
+def ev_columns():
+    return _ev_header()
+
+
+def project_newly_paired(prefixes, unpaired):
+    names = [str(r.get("Model auta", "")).lower() for r in unpaired]
+    out = {}
+    for p in prefixes:
+        pl = p.lower()
+        out[p] = sum(1 for n in names if n.startswith(pl))
+    return out
+
+
+def stub_row(cluster, fuel):
+    if fuel != "ev":
+        raise NotImplementedError("ICE stub handled in ICE mode task")
+    row = {col: "" for col in ev_columns()}
+    row["Model auta"] = cluster["prefix"]
+    return row

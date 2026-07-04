@@ -52,3 +52,21 @@ class TestClassify(unittest.TestCase):
     def test_missing_ref_when_nothing_matches(self):
         c = {"prefix": "Renault Twingo", "sample_names": ["Renault Twingo", "Renault Twingo E-Tech"]}
         self.assertEqual(rg.classify(c, ["Fiat Grande Panda"]), "missing_ref")
+
+
+class TestProjectAndStub(unittest.TestCase):
+    def _unpaired(self):
+        return [
+            {"Model auta": "Renault Twingo"}, {"Model auta": "Renault Twingo E-Tech"},
+            {"Model auta": "Fiat Grande Panda"},
+        ]
+
+    def test_projection_counts_prefix_matches(self):
+        got = rg.project_newly_paired(["Renault Twingo", "Fiat Grande Panda"], self._unpaired())
+        self.assertEqual(got, {"Renault Twingo": 2, "Fiat Grande Panda": 1})
+
+    def test_stub_row_has_exact_ev_columns_and_prefix(self):
+        row = rg.stub_row({"prefix": "Renault Twingo"}, "ev")
+        self.assertEqual(list(row.keys()), rg.ev_columns())
+        self.assertEqual(row["Model auta"], "Renault Twingo")
+        self.assertEqual(row["Kapacita baterie (kWh)"], "")  # spec blank until researched
