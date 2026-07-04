@@ -3,6 +3,9 @@ import re
 
 BRAND_MAP = {
     "Volkswagen": "VW",
+    # mobile.de strips diacritics from make names
+    "Skoda": "Škoda",
+    "Citroen": "Citroën",
 }
 
 # Union of electric + combustion cleanup patterns. Order: brand-expanded input assumed.
