@@ -12,7 +12,7 @@ lists, researches their specs via subagents behind a human review gate, and grow
 
 Deliverables:
 - `build/reference_gap.py` — deterministic core + CLI (`gaps` / `validate` / `apply`), offline unit-tested.
-- `tests/test_reference_gap.py` — 21 offline tests (part of the 81-test suite).
+- `tests/test_reference_gap.py` — 20 offline tests (part of the 82-test suite).
 - `.claude/commands/grow-reference.md` — interactive orchestration recipe.
 - `bin/grow-reference.sh` — deterministic-phase wrapper.
 
