@@ -17,10 +17,17 @@ concurrency:
   group: pages
   cancel-in-progress: false
 
+# Data lives in GitHub Releases, not git (decision 001):
+#   - rolling release `data` — current per-source state parquets + built payload,
+#     assets clobbered daily
+#   - immutable snapshots `data-YYYY-MM` — published on the 1st of each month;
+#     with 60-day removed-row retention every listing lands in >=1 snapshot
+# The repo itself stays code-only; frozen seed CSVs cover release-less bootstraps.
+
 jobs:
   # One runner per source — true parallelism across servers. Each leg runs its
   # own adapter, whose internal fuel configurations (EV/ICE, palivo URLs) stay
-  # serial. Legs are write-independent: each writes only its own <slug>.csv.
+  # serial. Legs are write-independent: each writes only its own <slug>.parquet.
   scrape:
     runs-on: ubuntu-latest
     strategy:
@@ -28,8 +35,8 @@ jobs:
       matrix:
         source: [sauto, autodraft, energycars, mobilede]
     # mobilede talks to an undocumented app endpoint that may die without
-    # notice — its failure must not block the daily build (which then reuses
-    # the committed mobilede.csv, since no fresh artifact overwrites it).
+    # notice — its failure must not block the daily build (which then falls
+    # back to the previous state from the rolling `data` release).
     continue-on-error: ${{ matrix.source == 'mobilede' }}
     steps:
       - uses: actions/checkout@v4
@@ -39,7 +46,7 @@ jobs:
           python-version: '3.12'
           cache: pip
 
-      - run: pip install playwright pandas beautifulsoup4 aiohttp
+      - run: pip install playwright pandas pyarrow beautifulsoup4 aiohttp
 
       - uses: actions/cache@v4
         with:
@@ -50,16 +57,28 @@ jobs:
       - if: matrix.source != 'sauto' && matrix.source != 'mobilede'
         run: playwright install chromium --with-deps
 
+      # Previous state comes from the rolling release; the git-tracked seed CSV
+      # remains the fallback when the release (or this asset) doesn't exist yet.
+      - name: Download previous state
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download data \
+            --pattern '${{ matrix.source }}.parquet' \
+            --dir scrapers/data/scrapes --clobber \
+            || echo "no previous state — seed CSV fallback"
+
       - run: python -m scrapers.run --source ${{ matrix.source }}
 
       - uses: actions/upload-artifact@v4
         with:
-          name: csv-${{ matrix.source }}
-          path: scrapers/data/scrapes/${{ matrix.source }}.csv
+          name: state-${{ matrix.source }}
+          path: scrapers/data/scrapes/${{ matrix.source }}.parquet
           if-no-files-found: error
 
-  # Join the per-source CSVs, rebuild the dashboard JSON, commit once. Pure
-  # pandas — no browser deps. Runs only if every scrape leg succeeded.
+  # Join the per-source states, rebuild the payload, publish to the rolling
+  # release. Pure pandas+pyarrow — no browser deps. Runs only if every
+  # non-soft-fail scrape leg succeeded.
   build:
     needs: scrape
     runs-on: ubuntu-latest
@@ -71,11 +90,29 @@ jobs:
           python-version: '3.12'
           cache: pip
 
-      - run: pip install pandas
+      - run: pip install pandas pyarrow
 
+      # Yesterday's state + history first (covers a failed mobilede leg)…
+      - name: Download previous release data
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download data \
+            --pattern '*.parquet' --pattern 'scrape_history.json' \
+            --dir /tmp/release-data --clobber \
+            || echo "no release yet — seed fallback"
+          if [ -d /tmp/release-data ]; then
+            mkdir -p scrapers/data/scrapes site/data
+            for src in sauto autodraft energycars mobilede; do
+              [ -f "/tmp/release-data/$src.parquet" ] && cp "/tmp/release-data/$src.parquet" scrapers/data/scrapes/
+            done
+            [ -f /tmp/release-data/scrape_history.json ] && cp /tmp/release-data/scrape_history.json site/data/
+          fi
+
+      # …then overlay whatever the scrape legs produced today.
       - uses: actions/download-artifact@v4
         with:
-          pattern: csv-*
+          pattern: state-*
           merge-multiple: true
           path: scrapers/data/scrapes
 
@@ -83,13 +120,52 @@ jobs:
         env:
           BUILD_TRIGGER: ${{ github.event_name }}
 
-      - name: Commit data if changed
+      # Everything the deploy job puts under site/data — parquet payload, meta,
+      # reference.json, scrape_history.json.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: site-data
+          path: site/data
+          if-no-files-found: error
+
+      - name: Update rolling data release
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          git config user.name "Martin Lukeš"
-          git config user.email "martin.meridius@gmail.com"
-          git add scrapers/data/scrapes/ site/data/
-          git diff --cached --quiet && echo "No changes" || git commit -m "data: daily scrape $(date -u +%Y-%m-%d)"
-          git push
+          gh release create data \
+            --title "Data (rolling)" \
+            --notes "Current scraper state + built payload. Assets are clobbered daily; monthly data-YYYY-MM releases are the immutable history." \
+            2>/dev/null || true
+          gh release upload data --clobber \
+            scrapers/data/scrapes/sauto.parquet \
+            scrapers/data/scrapes/autodraft.parquet \
+            scrapers/data/scrapes/energycars.parquet \
+            scrapers/data/scrapes/mobilede.parquet \
+            site/data/cars.parquet \
+            site/data/cars-meta.json \
+            site/data/reference.json \
+            site/data/scrape_history.json
+
+      - name: Monthly immutable snapshot
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if [ "$(date -u +%d)" = "01" ]; then
+            TAG="data-$(date -u +%Y-%m)"
+            gh release create "$TAG" \
+              --title "Data snapshot $(date -u +%Y-%m)" \
+              --notes "Immutable monthly snapshot (see docs/decisions/001-scalable-storage.md)." \
+              scrapers/data/scrapes/sauto.parquet \
+              scrapers/data/scrapes/autodraft.parquet \
+              scrapers/data/scrapes/energycars.parquet \
+              scrapers/data/scrapes/mobilede.parquet \
+              site/data/cars.parquet \
+              site/data/cars-meta.json \
+              site/data/reference.json \
+              site/data/scrape_history.json \
+              || echo "snapshot $TAG already exists"
+          fi
 
   deploy:
     needs: build
@@ -106,6 +182,12 @@ jobs:
         with:
           ref: main
 
+      # Data is not in git — inject the freshly built payload into the Pages artifact.
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-data
+          path: site/data
+
       - uses: actions/configure-pages@v5
 
       - name: Cache-bust local assets
@@ -114,6 +196,7 @@ jobs:
           sed -i "s|style\.css\"|style.css?v=$V\"|g" site/*.html
           sed -i "s|app\.js\"|app.js?v=$V\"|g" site/index.html
           sed -i "s|reference\.js\"|reference.js?v=$V\"|g" site/reference.html
+          sed -i "s|data/cars\.parquet\"|data/cars.parquet?v=$V\"|g" site/app.js
 
       - uses: actions/upload-pages-artifact@v3
         with:
