@@ -165,6 +165,18 @@ def backfill_body_fuel(df):
     return df
 
 
+def backfill_country(df):
+    """Populate a blank 'Země' for the Czech-only sources whose CSVs predate the
+    column (sauto/autodraft/energycars are all CZ). mobile.de rows already carry
+    their per-listing country from the scrape; leave anything else untouched."""
+    if "Země" not in df.columns:
+        df["Země"] = ""
+    zeme = df["Země"].astype("string").fillna("").str.strip()
+    src = df.get("Zdroj", pd.Series("", index=df.index)).astype("string").fillna("")
+    df.loc[(zeme == "") & (src != "Mobile.de"), "Země"] = "Česko"
+    return df
+
+
 def rematch_combustion(combustion):
     """Strip noise prefixes and re-run authoritative matching over every row."""
     if combustion.empty or "Model auta" not in combustion.columns:
@@ -523,6 +535,7 @@ def main():
 
     print("Backfilling body/fuel for overview...")
     df = backfill_body_fuel(df)
+    df = backfill_country(df)
 
     # PHEV combined consumption is the misleading official WLTP weighted figure
     # (~1 l/100 km, assumes a charged battery). Blank it on every PHEV-tagged row
@@ -549,7 +562,7 @@ def main():
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
         "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Spárováno",
         "Skóre shody", "Tepelné čerpadlo",
-        "Extra", "Stav", "Zdroj", "Odkaz na auto",
+        "Extra", "Stav", "Země", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
         "Cd", "Cd zdroj", "Tepelné čerpadlo možné",

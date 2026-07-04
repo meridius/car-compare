@@ -198,6 +198,17 @@ Like energycars, mobile.de exposes no availability concept in search results. Th
 merge step still marks vanished listings `Odstraněno`. `attr.gi` (Garantie until
 MM/YYYY) drives `Záruka = "Ano"`.
 
+### country → the shared "Země" column, not Extra
+
+`attr.cn` (ISO code) maps via `_COUNTRY_MAP` to the Czech country name in the canonical
+`Země` column (CZ→Česko, SK→Slovensko, DE→Německo, AT→Rakousko, PL→Polsko; unknown
+codes pass through verbatim). Extra now keeps only the city (`attr.loc`), not the old
+"CZ Beroun" country-prefixed token. mobile.de is the only source with non-CZ rows —
+the three Czech sources hard-code `Země = "Česko"`, and `build_data.backfill_country()`
+fills `Česko` on any non-mobile.de row whose `Země` is blank (CSVs written before the
+column existed). The dashboard shows `Země` as a set-filter column and a "Země × Typ"
+card in the dataset overview.
+
 ---
 
 ## core — normalize

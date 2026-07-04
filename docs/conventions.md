@@ -34,7 +34,7 @@ Model cleanup patterns (regex fixups) belong in `core/normalize.py` `MODEL_CLEAN
 
 ## Column Order
 
-The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/schema.py`. Never reorder silently. Adapters emit exactly these 24 columns (use `blank_row()` for the ones they don't fill).
+The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/schema.py`. Never reorder silently. Adapters emit exactly these 26 columns (use `blank_row()` for the ones they don't fill).
 
 ## Running Scrapers
 
@@ -46,7 +46,7 @@ The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/sc
 After modifying any source adapter or `core/` module, **always run the affected source(s)** and verify the CSV output before reporting the task as complete. Check:
 
 1. `python -m scrapers.run --source <name>` runs without errors
-2. Column count matches `CANONICAL_COLS` in `scrapers/core/schema.py` (25)
+2. Column count matches `CANONICAL_COLS` in `scrapers/core/schema.py` (26)
 3. New/changed fields are populated (spot-check with `pandas value_counts`)
 4. Existing fields still correct (model, price, mileage)
 

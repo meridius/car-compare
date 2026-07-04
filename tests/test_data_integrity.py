@@ -51,6 +51,17 @@ class DataIntegrityTest(unittest.TestCase):
         bad = {c.get("Spárováno") for c in self.ev} - {"Ano", "Ne"}
         self.assertFalse(bad, f"unexpected EV Spárováno values: {bad}")
 
+    def test_zeme_in_schema(self):
+        self.assertIn("Země", CANONICAL_COLS)
+
+    def test_every_row_has_country(self):
+        """Country must be populated on every listing — CZ sources backfilled to
+        'Česko', mobile.de rows carry their per-listing country."""
+        offenders = [c for c in self.cars if not str(c.get("Země") or "").strip()]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows missing Země (e.g. "
+                         f"{offenders[0].get('Model auta') if offenders else ''})")
+
     def test_no_confident_match_with_nonpositive_score(self):
         """THE core reliability invariant: a confident 'Ano' must never be a
         coin-flip (score 0) or a contradiction (score < 0)."""

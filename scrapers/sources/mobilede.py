@@ -50,6 +50,13 @@ EV_FUELS = (("ft", "ELECTRICITY"),)
 ICE_FUELS = tuple(("ft", f) for f in ("PETROL", "DIESEL", "HYBRID", "HYBRID_DIESEL"))
 ICE_EXTRA = (("pw", "100:"),)
 
+# attr.cn is an ISO-3166 alpha-2 code; the canonical "Země" column carries the
+# Czech country name. Unknown codes fall through as-is (never silently dropped).
+_COUNTRY_MAP = {
+    "CZ": "Česko", "SK": "Slovensko", "DE": "Německo",
+    "AT": "Rakousko", "PL": "Polsko",
+}
+
 _HYBRID_FTS = {"Hybrid (Benzin/Elektro)", "Hybrid (Diesel/Elektro)"}
 _FUEL_MAP = {
     "Benzin": "Benzín",
@@ -117,7 +124,9 @@ def _build_row(item, rate):
     sub = item.get("subTitle") or ""
     title_text = f"{item.get('shortTitle') or ''} {sub}".strip()
     body = _CATEGORY_MAP.get(attr.get("c", ""), "") or extract_body_type(title_text)
-    loc_token = " ".join(p for p in (attr.get("cn"), attr.get("loc")) if p)
+    # Country goes to its own "Země" column now; Extra keeps only the city.
+    zeme = _COUNTRY_MAP.get(attr.get("cn", ""), attr.get("cn", ""))
+    loc_token = attr.get("loc") or ""
     awd = "Ano" if extract_awd(title_text) == "Ano" else "Ne"
 
     row = schema.blank_row()
@@ -126,7 +135,7 @@ def _build_row(item, rate):
         "Nájezd (km)": _parse_number(attr.get("ml")),
         "Rok výroby": _year_from_fr(attr.get("fr")),
         "Výkon (kW)": _parse_number(attr.get("pw")),
-        "Karoserie": body, "Náhon 4x4": awd,
+        "Karoserie": body, "Náhon 4x4": awd, "Země": zeme,
         "Zdroj": SOURCE_NAME, "Odkaz na auto": link,
     })
 

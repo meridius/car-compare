@@ -179,7 +179,8 @@ def _build_ev(text, base_name, power, kola, nahon_4x4, rok, extra_rest, status, 
         "Tepelné čerpadlo": "Ano" if "Tepelko" in text else "Ne",
         "Kola": kola, "Náhon 4x4": nahon_4x4,
         "Karoserie": extract_body_type(base_name + " " + extra_rest),
-        "Extra": extra_rest, "Stav": status, "Zdroj": SOURCE_NAME, "Odkaz na auto": link,
+        "Extra": extra_rest, "Stav": status, "Země": "Česko",
+        "Zdroj": SOURCE_NAME, "Odkaz na auto": link,
     })
     return row, base_name
 
@@ -212,7 +213,8 @@ def _build_ice(text, base_name, power, kola, nahon_4x4, rok, extra_rest, status,
         "Rok výroby": rok, "Palivo": fuel, "Převodovka": _extract_transmission(text),
         "Kola": kola, "Náhon 4x4": nahon_4x4,
         "Extra": clean_extra(extra_rest, extracted),
-        "Stav": status, "Zdroj": SOURCE_NAME, "Odkaz na auto": link, **extracted,
+        "Stav": status, "Země": "Česko",
+        "Zdroj": SOURCE_NAME, "Odkaz na auto": link, **extracted,
     })
     return row
 

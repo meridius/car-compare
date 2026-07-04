@@ -172,6 +172,7 @@ async def scrape():
                 "Palivo":           "Elektro",
                 "Extra":            " / ".join(extra_parts),
                 "Stav":             "Dostupný",
+                "Země":             "Česko",
                 "Zdroj":            SOURCE_NAME,
                 "Odkaz na auto":    link,
             })
