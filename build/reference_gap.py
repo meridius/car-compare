@@ -9,6 +9,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
@@ -47,8 +48,12 @@ def load_unpaired(cars_json_path, fuel):
     return load_unpaired_from_rows(rows, fuel)
 
 
+def _fold_accents(s):
+    return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c))
+
+
 def _canonical_key(name):
-    n = normalize_model(name or "").lower()
+    n = _fold_accents(normalize_model(name or "")).lower()
     n = _KEY_STRIP.sub(" ", n)
     return re.sub(r"\s+", " ", n).strip()
 

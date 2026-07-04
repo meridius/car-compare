@@ -27,3 +27,13 @@ class TestCluster(unittest.TestCase):
         self.assertIn("Renault Twingo", by_prefix)
         self.assertEqual(by_prefix["Renault Twingo"]["volume"], 2)  # bare + E-Tech merged
         self.assertEqual(clusters[0]["volume"], 2)  # sorted by volume desc
+
+    def test_cluster_folds_diacritics_across_sources(self):
+        listings = [
+            {"Typ": "Elektrické", "Spárováno": "Ne", "Model auta": "Citroën ë-C3", "Odkaz na auto": "a"},
+            {"Typ": "Elektrické", "Spárováno": "Ne", "Model auta": "Citroen e-C3", "Odkaz na auto": "b"},
+        ]
+        ev = rg.load_unpaired_from_rows(listings, "ev")
+        clusters = rg.cluster(ev, "ev")
+        self.assertEqual(len(clusters), 1)        # both spellings merge into one cluster
+        self.assertEqual(clusters[0]["volume"], 2)
