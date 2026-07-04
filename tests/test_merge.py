@@ -1,10 +1,11 @@
-"""Golden tests for merge_with_previous: removal stamping + 60-day retention.
+"""Golden tests for merge_with_previous: removal stamping + optional retention.
 
 State layer semantics:
 - a vanished link is kept with Stav="Odstraněno" and stamped "Odstraněno dne"=today
 - the stamp is preserved on later merges (not re-stamped)
-- rows removed more than REMOVED_RETENTION_DAYS ago are dropped from state
-  (they live on in the monthly snapshot releases — see docs/decisions/001)
+- by default (retention_days=None) removed rows are kept forever — they become
+  the lazy-loaded archive in the dashboard (decision 001, option C)
+- when a retention_days cap IS passed, rows removed longer ago are dropped
 - a reappearing link takes the fresh row (blank stamp) — new data always wins
 """
 import tempfile
@@ -15,7 +16,7 @@ from pathlib import Path
 import pandas as pd
 
 from scrapers.core import storage
-from scrapers.core.merge import REMOVED_RETENTION_DAYS, merge_with_previous
+from scrapers.core.merge import merge_with_previous
 
 COLS = ["Model auta", "Stav", "Odstraněno dne", "Odkaz na auto"]
 TODAY = date(2026, 7, 4)
@@ -25,12 +26,12 @@ def _df(rows):
     return pd.DataFrame(rows, columns=COLS)
 
 
-def _merge(new_df, prev_df, today=TODAY):
+def _merge(new_df, prev_df, today=TODAY, retention_days=None):
     with tempfile.TemporaryDirectory() as td:
         base = Path(td) / "src"
         if prev_df is not None:
             storage.write_state(prev_df, base)
-        return merge_with_previous(new_df, base, today=today)
+        return merge_with_previous(new_df, base, today=today, retention_days=retention_days)
 
 
 class MergeTest(unittest.TestCase):
@@ -72,23 +73,32 @@ class MergeTest(unittest.TestCase):
         self.assertEqual(row["Stav"], "Dostupný")
         self.assertEqual(row["Odstraněno dne"], "")
 
-    def test_retention_drops_rows_older_than_cutoff(self):
-        old_date = (TODAY - timedelta(days=REMOVED_RETENTION_DAYS + 1)).isoformat()
-        edge_date = (TODAY - timedelta(days=REMOVED_RETENTION_DAYS)).isoformat()
+    def test_default_keeps_all_removed_forever(self):
+        # No retention cap by default — removed rows become the lazy archive.
+        ancient = (TODAY - timedelta(days=3650)).isoformat()
+        prev = _df([["ancient", "Odstraněno", ancient, "https://x/1"]])
+        new = _df([["B", "Dostupný", "", "https://x/2"]])
+        out = _merge(new, prev)  # retention_days=None
+        self.assertIn("https://x/1", set(out["Odkaz na auto"]))
+
+    def test_retention_cap_drops_rows_older_than_cutoff(self):
+        cap = 60
+        old_date = (TODAY - timedelta(days=cap + 1)).isoformat()
+        edge_date = (TODAY - timedelta(days=cap)).isoformat()
         prev = _df([
             ["too-old", "Odstraněno", old_date, "https://x/1"],
             ["edge-keep", "Odstraněno", edge_date, "https://x/2"],
         ])
         new = _df([["B", "Dostupný", "", "https://x/3"]])
-        out = _merge(new, prev)
+        out = _merge(new, prev, retention_days=cap)
         self.assertNotIn("https://x/1", set(out["Odkaz na auto"]))
         self.assertIn("https://x/2", set(out["Odkaz na auto"]))
 
-    def test_retention_ignores_non_removed_rows(self):
-        # a bogus stamp on a live row must not delete it
+    def test_retention_cap_ignores_non_removed_rows(self):
+        # a bogus stamp on a live row must not delete it even with a cap set
         prev = _df([["A", "Dostupný", "2020-01-01", "https://x/1"]])
         new = _df([["A", "Dostupný", "", "https://x/1"]])
-        out = _merge(new, prev)
+        out = _merge(new, prev, retention_days=60)
         self.assertEqual(len(out), 1)
 
     def test_unparsable_stamp_is_kept_and_restamped(self):

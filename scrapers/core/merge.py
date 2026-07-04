@@ -1,11 +1,13 @@
 """Merge new scrape with previous state, preserving removed listings.
 
 Removed listings are kept with Stav="Odstraněno" and stamped with the date they
-were first seen missing ("Odstraněno dne"). Rows removed more than
-REMOVED_RETENTION_DAYS ago are dropped from the state file — the live dataset
-plateaus instead of growing forever, and full history survives in the monthly
-snapshot releases (retention 60 d > snapshot interval 31 d, so every row lands
-in at least one immutable snapshot). See docs/decisions/001-scalable-storage.md.
+were first seen missing ("Odstraněno dne"). By default they are kept forever:
+the dashboard splits them into a lazy-loaded archive (decision 001, option C),
+so the live payload stays bounded by the market while full history is available
+on demand and permanently in the monthly snapshot releases.
+
+`retention_days` is an optional cap — pass an int to drop rows removed longer
+ago than that (useful if the archive ever needs bounding). None = keep all.
 """
 from datetime import date, timedelta
 from pathlib import Path
@@ -14,22 +16,31 @@ import pandas as pd
 
 from . import storage
 
-REMOVED_RETENTION_DAYS = 60
+# None = keep every removed row (archive is unbounded, snapshots are permanent).
+# Set to an int to cap how long removed listings survive in live state.
+REMOVED_RETENTION_DAYS = None
 
 
-def _keep_removed(row, cutoff: date) -> bool:
-    """True when a previously-removed row is still within the retention window."""
+def _keep_removed(row, cutoff) -> bool:
+    """True when a previously-removed row is still within the retention window.
+
+    cutoff is None (keep all) or a date; a blank/garbage stamp is kept (the
+    caller re-stamps it).
+    """
+    if cutoff is None:
+        return True
     try:
         removed_on = date.fromisoformat(row.get("Odstraněno dne", ""))
     except ValueError:
-        return True  # blank/garbage stamp — keep, caller re-stamps
+        return True
     return removed_on >= cutoff
 
 
-def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = None) -> pd.DataFrame:
+def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = None,
+                        retention_days=REMOVED_RETENTION_DAYS) -> pd.DataFrame:
     """Merge new scrape with previous state, preserving row order from previous state."""
     today = today or date.today()
-    cutoff = today - timedelta(days=REMOVED_RETENTION_DAYS)
+    cutoff = None if retention_days is None else today - timedelta(days=retention_days)
 
     prev = storage.read_state(base_path)
     if prev is None or "Odkaz na auto" not in prev.columns:

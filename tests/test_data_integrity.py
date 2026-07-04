@@ -125,48 +125,45 @@ class DataIntegrityTest(unittest.TestCase):
         self.assertGreater(ano / n, 0.30, f"Ano rate {ano/n:.1%} suspiciously low")
 
 
-class PayloadContractTest(unittest.TestCase):
-    """Pins the browser-facing artifact: schema dtypes, meta sidecar, retention."""
+CARS_ARCHIVED = os.path.join(ROOT, "site", "data", "cars-archived.parquet")
 
-    def test_no_int64_columns(self):
+
+class PayloadContractTest(unittest.TestCase):
+    """Pins the browser-facing artifacts: the live/archive split, dtypes, meta."""
+
+    def test_no_int64_columns_in_either_payload(self):
         import pyarrow.parquet as pq
-        schema = pq.read_schema(CARS_PARQUET)
-        offenders = [f.name for f in schema if "int64" in str(f.type)]
-        self.assertEqual(offenders, [],
-                         f"int64 columns decode to BigInt in hyparquet: {offenders}")
+        for path in (CARS_PARQUET, CARS_ARCHIVED):
+            offenders = [f.name for f in pq.read_schema(path) if "int64" in str(f.type)]
+            self.assertEqual(offenders, [],
+                             f"int64 in {os.path.basename(path)} → BigInt in hyparquet: {offenders}")
 
     def test_meta_sidecar_keys(self):
         with open(CARS_META, encoding="utf-8") as f:
             meta = json.load(f)
         self.assertEqual(
             set(meta),
-            {"buildDate", "trigger", "sources", "matching", "referenceData", "totalCars"},
+            {"buildDate", "trigger", "sources", "matching", "referenceData",
+             "totalCars", "archivedCars"},
         )
         self.assertGreater(meta["totalCars"], 0)
 
-    def test_removed_rows_respect_retention(self):
-        """Stamped removed rows must be younger than retention (+grace). Rows
-        without a stamp are pre-migration seeds and exempt."""
-        from datetime import date, timedelta
-        from scrapers.core.merge import REMOVED_RETENTION_DAYS
-        cars = _records(CARS_PARQUET)
-        cutoff = date.today() - timedelta(days=REMOVED_RETENTION_DAYS + 7)
-        offenders = []
-        for c in cars:
-            if c.get("Stav") != "Odstraněno":
-                continue
-            stamp = c.get("Odstraněno dne")
-            if not stamp:
-                continue
-            try:
-                removed_on = date.fromisoformat(str(stamp))
-            except ValueError:
-                offenders.append(c)
-                continue
-            if removed_on < cutoff:
-                offenders.append(c)
+    def test_live_payload_has_no_removed_rows(self):
+        """cars.parquet is the always-loaded live set — removed listings belong
+        in cars-archived.parquet, not here (decision 001, option C)."""
+        offenders = [c for c in _records(CARS_PARQUET) if c.get("Stav") == "Odstraněno"]
         self.assertEqual(offenders, [],
-                         f"{len(offenders)} removed rows older than retention window")
+                         f"{len(offenders)} 'Odstraněno' rows leaked into the live payload")
+
+    def test_archive_holds_only_removed_rows(self):
+        archived = _records(CARS_ARCHIVED)
+        bad = [c for c in archived if c.get("Stav") != "Odstraněno"]
+        self.assertEqual(bad, [], f"{len(bad)} non-removed rows in the archive payload")
+
+    def test_meta_archived_count_matches_archive_file(self):
+        with open(CARS_META, encoding="utf-8") as f:
+            meta = json.load(f)
+        self.assertEqual(meta["archivedCars"], len(_records(CARS_ARCHIVED)))
 
 
 if __name__ == "__main__":

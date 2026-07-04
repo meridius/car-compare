@@ -107,12 +107,40 @@ def scenario_overview_matching(page):
     return "#summary-overlay"
 
 
+def scenario_archive(page):
+    """Click 'Načíst archiv' to lazy-load cars-archived.parquet, then filter the
+    grid to the loaded removed listings so the archive rows are visible in the
+    screenshot. Asserts the fetch+decode+applyTransaction path actually adds rows."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    # Button is hidden when there are no archived rows — nothing to verify then.
+    if not page.evaluate("(function(){var b=document.getElementById('btn-archive');"
+                         "return b && b.style.display !== 'none';})()"):
+        return None
+    before = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    page.evaluate("window.loadArchive()")
+    # Wait until the button flips to the loaded label (fetch + decode complete).
+    page.wait_for_function(
+        "document.getElementById('btn-archive').textContent.indexOf('načten') >= 0",
+        timeout=20000,
+    )
+    page.evaluate(
+        "window.__gridApi.setFilterModel("
+        "{ 'Stav': { filterType: 'set', values: ['Odstraněno'] } });"
+    )
+    page.wait_for_timeout(400)
+    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if after == 0:
+        raise AssertionError("archive loaded but no Odstraněno rows displayed")
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
     "summary": scenario_summary,
     "sparovano": scenario_sparovano,
     "overview-matching": scenario_overview_matching,
+    "archive": scenario_archive,
 }
 
 

@@ -35,14 +35,19 @@ artifact carries the payload; AG Grid stays.** No new accounts, $0.
    **immutable snapshot release** `data-YYYY-MM`. Releases allow 2 GiB/asset, no stated
    total cap, and `GITHUB_TOKEN` can manage them
    ([docs](https://docs.github.com/en/repositories/releasing-projects-on-github/about-releases)).
-3. **Retention bound** — new canonical column **`Odstraněno dne`** (date a listing was
-   first seen missing). `merge_with_previous()` drops removed rows older than
-   **`REMOVED_RETENTION_DAYS = 60`**. Because 60 d > 31 d (snapshot interval), every row
-   that ever existed appears in ≥ 1 immutable monthly snapshot — nothing is ever lost,
-   while live data plateaus at (live market + 60 days of churn) instead of growing forever.
-4. **Payload** — `build_data.py` writes `site/data/cars.parquet` (**snappy**, **numeric
-   columns float64** — int64 would decode to BigInt in the browser and break the grid) +
-   `site/data/cars-meta.json` (the old `metadata` object). Snappy, not zstd: hyparquet
+3. **Live / archive split (option C)** — new canonical column **`Odstraněno dne`** (date
+   a listing was first seen missing). The payload splits by `Stav`: live listings →
+   `cars.parquet` (always loaded, bounded by the live market), removed →
+   `cars-archived.parquet` (**lazy-loaded** on demand via a dashboard button). Removed
+   rows are therefore kept **forever** by default (`REMOVED_RETENTION_DAYS = None`) — the
+   archive is the on-demand history, monthly snapshots the permanent record — so a
+   removed listing never silently vanishes from the app, yet the default load stays lean.
+   `merge_with_previous(retention_days=N)` can still cap the archive if it ever grows too
+   large to load on demand.
+4. **Payload** — `build_data.py` writes `site/data/cars.parquet` (live) +
+   `site/data/cars-archived.parquet` (removed) — both **snappy**, **numeric columns
+   float64** (int64 would decode to BigInt in the browser and break the grid) —
+   plus `site/data/cars-meta.json` (the old `metadata` object + `archivedCars`). Snappy, not zstd: hyparquet
    decodes snappy natively, so the browser needs **one** pinned import instead of also
    shipping `hyparquet-compressors` for zstd. The size cost is small (7.8 vs 5.5 MB) and
    Pages gzips it on the wire anyway. Both files ship only inside the Pages deploy
@@ -66,8 +71,9 @@ AG Grid at 141k rows: `verify_ui` scenarios grid / stav-filter / summary all PAS
 `accept-ranges: bytes` (verified 206) and `access-control-allow-origin: *`, and
 auto-gzips JSON — measured live against the deployed site.
 
-Projection: ~1M rows ≈ 35–40 MB parquet — still trivially inside every limit above;
-the browser payload stays bounded by retention regardless.
+Projection: ~1M rows ≈ 35–40 MB parquet — still trivially inside every limit above.
+The always-loaded `cars.parquet` stays bounded by the *live* market (removed listings
+go to the lazy-loaded archive), so first-load cost doesn't grow with accumulated history.
 
 ## Alternatives rejected
 
@@ -101,6 +107,8 @@ the browser payload stays bounded by retention regardless.
 - The daily workflow no longer commits data; the repo becomes code-only again.
 - First run on main bootstraps state from the frozen seed CSVs, then the release takes
   over; afterwards the seeds may be deleted at leisure.
+- Dashboard default view is live-only; a "Načíst archiv (N)" button fetches
+  `cars-archived.parquet` on demand and reveals removed listings in the grid.
 - Local dev: `./bin/bootstrap-data.sh` fetches current state + payload from the
   release (private repo needs gh auth); without it, seeds keep everything working
   offline.

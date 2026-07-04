@@ -311,6 +311,9 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   var chartLoaded = false;
   var summaryRendered = false;
   var totalRows = 0;
+  // Removed listings live in a separate cars-archived.parquet, fetched on demand
+  // (decision 001, option C). "unloaded" | "loading" | "loaded".
+  var archiveState = "unloaded";
 
   function hslToRgb(h, s, l) {
     s /= 100; l /= 100;
@@ -596,6 +599,51 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     document.getElementById("row-count").textContent = text;
   }
 
+  // Show the "load archive" button once we know how many removed listings exist.
+  // Hidden entirely when there are none. cars.parquet holds only live listings,
+  // so the archive stays out of memory until the user asks for it.
+  function setupArchiveButton() {
+    var btn = document.getElementById("btn-archive");
+    if (!btn) return;
+    var n = (appMetadata && appMetadata.archivedCars) || 0;
+    if (!n) { btn.style.display = "none"; return; }
+    btn.style.display = "";
+    btn.disabled = false;
+    btn.textContent = "Na\u010d\u00edst archiv (" + Number(n).toLocaleString("cs-CZ") + ")";
+  }
+
+  window.loadArchive = function () {
+    if (archiveState !== "unloaded") return;
+    archiveState = "loading";
+    var btn = document.getElementById("btn-archive");
+    if (btn) { btn.disabled = true; btn.textContent = "Na\u010d\u00edt\u00e1m archiv\u2026"; }
+    fetch("data/cars-archived.parquet")
+      .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); })
+      .then(function (buf) { return parquetReadObjects({ file: buf }); })
+      .then(function (rows) {
+        if (gridApi && rows.length) {
+          gridApi.applyTransaction({ add: rows });
+          totalRows += rows.length;
+          // If a Stav filter is active and excludes "Odstran\u011bno", the freshly
+          // added rows would stay hidden \u2014 the user clicked to see them, so
+          // add that value back into the active selection.
+          var model = gridApi.getFilterModel() || {};
+          var stav = model["Stav"];
+          if (stav && stav.values && stav.values.indexOf("Odstran\u011bno") === -1) {
+            stav.values.push("Odstran\u011bno");
+            gridApi.setFilterModel(model);
+          }
+        }
+        archiveState = "loaded";
+        if (btn) btn.textContent = "Archiv na\u010dten (" + Number(rows.length).toLocaleString("cs-CZ") + ")";
+        updateRowCount();
+      })
+      .catch(function () {
+        archiveState = "unloaded";
+        if (btn) { btn.disabled = false; btn.textContent = "Archiv \u2013 chyba, zkusit znovu"; }
+      });
+  };
+
   window.clearFilters = function () {
     localStorage.removeItem(STORAGE_KEY);
     var url = new URL(window.location);
@@ -719,6 +767,9 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       addStat(card1, "Datum", fmtDate(appMetadata.buildDate));
       addStat(card1, "Spu\u0161t\u011bn\u00ed", trigger);
       addStat(card1, "Celkem aut", fmtNum(appMetadata.totalCars));
+      if (appMetadata.archivedCars) {
+        addStat(card1, "Archiv (odstraněné)", fmtNum(appMetadata.archivedCars));
+      }
       body.appendChild(card1);
 
       // Source breakdown
@@ -1063,6 +1114,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       return parquetReadObjects({ file: results[0] }).then(function (rows) {
         appMetadata = results[1];
         init(rows);
+        setupArchiveButton();
       });
     })
     .catch(function (err) {

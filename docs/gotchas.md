@@ -251,12 +251,29 @@ uncompressed first.
 release access still builds from the seeds. The seeds stop being updated — do
 not "fix" data in them.
 
-### merge retention math
+### live / archive split (removed listings are lazy-loaded)
 
-`merge_with_previous()` drops rows removed > `REMOVED_RETENTION_DAYS` (60) ago;
-monthly snapshots are cut on the 1st. 60 d > 31 d ⇒ every row that ever existed
-appears in ≥1 immutable `data-YYYY-MM` release. Shrinking retention below the
-snapshot interval would silently lose short-lived listings from history.
+`build_data.write_payload()` splits the payload by `Stav`: live listings →
+`cars.parquet` (always loaded), removed (`Stav=="Odstraněno"`) →
+`cars-archived.parquet` (fetched only when the user clicks "Načíst archiv" in
+`app.js`). So the always-loaded payload stays bounded by the live market even as
+removed listings accumulate. `cars-meta.json` carries `archivedCars` so the
+button can show the count (and hides when 0). The archive file is always written
+(empty frame keeps its schema) so the browser fetch never 404s.
+
+### merge keeps removed rows forever by default
+
+`REMOVED_RETENTION_DAYS = None` → `merge_with_previous()` keeps every removed row
+(they become the archive; monthly snapshots are the permanent record). Pass
+`retention_days=N` to cap it if the archive ever needs bounding. This is a
+deliberate reversal of the original "drop after 60 days" — the live/archive split
+removed the size pressure that motivated a hard cap.
+
+### live payload must never contain Odstraněno rows
+
+`test_data_integrity.test_live_payload_has_no_removed_rows` pins it — a removed
+row leaking into `cars.parquet` means it shows without the user loading the
+archive, and doubles up once they do.
 
 ---
 

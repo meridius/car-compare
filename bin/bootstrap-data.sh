@@ -38,7 +38,7 @@ for slug in sauto autodraft energycars mobilede; do
 done
 
 # Built payload + sidecars → site/data/ (lets serve.sh run without a rebuild).
-for f in cars.parquet cars-meta.json reference.json scrape_history.json; do
+for f in cars.parquet cars-archived.parquet cars-meta.json reference.json scrape_history.json; do
   if [ -f "$TMP/$f" ]; then
     cp "$TMP/$f" site/data/
     echo "  payload: $f"

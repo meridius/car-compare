@@ -21,7 +21,7 @@ concurrency:
 #   - rolling release `data` — current per-source state parquets + built payload,
 #     assets clobbered daily
 #   - immutable snapshots `data-YYYY-MM` — published on the 1st of each month;
-#     with 60-day removed-row retention every listing lands in >=1 snapshot
+#     the permanent record behind the lazy-loaded archive (decision 001, option C)
 # The repo itself stays code-only; frozen seed CSVs cover release-less bootstraps.
 
 jobs:
@@ -142,6 +142,7 @@ jobs:
             scrapers/data/scrapes/energycars.parquet \
             scrapers/data/scrapes/mobilede.parquet \
             site/data/cars.parquet \
+            site/data/cars-archived.parquet \
             site/data/cars-meta.json \
             site/data/reference.json \
             site/data/scrape_history.json
@@ -161,6 +162,7 @@ jobs:
               scrapers/data/scrapes/energycars.parquet \
               scrapers/data/scrapes/mobilede.parquet \
               site/data/cars.parquet \
+              site/data/cars-archived.parquet \
               site/data/cars-meta.json \
               site/data/reference.json \
               site/data/scrape_history.json \
@@ -197,6 +199,7 @@ jobs:
           sed -i "s|app\.js\"|app.js?v=$V\"|g" site/index.html
           sed -i "s|reference\.js\"|reference.js?v=$V\"|g" site/reference.html
           sed -i "s|data/cars\.parquet\"|data/cars.parquet?v=$V\"|g" site/app.js
+          sed -i "s|data/cars-archived\.parquet\"|data/cars-archived.parquet?v=$V\"|g" site/app.js
 
       - uses: actions/upload-pages-artifact@v3
         with:

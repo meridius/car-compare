@@ -494,34 +494,51 @@ def build_reference_json(comb_ref, elec_ref, df):
     print(f"  Reference: {len(records)} entries → {out_path}")
     return records
 
-def write_payload(df, metadata, out_dir):
-    """Write site/data/cars.parquet (snappy) + cars-meta.json sidecar.
+PAYLOAD_NUMERIC_COLS = [
+    "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
+    "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
+    "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
+    "Skóre shody", "Cd",
+]
 
-    Snappy, not zstd: hyparquet decodes snappy natively — no extra browser dep.
-    Numeric columns are forced to float64; pyarrow int64 decodes to BigInt in
-    the browser and breaks grid formatters (pinned by test_no_int64_columns).
+
+def _coerce_payload(df):
+    """Type a frame for the browser: numeric cols → float64, blanks → null.
+
+    Snappy (in write_payload) + float64: hyparquet decodes snappy natively (no
+    extra browser dep) and int64 would decode to BigInt and break grid
+    formatters (pinned by test_no_int64_columns).
     """
-    numeric_cols = [
-        "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
-        "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
-        "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
-        "Skóre shody", "Cd",
-    ]
     df = df.copy()
-    for col in numeric_cols:
+    for col in PAYLOAD_NUMERIC_COLS:
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors="coerce").astype("float64")
     for col in df.columns:
-        if col not in numeric_cols:
+        if col not in PAYLOAD_NUMERIC_COLS:
             df[col] = df[col].astype(object).mask(df[col].isna() | (df[col] == ""), None)
+    return df
 
+
+def write_payload(df, metadata, out_dir):
+    """Write the split payload (decision 001, option C): cars.parquet = live
+    listings, cars-archived.parquet = removed ones (Stav="Odstraněno"), plus the
+    cars-meta.json sidecar. The archive is lazy-loaded on demand in the dashboard,
+    so the always-loaded payload stays bounded by the live market.
+    """
     os.makedirs(out_dir, exist_ok=True)
-    parquet_path = os.path.join(out_dir, "cars.parquet")
-    df.to_parquet(parquet_path, compression="snappy", index=False)
+    removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
+
+    live_path = os.path.join(out_dir, "cars.parquet")
+    _coerce_payload(df[~removed]).to_parquet(live_path, compression="snappy", index=False)
+
+    archived_path = os.path.join(out_dir, "cars-archived.parquet")
+    # Always write it (empty frame keeps its schema) so the browser fetch never 404s.
+    _coerce_payload(df[removed]).to_parquet(archived_path, compression="snappy", index=False)
+
     meta_path = os.path.join(out_dir, "cars-meta.json")
     with open(meta_path, "w", encoding="utf-8") as f:
         json.dump(metadata, f, ensure_ascii=False, separators=(",", ":"))
-    return parquet_path, meta_path
+    return live_path, archived_path, meta_path
 
 
 def update_scrape_history(metadata, history_path=None, seed_path=None):
@@ -612,22 +629,30 @@ def main():
     trigger = os.environ.get("BUILD_TRIGGER", "manual")
     build_date = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    removed_mask = (df["Stav"].astype(str) == "Odstraněno") if "Stav" in df.columns else pd.Series(False, index=df.index)
+    df_live = df[~removed_mask]
+    archived_count = int(removed_mask.sum())
+
+    # Metadata describes the always-loaded live payload; the archive is separate
+    # and lazy-loaded, so its rows are surfaced only by archivedCars.
     metadata = {
         "buildDate": build_date,
         "trigger": trigger,
-        "sources": count_sources(df),
-        "matching": count_matching(df),
+        "sources": count_sources(df_live),
+        "matching": count_matching(df_live),
         "referenceData": {
             "combustion": {"file": "ice_specs.csv", "count": len(comb_ref)},
             "electric": {"file": "ev_specs.csv", "count": len(elec_ref)},
         },
-        "totalCars": len(df),
+        "totalCars": len(df_live),       # rows in the always-loaded cars.parquet
+        "archivedCars": archived_count,  # rows in the lazy-loaded cars-archived.parquet
     }
+    live_count = len(df_live)
 
     out_dir = os.path.join(BASE_DIR, "site", "data")
-    parquet_path, _ = write_payload(df, metadata, out_dir)
+    live_path, _, _ = write_payload(df, metadata, out_dir)
 
-    print(f"\nDone: {len(df)} cars → {parquet_path}")
+    print(f"\nDone: {live_count} live + {archived_count} archived cars → {live_path}")
     print(f"Final columns ({len(final_cols)}): {final_cols}")
 
     print("Building reference JSON...")
