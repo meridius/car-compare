@@ -267,6 +267,35 @@ def extract_awd(text: str) -> str:
     return "Ano" if _AWD_EXTRA_RE.search(text) else "Ne"
 
 
+def normalize_ano_ne(value) -> str:
+    """Normalize boolean Ano/Ne values to proper case, stripping whitespace.
+
+    Maps "ano"/"ANO"/"Ano " (case-insensitive + whitespace) → "Ano",
+    maps "ne"/"NE"/"Ne " → "Ne", leaves everything else (including "Nejisté"
+    tri-state values) unchanged (but with whitespace stripped). Blank/None/NaN → "".
+    """
+    # Handle None, empty string, and NaN (float NaN)
+    if value is None or value == "":
+        return ""
+    # Check for NaN (float NaN evaluates as not equal to itself)
+    try:
+        if isinstance(value, float) and value != value:
+            return ""
+    except (TypeError, ValueError):
+        pass
+
+    s = str(value).strip()
+    if not s:
+        return ""
+    s_upper = s.upper()
+    if s_upper == "ANO":
+        return "Ano"
+    if s_upper == "NE":
+        return "Ne"
+    # All other values (Nejisté, Dostupný, Prodané, etc.) pass through with whitespace stripped
+    return s
+
+
 _WARRANTY_RE = re.compile(
     r'\d+\s+(?:rok[yůa]?\s+)?(?:pln[áa]\s+)?z[áa]ruk[ay]?\s+(?:v\s+cen[ěe])?',
     re.IGNORECASE,

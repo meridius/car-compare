@@ -2,9 +2,9 @@
 from pathlib import Path
 import pandas as pd
 
-from .schema import CANONICAL_COLS, TYP_ICE
+from .schema import CANONICAL_COLS, ANO_NE_COLS, TYP_ICE
 from .merge import merge_with_previous
-from . import matching, storage
+from . import matching, storage, fields
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 SCRAPES_DIR = DATA_DIR / "scrapes"
@@ -20,6 +20,14 @@ def _match_ice(df, auth_list):
         ice = df[ice_mask].copy()
         ice = matching.match_to_authoritative(ice, auth_list)
         df.loc[ice_mask, ice.columns] = ice.values
+    return df
+
+
+def _normalize_ano_ne_columns(df):
+    """Normalize all boolean Ano/Ne columns to proper case (case-insensitive + trim)."""
+    for col in ANO_NE_COLS:
+        if col in df.columns:
+            df[col] = df[col].apply(fields.normalize_ano_ne)
     return df
 
 
@@ -40,6 +48,8 @@ def run_source(source_module):
     # Reindex to the canonical schema so column order is stable and any column added
     # since the previous state (e.g. "Odstraněno dne") is present/blank on preserved rows.
     df = df.reindex(columns=CANONICAL_COLS)
+    # Normalize all boolean Ano/Ne columns to proper case
+    df = _normalize_ano_ne_columns(df)
     out_path = storage.write_state(df, base_path)
     print(f"Hotovo – uloženo {len(df)} aut do {out_path.name}")
     return out_path

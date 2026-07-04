@@ -76,6 +76,45 @@ class CleanExtraHpShorthandTest(unittest.TestCase):
         self.assertNotIn("145k", out)
 
 
+class NormalizeAnoNeTest(unittest.TestCase):
+    """Pins normalize_ano_ne() behavior: case-insensitive + whitespace stripping."""
+
+    def test_ano_variations_normalize_to_proper_case(self):
+        self.assertEqual(F.normalize_ano_ne("ano"), "Ano")
+        self.assertEqual(F.normalize_ano_ne("ANO"), "Ano")
+        self.assertEqual(F.normalize_ano_ne("Ano"), "Ano")
+        self.assertEqual(F.normalize_ano_ne("Ano "), "Ano")
+        self.assertEqual(F.normalize_ano_ne(" Ano"), "Ano")
+        self.assertEqual(F.normalize_ano_ne(" ANO "), "Ano")
+
+    def test_ne_variations_normalize_to_proper_case(self):
+        self.assertEqual(F.normalize_ano_ne("ne"), "Ne")
+        self.assertEqual(F.normalize_ano_ne("NE"), "Ne")
+        self.assertEqual(F.normalize_ano_ne("Ne"), "Ne")
+        self.assertEqual(F.normalize_ano_ne("Ne "), "Ne")
+        self.assertEqual(F.normalize_ano_ne(" Ne"), "Ne")
+        self.assertEqual(F.normalize_ano_ne(" NE "), "Ne")
+
+    def test_blank_stays_blank(self):
+        self.assertEqual(F.normalize_ano_ne(""), "")
+        self.assertEqual(F.normalize_ano_ne(None), "")
+        self.assertEqual(F.normalize_ano_ne("  "), "")
+
+    def test_nan_becomes_blank(self):
+        # NaN (float NaN) should become blank, not "nan"
+        import math
+        self.assertEqual(F.normalize_ano_ne(float('nan')), "")
+
+    def test_other_values_unchanged(self):
+        # Nejisté should remain unchanged (tri-state for Spárováno)
+        self.assertEqual(F.normalize_ano_ne("Nejisté"), "Nejisté")
+        # But whitespace should still be stripped
+        self.assertEqual(F.normalize_ano_ne(" Nejisté "), "Nejisté")
+        # Other state values should pass through
+        self.assertEqual(F.normalize_ano_ne("Dostupný"), "Dostupný")
+        self.assertEqual(F.normalize_ano_ne("Prodané"), "Prodané")
+
+
 class RepairYearTest(unittest.TestCase):
     """Pins the sauto 2-digit-year-swap repair (#16): the search-index year can
     drift from the freshly-fetched detail's own date fields."""

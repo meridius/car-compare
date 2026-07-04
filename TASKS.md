@@ -75,8 +75,7 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #3
   > 📌 assumes: after the #3 split, the Model display column shows brand+model only; engine vol/type live solely in their own columns; reference join keeps using the full auth string internally (do NOT strip ice_specs.csv).
 
-- [ ] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
-  > flow:ralph · model:haiku · effort:low
+- [x] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
 
 - [ ] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
   > flow:ralph · model:sonnet · effort:medium
@@ -114,6 +113,16 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 ## Done
 
 - [x] **Deduplicate reference rows for the same physical car sold under multiple names** — DONE 2026-07-05: collapsed all name spellings to one canonical `Model auta` via a new `MODEL_CLEANUP_PATTERNS` entry in `scrapers/core/normalize.py` (`ORA Funky Cat` / `GWM Ora Funky Cat` / `Ora Good Cat` → `GWM Ora 03`), applied at scrape time in every adapter (as before) and re-applied in `build/build_data.py::fix_electric_model` at build time so rows already sitting in state/seed CSVs from before the alias existed still collapse onto the single remaining `GWM Ora 03` row in `ev_specs.csv` (the duplicate `ORA Funky Cat` row was deleted — both rows carried identical specs). Chosen over an explicit reference-alias column because it fixes the problem at the source for all four sources and needs no new schema; generalises to any future same-car-different-spelling case without touching `build_data.py`'s join logic again. Verified: `./bin/test.sh` green (126 tests, incl. new `tests/test_normalize.py::OraFunkyCatAliasTest` and `tests/test_build_data.py::ElectricModelAliasTest`); `python build/build_data.py` reports `Electric reference: 15108/17276 matched` (unchanged vs baseline) with the live `GWM Ora 03` row now `Spárováno=Ano`. 📌 discovered by: grow-reference demo (docs/superpowers/grow-reference-RESULTS.md).
+
+- [x] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
+  > done: added `normalize_ano_ne()` helper in `scrapers/core/fields.py` that maps case-insensitive
+  > "ano"/"ANO" → "Ano" and "ne"/"NE" → "Ne", stripping whitespace. Applied centrally in both
+  > `scrapers/core/pipeline.py::_normalize_ano_ne_columns()` (after merge_with_previous) and
+  > `build/build_data.py::main()` (after reading state from seed/parquet) so old rows with
+  > inconsistent casing are normalized. Boolean columns covered: Dvouspojková převodovka, Filtr
+  > pevných částic, Náhon 4x4, Záruka, Tepelné čerpadlo, Spárováno (tri-state Nejisté values
+  > pass through unchanged). Test-driven: unit tests cover variations, whitespace, blanks, and
+  > non-boolean values. Commit: 0b2d0f4.
 
 - [x] **EV reference join ignores diacritics across sources** — DONE 2026-07-05 — `build/build_data.py::join_electric_reference` matched by `listing.lower().startswith(ref.lower())` but did NOT accent-fold, while mobile.de (the dominant source) strips diacritics from scraped names (`docs/gotchas.md`: "Skoda", "Citroen", "e-C3") and other sources preserve them ("Škoda", "Citroën", "ë-C3"). Consequence: one reference row (e.g. `Citroën ë-C3`) paired the diacritic-preserving listings but left the diacritic-stripped mobile.de ones unpaired (and vice-versa), so accented EV models needed duplicate rows or stayed under-paired. (The grow-reference clustering already accent-folds, which dedups gap *candidates* but masked this pairing gap.) Fix: added `_fold_accents` (NFKD + strip combining marks, mirroring `reference_gap._fold_accents`) plus `_match_electric_ref` — tries an exact case-insensitive prefix match first, falling back to an accent-folded comparison only when nothing matches exactly. Exact-first matters: the reference list carries distinct rows differing only by diacritics with genuinely different specs (e.g. "Renault Megane" vs "Renault Mégane" — different Tepelné čerpadlo/Dojezd), so folding unconditionally would silently redirect an already-correct match to the wrong row. Applied identically in `join_electric_reference` and `build_ev_listing_specs` (the reference-page EV bucketing) so counts don't diverge. Verified against the real local dataset (17,276 EV listings): zero regressions, matched count unchanged (15108/17276) — this snapshot doesn't currently carry a live diacritic-stripped mismatch, but the fix is pinned by `tests/test_build_data.py::ElectricReferenceJoinAccentFoldTest` (accented "Citroën ë-C3 …" and stripped "Citroen e-C3 …" now both pair to the same reference row). Touch: `build/build_data.py`, `tests/test_build_data.py`. 📌 discovered by: grow-reference demo.
 

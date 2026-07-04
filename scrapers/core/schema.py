@@ -13,6 +13,18 @@ CANONICAL_COLS = [
     "Odkaz na auto",
 ]
 
+# Boolean columns that should be normalized to proper case: "Ano" or "Ne".
+# These columns hold yes/no or tri-state (Ano/Nejisté/Ne) values; normalize_ano_ne()
+# normalizes "ano"/"ANO" → "Ano" and "ne"/"NE" → "Ne", leaves others unchanged.
+ANO_NE_COLS = [
+    "Dvouspojková převodovka",
+    "Filtr pevných částic",
+    "Náhon 4x4",
+    "Záruka",
+    "Tepelné čerpadlo",
+    "Spárováno",
+]
+
 
 def blank_row() -> dict:
     """Return a dict with every canonical column set to ''. Adapters fill what they have."""

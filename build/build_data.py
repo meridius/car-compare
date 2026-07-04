@@ -637,6 +637,13 @@ def main():
     df = load_scraper_data()
     print(f"  Combined: {len(df)} rows, {len(df.columns)} columns")
 
+    print("Normalizing Ano/Ne boolean columns...")
+    from scrapers.core.fields import normalize_ano_ne
+    from scrapers.core.schema import ANO_NE_COLS
+    for col in ANO_NE_COLS:
+        if col in df.columns:
+            df[col] = df[col].apply(normalize_ano_ne)
+
     print("Re-matching combustion against authoritative list...")
     combustion_mask = df["Typ"] == "Spalovací"
     electric_mask = df["Typ"] == "Elektrické"
