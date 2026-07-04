@@ -217,7 +217,17 @@ def append_rows(fuel, rows, path=None):
     path = path or os.path.join(REF_DIR, REF_FILES[fuel])
     with open(path, newline="", encoding="utf-8") as f:
         header = next(csv.reader(f))
+    # Ensure the file ends with a newline before appending; otherwise a new row
+    # would glue onto the last existing line and corrupt both.
+    needs_nl = False
+    with open(path, "rb") as f:
+        f.seek(0, os.SEEK_END)
+        if f.tell() > 0:
+            f.seek(-1, os.SEEK_END)
+            needs_nl = f.read(1) != b"\n"
     with open(path, "a", newline="", encoding="utf-8") as f:
+        if needs_nl:
+            f.write("\n")
         w = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
         for r in rows:
             w.writerow([_fmt_cell(c, r.get(c, "")) for c in header])

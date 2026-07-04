@@ -140,3 +140,15 @@ class TestAppendAndCount(unittest.TestCase):
                 {"Typ": "Elektrické", "Spárováno": "Ano", "Model auta": "Y"},
             ]}, open(p, "w"))
             self.assertEqual(rg.count_unpaired(p, "ev"), 1)
+
+    def test_append_adds_missing_trailing_newline(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "ev.csv")
+            with open(p, "w", newline="", encoding="utf-8") as f:
+                f.write(",".join(rg.ev_columns()))   # header with NO trailing newline
+            row = {c: "" for c in rg.ev_columns()}
+            row["Model auta"] = "Renault Twingo"
+            rg.append_rows("ev", [row], path=p)
+            lines = open(p, encoding="utf-8").read().splitlines()
+            self.assertEqual(len(lines), 2)                       # header + row, not glued
+            self.assertTrue(lines[1].startswith("Renault Twingo"))
