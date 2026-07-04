@@ -40,23 +40,26 @@ artifact carries the payload; AG Grid stays.** No new accounts, $0.
    **`REMOVED_RETENTION_DAYS = 60`**. Because 60 d > 31 d (snapshot interval), every row
    that ever existed appears in ≥ 1 immutable monthly snapshot — nothing is ever lost,
    while live data plateaus at (live market + 60 days of churn) instead of growing forever.
-4. **Payload** — `build_data.py` writes `site/data/cars.parquet` (zstd, **numeric columns
-   float64** — int64 would decode to BigInt in the browser and break the grid) +
-   `site/data/cars-meta.json` (the old `metadata` object). Both ship only inside the
-   Pages deploy artifact; **no data is committed to git anymore**. Bootstrap seeds
-   (the frozen last CSVs + a seed `scrape_history.json`) stay tracked for
-   release-less first runs and offline dev.
+4. **Payload** — `build_data.py` writes `site/data/cars.parquet` (**snappy**, **numeric
+   columns float64** — int64 would decode to BigInt in the browser and break the grid) +
+   `site/data/cars-meta.json` (the old `metadata` object). Snappy, not zstd: hyparquet
+   decodes snappy natively, so the browser needs **one** pinned import instead of also
+   shipping `hyparquet-compressors` for zstd. The size cost is small (7.8 vs 5.5 MB) and
+   Pages gzips it on the wire anyway. Both files ship only inside the Pages deploy
+   artifact; **no data is committed to git anymore**. Bootstrap seeds (the frozen last
+   CSVs + a seed `scrape_history.json`) stay tracked for release-less first runs and
+   offline dev. (State parquet stays zstd — pandas reads it server-side, no browser dep.)
 5. **Dashboard** — AG Grid Community 33.1.1 clientSideRowModel **unchanged**; only the
-   loader swaps: `hyparquet@1.26.2` + `hyparquet-compressors@1.1.1` (pinned jsDelivr ESM)
-   decode `cars.parquet` into the same row objects `init(data)` always received.
+   loader swaps: `hyparquet@1.26.2` (pinned jsDelivr ESM, the sole new import) decodes
+   `cars.parquet` into the same row objects `init(data)` always received.
 
 ## Measured evidence (real DE-scale data, 140,975 rows, 2026-07-04)
 
 | payload | size | Chromium decode | JS heap |
 |---|---|---|---|
-| cars.json | 129.0 MB (7.3 MB gzip wire) | 9.0 s | 214 MB |
-| cars.parquet snappy | 7.8 MB | 1.6 s | 204 MB |
-| **cars.parquet zstd** | **5.5 MB** | **1.4 s** | 198 MB |
+| cars.json (old) | 129.0 MB (7.3 MB gzip wire) | 9.0 s | 214 MB |
+| **cars.parquet snappy (shipped)** | **7.8 MB** | **1.6 s** | 204 MB |
+| cars.parquet zstd (needs 2nd browser dep) | 5.5 MB | 1.4 s | 198 MB |
 
 AG Grid at 141k rows: `verify_ui` scenarios grid / stav-filter / summary all PASS
 (DOM stays virtualized at ~90 rendered rows). GitHub Pages serves with
