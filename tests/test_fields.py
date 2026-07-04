@@ -76,5 +76,39 @@ class CleanExtraHpShorthandTest(unittest.TestCase):
         self.assertNotIn("145k", out)
 
 
+class RepairYearTest(unittest.TestCase):
+    """Pins the sauto 2-digit-year-swap repair (#16): the search-index year can
+    drift from the freshly-fetched detail's own date fields."""
+
+    def test_mismatch_repaired_from_in_operation_date(self):
+        # VW ID.3 example: search index says 2002, detail's in_operation_date says 2022.
+        self.assertEqual(
+            F.repair_year("2002", "2022-01-01", None, 2026), "2022",
+        )
+
+    def test_century_swap_repaired(self):
+        # 19XX/20XX mixup falls out of the same "trust the detail fields" rule.
+        self.assertEqual(
+            F.repair_year("1998", "2018-06-01", None, 2026), "2018",
+        )
+
+    def test_falls_back_to_manufacturing_date(self):
+        self.assertEqual(
+            F.repair_year("2002", None, "2022-03-01", 2026), "2022",
+        )
+
+    def test_agreement_is_left_unchanged(self):
+        self.assertEqual(
+            F.repair_year("2022", "2022-01-01", None, 2026), "2022",
+        )
+
+    def test_no_candidate_keeps_original(self):
+        self.assertEqual(F.repair_year("2022", None, None, 2026), "2022")
+        self.assertEqual(F.repair_year("", None, None, 2026), "")
+
+    def test_blank_year_filled_from_candidate(self):
+        self.assertEqual(F.repair_year("", "2022-01-01", None, 2026), "2022")
+
+
 if __name__ == "__main__":
     unittest.main()

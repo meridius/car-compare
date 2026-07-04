@@ -87,10 +87,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
 
-- [ ] **#16** sauto listing has year 2002 but is really 2022 — detect and fix 2-digit year swaps (<https://www.sauto.cz/osobni/detail/volkswagen/id3/210446333>)
-  > flow:feature-dev · model:sonnet · effort:medium
-  > 📌 assumes: fix in scrapers/sources/sauto.py; detect via in_operation_date / manufacturing_date vs Rok výroby mismatch + 19XX→20XX swap heuristic; log corrected years.
-
 - [ ] **#17** sauto listing has year 1900 but is really 2026 — detect and fix invalid years (<https://www.sauto.cz/osobni/detail/dacia/bigster/210225179>)
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #16
   > 📌 assumes: same module/logic as #16; clamp years outside [2000 .. current year+1] and repair from in_operation_date; skip the row only if unrepairable.
@@ -132,6 +128,11 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [x] **#18** web UI should display set filters above the table on both pages
   > done: shared `site/filter-chips.js` renders a chip bar (column name + human summary,
   > [×] per chip, "Vymazat vše" at 2+) above the grid on index + reference; hidden when empty.
+
+- [x] **#16** sauto listing has year 2002 but is really 2022 — detect and fix 2-digit year swaps
+  > done: `repair_year()` in `scrapers/core/fields.py` reconciles item-derived year against the
+  > freshly-fetched detail's `in_operation_date`/`manufacturing_date` (trusts the live detail over
+  > a stale search-index snapshot); wired into `sauto.py::_common`; logs each correction.
 
 - [x] **#1** add mobile.de
   > done (branch `feature/mobilede-source`): aiohttp adapter on the keyless app JSON endpoint

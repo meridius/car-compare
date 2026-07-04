@@ -127,6 +127,39 @@ def sanitize_ev_power(power) -> str:
     return ""
 
 
+def _year_of(date_str) -> int | None:
+    """First-4-chars-as-year from a detail API date string ('2022-05-01' -> 2022)."""
+    if date_str and len(str(date_str)) >= 4 and str(date_str)[:4].isdigit():
+        return int(str(date_str)[:4])
+    return None
+
+
+def repair_year(year_str, in_operation_date, manufacturing_date, current_year) -> str:
+    """Reconcile a scraped 'Rok výroby' against the detail API's own date fields.
+
+    sauto's search-index year can drift from the freshly-fetched per-listing
+    detail (a dealer correction lands in the detail endpoint before the search
+    index catches up) — e.g. a listing shows year "2002" while its own
+    in_operation_date says "2022-01-01" (this also naturally covers 19XX/20XX
+    century mixups: whatever the detail fields say wins). The detail fields are
+    fetched live at scrape time and are authoritative; year_str may come from a
+    stale cached search-index snapshot. Returns the repaired 4-digit year
+    string, or year_str unchanged when no better data is available.
+    """
+    op_year = _year_of(in_operation_date)
+    mfg_year = _year_of(manufacturing_date)
+    candidate = op_year if op_year is not None else mfg_year
+    if candidate is None:
+        return year_str
+
+    y = int(year_str) if year_str and str(year_str).isdigit() else None
+    if y != candidate:
+        print(f"Sauto: opraven rok výroby {year_str!r} -> {candidate} "
+              f"(neshoda s in_operation_date/manufacturing_date)")
+        return str(candidate)
+    return year_str
+
+
 def clean_ev_suffix(suffix: str, model_base: str) -> str:
     """Strip a leading duplicate of the model name and hp shorthand from an EV
     listing suffix before it becomes Extra text (e.g.

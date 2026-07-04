@@ -1,4 +1,5 @@
 """Sauto.cz adapter — both EV and ICE listings via the JSON search API."""
+import datetime
 import re
 import aiohttp
 
@@ -8,8 +9,10 @@ from scrapers.core.fields import (
     extract_body_type, extract_engine_volume, extract_engine_type,
     extract_hybrid_type, extract_trim, extract_warranty, extract_dct,
     extract_particle_filter, extract_awd, clean_extra,
-    sanitize_engine_volume, sanitize_ev_power, clean_ev_suffix,
+    sanitize_engine_volume, sanitize_ev_power, clean_ev_suffix, repair_year,
 )
+
+_CURRENT_YEAR = datetime.date.today().year
 
 SOURCE_NAME = "Sauto.cz"
 SOURCE_SLUG = "sauto"
@@ -64,7 +67,7 @@ def _listing_link(item):
                               mod=item["model_cb"]["seo_name"], id=item["id"])
 
 
-def _common(item):
+def _common(item, detail):
     """Return (model_base, suffix, price, mileage, year) shared by both fuels."""
     brand = item["manufacturer_cb"]["name"]
     model = item["model_cb"]["name"]
@@ -78,6 +81,8 @@ def _common(item):
     price = item.get("price") or ""
     mileage = item.get("tachometer") or ""
     year = (item.get("in_operation_date") or item.get("manufacturing_date") or "")[:4]
+    year = repair_year(year, detail.get("in_operation_date"), detail.get("manufacturing_date"),
+                        _CURRENT_YEAR)
     return model_base, suffix, price, mileage, year
 
 
@@ -108,7 +113,7 @@ def build_ev(item, detail):
     """EV canonical row (port of electric/src/scrape_sauto.py build_record)."""
     if not detail:
         return None
-    model_base, suffix, price, mileage, year = _common(item)
+    model_base, suffix, price, mileage, year = _common(item, detail)
     if not _is_valid_purchase(price, detail):
         return None
     battery_kw = detail.get("battery_capacity") or ""
@@ -159,7 +164,7 @@ def build_ice(item, detail):
     condition = (detail.get("condition_cb") or {}).get("name", "")
     if "Havarované" in condition:
         return None
-    model_base, suffix, price, mileage, year = _common(item)
+    model_base, suffix, price, mileage, year = _common(item, detail)
     if not _is_valid_purchase(price, detail):
         return None
     drive_name = (detail.get("drive_cb") or {}).get("name", "")
