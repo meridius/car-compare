@@ -538,6 +538,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     saveFiltersToUrl(model);
     updateRowCount();
     updateFilterChips();
+    updatePairingGapButton();
   }
 
   function loadThresholds() {
@@ -617,6 +618,57 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     var text = count < totalRows ? "Vyfiltrov\u00e1no " + count + " / " + totalRows + " aut" : totalRows + " aut";
     document.getElementById("row-count").textContent = text;
   }
+
+  // #14: unpaired-listings shortcut — counts Spárováno == "Ne" / "Nejisté" over
+  // the FULL loaded dataset (forEachNode, not AfterFilter — the label must stay
+  // stable while the user filters, only growing when the archive is loaded).
+  function computePairingGapCounts() {
+    var counts = { ne: 0, nejiste: 0 };
+    if (!gridApi) return counts;
+    gridApi.forEachNode(function (node) {
+      if (!node.data) return;
+      var v = node.data["Spárováno"];
+      if (v === "Ne") counts.ne++;
+      else if (v === "Nejisté") counts.nejiste++;
+    });
+    return counts;
+  }
+
+  function isPairingGapFilterActive() {
+    if (!gridApi) return false;
+    var model = gridApi.getFilterModel() || {};
+    var sp = model["Spárováno"];
+    if (!sp || sp.filterType !== "set" || !sp.values) return false;
+    var vals = sp.values.slice().sort();
+    return vals.length === 2 && vals[0] === "Ne" && vals[1] === "Nejisté";
+  }
+
+  function updatePairingGapButton() {
+    var btn = document.getElementById("btn-pairing-gap");
+    if (!btn) return;
+    var counts = computePairingGapCounts();
+    if (counts.ne === 0 && counts.nejiste === 0) {
+      btn.style.display = "none";
+      return;
+    }
+    btn.style.display = "";
+    btn.textContent = "Nespárováno: " + counts.ne + " (" + counts.nejiste + " nejistých)";
+    btn.classList.toggle("active", isPairingGapFilterActive());
+  }
+
+  // Toggle: apply {Ne, Nejisté} to the Spárováno set filter, merging with
+  // whatever other column filters are active (never clobbers them); clicking
+  // again while that exact filter is active clears just the Spárováno entry.
+  window.togglePairingGapFilter = function () {
+    if (!gridApi) return;
+    var model = gridApi.getFilterModel() || {};
+    if (isPairingGapFilterActive()) {
+      delete model["Spárováno"];
+    } else {
+      model["Spárováno"] = { filterType: "set", values: ["Ne", "Nejisté"] };
+    }
+    gridApi.setFilterModel(model);
+  };
 
   // Show the "load archive" button once we know how many removed listings exist.
   // Hidden entirely when there are none. cars.parquet holds only live listings,
@@ -725,6 +777,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       animateRows: false,
       enableCellTextSelection: true,
       onFilterChanged: onFilterChanged,
+      onModelUpdated: updatePairingGapButton,
       onDragStopped: saveColState,
       onGridReady: function (params) {
         gridApi = params.api;
@@ -737,6 +790,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         if (filters) setFilterModel(filters);
         updateRowCount();
         updateFilterChips();
+        updatePairingGapButton();
       },
     };
 

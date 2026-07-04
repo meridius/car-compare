@@ -169,6 +169,49 @@ def scenario_ref_search(page):
     cells = page.locator('.ag-cell[col-id="Model auta"]').all_inner_texts()
     if not cells or not all("škoda" in c.lower() for c in cells):
         raise AssertionError(f"visible rows are not all Škoda: {cells[:10]}")
+def scenario_pairing_gap(page):
+    """Click the #14 unpaired-listings shortcut button and confirm it toggles
+    the Spárováno set filter to {Ne, Nejisté} (merging, not clobbering, an
+    existing filter), the chips bar reflects it, and the grid row count drops.
+    Clicking again must clear just that filter (toggle off)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    # Pre-set an unrelated filter to prove the toggle merges rather than clobbers.
+    page.evaluate(
+        "window.__gridApi.setFilterModel({"
+        "  'Typ': { filterType: 'set', values: ['Spalovací'] }"
+        "});"
+    )
+    page.wait_for_timeout(200)
+    before = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    page.wait_for_selector("#btn-pairing-gap", state="visible", timeout=5000)
+    page.click("#btn-pairing-gap")
+    page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
+    page.wait_for_timeout(200)
+    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    model = page.evaluate("window.__gridApi.getFilterModel()")
+    if "Spárováno" not in model:
+        raise AssertionError("clicking the shortcut did not apply the Spárováno filter")
+    if "Typ" not in model:
+        raise AssertionError("the pre-existing Typ filter was clobbered")
+    if after >= before:
+        raise AssertionError("row count did not shrink after applying the unpaired filter")
+    is_active = page.evaluate(
+        "document.getElementById('btn-pairing-gap').classList.contains('active')"
+    )
+    if not is_active:
+        raise AssertionError("shortcut button did not reflect active state")
+    # Toggle off and confirm the Spárováno filter (only) is cleared.
+    page.click("#btn-pairing-gap")
+    page.wait_for_timeout(200)
+    model_after_toggle_off = page.evaluate("window.__gridApi.getFilterModel()")
+    if "Spárováno" in model_after_toggle_off:
+        raise AssertionError("second click did not clear the Spárováno filter")
+    if "Typ" not in model_after_toggle_off:
+        raise AssertionError("second click clobbered the unrelated Typ filter")
+    # Re-apply for the screenshot so the filtered state (button + chips) is visible.
+    page.click("#btn-pairing-gap")
+    page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
+    page.wait_for_timeout(200)
     return None
 
 
@@ -181,6 +224,7 @@ SCENARIOS = {
     "archive": scenario_archive,
     "filter-chips": scenario_filter_chips,
     "ref-search": scenario_ref_search,
+    "pairing-gap": scenario_pairing_gap,
 }
 
 

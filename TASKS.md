@@ -77,10 +77,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [x] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
 
-- [ ] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
-  > flow:ralph · model:sonnet · effort:medium
-  > 📌 note: largely addressed by tri-state Spárováno coloring (Ne=red, Nejisté=amber, no more nulls); remaining work is surfacing a count/filter shortcut.
-
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
 
@@ -105,6 +101,8 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 ## Done
 
 - [x] **#29** referenční model se vyhledává podle: značka, model, rok výroby, výkon motoru, objem motoru, typ motoru, úroveň výbavy (reference model search) — DONE 2026-07-05: smart search box above the reference grid (`site/reference.html`/`.js`), accent-insensitive (folds diacritics on both the query and every column's quick-filter text via `getQuickFilterText`) AG Grid quick filter over `Model auta` (značka/model/výbava), `Výkon (kW)`, `Objem motoru`, `Typ motoru`; debounced 200ms, clear (×) button, independent of column filters/filter-chips bar. No schema change (reference has no separate rok výroby column). Verified: `verify_ui.py --page reference --scenario ref-search` (new scenario) PASS.
+- [x] **#14** Report empty `Spárováno` values in UI (so pairing gaps are visible and actionable)
+  > done: added a `Nespárováno: N (M nejistých)` toolbar button (`site/index.html`, `site/app.js`) that counts live `Spárováno == "Ne"/"Nejisté"` rows and toggles the `Spárováno` set filter to `{Ne, Nejisté}` on click, merging with any existing filter model rather than clobbering it; counts refresh on `onModelUpdated`/`onFilterChanged` from the full loaded dataset so the label stays stable while filtering. New `verify_ui.py` scenario `pairing-gap` exercises the merge/toggle-off/active-state behaviour.
 
 - [x] **Deduplicate reference rows for the same physical car sold under multiple names** — DONE 2026-07-05: collapsed all name spellings to one canonical `Model auta` via a new `MODEL_CLEANUP_PATTERNS` entry in `scrapers/core/normalize.py` (`ORA Funky Cat` / `GWM Ora Funky Cat` / `Ora Good Cat` → `GWM Ora 03`), applied at scrape time in every adapter (as before) and re-applied in `build/build_data.py::fix_electric_model` at build time so rows already sitting in state/seed CSVs from before the alias existed still collapse onto the single remaining `GWM Ora 03` row in `ev_specs.csv` (the duplicate `ORA Funky Cat` row was deleted — both rows carried identical specs). Chosen over an explicit reference-alias column because it fixes the problem at the source for all four sources and needs no new schema; generalises to any future same-car-different-spelling case without touching `build_data.py`'s join logic again. Verified: `./bin/test.sh` green (126 tests, incl. new `tests/test_normalize.py::OraFunkyCatAliasTest` and `tests/test_build_data.py::ElectricModelAliasTest`); `python build/build_data.py` reports `Electric reference: 15108/17276 matched` (unchanged vs baseline) with the live `GWM Ora 03` row now `Spárováno=Ano`. 📌 discovered by: grow-reference demo (docs/superpowers/grow-reference-RESULTS.md).
 

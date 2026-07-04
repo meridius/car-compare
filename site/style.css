@@ -83,6 +83,22 @@ button:hover {
     line-height: 1;
 }
 
+/* ── Pairing gap shortcut (#14) ── */
+#btn-pairing-gap {
+    border-color: rgba(245, 158, 11, 0.5);
+    color: #f59e0b;
+}
+
+#btn-pairing-gap:hover {
+    background: rgba(245, 158, 11, 0.14);
+}
+
+#btn-pairing-gap.active {
+    background: rgba(245, 158, 11, 0.22);
+    border-color: #f59e0b;
+    color: var(--clr-text);
+}
+
 a { color: var(--clr-link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
