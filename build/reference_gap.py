@@ -92,3 +92,24 @@ def cluster(listings, fuel):
         })
     clusters.sort(key=lambda c: c["volume"], reverse=True)
     return clusters
+
+
+def load_reference_models(fuel):
+    path = os.path.join(REF_DIR, REF_FILES[fuel])
+    with open(path, newline="", encoding="utf-8") as f:
+        return [row[ID_COL[fuel]] for row in csv.DictReader(f) if row.get(ID_COL[fuel])]
+
+
+def _prefix_matches(name, ref_low):
+    nl = name.lower()
+    return any(nl.startswith(r) for r in ref_low)
+
+
+def classify(cluster, ref_models):
+    ref_low = [r.lower() for r in ref_models]
+    raws = cluster.get("sample_names") or [cluster["prefix"]]
+    if any(_prefix_matches(n, ref_low) for n in raws):
+        return "covered"  # sanity: raw already matches a ref prefix (should have been Ano)
+    if any(_prefix_matches(normalize_model(n), ref_low) for n in raws):
+        return "normalization_gap"  # a BRAND_MAP/cleanup fix would pair it — not a new row
+    return "missing_ref"

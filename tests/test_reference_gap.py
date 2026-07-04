@@ -37,3 +37,18 @@ class TestCluster(unittest.TestCase):
         clusters = rg.cluster(ev, "ev")
         self.assertEqual(len(clusters), 1)        # both spellings merge into one cluster
         self.assertEqual(clusters[0]["volume"], 2)
+
+
+class TestClassify(unittest.TestCase):
+    def test_covered_when_raw_matches_existing_prefix(self):
+        c = {"prefix": "Renault Twingo", "sample_names": ["Renault Twingo E-Tech"]}
+        self.assertEqual(rg.classify(c, ["Renault Twingo"]), "covered")
+
+    def test_normalization_gap_when_only_normalized_matches(self):
+        # BRAND_MAP maps Volkswagen -> VW; raw won't match "VW ID.3" but normalized will
+        c = {"prefix": "Volkswagen ID.3", "sample_names": ["Volkswagen ID.3 Pro"]}
+        self.assertEqual(rg.classify(c, ["VW ID.3"]), "normalization_gap")
+
+    def test_missing_ref_when_nothing_matches(self):
+        c = {"prefix": "Renault Twingo", "sample_names": ["Renault Twingo", "Renault Twingo E-Tech"]}
+        self.assertEqual(rg.classify(c, ["Fiat Grande Panda"]), "missing_ref")
