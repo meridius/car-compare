@@ -192,7 +192,7 @@ def parse_czech_decimal(val):
 def load_scraper_csvs():
     dfs = []
     scrapes = os.path.join(BASE_DIR, "scrapers", "data", "scrapes")
-    for name in ["sauto", "autodraft", "energycars"]:
+    for name in ["sauto", "autodraft", "energycars", "mobilede"]:
         path = os.path.join(scrapes, f"{name}.csv")
         if os.path.exists(path):
             df = pd.read_csv(path)

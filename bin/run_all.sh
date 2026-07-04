@@ -7,7 +7,7 @@ ROOT="$SCRIPT_DIR/.."
 # Ensure CWD is repo root so `python -m scrapers.run` can resolve the package.
 cd "$ROOT"
 
-ALL_SOURCES=(sauto autodraft energycars)
+ALL_SOURCES=(sauto autodraft energycars mobilede)
 
 # Parse --source NAME (repeatable, mirrors scrapers.run); default to all sources.
 SOURCES=()
