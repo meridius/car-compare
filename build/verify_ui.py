@@ -134,6 +134,24 @@ def scenario_archive(page):
     return None
 
 
+def scenario_filter_chips(page):
+    """Apply a set filter + a number filter via the grid API (equivalent to a
+    user picking values in the filter popups), then confirm the active-filter
+    chips bar (#18) renders one chip per filtered column with a visible [×].
+    Uses "Typ" and "Výkon (kW)" — the two columns common to both index and
+    reference grids — so this scenario runs unmodified on either page."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate(
+        "window.__gridApi.setFilterModel({"
+        "  'Typ': { filterType: 'set', values: ['Elektrické'] },"
+        "  'Výkon (kW)': { filterType: 'number', type: 'greaterThan', filter: 100 }"
+        "});"
+    )
+    page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
+    page.wait_for_timeout(200)
+    return "#filter-chips-bar"
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
@@ -141,6 +159,7 @@ SCENARIOS = {
     "sparovano": scenario_sparovano,
     "overview-matching": scenario_overview_matching,
     "archive": scenario_archive,
+    "filter-chips": scenario_filter_chips,
 }
 
 

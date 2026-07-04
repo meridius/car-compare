@@ -304,6 +304,14 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     if (COL_CONFIG[ci].num) NUMERIC_COLS[COL_CONFIG[ci].field] = COL_CONFIG[ci].hi;
   }
 
+  // Single-line header names for the filter-chips bar (headerName itself may
+  // carry a "\n" line break for narrow grid columns — flatten that here).
+  var CHIP_HEADER_NAMES = {};
+  for (var chi = 0; chi < COL_CONFIG.length; chi++) {
+    var chcfg = COL_CONFIG[chi];
+    CHIP_HEADER_NAMES[chcfg.field] = (chcfg.hdr || chcfg.field).replace(/\n/g, " ");
+  }
+
   var gridApi = null;
   var colRanges = {};
   var userThresholds = {};
@@ -514,11 +522,22 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     gridApi.applyColumnState({ state: state, applyOrder: true });
   }
 
+  function updateFilterChips() {
+    if (!window.renderFilterChips) return;
+    window.renderFilterChips({
+      gridApi: gridApi,
+      barEl: document.getElementById("filter-chips-bar"),
+      headerNames: CHIP_HEADER_NAMES,
+      onClearAll: window.clearFilters,
+    });
+  }
+
   function onFilterChanged() {
     var model = getFilterModel();
     saveFiltersToStorage(model);
     saveFiltersToUrl(model);
     updateRowCount();
+    updateFilterChips();
   }
 
   function loadThresholds() {
@@ -717,6 +736,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         var filters = urlFilters || storageFilters;
         if (filters) setFilterModel(filters);
         updateRowCount();
+        updateFilterChips();
       },
     };
 

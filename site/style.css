@@ -126,6 +126,69 @@ a:hover { text-decoration: underline; }
     color: var(--clr-text);
 }
 
+/* ── Active filter chips ── */
+.filter-chips-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    background: var(--clr-surface-alt);
+    border-bottom: 1px solid var(--clr-border);
+}
+
+.filter-chips-bar.hidden { display: none; }
+
+.filter-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    max-width: 320px;
+    padding: 3px 4px 3px 10px;
+    border: 1px solid var(--clr-border);
+    border-radius: 999px;
+    background: var(--clr-surface);
+    font-size: 0.8rem;
+    color: var(--clr-text);
+}
+
+.filter-chip-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.filter-chip-close {
+    padding: 0 5px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.4;
+    cursor: pointer;
+}
+
+.filter-chip-close:hover {
+    background: var(--clr-hover);
+    color: var(--clr-text);
+}
+
+.filter-chips-clear {
+    padding: 3px 6px;
+    border: none;
+    background: transparent;
+    color: var(--clr-link);
+    font-size: 0.8rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.filter-chips-clear:hover {
+    background: transparent;
+    color: var(--clr-accent-hover);
+}
+
 /* ── Grid ── */
 #grid {
     width: 100%;

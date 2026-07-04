@@ -215,6 +215,13 @@
     { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center", headerTooltip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
   ];
 
+  // Single-line header names for the filter-chips bar.
+  var CHIP_HEADER_NAMES = {};
+  for (var chi = 0; chi < COL_DEFS.length; chi++) {
+    var chcfg = COL_DEFS[chi];
+    CHIP_HEADER_NAMES[chcfg.field] = (chcfg.headerName || chcfg.field).replace(/\n/g, " ");
+  }
+
   // Map numeric column fields to whether higher is better (true) or lower is better (false)
   var NUMERIC_COLS = {
     "Výkon (kW)": true,
@@ -364,6 +371,18 @@
     gridApi.applyColumnState({ state: state, applyOrder: true });
   }
 
+  // ── Filter chips bar ──
+
+  function updateFilterChips() {
+    if (!window.renderFilterChips) return;
+    window.renderFilterChips({
+      gridApi: gridApi,
+      barEl: document.getElementById("filter-chips-bar"),
+      headerNames: CHIP_HEADER_NAMES,
+      onClearAll: window.clearFilters,
+    });
+  }
+
   // ── Toolbar actions ──
 
   window.clearFilters = function () {
@@ -437,6 +456,7 @@
         saveFiltersToStorage(model);
         saveFiltersToUrl(model);
         updateRowCount();
+        updateFilterChips();
       },
       onDragStopped: saveColState,
       onGridReady: function (params) {
@@ -449,6 +469,7 @@
         var filters = urlFilters || storageFilters;
         if (filters) gridApi.setFilterModel(filters);
         updateRowCount();
+        updateFilterChips();
       },
     };
 

@@ -95,10 +95,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #16
   > 📌 assumes: same module/logic as #16; clamp years outside [2000 .. current year+1] and repair from in_operation_date; skip the row only if unrepairable.
 
-- [ ] **#18** web UI should display set filters above the table on both pages
-  > flow:feature-dev · model:sonnet · effort:medium
-  > 📌 assumes: persistent bar above the grid showing active filters as chips with an [×] to clear each; on BOTH index and reference pages.
-
 - [ ] **#19** many reference models are missing data in various cols
   > flow:ralph · model:sonnet · effort:medium
   > 📌 assumes: codeable part only — add a UI indicator on the reference page flagging models missing key spec columns; do NOT source/enter external data (that's a separate manual task).
@@ -132,6 +128,10 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 ## Done
 
 - [x] **EV reference join ignores diacritics across sources** — DONE 2026-07-05 — `build/build_data.py::join_electric_reference` matched by `listing.lower().startswith(ref.lower())` but did NOT accent-fold, while mobile.de (the dominant source) strips diacritics from scraped names (`docs/gotchas.md`: "Skoda", "Citroen", "e-C3") and other sources preserve them ("Škoda", "Citroën", "ë-C3"). Consequence: one reference row (e.g. `Citroën ë-C3`) paired the diacritic-preserving listings but left the diacritic-stripped mobile.de ones unpaired (and vice-versa), so accented EV models needed duplicate rows or stayed under-paired. (The grow-reference clustering already accent-folds, which dedups gap *candidates* but masked this pairing gap.) Fix: added `_fold_accents` (NFKD + strip combining marks, mirroring `reference_gap._fold_accents`) plus `_match_electric_ref` — tries an exact case-insensitive prefix match first, falling back to an accent-folded comparison only when nothing matches exactly. Exact-first matters: the reference list carries distinct rows differing only by diacritics with genuinely different specs (e.g. "Renault Megane" vs "Renault Mégane" — different Tepelné čerpadlo/Dojezd), so folding unconditionally would silently redirect an already-correct match to the wrong row. Applied identically in `join_electric_reference` and `build_ev_listing_specs` (the reference-page EV bucketing) so counts don't diverge. Verified against the real local dataset (17,276 EV listings): zero regressions, matched count unchanged (15108/17276) — this snapshot doesn't currently carry a live diacritic-stripped mismatch, but the fix is pinned by `tests/test_build_data.py::ElectricReferenceJoinAccentFoldTest` (accented "Citroën ë-C3 …" and stripped "Citroen e-C3 …" now both pair to the same reference row). Touch: `build/build_data.py`, `tests/test_build_data.py`. 📌 discovered by: grow-reference demo.
+
+- [x] **#18** web UI should display set filters above the table on both pages
+  > done: shared `site/filter-chips.js` renders a chip bar (column name + human summary,
+  > [×] per chip, "Vymazat vše" at 2+) above the grid on index + reference; hidden when empty.
 
 - [x] **#1** add mobile.de
   > done (branch `feature/mobilede-source`): aiohttp adapter on the keyless app JSON endpoint
