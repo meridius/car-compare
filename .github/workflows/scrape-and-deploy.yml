@@ -200,10 +200,12 @@ jobs:
 
   deploy:
     needs: build
-    # Pages only deploys from main; on a feature-branch workflow_dispatch the
-    # github-pages environment's branch policy blocks the job and it fails.
-    # Skip it on non-main refs so branch runs stay green.
-    if: github.ref == 'refs/heads/main'
+    # always() is required: on a no-scrape run `scrape` is skipped, and without a
+    # status function that skip propagates transitively (build → deploy) and would
+    # skip the deploy too. We instead explicitly require build to have succeeded.
+    # Pages only deploys from main (the github-pages environment blocks other refs),
+    # so keep the branch guard to keep feature-branch runs green.
+    if: ${{ always() && needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     environment:
       name: github-pages
