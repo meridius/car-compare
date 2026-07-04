@@ -9,8 +9,8 @@ cd "$(dirname "$0")/.."
 PORT="${1:-8000}"
 DIR="site"
 
-if [ ! -f "$DIR/data/cars.json" ]; then
-  echo "cars.json not found — building..."
+if [ ! -f "$DIR/data/cars.parquet" ]; then
+  echo "cars.parquet not found — building..."
   python3 build/build_data.py
 fi
 

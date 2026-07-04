@@ -24,7 +24,7 @@ from playwright.sync_api import sync_playwright
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE_DIR = os.path.join(BASE_DIR, "site")
 OUT_DIR = os.path.join(BASE_DIR, "tmp", "ui-verify")
-CARS_JSON = os.path.join(SITE_DIR, "data", "cars.json")
+CARS_PARQUET = os.path.join(SITE_DIR, "data", "cars.parquet")
 
 PAGE_FILES = {"index": "index.html", "reference": "reference.html"}
 
@@ -35,8 +35,8 @@ class _QuietHandler(http.server.SimpleHTTPRequestHandler):
 
 
 def ensure_data():
-    if not os.path.exists(CARS_JSON):
-        print("cars.json not found — building…")
+    if not os.path.exists(CARS_PARQUET):
+        print("cars.parquet not found — building…")
         subprocess.run(
             [sys.executable, os.path.join(BASE_DIR, "build", "build_data.py")],
             check=True,

@@ -16,23 +16,33 @@ sys.path.insert(0, ROOT)
 
 from scrapers.core.schema import CANONICAL_COLS  # noqa: E402
 
-CARS_JSON = os.path.join(ROOT, "site", "data", "cars.json")
+CARS_PARQUET = os.path.join(ROOT, "site", "data", "cars.parquet")
+CARS_META = os.path.join(ROOT, "site", "data", "cars-meta.json")
 
 
 def setUpModule():
-    if not os.path.exists(CARS_JSON):
+    if not os.path.exists(CARS_PARQUET):
         subprocess.run([sys.executable, os.path.join(ROOT, "build", "build_data.py")],
                        check=True, cwd=ROOT)
+
+
+def _records(path):
+    """Parquet rows as dicts with NaN mapped to None (JSON-record parity)."""
+    import pandas as pd
+    df = pd.read_parquet(path)
+    return [
+        {k: (None if (isinstance(v, float) and v != v) else v) for k, v in rec.items()}
+        for rec in df.to_dict("records")
+    ]
 
 
 class DataIntegrityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        with open(CARS_JSON, encoding="utf-8") as f:
-            cls.cars = json.load(f)["data"]
+        cls.cars = _records(CARS_PARQUET)
         cls.ice = [c for c in cls.cars if c.get("Typ") == "Spalovací"]
         cls.ev = [c for c in cls.cars if c.get("Typ") == "Elektrické"]
-        cls.assertTrue(cls.ice, "no combustion rows in cars.json")
+        cls.assertTrue(cls.ice, "no combustion rows in cars.parquet")
 
     @staticmethod
     def _score(car):
@@ -113,6 +123,50 @@ class DataIntegrityTest(unittest.TestCase):
         self.assertLess(ano / n, 0.95,
                         f"Ano rate {ano/n:.1%} >= 95% looks like the old vanity matcher")
         self.assertGreater(ano / n, 0.30, f"Ano rate {ano/n:.1%} suspiciously low")
+
+
+class PayloadContractTest(unittest.TestCase):
+    """Pins the browser-facing artifact: schema dtypes, meta sidecar, retention."""
+
+    def test_no_int64_columns(self):
+        import pyarrow.parquet as pq
+        schema = pq.read_schema(CARS_PARQUET)
+        offenders = [f.name for f in schema if "int64" in str(f.type)]
+        self.assertEqual(offenders, [],
+                         f"int64 columns decode to BigInt in hyparquet: {offenders}")
+
+    def test_meta_sidecar_keys(self):
+        with open(CARS_META, encoding="utf-8") as f:
+            meta = json.load(f)
+        self.assertEqual(
+            set(meta),
+            {"buildDate", "trigger", "sources", "matching", "referenceData", "totalCars"},
+        )
+        self.assertGreater(meta["totalCars"], 0)
+
+    def test_removed_rows_respect_retention(self):
+        """Stamped removed rows must be younger than retention (+grace). Rows
+        without a stamp are pre-migration seeds and exempt."""
+        from datetime import date, timedelta
+        from scrapers.core.merge import REMOVED_RETENTION_DAYS
+        cars = _records(CARS_PARQUET)
+        cutoff = date.today() - timedelta(days=REMOVED_RETENTION_DAYS + 7)
+        offenders = []
+        for c in cars:
+            if c.get("Stav") != "Odstraněno":
+                continue
+            stamp = c.get("Odstraněno dne")
+            if not stamp:
+                continue
+            try:
+                removed_on = date.fromisoformat(str(stamp))
+            except ValueError:
+                offenders.append(c)
+                continue
+            if removed_on < cutoff:
+                offenders.append(c)
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} removed rows older than retention window")
 
 
 if __name__ == "__main__":

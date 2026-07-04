@@ -32,6 +32,12 @@ def _rows_from_csv(path):
     return {r[LINK]: dict(r) for _, r in df.iterrows() if r.get(LINK)}
 
 
+def _rows_from_parquet(path):
+    df = pd.read_parquet(path)
+    df = df.astype(object).where(df.notna(), "")
+    return {r[LINK]: dict(r) for _, r in df.iterrows() if r.get(LINK)}
+
+
 def _rows_from_json(path):
     with open(path, encoding="utf-8") as f:
         data = json.load(f)
@@ -54,14 +60,14 @@ def compare(old, new, ignore_cols):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("kind", choices=["csv", "json"])
+    ap.add_argument("kind", choices=["csv", "json", "parquet"])
     ap.add_argument("old")
     ap.add_argument("new")
     ap.add_argument("--ignore-cols", default="")
     args = ap.parse_args()
 
     ignore = [c for c in args.ignore_cols.split(",") if c]
-    loader = _rows_from_csv if args.kind == "csv" else _rows_from_json
+    loader = {"csv": _rows_from_csv, "json": _rows_from_json, "parquet": _rows_from_parquet}[args.kind]
     old, new = loader(args.old), loader(args.new)
     regressions, only_old, only_new = compare(old, new, ignore)
 

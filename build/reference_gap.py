@@ -26,7 +26,7 @@ EV_RANGES = {
     "Dojezd komb. letní EV-database (km)": (100, 800),
     "Cd": (0.20, 0.45),
 }
-CARS_JSON = os.path.join(BASE_DIR, "site", "data", "cars.json")
+CARS_PARQUET = os.path.join(BASE_DIR, "site", "data", "cars.parquet")
 REF_DIR = os.path.join(BASE_DIR, "scrapers", "data", "reference")
 
 # spec tokens stripped when deriving a model grouping key (powertrain/battery/hp noise)
@@ -42,9 +42,13 @@ def load_unpaired_from_rows(rows, fuel):
     return [r for r in rows if r.get("Typ") == typ and r.get("Spárováno") == "Ne"]
 
 
-def load_unpaired(cars_json_path, fuel):
-    with open(cars_json_path, encoding="utf-8") as f:
-        rows = json.load(f)["data"]
+def load_unpaired(cars_path, fuel):
+    import pandas as pd
+    df = pd.read_parquet(cars_path)
+    rows = [
+        {k: (None if (isinstance(v, float) and v != v) else v) for k, v in rec.items()}
+        for rec in df.to_dict("records")
+    ]
     return load_unpaired_from_rows(rows, fuel)
 
 
@@ -236,8 +240,8 @@ def append_rows(fuel, rows, path=None):
     return len(rows)
 
 
-def count_unpaired(cars_json_path, fuel):
-    return len(load_unpaired(cars_json_path, fuel))
+def count_unpaired(cars_path, fuel):
+    return len(load_unpaired(cars_path, fuel))
 
 
 def _rebuild():
@@ -249,7 +253,7 @@ def _rebuild():
 def _cmd_gaps(a):
     if a.rebuild:
         _rebuild()
-    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    unpaired = load_unpaired(CARS_PARQUET, a.fuel)
     ref_models = load_reference_models(a.fuel)
     clusters = cluster(unpaired, a.fuel)
     for c in clusters:
@@ -284,7 +288,7 @@ def _cmd_validate(a):
     rows = json.load(open(a.infile, encoding="utf-8"))
     rows = rows if isinstance(rows, list) else rows.get("rows", [])
     ref_models = load_reference_models(a.fuel)
-    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    unpaired = load_unpaired(CARS_PARQUET, a.fuel)
     ok, errs = validate_rows(rows, a.fuel, ref_models, unpaired)
     for e in errs:
         print("  CHYBA:", e)
@@ -298,17 +302,17 @@ def _cmd_apply(a):
     rows = json.load(open(a.infile, encoding="utf-8"))
     rows = rows if isinstance(rows, list) else rows.get("rows", [])
     ref_models = load_reference_models(a.fuel)
-    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    unpaired = load_unpaired(CARS_PARQUET, a.fuel)
     ok, errs = validate_rows(rows, a.fuel, ref_models, unpaired)
     if errs:
         for e in errs:
             print("  CHYBA:", e)
         print("Aplikace přerušena — oprav chyby.")
         return 1
-    before = count_unpaired(CARS_JSON, a.fuel)
+    before = count_unpaired(CARS_PARQUET, a.fuel)
     n = append_rows(a.fuel, ok)
     _rebuild()
-    after = count_unpaired(CARS_JSON, a.fuel)
+    after = count_unpaired(CARS_PARQUET, a.fuel)
     print(f"Přidáno {n} referenčních modelů ({a.fuel}).")
     print(f"Nespárováno: {before} → {after}  (−{before - after})")
     return 0
