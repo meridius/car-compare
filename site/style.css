@@ -136,6 +136,69 @@ a:hover { text-decoration: underline; }
     justify-content: center;
 }
 
+/* ── Scrollbar styling (wider, visible, accessible) ── */
+/* Webkit-based browsers (Chrome, Safari, Edge) */
+.ag-theme-alpine-dark .ag-root-wrapper::-webkit-scrollbar,
+.ag-theme-alpine-dark .ag-body-viewport::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+.ag-theme-alpine-dark .ag-root-wrapper::-webkit-scrollbar-track,
+.ag-theme-alpine-dark .ag-body-viewport::-webkit-scrollbar-track {
+    background: var(--clr-bg);
+}
+
+.ag-theme-alpine-dark .ag-root-wrapper::-webkit-scrollbar-thumb,
+.ag-theme-alpine-dark .ag-body-viewport::-webkit-scrollbar-thumb {
+    background: #4b5563;
+    border-radius: 6px;
+    border: 3px solid var(--clr-bg);
+}
+
+.ag-theme-alpine-dark .ag-root-wrapper::-webkit-scrollbar-thumb:hover,
+.ag-theme-alpine-dark .ag-body-viewport::-webkit-scrollbar-thumb:hover {
+    background: #64748b;
+}
+
+/* Firefox */
+.ag-theme-alpine-dark .ag-root-wrapper,
+.ag-theme-alpine-dark .ag-body-viewport {
+    scrollbar-width: auto;
+    scrollbar-color: #4b5563 var(--clr-bg);
+}
+
+/* Light theme scrollbars */
+.ag-theme-alpine .ag-root-wrapper::-webkit-scrollbar,
+.ag-theme-alpine .ag-body-viewport::-webkit-scrollbar {
+    width: 14px;
+    height: 14px;
+}
+
+.ag-theme-alpine .ag-root-wrapper::-webkit-scrollbar-track,
+.ag-theme-alpine .ag-body-viewport::-webkit-scrollbar-track {
+    background: var(--clr-bg);
+}
+
+.ag-theme-alpine .ag-root-wrapper::-webkit-scrollbar-thumb,
+.ag-theme-alpine .ag-body-viewport::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 6px;
+    border: 3px solid var(--clr-bg);
+}
+
+.ag-theme-alpine .ag-root-wrapper::-webkit-scrollbar-thumb:hover,
+.ag-theme-alpine .ag-body-viewport::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+/* Firefox light theme */
+.ag-theme-alpine .ag-root-wrapper,
+.ag-theme-alpine .ag-body-viewport {
+    scrollbar-width: auto;
+    scrollbar-color: #cbd5e1 var(--clr-bg);
+}
+
 .ag-theme-alpine,
 .ag-theme-alpine-dark {
     --ag-background-color: var(--clr-bg);

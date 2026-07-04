@@ -113,9 +113,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:ralph · model:sonnet · effort:medium
   > 📌 assumes: core integrity harness already added (tests/test_data_integrity.py); this extends it with per-column format checks (numeric price/year/km, enum columns, required-field presence).
 
-- [ ] **#22** scroll bars in tables are very thin and hard to use since they are hidden behind the page scroll bar
-  > flow:ralph · model:haiku · effort:low
-
 - [ ] **#24** počet válců (number of cylinders) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
@@ -165,3 +162,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [x] **#7** "Objem motoru" col sortable + filterable as numbers
   > flow:ralph · model:sonnet · effort:low
+
+- [x] **#22** scroll bars in tables are very thin and hard to use since they are hidden behind the page scroll bar
+  > done: 14px webkit scrollbar + scrollbar-color for Firefox, visible #4b5563 thumb with border, scoped to .ag-theme-alpine-dark/.ag-theme-alpine on both index + reference pages; verify_ui both pages PASS
