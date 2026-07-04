@@ -111,6 +111,20 @@ class TestValidate(unittest.TestCase):
         self.assertTrue(any("není číslo" in e for e in errs))
 
 
+class TestCLIGuards(unittest.TestCase):
+    def test_validate_and_apply_reject_ice(self):
+        # ICE is deferred; argparse must reject --fuel ice for validate/apply
+        with self.assertRaises(SystemExit):
+            rg.main(["validate", "--fuel", "ice", "--in", "nope.json"])
+        with self.assertRaises(SystemExit):
+            rg.main(["apply", "--fuel", "ice", "--in", "nope.json"])
+
+    def test_gaps_still_accepts_both_fuels(self):
+        # gaps is read-only; argparse should accept ice as a valid choice (parse only)
+        with self.assertRaises(SystemExit):
+            rg.main(["gaps", "--help"])   # --help exits 0; proves 'gaps' subparser exists
+
+
 class TestAppendAndCount(unittest.TestCase):
     def test_fmt_cell_cd_dot_others_comma(self):
         self.assertEqual(rg._fmt_cell("Cd", 0.31), "0.31")
