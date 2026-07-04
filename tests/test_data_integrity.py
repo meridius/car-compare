@@ -39,6 +39,12 @@ def _records(path):
     ]
 
 
+def _name(car):
+    """Diagnostic display name for a payload row (task #3: the payload no
+    longer carries 'Model auta' — it's split into 'Značka' + 'Model')."""
+    return f"{car.get('Značka') or ''} {car.get('Model') or ''}".strip()
+
+
 class DataIntegrityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
@@ -73,7 +79,7 @@ class DataIntegrityTest(unittest.TestCase):
         offenders = [c for c in self.cars if not str(c.get("Země") or "").strip()]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} rows missing Země (e.g. "
-                         f"{offenders[0].get('Model auta') if offenders else ''})")
+                         f"{_name(offenders[0]) if offenders else ''})")
 
     def test_no_confident_match_with_nonpositive_score(self):
         """THE core reliability invariant: a confident 'Ano' must never be a
@@ -83,7 +89,7 @@ class DataIntegrityTest(unittest.TestCase):
                      and self._score(c) is not None and self._score(c) <= 0]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} 'Ano' rows score <= 0 (e.g. "
-                         f"{offenders[0]['Model auta'] if offenders else ''})")
+                         f"{_name(offenders[0]) if offenders else ''})")
 
     def test_ne_rows_carry_no_score(self):
         offenders = [c for c in self.ice
@@ -103,7 +109,7 @@ class DataIntegrityTest(unittest.TestCase):
                      and c.get("Spotřeba (l/100 km)") not in (None, "")]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} PHEV rows carry consumption (e.g. "
-                         f"{offenders[0]['Model auta'] if offenders else ''})")
+                         f"{_name(offenders[0]) if offenders else ''})")
 
     def test_engine_volume_plausible(self):
         """No ICE row may carry an implausible displacement (sauto's 14.9 bug)."""
@@ -174,7 +180,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                              and c["Cena (Kč)"] > 0)]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} rows with non-numeric/non-positive Cena "
-                         f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                         f"(e.g. {_name(offenders[0]) if offenders else ''})")
 
     def test_cena_within_scrape_window_for_filtered_sources(self):
         offenders = [c for c in self.cars
@@ -185,7 +191,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                          f"{len(offenders)} {self._PRICE_WINDOW_SOURCES} rows outside "
                          f"[{self._PRICE_FLOOR}, {self._PRICE_CEILING}] Kč "
                          f"(e.g. {offenders[0].get('Cena (Kč)') if offenders else ''} "
-                         f"{offenders[0].get('Model auta') if offenders else ''})")
+                         f"{_name(offenders[0]) if offenders else ''})")
 
     # -- Rok výroby ----------------------------------------------------------
 
@@ -210,7 +216,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                              f"{len(offenders)} rows with Rok výroby outside [{lo}, {hi}] "
                              f"(known: 1 frozen-seed sentinel row; e.g. "
                              f"{offenders[0].get('Rok výroby') if offenders else ''} "
-                             f"{offenders[0].get('Model auta') if offenders else ''} / "
+                             f"{_name(offenders[0]) if offenders else ''} / "
                              f"{offenders[0].get('Zdroj') if offenders else ''})")
 
     # -- Nájezd (km) ---------------------------------------------------------
@@ -224,7 +230,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                      and c["Nájezd (km)"] < 0]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} rows with negative Nájezd "
-                         f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                         f"(e.g. {_name(offenders[0]) if offenders else ''})")
 
     # -- Výkon (kW) ------------------------------------------------------
 
@@ -246,7 +252,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                      and c["Výkon (kW)"] < 0]
         self.assertEqual(offenders, [],
                          f"{len(offenders)} rows with negative Výkon "
-                         f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                         f"(e.g. {_name(offenders[0]) if offenders else ''})")
 
     def test_vykon_zero_rows_are_a_known_small_set(self):
         """Tracks the known (now-fixed-at-source, see above) Mobile.de 0-kW
@@ -257,7 +263,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         self.assertLessEqual(len(offenders), 15,
                              f"{len(offenders)} rows with 0 kW — Mobile.de EV power gap "
                              f"has grown past the known ~10, investigate "
-                             f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                             f"(e.g. {_name(offenders[0]) if offenders else ''})")
 
     # -- Objem motoru ------------------------------------------------------
 
@@ -269,7 +275,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         self.assertEqual(offenders, [],
                          f"{len(offenders)} rows with implausible Objem motoru "
                          f"(e.g. {offenders[0].get('Objem motoru') if offenders else ''} "
-                         f"{offenders[0].get('Model auta') if offenders else ''})")
+                         f"{_name(offenders[0]) if offenders else ''})")
 
     # -- Enum columns --------------------------------------------------------
 
@@ -309,7 +315,7 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         self.assertLessEqual(len(offenders), 1,
                              f"{len(offenders)} EV rows with Stav=Havarované — sauto.py "
                              f"build_ev is missing the 'Havarované' guard that build_ice has "
-                             f"(e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                             f"(e.g. {_name(offenders[0]) if offenders else ''})")
 
     def test_sparovano_enum_all(self):
         bad = {str(c.get("Spárováno") or "") for c in self.cars} - {"Ano", "Nejisté", "Ne", ""}
@@ -331,10 +337,18 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
     # -- Required fields / uniqueness ---------------------------------------
 
     def test_required_fields_nonempty(self):
-        for col in ["Model auta", "Zdroj", "Odkaz na auto"]:
+        for col in ["Zdroj", "Odkaz na auto"]:
             with self.subTest(col=col):
                 offenders = [c for c in self.cars if not str(c.get(col) or "").strip()]
                 self.assertEqual(offenders, [], f"{len(offenders)} rows missing {col}")
+
+        # Task #3: "Model auta" was split into "Značka" + "Model" in the payload
+        # (build_data.add_brand_model_columns) — require the reconstructed name
+        # to be non-empty rather than either half individually (a single-word
+        # model, e.g. "Tesla", legitimately leaves "Model" blank).
+        with self.subTest(col="Značka+Model"):
+            offenders = [c for c in self.cars if not _name(c)]
+            self.assertEqual(offenders, [], f"{len(offenders)} rows missing Značka+Model")
 
     def test_odkaz_na_auto_unique_in_live_payload(self):
         """Cross-source duplicates are structurally impossible (each source's
@@ -351,13 +365,17 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         """A confident (Spárováno=Ano) ICE row's 'Model auta' must be an exact
         entry in ice_specs.csv's PK column ('Jednoznačná varianta vozu') —
         match_to_authoritative rewrites it to that exact string on a
-        confident match (core/matching.py)."""
+        confident match (core/matching.py). The payload no longer carries
+        'Model auta' directly (task #3 split it into 'Značka' + 'Model'), so
+        reconstruct it via _name() — the exact inverse of
+        build_data.split_brand_model for single-space-joined names — to keep
+        this guard meaningful."""
         entries = {r["entry"] for r in load_authoritative_list(ICE_SPECS_CSV)}
         offenders = [c for c in self.ice
-                     if c.get("Spárováno") == "Ano" and c.get("Model auta") not in entries]
+                     if c.get("Spárováno") == "Ano" and _name(c) not in entries]
         self.assertEqual(offenders, [],
-                         f"{len(offenders)} confident ICE rows whose Model auta isn't in "
-                         f"ice_specs.csv (e.g. {offenders[0].get('Model auta') if offenders else ''})")
+                         f"{len(offenders)} confident ICE rows whose Značka+Model isn't in "
+                         f"ice_specs.csv (e.g. {_name(offenders[0]) if offenders else ''})")
 
 
 CARS_ARCHIVED = os.path.join(ROOT, "site", "data", "cars-archived.parquet")

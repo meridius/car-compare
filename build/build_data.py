@@ -553,6 +553,40 @@ def build_reference_json(comb_ref, elec_ref, df):
     print(f"  Reference: {len(records)} entries → {out_path}")
     return records
 
+def split_brand_model(model_auta):
+    """Split a canonical 'Model auta' string into (Značka, Model) for the
+    payload display columns (task #3: payload/display split — the canonical
+    scrape/state schema and all matching/merge/join logic keep keying on the
+    single 'Model auta' column untouched).
+
+    Reuses the scraped-side brand parser (core.matching._parse_brand /
+    MULTI_WORD_BRANDS) instead of inventing a new splitter, so multi-word
+    brands (Alfa Romeo, Land Rover, Mercedes-Benz, GWM Haval) split correctly;
+    an unrecognised brand falls back to the first token, same as matching.
+    """
+    if not isinstance(model_auta, str) or not model_auta.strip():
+        return "", ""
+    return comb_utils._parse_brand(model_auta.strip())
+
+
+def add_brand_model_columns(df):
+    """Payload-only transform (task #3): derive 'Značka' + 'Model' from
+    'Model auta' and drop 'Model auta' from the frame. Called once, right
+    before the payload is written — every upstream step (matching, merge,
+    reference joins) still reads/writes the single 'Model auta' column."""
+    df = df.copy()
+    if "Model auta" not in df.columns:
+        return df
+    pos = list(df.columns).index("Model auta")
+    split = df["Model auta"].map(split_brand_model)
+    znacka = split.map(lambda t: t[0])
+    model = split.map(lambda t: t[1])
+    df = df.drop(columns=["Model auta"])
+    df.insert(pos, "Model", model)
+    df.insert(pos, "Značka", znacka)
+    return df
+
+
 PAYLOAD_NUMERIC_COLS = [
     "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
     "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
@@ -583,8 +617,13 @@ def write_payload(df, metadata, out_dir):
     listings, cars-archived.parquet = removed ones (Stav="Odstraněno"), plus the
     cars-meta.json sidecar. The archive is lazy-loaded on demand in the dashboard,
     so the always-loaded payload stays bounded by the live market.
+
+    Task #3: also splits 'Model auta' into the payload-only 'Značka' + 'Model'
+    display columns and drops 'Model auta' — the canonical schema keeps the
+    single column; only the browser-facing payload is split.
     """
     os.makedirs(out_dir, exist_ok=True)
+    df = add_brand_model_columns(df)
     removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
 
     live_path = os.path.join(out_dir, "cars.parquet")

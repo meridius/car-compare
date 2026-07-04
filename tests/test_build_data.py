@@ -34,6 +34,59 @@ def _ev_ref():
     }])
 
 
+class SplitBrandModelTest(unittest.TestCase):
+    """Task #3: payload/display split of 'Model auta' into 'Značka' + 'Model'.
+
+    Reuses the scraped-side brand parser (core.matching._parse_brand /
+    MULTI_WORD_BRANDS) rather than inventing a new splitter — see
+    build_data.split_brand_model."""
+
+    def test_single_word_brand(self):
+        self.assertEqual(
+            B.split_brand_model("Škoda Karoq 1.5 TSI"), ("Škoda", "Karoq 1.5 TSI"))
+
+    def test_multi_word_brand(self):
+        self.assertEqual(
+            B.split_brand_model("Alfa Romeo Tonale 1.5"), ("Alfa Romeo", "Tonale 1.5"))
+
+    def test_another_multi_word_brand(self):
+        self.assertEqual(
+            B.split_brand_model("Land Rover Defender 110"), ("Land Rover", "Defender 110"))
+
+    def test_unknown_brand_falls_back_to_first_token(self):
+        self.assertEqual(
+            B.split_brand_model("Zzz Nothing 1.0"), ("Zzz", "Nothing 1.0"))
+
+    def test_brand_only_no_remainder(self):
+        self.assertEqual(B.split_brand_model("Tesla"), ("Tesla", ""))
+
+    def test_blank_input(self):
+        self.assertEqual(B.split_brand_model(""), ("", ""))
+
+    def test_nan_input(self):
+        self.assertEqual(B.split_brand_model(float("nan")), ("", ""))
+
+
+class AddBrandModelColumnsTest(unittest.TestCase):
+    """add_brand_model_columns() is the payload-only transform: it derives the
+    two display columns and drops 'Model auta' — the canonical scrape/state
+    schema is untouched (only build_data's payload output changes)."""
+
+    def test_drops_model_auta_adds_znacka_model(self):
+        df = pd.DataFrame([
+            {"Model auta": "Škoda Karoq 1.5 TSI", "Typ": "Spalovací"},
+            {"Model auta": "Alfa Romeo Tonale 1.5", "Typ": "Spalovací"},
+        ])
+        out = B.add_brand_model_columns(df)
+        self.assertNotIn("Model auta", out.columns)
+        self.assertIn("Značka", out.columns)
+        self.assertIn("Model", out.columns)
+        self.assertEqual(out.iloc[0]["Značka"], "Škoda")
+        self.assertEqual(out.iloc[0]["Model"], "Karoq 1.5 TSI")
+        self.assertEqual(out.iloc[1]["Značka"], "Alfa Romeo")
+        self.assertEqual(out.iloc[1]["Model"], "Tonale 1.5")
+
+
 class PayloadWriterTest(unittest.TestCase):
     """Pins the split payload contract (decision 001, option C).
 
@@ -75,6 +128,25 @@ class PayloadWriterTest(unittest.TestCase):
             {"buildDate", "trigger", "sources", "matching", "referenceData",
              "totalCars", "archivedCars"},
         )
+
+    def test_payload_splits_model_auta_into_znacka_and_model(self):
+        """Task #3: write_payload derives 'Značka' + 'Model' from 'Model auta'
+        and drops 'Model auta' from both payload parquets."""
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            live_path, archived_path, _ = self._write(td)
+            live = pd.read_parquet(live_path)
+            archived = pd.read_parquet(archived_path)
+        for frame in (live, archived):
+            self.assertNotIn("Model auta", frame.columns)
+            self.assertIn("Značka", frame.columns)
+            self.assertIn("Model", frame.columns)
+        row = live[live["Odkaz na auto"] == "https://x/1"].iloc[0]
+        self.assertEqual(row["Značka"], "Škoda")
+        self.assertEqual(row["Model"], "Karoq 1.5 TSI")
+        row2 = archived.iloc[0]
+        self.assertEqual(row2["Značka"], "Audi")
+        self.assertEqual(row2["Model"], "A4 2.0 TDI")
 
     def test_live_excludes_removed_archive_holds_only_removed(self):
         import tempfile
