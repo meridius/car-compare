@@ -140,3 +140,51 @@ def stub_row(cluster, fuel):
     row = {col: "" for col in ev_columns()}
     row["Model auta"] = cluster["prefix"]
     return row
+
+
+def _num(v):
+    if v is None or str(v).strip() == "":
+        return None
+    return float(str(v).strip().replace(",", "."))
+
+
+def validate_rows(rows, fuel, ref_models, unpaired):
+    cols = ev_columns()  # EV only for now
+    ref_low = [r.lower() for r in ref_models]
+    unpaired_low = [str(r.get("Model auta", "")).lower() for r in unpaired]
+    ok, errs = [], []
+    seen = set()
+    for i, raw in enumerate(rows):
+        clean = {c: raw.get(c, "") for c in cols}
+        model = str(clean.get("Model auta", "")).strip()
+        problems = []
+        if not model:
+            problems.append(f"row {i}: prázdné 'Model auta'")
+        # numeric ranges
+        for col, (lo, hi) in EV_RANGES.items():
+            val = _num(clean.get(col))
+            if val is not None and not (lo <= val <= hi):
+                label = "baterie" if "baterie" in col else col
+                problems.append(f"row {i} ({model}): {label}={val} mimo rozsah {lo}-{hi}")
+        # Cd zdroj enum (only when Cd present)
+        if str(clean.get("Cd", "")).strip():
+            if clean.get("Cd zdroj") not in ("reálné", "odhad"):
+                problems.append(f"row {i} ({model}): 'Cd zdroj' musí být reálné/odhad")
+        # heat pump enum
+        hp = str(clean.get("Tepelné čerpadlo možné (ano/ne)", "")).strip()
+        if hp and hp not in ("ano", "ne"):
+            problems.append(f"row {i} ({model}): tepelné čerpadlo musí být ano/ne")
+        # duplicate vs existing + within-batch
+        ml = model.lower()
+        if ml in ref_low or ml in seen:
+            problems.append(f"row {i} ({model}): duplicitní 'Model auta'")
+        # over-broad prefix: a reference prefix must be at least brand+model (2 tokens);
+        # a bare brand ("Renault") would pair unrelated cars.
+        if model and len(model.split()) < 2 and any(n.startswith(ml) for n in unpaired_low):
+            problems.append(f"row {i} ({model}): příliš obecný prefix (jen značka)")
+        if problems:
+            errs.extend(problems)
+        else:
+            seen.add(ml)
+            ok.append(clean)
+    return ok, errs

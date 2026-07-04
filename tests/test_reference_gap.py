@@ -70,3 +70,33 @@ class TestProjectAndStub(unittest.TestCase):
         self.assertEqual(list(row.keys()), rg.ev_columns())
         self.assertEqual(row["Model auta"], "Renault Twingo")
         self.assertEqual(row["Kapacita baterie (kWh)"], "")  # spec blank until researched
+
+
+class TestValidate(unittest.TestCase):
+    def _good(self):
+        r = {c: "" for c in rg.ev_columns()}
+        r.update({"Model auta": "Renault Twingo", "Kapacita baterie (kWh)": 22,
+                  "Dojezd komb. letní WLTP (km)": 190, "Cd": 0.31,
+                  "Cd zdroj": "reálné", "Tepelné čerpadlo možné (ano/ne)": "ne"})
+        return r
+
+    def test_accepts_good_row_and_drops_sidecar(self):
+        r = self._good(); r["_sources"] = {"Cd": "http://x"}
+        ok, errs = rg.validate_rows([r], "ev", ["Fiat Grande Panda"], [])
+        self.assertEqual(errs, [])
+        self.assertNotIn("_sources", ok[0])
+        self.assertEqual(list(ok[0].keys()), rg.ev_columns())
+
+    def test_rejects_out_of_range_battery(self):
+        r = self._good(); r["Kapacita baterie (kWh)"] = 5
+        ok, errs = rg.validate_rows([r], "ev", [], [])
+        self.assertEqual(ok, []); self.assertTrue(any("baterie" in e for e in errs))
+
+    def test_rejects_bad_cd_source_and_duplicate_and_overbroad(self):
+        r1 = self._good(); r1["Cd zdroj"] = "guess"
+        r2 = self._good(); r2["Model auta"] = "Fiat Grande Panda"  # dup vs existing ref
+        r3 = self._good(); r3["Model auta"] = "Renault"            # over-broad prefix
+        unpaired = [{"Model auta": "Renault Megane E-TECH"}]
+        ok, errs = rg.validate_rows([r1, r2, r3], "ev", ["Fiat Grande Panda"], unpaired)
+        self.assertEqual(ok, [])
+        self.assertEqual(len(errs), 3)
