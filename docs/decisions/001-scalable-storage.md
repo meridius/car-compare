@@ -98,5 +98,6 @@ the browser payload stays bounded by retention regardless.
 - The daily workflow no longer commits data; the repo becomes code-only again.
 - First run on main bootstraps state from the frozen seed CSVs, then the release takes
   over; afterwards the seeds may be deleted at leisure.
-- Local dev: `gh release download data` fetches current state (private repo needs gh
-  auth); without it, seeds keep everything working offline.
+- Local dev: `./bin/bootstrap-data.sh` fetches current state + payload from the
+  release (private repo needs gh auth); without it, seeds keep everything working
+  offline.

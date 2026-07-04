@@ -39,6 +39,9 @@ python -m scrapers.run --source sauto  # Debug a single source
 
 Sources: `sauto`, `autodraft`, `energycars`, `mobilede`.
 
+`./bin/bootstrap-data.sh` pulls the current state + payload from the `data` release
+(needs `gh` auth; without it the frozen seed CSVs cover local dev).
+
 ## Testing
 
 ```bash
