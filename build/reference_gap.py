@@ -140,6 +140,50 @@ def project_newly_paired(prefixes, unpaired):
     return out
 
 
+def _is_token_prefix(parent, child):
+    """True if parent's tokens are a strict, word-boundary-safe prefix of child's
+    tokens (case-insensitive). Token-based so "Citroën C3" prefixes "Citroën C3
+    Aircross" but NOT "Citroën C30" (no shared final token)."""
+    pt = parent.lower().split()
+    ct = child.lower().split()
+    return len(pt) < len(ct) and ct[: len(pt)] == pt
+
+
+def find_nested_prefixes(prefixes):
+    """Pairs (parent, child) among `prefixes` where parent is a token-prefix of
+    child — e.g. ("Citroën C3", "Citroën C3 Aircross"). Approving `parent` alone
+    would silently absorb `child`'s listings under the wrong model's specs."""
+    return [
+        (parent, child)
+        for parent in prefixes
+        for child in prefixes
+        if parent != child and _is_token_prefix(parent, child)
+    ]
+
+
+def project_own_absorbed(prefixes, unpaired):
+    """Split each candidate prefix's raw startswith count into:
+      - own:      listings for which this prefix is the LONGEST matching
+                  candidate prefix (i.e. its real cluster size).
+      - absorbed: listings that also startswith this prefix but whose true
+                  (longest) match is a different, longer candidate prefix — they
+                  would only "fall to" this prefix if that longer/nested sibling
+                  is never added as its own reference row.
+    Prevents nested prefixes (e.g. "Citroën C3" vs "Citroën C3 Aircross") from
+    double-counting the same listing's impact under both the parent and child."""
+    names = [str(r.get("Model auta", "")).lower() for r in unpaired]
+    stats = {p: {"own": 0, "absorbed": 0, "projected": 0} for p in prefixes}
+    for n in names:
+        matches = [p for p in prefixes if n.startswith(p.lower())]
+        if not matches:
+            continue
+        longest = max(matches, key=len)
+        for p in matches:
+            stats[p]["projected"] += 1
+            stats[p]["own" if p == longest else "absorbed"] += 1
+    return stats
+
+
 def stub_row(cluster, fuel):
     if fuel != "ev":
         raise NotImplementedError("ICE stub handled in ICE mode task")
@@ -258,12 +302,22 @@ def _cmd_gaps(a):
     clusters = cluster(unpaired, a.fuel)
     for c in clusters:
         c["klass"] = classify(c, ref_models)
-    proj = project_newly_paired([c["prefix"] for c in clusters], unpaired)
-    for c in clusters:
-        c["projected"] = proj.get(c["prefix"], 0)
     missing = [c for c in clusters if c["klass"] == "missing_ref"]
     norm = [c for c in clusters if c["klass"] == "normalization_gap"]
     total_missing = len(missing)
+
+    # Own/absorbed split + nested-prefix warning are computed over the FULL
+    # missing_ref candidate set (not the --top-sliced display list): a nested
+    # child can be absorbed by a surfaced parent even if the child itself falls
+    # outside the top N printed rows.
+    missing_prefixes = [c["prefix"] for c in missing]
+    stats = project_own_absorbed(missing_prefixes, unpaired)
+    for c in missing:
+        s = stats[c["prefix"]]
+        c["projected"], c["own"], c["absorbed"] = s["projected"], s["own"], s["absorbed"]
+    nested = find_nested_prefixes(missing_prefixes)
+    volume_by_prefix = {c["prefix"]: c["volume"] for c in missing}
+
     if a.top:
         missing = missing[: a.top]
     outdir = os.path.join(BASE_DIR, "tmp", "ref-gap")
@@ -277,7 +331,14 @@ def _cmd_gaps(a):
           f"{len(norm)} normalizace).")
     print(f"Top {len(missing)} z {total_missing} chybějících (→ {out}):")
     for c in missing:
-        print(f"  {c['projected']:5d}  {c['prefix']}   e.g. {c['sample_names'][:2]}")
+        print(f"  {c['projected']:5d} (own {c['own']}, absorbed {c['absorbed']})  "
+              f"{c['prefix']}   e.g. {c['sample_names'][:2]}")
+    if nested:
+        print("VAROVÁNÍ: vnořené prefixy — přidání rodiče samotného potichu pohltí dítě "
+              "pod jeho specifikacemi (přidej OBA, nebo dítě zvlášť):")
+        for parent, child in nested:
+            print(f"  {parent!r} pohlcuje {child!r} "
+                  f"(dítě má {volume_by_prefix.get(child, '?')} vlastních inzerátů)")
     if norm:
         print(f"Normalizační mezery (oprav BRAND_MAP/MODEL_CLEANUP, nepřidávej řádek):")
         for c in norm[:15]:

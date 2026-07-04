@@ -84,6 +84,45 @@ class TestProjectAndStub(unittest.TestCase):
             self.assertIn(col, cols)  # a renamed CSV header must fail loud, not silently skip
 
 
+class TestNestedPrefixProjection(unittest.TestCase):
+    """Citroën C3 / Citroën C3 Aircross shape: "Citroën C3" is a literal string
+    prefix of "Citroën C3 Aircross ...", so a naive prefix-startswith projection
+    double-counts the Aircross listings under the C3 bucket too."""
+
+    def _listings(self):
+        c3 = [{"Model auta": f"Citroën C3 {i}"} for i in range(110)]
+        aircross = [{"Model auta": f"Citroën C3 Aircross {i}"} for i in range(71)]
+        return c3 + aircross
+
+    def test_own_absorbed_split_matches_real_cluster_sizes(self):
+        stats = rg.project_own_absorbed(["Citroën C3", "Citroën C3 Aircross"], self._listings())
+        self.assertEqual(stats["Citroën C3"]["projected"], 181)  # raw startswith, inflated
+        self.assertEqual(stats["Citroën C3"]["own"], 110)         # its actual cluster size
+        self.assertEqual(stats["Citroën C3"]["absorbed"], 71)     # would-be Aircross listings
+        self.assertEqual(stats["Citroën C3 Aircross"]["projected"], 71)
+        self.assertEqual(stats["Citroën C3 Aircross"]["own"], 71)
+        self.assertEqual(stats["Citroën C3 Aircross"]["absorbed"], 0)
+
+    def test_own_absorbed_no_overlap_when_prefixes_disjoint(self):
+        unpaired = [{"Model auta": "Renault Twingo"}, {"Model auta": "Fiat Grande Panda"}]
+        stats = rg.project_own_absorbed(["Renault Twingo", "Fiat Grande Panda"], unpaired)
+        self.assertEqual(stats["Renault Twingo"], {"own": 1, "absorbed": 0, "projected": 1})
+        self.assertEqual(stats["Fiat Grande Panda"], {"own": 1, "absorbed": 0, "projected": 1})
+
+    def test_find_nested_prefixes_detects_parent_child(self):
+        pairs = rg.find_nested_prefixes(["Citroën C3", "Citroën C3 Aircross", "Fiat Grande Panda"])
+        self.assertEqual(pairs, [("Citroën C3", "Citroën C3 Aircross")])
+
+    def test_find_nested_prefixes_is_token_boundary_safe(self):
+        # "Citroën C3" must NOT be considered a prefix of "Citroën C30" (no shared token)
+        pairs = rg.find_nested_prefixes(["Citroën C3", "Citroën C30"])
+        self.assertEqual(pairs, [])
+
+    def test_find_nested_prefixes_empty_when_no_nesting(self):
+        pairs = rg.find_nested_prefixes(["Renault Twingo", "Fiat Grande Panda"])
+        self.assertEqual(pairs, [])
+
+
 class TestValidate(unittest.TestCase):
     def _good(self):
         r = {c: "" for c in rg.ev_columns()}
