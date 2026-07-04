@@ -141,5 +141,54 @@ class BuildRowTest(unittest.TestCase):
         self.assertEqual(sorted(row.keys()), sorted(CANONICAL_COLS))
 
 
+class FetchBandedTest(unittest.TestCase):
+    """Price-band splitter: split while >= RESULT_CAP, fetch when under."""
+
+    def _run(self, counts):
+        """counts: {(lo, hi): total}. Fake _count/_fetch_slice; items = one dict per result."""
+        fetched = []
+
+        async def fake_count(session, params):
+            band = dict(params)["p"]
+            lo, hi = (int(x) for x in band.split(":"))
+            return counts.get((lo, hi), 0)
+
+        async def fake_fetch_slice(session, params, total, sem):
+            band = dict(params)["p"]
+            fetched.append(band)
+            return [{"band": band, "i": i} for i in range(min(total, mobilede.RESULT_CAP))]
+
+        with mock.patch.object(mobilede, "_count", fake_count), \
+             mock.patch.object(mobilede, "_fetch_slice", fake_fetch_slice):
+            items = asyncio.run(mobilede._fetch_banded(None, (), 0, 30000, None))
+        return items, fetched
+
+    def test_small_result_no_split(self):
+        items, fetched = self._run({(0, 30000): 150})
+        self.assertEqual(len(items), 150)
+        self.assertEqual(fetched, ["0:30000"])
+
+    def test_split_over_cap(self):
+        counts = {(0, 30000): 3000, (0, 15000): 1800, (15001, 30000): 1200}
+        items, fetched = self._run(counts)
+        self.assertEqual(len(items), 3000)
+        self.assertEqual(sorted(fetched), ["0:15000", "15001:30000"])
+
+    def test_empty_band_skipped(self):
+        items, fetched = self._run({(0, 30000): 0})
+        self.assertEqual(items, [])
+        self.assertEqual(fetched, [])
+
+
+class CnbRateTest(unittest.TestCase):
+    def test_parse_cnb_line(self):
+        text = ("04.07.2026 #128\nzemě|měna|množství|kód|kurz\n"
+                "Austrálie|dolar|1|AUD|14,505\nEMU|euro|1|EUR|24,745\n")
+        self.assertEqual(mobilede._rate_from_cnb_text(text), 24.745)
+
+    def test_parse_cnb_garbage_returns_none(self):
+        self.assertIsNone(mobilede._rate_from_cnb_text("<html>outage</html>"))
+
+
 if __name__ == "__main__":
     unittest.main()
