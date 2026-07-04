@@ -211,6 +211,55 @@ card in the dataset overview.
 
 ---
 
+## core — storage & payload (parquet)
+
+### state parquet is stringly on purpose
+
+`storage.write_state()` coerces every column to str with blanks `""` — exact
+parity with the old `pd.read_csv(dtype=str).fillna("")` contract. Typed state
+would change merge/matching comparisons (e.g. `row["Stav"] == "Odstraněno"` on
+NaN). The typed payload is built separately in `build_data.write_payload()`.
+
+### payload numeric columns must be float64, never int64
+
+hyparquet decodes parquet int64 as JavaScript BigInt; grid formatters call
+`toFixed` → crash. `write_payload()` casts all numeric cols to float64
+(pinned by `test_no_int64_columns`). Same trap: a numeric-in-the-grid column
+missing from `numeric_cols` stays a *string* after the stringly state read and
+crashes formatters ("Objem motoru" bug) — every `num: true` column in
+`site/app.js` COL_CONFIG must be in `write_payload.numeric_cols`.
+
+### hyparquet import must be version-pinned
+
+The unpinned `cdn.jsdelivr.net/npm/hyparquet/+esm` URL serves a stale cached
+build. `site/app.js` pins `hyparquet@1.26.2`. Payload uses **snappy** (native
+in hyparquet); switching to zstd would require the extra `hyparquet-compressors`
+package in the browser.
+
+### full-buffer fetch on purpose (Pages gzip+Range bug)
+
+GitHub Pages computes `Content-Range` against the *gzipped* byte stream for
+compressible types, corrupting ranged reads (verified live 2026-07). `app.js`
+therefore fetches `cars.parquet` as one ArrayBuffer — no Range requests. If a
+future DuckDB-WASM upgrade needs ranged reads, verify Pages serves `.parquet`
+uncompressed first.
+
+### seed CSVs are frozen, not dead
+
+`storage.read_state()` prefers `<slug>.parquet`, falls back to the git-tracked
+`<slug>.csv`. CI seeds from the rolling `data` release; a fresh clone without
+release access still builds from the seeds. The seeds stop being updated — do
+not "fix" data in them.
+
+### merge retention math
+
+`merge_with_previous()` drops rows removed > `REMOVED_RETENTION_DAYS` (60) ago;
+monthly snapshots are cut on the 1st. 60 d > 31 d ⇒ every row that ever existed
+appears in ≥1 immutable `data-YYYY-MM` release. Shrinking retention below the
+snapshot interval would silently lose short-lived listings from history.
+
+---
+
 ## core — normalize
 
 ### normalisation order matters

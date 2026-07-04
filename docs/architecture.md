@@ -11,18 +11,21 @@ scrapers/
     normalize.py  BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model()
     fields.py     ICE field extraction (engine vol/type, hybrid, body, trim, DCT, GPF, AWD, clean_extra)
     matching.py   load_authoritative_list(), match_to_authoritative() — ICE auth matching
-    merge.py      merge_with_previous() — preserves removed listings
+    merge.py      merge_with_previous() — preserves removed listings, stamps
+                  "Odstraněno dne", drops removed rows past 60-day retention
+    storage.py    read_state()/write_state() — parquet state, seed-CSV fallback
     http.py       aiohttp helpers, fetch_all_details(concurrency=20)  (sauto)
     browser.py    Playwright helpers (autodraft, energycars)
-    pipeline.py   run_source(): dedup → ICE auth-match → merge → write CSV
+    pipeline.py   run_source(): dedup → ICE auth-match → merge → write parquet state
   sources/
-    sauto.py      EV + ICE, aiohttp REST API     → data/scrapes/sauto.csv
-    autodraft.py  EV + ICE, Playwright           → data/scrapes/autodraft.csv
-    energycars.py EV only, Playwright listing→detail → data/scrapes/energycars.csv
-    mobilede.py   EV + ICE, aiohttp app JSON API → data/scrapes/mobilede.csv
+    sauto.py      EV + ICE, aiohttp REST API     → data/scrapes/sauto.parquet
+    autodraft.py  EV + ICE, Playwright           → data/scrapes/autodraft.parquet
+    energycars.py EV only, Playwright listing→detail → data/scrapes/energycars.parquet
+    mobilede.py   EV + ICE (incl. DE), aiohttp app JSON API → data/scrapes/mobilede.parquet
   run.py          CLI: python -m scrapers.run [--source NAME ...]
   data/
-    scrapes/      per-source output CSVs
+    scrapes/      per-source parquet state (git-ignored; frozen seed CSVs tracked)
+    seed/         scrape_history.json bootstrap copy
     reference/
       ice_specs.csv   ICE reference — structured cols (Značka,Model,Výbava,Generace,
                       Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,
@@ -31,7 +34,7 @@ scrapers/
       ev_specs.csv    EV reference (comma-delim; …,Cd,Cd zdroj,…); prefix-match join
 
 bin/run_all.sh    dep check (once) + fan out `python -m scrapers.run --source NAME` per source in parallel
-build/build_data.py  concat CSVs + per-fuel reference enrichment → site/data/cars.json
+build/build_data.py  concat states + per-fuel reference enrichment → site/data/cars.parquet (+ cars-meta.json)
 ```
 
 Each adapter exposes `SOURCE_NAME`, `SOURCE_SLUG`, `FUELS`, and an async `scrape()` returning canonical rows.
@@ -39,21 +42,38 @@ Each adapter exposes `SOURCE_NAME`, `SOURCE_SLUG`, `FUELS`, and an async `scrape
 ## Data Flow
 
 ```text
-source.scrape()  → canonical rows (25-col dicts)
+source.scrape()  → canonical rows (27-col dicts)
 pipeline.run_source():
    DataFrame(rows, columns=CANONICAL_COLS)
    → drop_duplicates(subset="Odkaz na auto")
    → match_to_authoritative() on ICE rows only (EV untouched)
-   → merge_with_previous()  (mark vanished listings "Odstraněno")
-   → write data/scrapes/<slug>.csv
+   → merge_with_previous()  (stamp vanished listings "Odstraněno" + "Odstraněno dne",
+                             drop removed rows older than 60 days)
+   → storage.write_state() → data/scrapes/<slug>.parquet
 build/build_data.py:
-   concat all source CSVs
+   storage.read_state() per source (parquet, seed-CSV fallback) + concat
    → re-match ICE against ice_specs.csv (rewrites "Model auta")
    → per-fuel reference enrichment by Typ (ICE: ice_specs.csv, EV: ev_specs.csv)
-   → site/data/cars.json
+   → site/data/cars.parquet (snappy, numeric cols float64) + cars-meta.json
 ```
 
-CSVs are **merged incrementally**: listings in the old CSV but absent from the new scrape get `Stav = "Odstraněno"` and are kept. New data always wins (`keep="first"` dedup). See gotchas for `merge_with_previous` behaviour (and a known empty-link bug).
+State is **merged incrementally**: listings in the old state but absent from the
+new scrape get `Stav = "Odstraněno"` + a date stamp and are kept for 60 days
+(`REMOVED_RETENTION_DAYS`); monthly snapshot releases keep them forever. New data
+always wins. See gotchas for `merge_with_previous` behaviour.
+
+## Storage & Delivery (decision 001)
+
+- **State layer**: `scrapers/data/scrapes/<slug>.parquet`, stringly-typed (every
+  column str, blanks "") for exact parity with the old CSV semantics. Git-ignored.
+- **Canonical store**: rolling GitHub Release `data` (assets clobbered daily) +
+  immutable monthly `data-YYYY-MM` snapshots. Bootstrap falls back to the frozen
+  seed CSVs tracked in git.
+- **Payload**: `site/data/cars.parquet` (snappy — hyparquet decodes it natively)
+  + `cars-meta.json` sidecar; shipped only inside the Pages deploy artifact.
+  At 141k rows: 129 MB JSON → ~8 MB parquet, browser decode 9 s → ~1.5 s.
+- **Dashboard**: AG Grid Community clientSideRowModel unchanged; `app.js` decodes
+  the parquet with hyparquet (pinned jsDelivr ESM) and feeds the same row objects.
 
 ## Source Comparison
 
