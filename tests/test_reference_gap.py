@@ -1,4 +1,4 @@
-import os, sys, unittest
+import os, sys, unittest, tempfile, json
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 sys.path.insert(0, os.path.join(ROOT, "build"))
@@ -109,3 +109,34 @@ class TestValidate(unittest.TestCase):
         ok, errs = rg.validate_rows([good, bad], "ev", [], [])
         self.assertEqual([r["Model auta"] for r in ok], ["Renault Twingo"])  # good row survives
         self.assertTrue(any("není číslo" in e for e in errs))
+
+
+class TestAppendAndCount(unittest.TestCase):
+    def test_fmt_cell_cd_dot_others_comma(self):
+        self.assertEqual(rg._fmt_cell("Cd", 0.31), "0.31")
+        self.assertEqual(rg._fmt_cell("Kapacita baterie (kWh)", 86.5), "86,5")
+        self.assertEqual(rg._fmt_cell("Objem kufru (l)", 520), "520")
+        self.assertEqual(rg._fmt_cell("Hlučnost (dB)", ""), "")
+
+    def test_append_preserves_header_and_quotes_comma_decimals(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "ev.csv")
+            with open(p, "w", newline="", encoding="utf-8") as f:
+                f.write(",".join(rg.ev_columns()) + "\n")
+            row = {c: "" for c in rg.ev_columns()}
+            row.update({"Model auta": "Renault Twingo", "Kapacita baterie (kWh)": 22.5, "Cd": 0.31})
+            n = rg.append_rows("ev", [row], path=p)
+            self.assertEqual(n, 1)
+            text = open(p, encoding="utf-8").read()
+            self.assertIn("Renault Twingo", text)
+            self.assertIn('"22,5"', text)   # comma decimal quoted
+            self.assertIn("0.31", text)     # Cd dot, unquoted
+
+    def test_count_unpaired(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "cars.json")
+            json.dump({"data": [
+                {"Typ": "Elektrické", "Spárováno": "Ne", "Model auta": "X"},
+                {"Typ": "Elektrické", "Spárováno": "Ano", "Model auta": "Y"},
+            ]}, open(p, "w"))
+            self.assertEqual(rg.count_unpaired(p, "ev"), 1)

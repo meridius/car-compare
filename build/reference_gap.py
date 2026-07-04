@@ -196,3 +196,33 @@ def validate_rows(rows, fuel, ref_models, unpaired):
             seen.add(ml)
             ok.append(clean)
     return ok, errs
+
+
+def _fmt_cell(col, val):
+    if val is None or str(val).strip() == "":
+        return ""
+    s = str(val).strip()
+    if col == "Cd":
+        return s.replace(",", ".")
+    if re.fullmatch(r"-?\d+", s):
+        return s
+    if re.fullmatch(r"-?\d+\.0", s):
+        return s[:-2]  # 520.0 -> 520
+    if re.fullmatch(r"-?\d+[.,]\d+", s):
+        return s.replace(".", ",")
+    return s
+
+
+def append_rows(fuel, rows, path=None):
+    path = path or os.path.join(REF_DIR, REF_FILES[fuel])
+    with open(path, newline="", encoding="utf-8") as f:
+        header = next(csv.reader(f))
+    with open(path, "a", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
+        for r in rows:
+            w.writerow([_fmt_cell(c, r.get(c, "")) for c in header])
+    return len(rows)
+
+
+def count_unpaired(cars_json_path, fuel):
+    return len(load_unpaired(cars_json_path, fuel))
