@@ -502,7 +502,7 @@ def write_payload(df, metadata, out_dir):
     the browser and breaks grid formatters (pinned by test_no_int64_columns).
     """
     numeric_cols = [
-        "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby",
+        "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
         "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
         "Skóre shody", "Cd",

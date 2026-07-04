@@ -45,10 +45,10 @@ class PayloadWriterTest(unittest.TestCase):
         df = pd.DataFrame([
             {"Typ": "Spalovací", "Model auta": "Škoda Karoq 1.5 TSI",
              "Cena (Kč)": "599000", "Nájezd (km)": "", "Typ motoru": "TSI",
-             "Odkaz na auto": "https://x/1"},
+             "Objem motoru": "1.5", "Odkaz na auto": "https://x/1"},
             {"Typ": "Elektrické", "Model auta": "Tesla Model 3",
              "Cena (Kč)": "888000", "Nájezd (km)": "12000", "Typ motoru": "",
-             "Odkaz na auto": "https://x/2"},
+             "Objem motoru": "", "Odkaz na auto": "https://x/2"},
         ])
         meta = {"buildDate": "2026-07-04T00:00:00Z", "trigger": "manual",
                 "sources": {}, "matching": {}, "referenceData": {}, "totalCars": 2}
@@ -86,6 +86,8 @@ class PayloadWriterTest(unittest.TestCase):
         self.assertTrue(pd.isna(back.iloc[0]["Nájezd (km)"]))
         self.assertTrue(back.iloc[1]["Typ motoru"] is None or pd.isna(back.iloc[1]["Typ motoru"]))
         self.assertEqual(back.iloc[0]["Cena (Kč)"], 599000.0)
+        # "Objem motoru" is numeric in the grid (toFixed) — a string here crashed the UI
+        self.assertEqual(back.iloc[0]["Objem motoru"], 1.5)
 
 
 class LoadScraperDataTest(unittest.TestCase):

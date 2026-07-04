@@ -1,3 +1,9 @@
+// Payload is parquet (129 MB JSON → ~8 MB, decode 9 s → ~1.5 s at 141k rows).
+// hyparquet decodes snappy natively — keep cars.parquet snappy-compressed and
+// this stays the only import. Pin the version: the unpinned jsdelivr URL serves
+// a stale cached build. See docs/decisions/001-scalable-storage.md.
+import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.2/+esm";
+
 (function () {
   "use strict";
 
@@ -257,6 +263,7 @@
 
   var COL_CONFIG = [
     { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS, tip: "Dostupnost inzerátu: Dostupný / Zamluvené / Chystá se / Prodané / Odstraněno" },
+    { field: "Odstraněno dne", filter: "agTextColumnFilter", w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
     { field: "Model auta", filter: "agTextColumnFilter", w: 260, pinned: "left", align: "left" },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
@@ -1040,15 +1047,23 @@
       });
   }
 
-  fetch("data/cars.json")
-    .then(function (r) { return r.json(); })
-    .then(function (json) {
-      if (json && json.metadata && json.data) {
-        appMetadata = json.metadata;
-        init(json.data);
-      } else {
-        init(json);
-      }
+  // Full-buffer fetch on purpose: ranged reads of compressible types are
+  // broken on GitHub Pages (Content-Range counts gzipped bytes), and at ~8 MB
+  // there is nothing to gain from partial reads anyway.
+  Promise.all([
+    fetch("data/cars.parquet").then(function (r) {
+      if (!r.ok) throw new Error("HTTP " + r.status + " (cars.parquet)");
+      return r.arrayBuffer();
+    }),
+    fetch("data/cars-meta.json")
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; }),
+  ])
+    .then(function (results) {
+      return parquetReadObjects({ file: results[0] }).then(function (rows) {
+        appMetadata = results[1];
+        init(rows);
+      });
     })
     .catch(function (err) {
       document.getElementById("grid").textContent = "Chyba načítání dat: " + err.message;
