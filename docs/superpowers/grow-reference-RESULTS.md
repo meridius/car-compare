@@ -23,7 +23,11 @@ Nespárováno EV: 5232 → 2165  (−3067)
 ```
 
 12 reference models added; the projected drop (3067, longest-prefix simulation) matched
-the **measured** drop exactly. `ev_specs.csv`: 78 → 90 rows. `./bin/test.sh`: 81/81 green.
+the **measured** drop exactly. `ev_specs.csv`: 78 → 90 rows. `./bin/test.sh`: 82/82 green.
+
+> Note: the 5232→2165 figure was measured on the `feature/mobilede-source` snapshot. After
+> rebasing this work onto `main` and rebuilding on main's scrape snapshot, EV unpaired = **2168**
+> (same ~3064-listing drop; the 3-row difference is data-snapshot drift between the branches).
 
 | Model (prefix) | paired | battery kWh | WLTP km | Cd | Cd zdroj |
 |---|--:|--:|--:|--:|---|
