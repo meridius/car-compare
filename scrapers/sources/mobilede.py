@@ -38,8 +38,7 @@ PAGE_SIZE = 100
 CONCURRENCY = 5
 
 EV_COUNTRIES = ("CZ", "SK", "AT", "PL", "DE")
-# DE deliberately excluded for ICE: ~123k results even at >=100 kW.
-ICE_COUNTRIES = ("CZ", "SK", "AT", "PL")
+ICE_COUNTRIES = ("CZ", "SK", "AT", "PL", "DE")
 
 _BASE_PARAMS = (
     ("s", "Car"), ("vc", "Car"),
