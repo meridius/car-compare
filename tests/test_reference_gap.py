@@ -38,6 +38,13 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(len(clusters), 1)        # both spellings merge into one cluster
         self.assertEqual(clusters[0]["volume"], 2)
 
+    def test_shared_prefix_case_insensitive_tokens(self):
+        # same model, different casing must not truncate the prefix to the brand
+        self.assertEqual(
+            rg._shared_prefix(["Hyundai IONIQ 6", "Hyundai Ioniq 6"]),
+            "Hyundai IONIQ 6",
+        )
+
 
 class TestClassify(unittest.TestCase):
     def test_covered_when_raw_matches_existing_prefix(self):

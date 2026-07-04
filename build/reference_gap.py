@@ -59,14 +59,16 @@ def _canonical_key(name):
 
 
 def _shared_prefix(names):
-    """Longest word-boundary prefix common to all raw names in a cluster."""
+    """Longest word-boundary prefix common to all raw names in a cluster.
+    Token comparison is case-insensitive (the EV join lowercases both sides, so
+    casing never affects pairing) but the first name's original casing is emitted."""
     if not names:
         return ""
     split = [n.split() for n in names]
     out = []
     for i in range(min(len(w) for w in split)):
         tok = split[0][i]
-        if all(w[i] == tok for w in split):
+        if all(w[i].lower() == tok.lower() for w in split):
             out.append(tok)
         else:
             break
