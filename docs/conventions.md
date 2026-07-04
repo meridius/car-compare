@@ -39,7 +39,7 @@ The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/sc
 ## Running Scrapers
 
 - Recommend `./bin/run_all.sh` (dep check + run all sources), or `./bin/run_all.sh --source <name>` for a subset.
-- Debug a single source with `python -m scrapers.run --source <name>` (sources: `sauto`, `autodraft`, `energycars`).
+- Debug a single source with `python -m scrapers.run --source <name>` (sources: `sauto`, `autodraft`, `energycars`, `mobilede`).
 
 ## Verification After Changes
 

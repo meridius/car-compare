@@ -21,14 +21,6 @@
 
 Tasks below need your input — they are genuinely owner-only decisions (new data source, cost, or product direction). Reply directly under each Q line in chat, then run `/tasks-triage` to promote to Atomic.
 
-- [ ] **#1** add mobile.de
-  > ❓ Q1: Requires browser scraping or REST API available?
-  I don't know, you investigate.
-  > ❓ Q2: Czech listings only or EU-wide?
-  CZ, SK, DE, AT, PL
-  > ❓ Q3: Same canonical schema, or new fields needed?
-  Same canonical schema.
-
 - [ ] **#2** widen scraping on sauto.cz and other sites
   > ❓ Q1: Which filters to relax? (price ceiling, year floor, km ceiling, body types?)
   I don't know, tell me which you have enabled currently and let me decide.
@@ -133,6 +125,14 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > 📌 assumes: add a derived "Spolehlivost" score (1–5) for matched ICE from cylinder count + displacement (more/bigger → higher); needs the #24 cylinders column.
 
 ## Done
+
+- [x] **#1** add mobile.de
+  > done (branch `feature/mobilede-source`): aiohttp adapter on the keyless app JSON endpoint
+  > (`X-Mobile-Client` header; official Search-API has no self-service signup — env plumbing
+  > prepared in `var/.env.example` for when support grants credentials). Fuels petrol/diesel/
+  > EV/hybrid include-only (no gas); EV: CZ/SK/AT/PL/DE, ICE: CZ/SK/AT/PL (DE=123k rows —
+  > excluded, `ICE_COUNTRIES` knob); EUR→Kč via CNB daily fixing; 2000-cap price-band slicing.
+  > See docs/gotchas.md → mobile.de.
 
 - [x] **#12** Fix EV `Spárováno` = null vs ICE `Spárováno` = "Ne" asymmetry (`build/build_data.py`)
   > flow:ralph · model:haiku · effort:low
