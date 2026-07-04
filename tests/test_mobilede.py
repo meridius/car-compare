@@ -99,7 +99,9 @@ class BuildRowTest(unittest.TestCase):
         self.assertEqual(row["Výkon (kW)"], 33)
         self.assertEqual(row["Karoserie"], "Hatchback")
         self.assertIn("Baterie 27 kWh", row["Extra"])
-        self.assertIn("CZ Beroun", row["Extra"])
+        self.assertIn("Beroun", row["Extra"])
+        self.assertNotIn("CZ", row["Extra"])  # country moved to its own column
+        self.assertEqual(row["Země"], "Česko")
         self.assertEqual(row["Zdroj"], "Mobile.de")
         self.assertEqual(row["Odkaz na auto"], EV_ITEM["url"])
         self.assertEqual(row["Tepelné čerpadlo"], "")
@@ -124,6 +126,16 @@ class BuildRowTest(unittest.TestCase):
         self.assertEqual(row["Hybrid typ"], "HEV")
         self.assertEqual(row["Náhon 4x4"], "Ano")
         self.assertEqual(row["Záruka"], "Ano")
+
+    def test_country_mapped_from_cn(self):
+        de = {**ICE_ITEM, "attr": {**ICE_ITEM["attr"], "cn": "DE", "loc": "Köln"}}
+        self.assertEqual(mobilede._build_row(de, 25.0)["Země"], "Německo")
+        for code, name in [("SK", "Slovensko"), ("AT", "Rakousko"), ("PL", "Polsko")]:
+            item = {**ICE_ITEM, "attr": {**ICE_ITEM["attr"], "cn": code}}
+            self.assertEqual(mobilede._build_row(item, 25.0)["Země"], name)
+        # unknown code falls through as-is, never silently dropped
+        unk = {**ICE_ITEM, "attr": {**ICE_ITEM["attr"], "cn": "XX"}}
+        self.assertEqual(mobilede._build_row(unk, 25.0)["Země"], "XX")
 
     def test_gas_and_unknown_fuels_rejected(self):
         for ft in ("Autogas (LPG)", "Erdgas (CNG)", "Wasserstoff", "Andere", ""):

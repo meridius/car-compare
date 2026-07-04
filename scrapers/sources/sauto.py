@@ -144,7 +144,7 @@ def build_ev(item, detail):
         "Karoserie": body_api or extract_body_type(model_base),
         "Extra": " / ".join(extra_parts),
         "Stav": (detail.get("condition_cb") or {}).get("name", ""),
-        "Zdroj": SOURCE_NAME, "Odkaz na auto": _listing_link(item),
+        "Země": "Česko", "Zdroj": SOURCE_NAME, "Odkaz na auto": _listing_link(item),
     })
     return row
 
@@ -199,7 +199,8 @@ def build_ice(item, detail):
         "Výkon (kW)": detail.get("engine_power") or "", "Rok výroby": year,
         "Palivo": fuel, "Převodovka": gearbox, "Náhon 4x4": awd,
         "Extra": clean_extra(extra_text, extracted),
-        "Stav": condition, "Zdroj": SOURCE_NAME, "Odkaz na auto": _listing_link(item),
+        "Stav": condition, "Země": "Česko",
+        "Zdroj": SOURCE_NAME, "Odkaz na auto": _listing_link(item),
         **extracted,
     })
     return row

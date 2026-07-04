@@ -288,6 +288,7 @@
     { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true, tip: "Ano = jistá shoda s referenčním modelem, Nejisté = slabá nebo nejednoznačná shoda, Ne = nespárováno.\nBarva buňky: červená = Ne, oranžová = Nejisté." },
     { field: "Skóre shody", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, hdr: "Skóre\nshody", tip: "Číselné skóre spolehlivosti párování. Vyšší = jistější. Prázdné pro Ne (nespárováno) a EV – elektromobily se párují prefixovým spojením bez skórovacího algoritmu.\nBarva buňky: zelená = vyšší skóre, červená = nižší." },
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
+    { field: "Země", filter: "agSetColumnFilter", w: 100, tip: "Země prodejce. Inzeráty z mobile.de mohou být z Česka, Slovenska, Německa, Rakouska nebo Polska; ostatní zdroje jsou z Česka." },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
   ];
 
@@ -849,6 +850,37 @@
       trTot.lastChild.className = "celkem-col";
       card5.appendChild(tbl5);
       body.appendChild(card5);
+
+      // Země × Typ (country breakdown) — mobile.de brings multi-country listings
+      var countries = {};
+      gridApi.forEachNode(function (node) {
+        if (!node.data) return;
+        var zeme = (node.data["Země"] || "Nezadáno").trim() || "Nezadáno";
+        var typ = node.data["Typ"] || "";
+        if (!countries[zeme]) countries[zeme] = { ev: 0, ice: 0 };
+        if (typ === "Elektrické") countries[zeme].ev += 1;
+        else countries[zeme].ice += 1;
+      });
+      var countryKeys = Object.keys(countries).sort(function (a, b) {
+        return (countries[b].ev + countries[b].ice) - (countries[a].ev + countries[a].ice);
+      });
+      if (countryKeys.length) {
+        var card7 = makeCard("Země × Typ");
+        var tbl7 = makeTable(["Země", "Elektrické", "Spalovací", "Celkem"]);
+        tbl7.querySelector("tr").lastChild.className = "celkem-col";
+        var cEv = 0, cIce = 0;
+        for (var c = 0; c < countryKeys.length; c++) {
+          var cc = countries[countryKeys[c]];
+          cEv += cc.ev; cIce += cc.ice;
+          var trC = addRow(tbl7, [countryKeys[c], fmtNum(cc.ev), fmtNum(cc.ice), fmtNum(cc.ev + cc.ice)]);
+          trC.lastChild.className = "celkem-col";
+        }
+        var trCtot = addRow(tbl7, ["Celkem", fmtNum(cEv), fmtNum(cIce), fmtNum(cEv + cIce)]);
+        trCtot.className = "celkem-row";
+        trCtot.lastChild.className = "celkem-col";
+        card7.appendChild(tbl7);
+        body.appendChild(card7);
+      }
     }
 
     // Chart container

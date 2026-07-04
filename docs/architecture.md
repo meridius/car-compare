@@ -7,7 +7,7 @@ One fuel-agnostic scraper suite (`scrapers/`) collects Czech car listings and wr
 ```text
 scrapers/
   core/
-    schema.py     CANONICAL_COLS (25), TYP_EV/TYP_ICE, blank_row()
+    schema.py     CANONICAL_COLS (26), TYP_EV/TYP_ICE, blank_row()
     normalize.py  BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model()
     fields.py     ICE field extraction (engine vol/type, hybrid, body, trim, DCT, GPF, AWD, clean_extra)
     matching.py   load_authoritative_list(), match_to_authoritative() — ICE auth matching
@@ -66,15 +66,20 @@ CSVs are **merged incrementally**: listings in the old CSV but absent from the n
 
 ## Column Schema
 
-One canonical 25-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
+One canonical 26-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
 
 ```text
 Typ, Model auta, Cena (Kč), Nájezd (km), Rok výroby,
 Palivo, Objem motoru, Typ motoru, Hybrid typ, Výkon (kW),
 Převodovka, Dvouspojková převodovka, Filtr pevných částic,
 Kola, Náhon 4x4, Karoserie, Výbava, Záruka, Tepelné čerpadlo,
-Spárováno, Skóre shody, Extra, Stav, Zdroj, Odkaz na auto
+Spárováno, Skóre shody, Extra, Stav, Země, Zdroj, Odkaz na auto
 ```
+
+`Země` (country of the seller) is the only column that varies by country: the three
+CZ-only sources always emit `Česko`; mobile.de maps `attr.cn` (ISO code) to the Czech
+country name. `build_data.backfill_country()` fills any blank `Země` on a non-mobile.de
+row with `Česko`, so CSVs written before the column existed still display correctly.
 
 EV rows leave the ICE-only columns blank (Palivo, Objem motoru, Typ motoru, Hybrid typ, Převodovka, Dvouspojková převodovka, Filtr pevných částic, Výbava, Záruka). ICE rows leave `Tepelné čerpadlo` blank. `blank_row()` seeds every column to `""`.
 
