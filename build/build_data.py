@@ -3,6 +3,7 @@ import json
 import os
 import re
 import sys
+import unicodedata
 from datetime import datetime, timezone
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -13,6 +14,20 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
 from scrapers.core import matching as comb_utils  # noqa: E402
 from scrapers.core.normalize import normalize_model as _normalize_model  # noqa: E402
+
+
+def _fold_accents(s):
+    """Strip diacritics (NFKD decompose + drop combining marks).
+
+    mobile.de scrapes model names with diacritics stripped ("Skoda", "Citroen",
+    "e-C3") while every other source preserves them ("Škoda", "Citroën", "ë-C3").
+    The EV reference join is a prefix match on raw text, so without folding, one
+    spelling pairs with the reference row and the other stays permanently
+    unmatched. Comparison-only — never used to rewrite a displayed "Model auta".
+    Mirrors build/reference_gap.py::_fold_accents.
+    """
+    return "".join(c for c in unicodedata.normalize("NFKD", s) if not unicodedata.combining(c))
+
 
 # Status/promo banners that leak into "Model auta" from autodraft cards and break
 # brand parsing (e.g. "domluvená prohlídka Škoda Karoq 2.0 TDI").
@@ -272,14 +287,51 @@ def join_combustion_reference(df, ref):
 
     return pd.concat([merged, other], ignore_index=True)
 
+def _sorted_ref_pairs(ref_models, fold):
+    """(comparison-key, original) pairs, longest comparison-key first.
+
+    `fold` is identity for an exact comparison or _fold_accents for a folded one."""
+    return sorted(
+        ((fold(rm).lower(), rm) for rm in ref_models),
+        key=lambda pair: len(pair[0]),
+        reverse=True,
+    )
+
+
+def _match_electric_ref(model, ref_models_exact, ref_models_folded):
+    """Longest-prefix match a scraped EV model against reference 'Model auta' names.
+
+    Tries an exact (case-insensitive) prefix match first, and only falls back to an
+    accent-folded comparison when nothing matches exactly. This is deliberate, not
+    just an optimisation: the reference list can carry two distinct rows that differ
+    only by diacritics (e.g. "Renault Megane" vs "Renault Mégane" are different
+    trims with different specs), so folding both sides unconditionally would
+    silently redirect an already-correct exact match to the wrong row. Falling back
+    only when no exact candidate exists is what pairs mobile.de's diacritic-stripped
+    names ("Citroen e-C3") with sources that keep them ("Citroën ë-C3") without
+    disturbing any listing that already matches exactly.
+    """
+    low = model.lower()
+    for rm_key, rm in ref_models_exact:
+        if low.startswith(rm_key):
+            return rm
+    folded = _fold_accents(model).lower()
+    for rm_key, rm in ref_models_folded:
+        if folded.startswith(rm_key):
+            return rm
+    return None
+
+
 def join_electric_reference(df, ref):
-    """Prefix match: find longest ref 'Model auta' that is prefix of scraped model."""
+    """Prefix match: find longest ref 'Model auta' that is prefix of scraped model
+    (accent-folded fallback — see _match_electric_ref)."""
     electric_mask = df["Typ"] == "Elektrické"
     electric = df[electric_mask].copy()
     other = df[~electric_mask].copy()
 
     ref_models = ref["Model auta"].tolist()
-    ref_models_sorted = sorted(ref_models, key=len, reverse=True)
+    ref_models_exact = _sorted_ref_pairs(ref_models, lambda s: s)
+    ref_models_folded = _sorted_ref_pairs(ref_models, _fold_accents)
 
     add_cols_map = {
         "Objem kufru (l)": "Objem kufru (l)",
@@ -310,19 +362,18 @@ def join_electric_reference(df, ref):
 
     matched = 0
     for idx, row in electric.iterrows():
-        model = str(row.get("Model auta", "")).lower()
-        for ref_model in ref_models_sorted:
-            if model.startswith(ref_model.lower()):
-                ref_row = ref_lookup[ref_model]
-                for src_col, dst_col in add_cols_map.items():
-                    if src_col in ref_row.index:
-                        val = ref_row[src_col]
-                        if pd.notna(val) and val != "":
-                            if pd.isna(electric.at[idx, dst_col]) if dst_col in electric.columns else True:
-                                electric.at[idx, dst_col] = val
-                electric.at[idx, "Spárováno"] = "Ano"
-                matched += 1
-                break
+        model = str(row.get("Model auta", ""))
+        ref_model = _match_electric_ref(model, ref_models_exact, ref_models_folded)
+        if ref_model is not None:
+            ref_row = ref_lookup[ref_model]
+            for src_col, dst_col in add_cols_map.items():
+                if src_col in ref_row.index:
+                    val = ref_row[src_col]
+                    if pd.notna(val) and val != "":
+                        if pd.isna(electric.at[idx, dst_col]) if dst_col in electric.columns else True:
+                            electric.at[idx, dst_col] = val
+            electric.at[idx, "Spárováno"] = "Ano"
+            matched += 1
 
     print(f"  Electric reference: {matched}/{len(electric)} matched")
     return pd.concat([other, electric], ignore_index=True)
@@ -403,19 +454,20 @@ def build_ice_listing_specs(df):
 
 def build_ev_listing_specs(df, elec_ref):
     """Map electric reference 'Model auta' → mode of Karoserie / Výkon (kW) across
-    listings whose scraped model starts with that reference name (longest prefix —
-    same bucketing as join_electric_reference)."""
+    listings whose scraped model starts with that reference name (longest prefix,
+    accent-folded fallback — same bucketing as join_electric_reference)."""
     ev = df[df["Typ"] == "Elektrické"]
-    ref_models = sorted(elec_ref["Model auta"].tolist(), key=len, reverse=True)
+    ref_models = elec_ref["Model auta"].tolist()
+    ref_models_exact = _sorted_ref_pairs(ref_models, lambda s: s)
+    ref_models_folded = _sorted_ref_pairs(ref_models, _fold_accents)
     buckets = {}
     for _, row in ev.iterrows():
-        model = str(row.get("Model auta", "")).lower()
-        for rm in ref_models:
-            if model.startswith(rm.lower()):
-                b = buckets.setdefault(rm, {"Karoserie": [], "Výkon (kW)": []})
-                b["Karoserie"].append(row.get("Karoserie"))
-                b["Výkon (kW)"].append(row.get("Výkon (kW)"))
-                break
+        model = str(row.get("Model auta", ""))
+        rm = _match_electric_ref(model, ref_models_exact, ref_models_folded)
+        if rm is not None:
+            b = buckets.setdefault(rm, {"Karoserie": [], "Výkon (kW)": []})
+            b["Karoserie"].append(row.get("Karoserie"))
+            b["Výkon (kW)"].append(row.get("Výkon (kW)"))
     return {
         rm: {"Karoserie": _mode_nonempty(b["Karoserie"]),
              "Výkon (kW)": _mode_nonempty(b["Výkon (kW)"])}

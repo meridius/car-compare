@@ -161,5 +161,44 @@ class ElectricReferenceJoinTest(unittest.TestCase):
         self.assertEqual(row["Spárováno"], "Ne")
 
 
+class ElectricReferenceJoinAccentFoldTest(unittest.TestCase):
+    """mobile.de strips diacritics ('Citroen e-C3') while other sources keep them
+    ('Citroën ë-C3'); both spellings must pair to the SAME reference row."""
+
+    def _citroen_ref(self):
+        return pd.DataFrame([{
+            "Model auta": "Citroën ë-C3",
+            "Objem kufru (l)": 310,
+            "Hlučnost (dB)": "",
+            "Kapacita baterie (kWh)": 43.8,
+            "Dojezd komb. letní WLTP (km)": 327,
+            "Dojezd komb. letní EV-database (km)": "",
+            "Cd": "",
+            "Tepelné čerpadlo možné (ano/ne)": "ne",
+        }])
+
+    def test_accented_listing_matches(self):
+        out = B.join_electric_reference(_ev_df("Citroën ë-C3 You"), self._citroen_ref())
+        row = out.iloc[0]
+        self.assertEqual(row["Spárováno"], "Ano")
+        self.assertEqual(row["Kapacita baterie (kWh)"], 43.8)
+
+    def test_diacritic_stripped_listing_matches_same_reference_row(self):
+        # mobile.de-style spelling, no diacritics at all.
+        out = B.join_electric_reference(_ev_df("Citroen e-C3 You"), self._citroen_ref())
+        row = out.iloc[0]
+        self.assertEqual(row["Spárováno"], "Ano")
+        self.assertEqual(row["Kapacita baterie (kWh)"], 43.8)
+
+    def test_both_spellings_pair_to_the_same_single_row(self):
+        combined = pd.concat([
+            _ev_df("Citroën ë-C3 You"),
+            _ev_df("Citroen e-C3 You"),
+        ], ignore_index=True)
+        out = B.join_electric_reference(combined, self._citroen_ref())
+        self.assertEqual(set(out["Spárováno"]), {"Ano"})
+        self.assertEqual(out["Kapacita baterie (kWh)"].tolist(), [43.8, 43.8])
+
+
 if __name__ == "__main__":
     unittest.main()
