@@ -153,7 +153,11 @@ jobs:
           path: site/data
           if-no-files-found: error
 
+      # Only when a scrape actually ran — on a no-scrape push/redeploy the state
+      # parquets aren't present (nothing to publish), and the release already holds
+      # the current state. The Pages deploy below is what a push run produces.
       - name: Update rolling data release
+        if: ${{ needs.scrape.result == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -173,7 +177,7 @@ jobs:
             site/data/scrape_history.json
 
       - name: Monthly immutable snapshot
-        if: github.event_name == 'schedule'
+        if: ${{ github.event_name == 'schedule' && needs.scrape.result == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
