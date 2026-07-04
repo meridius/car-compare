@@ -26,7 +26,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        source: [sauto, autodraft, energycars]
+        source: [sauto, autodraft, energycars, mobilede]
+    # mobilede talks to an undocumented app endpoint that may die without
+    # notice — its failure must not block the daily build (which then reuses
+    # the committed mobilede.csv, since no fresh artifact overwrites it).
+    continue-on-error: ${{ matrix.source == 'mobilede' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -42,8 +46,8 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
 
-      # sauto is aiohttp-only; only the Playwright sources need Chromium.
-      - if: matrix.source != 'sauto'
+      # sauto and mobilede are aiohttp-only; only the Playwright sources need Chromium.
+      - if: matrix.source != 'sauto' && matrix.source != 'mobilede'
         run: playwright install chromium --with-deps
 
       - run: python -m scrapers.run --source ${{ matrix.source }}

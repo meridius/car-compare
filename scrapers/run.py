@@ -4,7 +4,7 @@ import importlib
 
 from scrapers.core import pipeline
 
-SOURCES = ["sauto", "autodraft", "energycars"]
+SOURCES = ["sauto", "autodraft", "energycars", "mobilede"]
 
 
 def main():
