@@ -88,10 +88,6 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > flow:ralph · model:sonnet · effort:medium
   > 📌 assumes: codeable part only — add a UI indicator on the reference page flagging models missing key spec columns; do NOT source/enter external data (that's a separate manual task).
 
-- [ ] **#21** automated tests for data integrity (mismatch between Model col and relevant cols, format of all data in each col)
-  > flow:ralph · model:sonnet · effort:medium
-  > 📌 assumes: core integrity harness already added (tests/test_data_integrity.py); this extends it with per-column format checks (numeric price/year/km, enum columns, required-field presence).
-
 - [ ] **#24** počet válců (number of cylinders) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
@@ -123,6 +119,8 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > pevných částic, Náhon 4x4, Záruka, Tepelné čerpadlo, Spárováno (tri-state Nejisté values
   > pass through unchanged). Test-driven: unit tests cover variations, whitespace, blanks, and
   > non-boolean values. Commit: 0b2d0f4.
+
+- [x] **#21** automated tests for data integrity — DONE 2026-07-05: `tests/test_data_integrity.py::ColumnFormatIntegrityTest` adds per-column format/enum/required-field invariants (Cena, Rok výroby, Nájezd, Výkon, Objem motoru numeric bounds; Typ/Stav/Spárováno/Země/boolean-column enums; required-field + link-uniqueness checks; confident-ICE-row-must-match-reference guard). Surfaced 3 real data issues along the way (2 pinned as small-tolerance regression guards, 1 reported): mobile.de leaves ~10 EV rows at an implausible 0 kW (sauto has a `sanitize_ev_power` guard mobile.de never calls); one frozen-seed row (Dacia Bigster) carries the historical sauto "1900 sentinel date" bug that `repair_year()` now guards against; `sauto.py build_ev` is missing the `Havarované` (wrecked) rejection that `build_ice` has, leaking one wrecked EV into live listings.
 
 - [x] **EV reference join ignores diacritics across sources** — DONE 2026-07-05 — `build/build_data.py::join_electric_reference` matched by `listing.lower().startswith(ref.lower())` but did NOT accent-fold, while mobile.de (the dominant source) strips diacritics from scraped names (`docs/gotchas.md`: "Skoda", "Citroen", "e-C3") and other sources preserve them ("Škoda", "Citroën", "ë-C3"). Consequence: one reference row (e.g. `Citroën ë-C3`) paired the diacritic-preserving listings but left the diacritic-stripped mobile.de ones unpaired (and vice-versa), so accented EV models needed duplicate rows or stayed under-paired. (The grow-reference clustering already accent-folds, which dedups gap *candidates* but masked this pairing gap.) Fix: added `_fold_accents` (NFKD + strip combining marks, mirroring `reference_gap._fold_accents`) plus `_match_electric_ref` — tries an exact case-insensitive prefix match first, falling back to an accent-folded comparison only when nothing matches exactly. Exact-first matters: the reference list carries distinct rows differing only by diacritics with genuinely different specs (e.g. "Renault Megane" vs "Renault Mégane" — different Tepelné čerpadlo/Dojezd), so folding unconditionally would silently redirect an already-correct match to the wrong row. Applied identically in `join_electric_reference` and `build_ev_listing_specs` (the reference-page EV bucketing) so counts don't diverge. Verified against the real local dataset (17,276 EV listings): zero regressions, matched count unchanged (15108/17276) — this snapshot doesn't currently carry a live diacritic-stripped mismatch, but the fix is pinned by `tests/test_build_data.py::ElectricReferenceJoinAccentFoldTest` (accented "Citroën ë-C3 …" and stripped "Citroen e-C3 …" now both pair to the same reference row). Touch: `build/build_data.py`, `tests/test_build_data.py`. 📌 discovered by: grow-reference demo.
 
