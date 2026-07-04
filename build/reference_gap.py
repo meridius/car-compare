@@ -236,3 +236,96 @@ def append_rows(fuel, rows, path=None):
 
 def count_unpaired(cars_json_path, fuel):
     return len(load_unpaired(cars_json_path, fuel))
+
+
+def _rebuild():
+    import subprocess
+    subprocess.run([sys.executable, os.path.join(BASE_DIR, "build", "build_data.py")],
+                   check=True, cwd=BASE_DIR)
+
+
+def _cmd_gaps(a):
+    if a.rebuild:
+        _rebuild()
+    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    ref_models = load_reference_models(a.fuel)
+    clusters = cluster(unpaired, a.fuel)
+    for c in clusters:
+        c["klass"] = classify(c, ref_models)
+    proj = project_newly_paired([c["prefix"] for c in clusters], unpaired)
+    for c in clusters:
+        c["projected"] = proj.get(c["prefix"], 0)
+    missing = [c for c in clusters if c["klass"] == "missing_ref"]
+    norm = [c for c in clusters if c["klass"] == "normalization_gap"]
+    if a.top:
+        missing = missing[: a.top]
+    outdir = os.path.join(BASE_DIR, "tmp", "ref-gap")
+    os.makedirs(outdir, exist_ok=True)
+    out = os.path.join(outdir, f"{a.fuel}-clusters.json")
+    with open(out, "w", encoding="utf-8") as f:
+        json.dump({"missing_ref": missing, "normalization_gap": norm}, f,
+                  ensure_ascii=False, indent=2)
+    print(f"Nespárováno {a.fuel.upper()}: {len(unpaired)} inzerátů, "
+          f"{len(clusters)} modelů ({len(missing)} chybí v referencích, "
+          f"{len(norm)} normalizace).")
+    print(f"Top {len(missing)} chybějících (→ {out}):")
+    for c in missing:
+        print(f"  {c['projected']:5d}  {c['prefix']}   e.g. {c['sample_names'][:2]}")
+    if norm:
+        print(f"Normalizační mezery (oprav BRAND_MAP/MODEL_CLEANUP, nepřidávej řádek):")
+        for c in norm[:15]:
+            print(f"  {c['volume']:5d}  {c['prefix']}")
+
+
+def _cmd_validate(a):
+    rows = json.load(open(a.infile, encoding="utf-8"))
+    rows = rows if isinstance(rows, list) else rows.get("rows", [])
+    ref_models = load_reference_models(a.fuel)
+    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    ok, errs = validate_rows(rows, a.fuel, ref_models, unpaired)
+    for e in errs:
+        print("  CHYBA:", e)
+    okfile = a.infile + ".ok.json"
+    json.dump(ok, open(okfile, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    print(f"OK: {len(ok)}/{len(rows)} řádků prošlo → {okfile}")
+    return 0 if not errs else 1
+
+
+def _cmd_apply(a):
+    rows = json.load(open(a.infile, encoding="utf-8"))
+    rows = rows if isinstance(rows, list) else rows.get("rows", [])
+    ref_models = load_reference_models(a.fuel)
+    unpaired = load_unpaired(CARS_JSON, a.fuel)
+    ok, errs = validate_rows(rows, a.fuel, ref_models, unpaired)
+    if errs:
+        for e in errs:
+            print("  CHYBA:", e)
+        print("Aplikace přerušena — oprav chyby.")
+        return 1
+    before = count_unpaired(CARS_JSON, a.fuel)
+    n = append_rows(a.fuel, ok)
+    _rebuild()
+    after = count_unpaired(CARS_JSON, a.fuel)
+    print(f"Přidáno {n} referenčních modelů ({a.fuel}).")
+    print(f"Nespárováno: {before} → {after}  (−{before - after})")
+    return 0
+
+
+def main(argv=None):
+    import argparse
+    p = argparse.ArgumentParser(description="grow-reference: covergrowth for reference models")
+    sub = p.add_subparsers(dest="cmd", required=True)
+    g = sub.add_parser("gaps"); g.add_argument("--fuel", required=True, choices=list(FUELS))
+    g.add_argument("--rebuild", action="store_true"); g.add_argument("--top", type=int, default=0)
+    g.set_defaults(fn=_cmd_gaps)
+    v = sub.add_parser("validate"); v.add_argument("--fuel", required=True, choices=list(FUELS))
+    v.add_argument("--in", dest="infile", required=True); v.set_defaults(fn=_cmd_validate)
+    ap = sub.add_parser("apply"); ap.add_argument("--fuel", required=True, choices=list(FUELS))
+    ap.add_argument("--in", dest="infile", required=True); ap.set_defaults(fn=_cmd_apply)
+    args = p.parse_args(argv)
+    rc = args.fn(args)
+    sys.exit(rc or 0)
+
+
+if __name__ == "__main__":
+    main()
