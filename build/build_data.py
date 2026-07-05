@@ -601,6 +601,64 @@ def strip_ice_engine_tokens(model):
     return stripped if stripped.strip() else model
 
 
+def derive_transmission_type(typ, prevodovka, dvouspojkova):
+    """Task #26: pure classifier for the derived 'Typ převodovky' display
+    column — a finer breakdown than the existing 'Převodovka'
+    (Automat/Manual) + 'Dvouspojková převodovka' (Ano/blank) pair, built
+    entirely from data already in the canonical schema (no new scrape-time
+    field). Mirrors the classification `site/transmissions.js` already does
+    client-side for its live per-type counts (`computeCounts()`), so the two
+    stay conceptually in sync.
+
+    - EV (`Typ == "Elektrické"`) → always "Redukční (EV)": every EV in this
+      dataset uses a fixed single-speed reduction gear, regardless of
+      whatever 'Převodovka'/'Dvouspojková převodovka' happen to carry.
+    - ICE 'Převodovka' is a manual value → "Manuální".
+    - ICE 'Převodovka' is an automatic value and 'Dvouspojková převodovka'
+      == "Ano" → "Dvouspojková (DSG/DCT)".
+    - ICE 'Převodovka' is an automatic value otherwise → "Automatická"
+      (hydraulic torque-converter vs. CVT aren't distinguishable in the
+      source data — do not guess).
+    - Anything else (blank/unrecognised 'Převodovka') → "" (blank).
+
+    'Převodovka' itself is not spelled consistently across sources — sauto's
+    API and mobile.de's German→Czech map both write out "Automatická" /
+    "Manuální" natively, while autodraft's own extractor writes the shorter
+    "Automat" / "Manual" — so both spellings must be accepted here. Mirrors
+    `AUTOMAT_VALUES` / `MANUAL_VALUES` in `site/transmissions.js`, which faced
+    the exact same inconsistency for its client-side live counts.
+    """
+    from scrapers.core.schema import TYP_EV
+    if typ == TYP_EV:
+        return "Redukční (EV)"
+    if prevodovka in ("Manual", "Manuální"):
+        return "Manuální"
+    if prevodovka in ("Automat", "Automatická"):
+        return "Dvouspojková (DSG/DCT)" if dvouspojkova == "Ano" else "Automatická"
+    return ""
+
+
+def add_transmission_type_column(df):
+    """Payload-only transform (task #26): derive 'Typ převodovky' from
+    'Typ' + 'Převodovka' + 'Dvouspojková převodovka' and insert it right
+    after 'Dvouspojková převodovka'. No-op if those source columns are
+    absent (e.g. a minimal test frame) — never invents the column from
+    nothing.
+    """
+    required = {"Typ", "Převodovka", "Dvouspojková převodovka"}
+    if not required.issubset(df.columns):
+        return df
+    df = df.copy()
+    pos = list(df.columns).index("Dvouspojková převodovka") + 1
+    values = [
+        derive_transmission_type(typ, prevodovka, dvouspojkova)
+        for typ, prevodovka, dvouspojkova in zip(
+            df["Typ"], df["Převodovka"], df["Dvouspojková převodovka"])
+    ]
+    df.insert(pos, "Typ převodovky", values)
+    return df
+
+
 def add_brand_model_columns(df):
     """Payload-only transform (task #3): derive 'Značka' + 'Model' from
     'Model auta' and drop 'Model auta' from the frame. Called once, right
@@ -757,10 +815,15 @@ def write_payload(df, metadata, out_dir):
 
     Task #30: also derives the payload-only 'Spolehlivost' column (see
     add_reliability_column) — likewise not part of the canonical schema.
+
+    Task #26: also derives the payload-only 'Typ převodovky' column from
+    'Typ' + 'Převodovka' + 'Dvouspojková převodovka' (see
+    add_transmission_type_column) — no new canonical column.
     """
     os.makedirs(out_dir, exist_ok=True)
     df = add_brand_model_columns(df)
     df = add_reliability_column(df)
+    df = add_transmission_type_column(df)
     removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
 
     live_path = os.path.join(out_dir, "cars.parquet")

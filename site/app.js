@@ -288,6 +288,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Dojezd EV-database (km)", filter: "agNumberColumnFilter", w: 110, num: true, hi: true, hdr: "Dojezd\nEV-db (km)", tip: "Reálný dojezd dle ev-database.com – realističtější než WLTP.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
     { field: "Převodovka", filter: "agSetColumnFilter", w: 110 },
     { field: "Dvouspojková převodovka", filter: "agSetColumnFilter", w: 90, hdr: "Dvousp.\npřevodovka", tip: "DSG / DCT / S-tronic / PDK – dvě spojky pro sudá a lichá rychlostní stupně.\n+ Rychlé a plynulé řazení, nižší spotřeba.\n– Může škubat při pomalé jízdě a parkování." },
+    { field: "Typ převodovky", filter: "agSetColumnFilter", w: 150, hdr: "Typ\npřevodovky", tip: "Odvozeno z Převodovka + Dvouspojková převodovka + Typ: Manuální / Automatická / Dvouspojková (DSG/DCT) / Redukční (EV) – elektromobily mají pevný jednostupňový převod.\nHydraulický měnič a CVT nejsou v datech rozlišitelné – bez odhadu." },
     { field: "Náhon 4x4", filter: "agSetColumnFilter", w: 80 },
     { field: "Filtr pevných částic", filter: "agSetColumnFilter", w: 90, hdr: "Filtr pevn.\nčástic", tip: "GPF (benzín) nebo DPF (nafta) – zachycuje saze z výfukových plynů." },
     { field: "Tepelné čerpadlo", filter: "agSetColumnFilter", w: 80, hdr: "Tepelné\nčerpadlo", tip: "Efektivní vytápění a chlazení EV. V zimě výrazně šetří kapacitu baterie." },

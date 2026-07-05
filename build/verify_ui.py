@@ -93,6 +93,16 @@ def scenario_sparovano(page):
     return None
 
 
+def scenario_transmission_type_col(page):
+    """Scroll the new derived 'Typ převodovky' column (#26) into view — it
+    sits far right of the default grid viewport (after 'Dvouspojková
+    převodovka'), so the default 'grid' scenario screenshot never shows it."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.__gridApi.ensureColumnVisible('Typ převodovky');")
+    page.wait_for_timeout(400)
+    return None
+
+
 def scenario_overview_matching(page):
     """Open the dataset overview and scroll the 'Párování s referenčními modely'
     card into view, so the tri-state matching table (Spárováno / Nejisté /
@@ -271,6 +281,7 @@ SCENARIOS = {
     "stav-filter": scenario_stav_filter,
     "summary": scenario_summary,
     "sparovano": scenario_sparovano,
+    "transmission-type-col": scenario_transmission_type_col,
     "overview-matching": scenario_overview_matching,
     "archive": scenario_archive,
     "filter-chips": scenario_filter_chips,

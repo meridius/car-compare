@@ -145,6 +145,88 @@ class StripIceEngineTokensTest(unittest.TestCase):
         self.assertEqual(B.strip_ice_engine_tokens(""), "")
 
 
+class DeriveTransmissionTypeTest(unittest.TestCase):
+    """Task #26: 'Typ převodovky' is a derived payload column — finer than
+    the existing 'Převodovka' (Automat/Manual) + 'Dvouspojková převodovka'
+    (Ano/blank) pair, built purely from those two columns plus 'Typ' (no new
+    canonical column, no new scrape-time data). Mirrors the classification
+    site/transmissions.js already does client-side for its live counts."""
+
+    def test_manual(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Manual", ""), "Manuální")
+
+    def test_manual_czech_spelling(self):
+        # sauto's gearbox_cb.name / mobile.de's German→Czech map already
+        # write the long Czech form natively — autodraft is the only source
+        # that writes the short "Manual" (see site/transmissions.js's
+        # MANUAL_VALUES, which faces the identical inconsistency).
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Manuální", ""), "Manuální")
+
+    def test_automat_with_dsg_flag(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Automat", "Ano"),
+            "Dvouspojková (DSG/DCT)")
+
+    def test_automat_czech_spelling_with_dsg_flag(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Automatická", "Ano"),
+            "Dvouspojková (DSG/DCT)")
+
+    def test_automat_without_dsg_flag(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Automat", ""), "Automatická")
+
+    def test_automat_czech_spelling_without_dsg_flag(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "Automatická", ""), "Automatická")
+
+    def test_electric_always_reduction_regardless_of_prevodovka(self):
+        # EVs use a fixed single-speed reduction gear — always this value,
+        # even if Převodovka/Dvouspojková happen to carry stray data.
+        self.assertEqual(
+            B.derive_transmission_type("Elektrické", "", ""), "Redukční (EV)")
+        self.assertEqual(
+            B.derive_transmission_type("Elektrické", "Automat", "Ano"),
+            "Redukční (EV)")
+
+    def test_blank_prevodovka_on_ice_is_blank(self):
+        self.assertEqual(B.derive_transmission_type("Spalovací", "", ""), "")
+
+    def test_unknown_prevodovka_value_is_blank(self):
+        self.assertEqual(
+            B.derive_transmission_type("Spalovací", "CVT", ""), "")
+
+
+class AddTransmissionTypeColumnTest(unittest.TestCase):
+    """add_transmission_type_column() applies derive_transmission_type()
+    row-wise and inserts 'Typ převodovky' right after 'Dvouspojková
+    převodovka' (payload display order)."""
+
+    def test_adds_column_next_to_dct_flag(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Převodovka": "Manual", "Dvouspojková převodovka": "",
+             "Model auta": "x"},
+            {"Typ": "Spalovací", "Převodovka": "Automat", "Dvouspojková převodovka": "Ano",
+             "Model auta": "y"},
+            {"Typ": "Elektrické", "Převodovka": "", "Dvouspojková převodovka": "",
+             "Model auta": "z"},
+        ])
+        out = B.add_transmission_type_column(df)
+        self.assertEqual(
+            list(out.columns).index("Typ převodovky"),
+            list(out.columns).index("Dvouspojková převodovka") + 1,
+        )
+        self.assertEqual(list(out["Typ převodovky"]),
+                          ["Manuální", "Dvouspojková (DSG/DCT)", "Redukční (EV)"])
+
+    def test_missing_source_columns_is_a_noop(self):
+        df = pd.DataFrame([{"Typ": "Spalovací", "Model auta": "x"}])
+        out = B.add_transmission_type_column(df)
+        self.assertNotIn("Typ převodovky", out.columns)
+
+
 class PayloadWriterTest(unittest.TestCase):
     """Pins the split payload contract (decision 001, option C).
 
