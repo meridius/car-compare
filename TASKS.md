@@ -63,13 +63,6 @@ Tasks below need your input — they are genuinely owner-only decisions (new dat
 
 Ready to execute. Pick next unchecked item, use its `flow · model · effort` metadata to run. **Veto any `📌 assumes:` line before running** — the classifier chose that default for you.
 
-- [x] **#13** Normalize "Ne" / "Ano" values to proper case in all fields across all sources
-
-- [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
-  > flow:feature-dev · model:haiku · effort:low
-- [ ] **#24** počet válců (number of cylinders) — new column
-  > flow:feature-dev · model:sonnet · effort:medium
-
 - [ ] **#26** typ převodovky (transmission type) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
