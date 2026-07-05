@@ -340,7 +340,7 @@ def _cmd_gaps(a):
     out = os.path.join(outdir, f"{a.fuel}-clusters.json")
     with open(out, "w", encoding="utf-8") as f:
         json.dump({"missing_ref": missing, "normalization_gap": norm}, f,
-                  ensure_ascii=False, indent=2)
+                  ensure_ascii=False, indent=2, sort_keys=True)
     print(f"Nespárováno {a.fuel.upper()}: {len(unpaired)} inzerátů, "
           f"{len(clusters)} modelů ({total_missing} chybí v referencích, "
           f"{len(norm)} normalizace).")
@@ -369,7 +369,10 @@ def _cmd_validate(a):
     for e in errs:
         print("  CHYBA:", e)
     okfile = a.infile + ".ok.json"
-    json.dump(ok, open(okfile, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+    # Sort the validated rows by "Model auta" for deterministic output
+    ok_sorted = sorted(ok, key=lambda r: r.get("Model auta", ""))
+    with open(okfile, "w", encoding="utf-8") as f:
+        json.dump(ok_sorted, f, ensure_ascii=False, indent=2)
     print(f"OK: {len(ok)}/{len(rows)} řádků prošlo → {okfile}")
     return 0 if not errs else 1
 

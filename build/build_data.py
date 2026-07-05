@@ -547,9 +547,12 @@ def build_reference_json(comb_ref, elec_ref, df):
             if pd.notna(v) is False:
                 rec[k] = None
 
+    # Sort records by "Model auta" for deterministic output
+    records.sort(key=lambda r: r.get("Model auta", ""))
+
     out_path = os.path.join(BASE_DIR, "site", "data", "reference.json")
     with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(records, f, ensure_ascii=False, separators=(",", ":"))
+        json.dump(records, f, ensure_ascii=False, indent=2)
     print(f"  Reference: {len(records)} entries → {out_path}")
     return records
 
@@ -679,7 +682,7 @@ def write_payload(df, metadata, out_dir):
 
     meta_path = os.path.join(out_dir, "cars-meta.json")
     with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump(metadata, f, ensure_ascii=False, separators=(",", ":"))
+        json.dump(metadata, f, ensure_ascii=False, indent=2, sort_keys=True)
     return live_path, archived_path, meta_path
 
 
@@ -712,7 +715,7 @@ def update_scrape_history(metadata, history_path=None, seed_path=None):
     history = history[-365:]
 
     with open(history_path, "w", encoding="utf-8") as f:
-        json.dump(history, f, ensure_ascii=False, indent=1)
+        json.dump(history, f, ensure_ascii=False, indent=2)
     print(f"  History: {len(history)} entries → {history_path}")
 
 def main():

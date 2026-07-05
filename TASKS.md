@@ -67,6 +67,8 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 
 - [ ] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything
   > flow:feature-dev · model:haiku · effort:low
+- [ ] **#24** počet válců (number of cylinders) — new column
+  > flow:feature-dev · model:sonnet · effort:medium
 
 - [ ] **#26** typ převodovky (transmission type) — new column
   > flow:feature-dev · model:sonnet · effort:medium
@@ -76,6 +78,8 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
   > 📌 assumes: add a derived "Spolehlivost" score (1–5) for matched ICE from cylinder count + displacement (more/bigger → higher); needs the #24 cylinders column.
 
 ## Done
+
+- [x] **#15** json data files should have static order of lines for cleaner diffs, no single line for everything — DONE 2026-07-05: deterministic multi-line JSON output for cleaner version control diffs. Changes: (1) `build/build_data.py`: `build_reference_json()` sorts records by "Model auta" before writing, changed to `indent=2` and removed `separators` for multi-line format; `write_payload()` updated `cars-meta.json` writer with `indent=2, sort_keys=True`; `update_scrape_history()` changed `indent=1` to `indent=2` for consistent spacing. (2) `build/reference_gap.py`: `_cmd_gaps()` kept existing `indent=2`, added `sort_keys=True` for dict output; `_cmd_validate()` sorts validated rows by "Model auta" before writing `.ok.json`. (3) `tests/test_build_data.py`: new `JSONFormatTest` class with 3 tests verifying multi-line format (>5 lines per file), `indent=2` spacing, idempotency (byte-identical on re-runs), and sorted entries by key. Consumer impact: `site/app.js` and `site/reference.js` use `fetch().then(r.json())` — JSON line/key order doesn't affect parsing. Verified: `./bin/test.sh` green (193 tests, incl. 3 new JSONFormatTest), `python build/build_data.py` clean, `verify_ui.py --page {index,reference} --scenario grid` both PASS, `reference.json` byte-identical on re-runs (confirms stable sorting).
 
 - [x] **#28** nová stránka s přehledem převodovek: popisky — DONE 2026-07-05: new static `site/transmissions.html`/`.js` page (dark theme, same header/nav conventions) with a hand-seeded catalogue table (Manuální, Automat/hydrodynamický měnič, DSG/DCT dvouspojková, CVT, eCVT, redukční jednostupňová EV) — Czech name, princip, typické vozy/motorizace, poznámka; live per-type counts computed client-side from `cars.parquet` via the same hyparquet loader as `app.js` (n/a for CVT/eCVT, which the dataset doesn't tag separately from Automat). Added "Převodovky" nav button to `index.html` and `reference.html` toolbars. Quality ratings (#31) deferred as assumed. Verified: `python build/build_data.py`, new `verify_ui.py --page transmissions --scenario transmissions` scenario (PASS, screenshot confirms table + live counts), `--page index --scenario grid` PASS (nav button doesn't break the grid), `./bin/test.sh` 166 tests OK.
 

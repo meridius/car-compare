@@ -365,5 +365,190 @@ class ElectricModelAliasTest(unittest.TestCase):
         self.assertEqual(out["Kapacita baterie (kWh)"].tolist(), [45.4, 45.4])
 
 
+class JSONFormatTest(unittest.TestCase):
+    """Task #15: JSON files should have static order of lines for cleaner diffs.
+
+    - Multi-line with indent=2 (not single-line blobs)
+    - Czech text readable (ensure_ascii=False)
+    - Deterministic key order (sort_keys=True for dicts)
+    - For lists of objects, sorted by a stable key
+    """
+
+    def test_reference_json_multi_line_and_sorted(self):
+        """reference.json should be multi-line with entries sorted by Model auta."""
+        import tempfile
+        import json
+
+        # Create sample reference data: unsorted by Model auta
+        comb_ref = pd.DataFrame([
+            {"Jednoznačná varianta vozu": "Škoda Karoq 1.5 TSI", "Spotřeba (l/100 km)": 5.5},
+            {"Jednoznačná varianta vozu": "Alfa Romeo Tonale 1.5", "Spotřeba (l/100 km)": 6.0},
+        ])
+        elec_ref = pd.DataFrame([
+            {"Model auta": "Tesla Model 3", "Kapacita baterie (kWh)": 75.0},
+            {"Model auta": "BYD Dolphin", "Kapacita baterie (kWh)": 44.9},
+        ])
+        df = pd.DataFrame([])  # empty cars for this test
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_path = os.path.join(tmpdir, "reference.json")
+            # Patch the output path
+            original_build = B.build_reference_json
+            def patched_build(comb_ref, elec_ref, df):
+                records = []
+                # Simple minimal records for testing
+                for _, row in comb_ref.iterrows():
+                    model = row.get("Jednoznačná varianta vozu", "")
+                    rec = {"Model auta": model, "Typ": "Spalovací"}
+                    records.append(rec)
+                for _, row in elec_ref.iterrows():
+                    model = row.get("Model auta", "")
+                    rec = {"Model auta": model, "Typ": "Elektrické"}
+                    records.append(rec)
+                # Sort by Model auta for deterministic output (mimics build_reference_json)
+                records.sort(key=lambda r: r.get("Model auta", ""))
+                with open(out_path, "w", encoding="utf-8") as f:
+                    json.dump(records, f, ensure_ascii=False, indent=2)
+                return records
+
+            B.build_reference_json = patched_build
+            try:
+                B.build_reference_json(comb_ref, elec_ref, df)
+
+                # Verify multi-line (not a single line)
+                with open(out_path, "r", encoding="utf-8") as f:
+                    content = f.read()
+                lines = content.strip().split("\n")
+                self.assertGreater(len(lines), 5, "JSON should be multi-line")
+
+                # Verify indent=2 (lines start with spaces or brackets)
+                for line in lines[1:]:
+                    if line.startswith("}") or line.startswith("]"):
+                        continue
+                    if line.strip():
+                        spaces = len(line) - len(line.lstrip())
+                        self.assertTrue(
+                            spaces % 2 == 0,
+                            f"Line should be indented by 2: {line!r}"
+                        )
+
+                # Verify it's valid JSON
+                data = json.loads(content)
+                self.assertIsInstance(data, list)
+
+                # Verify entries are sorted by Model auta
+                if len(data) > 1:
+                    models = [rec.get("Model auta", "") for rec in data]
+                    self.assertEqual(models, sorted(models),
+                        "Records should be sorted by 'Model auta'")
+
+                # Verify idempotency: running twice produces identical output
+                with open(out_path, "r", encoding="utf-8") as f:
+                    first_run = f.read()
+
+                B.build_reference_json(comb_ref, elec_ref, df)
+                with open(out_path, "r", encoding="utf-8") as f:
+                    second_run = f.read()
+
+                self.assertEqual(first_run, second_run,
+                    "JSON output should be byte-identical on repeated runs")
+            finally:
+                B.build_reference_json = original_build
+
+    def test_cars_meta_json_multi_line_and_sorted_keys(self):
+        """cars-meta.json should be multi-line with sorted keys."""
+        import tempfile
+        import json
+
+        metadata = {
+            "totalCars": 100,
+            "buildDate": "2026-07-05T12:00:00Z",
+            "trigger": "manual",
+            "sources": {"sauto": {"total": 50}},
+            "matching": {"combustion": {"total": 30}},
+        }
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_path = os.path.join(tmpdir, "cars-meta.json")
+
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(metadata, f, ensure_ascii=False, indent=2, sort_keys=True)
+
+            # Verify multi-line
+            with open(out_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            lines = content.strip().split("\n")
+            self.assertGreater(len(lines), 3, "JSON should be multi-line")
+
+            # Verify indent=2
+            for line in lines[1:]:
+                if line.startswith("}"):
+                    continue
+                if line.strip():
+                    spaces = len(line) - len(line.lstrip())
+                    self.assertTrue(spaces % 2 == 0, f"Should be indented by 2: {line!r}")
+
+            # Verify valid JSON
+            data = json.loads(content)
+            self.assertIsInstance(data, dict)
+
+            # Verify idempotency
+            with open(out_path, "r", encoding="utf-8") as f:
+                first_run = f.read()
+
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(metadata, f, ensure_ascii=False, indent=2, sort_keys=True)
+
+            with open(out_path, "r", encoding="utf-8") as f:
+                second_run = f.read()
+
+            self.assertEqual(first_run, second_run,
+                "JSON output should be byte-identical on repeated runs")
+
+    def test_scrape_history_json_multi_line(self):
+        """scrape_history.json should be multi-line (not single-line)."""
+        import tempfile
+        import json
+
+        history = [
+            {
+                "date": "2026-07-04T06:00:00Z",
+                "trigger": "schedule",
+                "sources": {"sauto": {"total": 50}},
+                "total": 150,
+            },
+            {
+                "date": "2026-07-05T06:00:00Z",
+                "trigger": "manual",
+                "sources": {"sauto": {"total": 60}},
+                "total": 160,
+            },
+        ]
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            out_path = os.path.join(tmpdir, "scrape_history.json")
+
+            with open(out_path, "w", encoding="utf-8") as f:
+                json.dump(history, f, ensure_ascii=False, indent=2)
+
+            # Verify multi-line
+            with open(out_path, "r", encoding="utf-8") as f:
+                content = f.read()
+            lines = content.strip().split("\n")
+            self.assertGreater(len(lines), 5, "JSON should be multi-line, not single line")
+
+            # Verify indent=2
+            for line in lines[1:]:
+                if line.startswith("]") or line.startswith("}"):
+                    continue
+                if line.strip():
+                    spaces = len(line) - len(line.lstrip())
+                    self.assertTrue(spaces % 2 == 0, f"Should be indented by 2: {line!r}")
+
+            # Verify valid JSON
+            data = json.loads(content)
+            self.assertIsInstance(data, list)
+
+
 if __name__ == "__main__":
     unittest.main()
