@@ -82,15 +82,13 @@ Ready to execute. Pick next unchecked item, use its `flow · model · effort` me
 - [ ] **#26** typ převodovky (transmission type) — new column
   > flow:feature-dev · model:sonnet · effort:medium
 
-- [ ] **#28** nová stránka s přehledem převodovek: popisky (new page with transmission overview: descriptions)
-  > flow:feature-dev · model:sonnet · effort:medium
-  > 📌 assumes: static lookup page listing transmission types present in the dataset + seed descriptions; wire quality ratings (#31) in later.
-
 - [ ] **#30** větší počet válců a větší objem znamená větší spolehlivost (more cylinders + bigger volume = more reliability — scoring rule)
   > flow:feature-dev · model:sonnet · effort:medium · blocked-by: #24
   > 📌 assumes: add a derived "Spolehlivost" score (1–5) for matched ICE from cylinder count + displacement (more/bigger → higher); needs the #24 cylinders column.
 
 ## Done
+
+- [x] **#28** nová stránka s přehledem převodovek: popisky — DONE 2026-07-05: new static `site/transmissions.html`/`.js` page (dark theme, same header/nav conventions) with a hand-seeded catalogue table (Manuální, Automat/hydrodynamický měnič, DSG/DCT dvouspojková, CVT, eCVT, redukční jednostupňová EV) — Czech name, princip, typické vozy/motorizace, poznámka; live per-type counts computed client-side from `cars.parquet` via the same hyparquet loader as `app.js` (n/a for CVT/eCVT, which the dataset doesn't tag separately from Automat). Added "Převodovky" nav button to `index.html` and `reference.html` toolbars. Quality ratings (#31) deferred as assumed. Verified: `python build/build_data.py`, new `verify_ui.py --page transmissions --scenario transmissions` scenario (PASS, screenshot confirms table + live counts), `--page index --scenario grid` PASS (nav button doesn't break the grid), `./bin/test.sh` 166 tests OK.
 
 - [x] **EV data leaks: mobile.de 0 kW + sauto wrecked EV** — DONE 2026-07-05: `scrapers/sources/mobilede.py` now runs EV `Výkon (kW)` through `sanitize_ev_power()` (blanks the ~10 Dacia Spring/Hyundai Kona Elektro/Opel Mokka-e rows carrying a literal `pw: "0 kW"`), and `scrapers/sources/sauto.py::build_ev` now rejects `condition_cb.name == "Havarované"` the same way `build_ice` already did (the leaked wrecked MG MG4). Both mirror an existing proven guard rather than inventing a new one. 📌 discovered by: #21 integrity tests.
 - [x] **#19** many reference models are missing data in various cols — DONE 2026-07-05: codeable part only (per scope note, no external data sourced). `site/reference.js`/`.html`/`style.css` add a missing-spec badge column (⚠ N, tooltip lists the missing Czech column names) computed client-side per row against a key-spec set (ICE: Spotřeba [skipped for PHEV — intentionally blanked], Objem motoru, Typ motoru, Cd, Hlučnost; EV: Kapacita baterie, Dojezd WLTP, Dojezd EV-database, Cd — listing-aggregated columns like Karoserie/Výkon excluded since their blanks reflect no matching listings, not a data gap), plus a header "Neúplné: N / M" toggle button wired as an AG Grid external filter (independent of column filters/quick search, like the existing search box). Observed: 156/390 reference rows (40%) currently miss ≥1 key spec. Verified: `python build/build_data.py` + `verify_ui.py --page reference --scenario grid/ref-search/missing-specs` (new scenario) all exit 0, screenshots confirm badges + toggle.

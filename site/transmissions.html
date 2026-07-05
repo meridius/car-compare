@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="cs" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Převodovky</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>Převodovky</h1>
+        <div class="controls">
+            <span id="row-count"></span>
+            <button id="btn-theme" onclick="toggleTheme()" title="Přepnout motiv">☾</button>
+            <button class="nav-link" onclick="location.href='index.html'">Porovnání aut</button>
+            <button class="nav-link" onclick="location.href='reference.html'">Referenční modely</button>
+        </div>
+    </header>
+    <main class="transmissions-content">
+        <p class="transmissions-intro">
+            Přehled typů převodovek, které se vyskytují v datasetu, s krátkým principem fungování a
+            praktickou poznámkou. Počty vozů se dopočítávají z aktuálních dat (sloupce „Převodovka“ a
+            „Dvouspojková převodovka“); u typů, které dataset nerozlišuje odděleně (CVT / eCVT), zůstává
+            počet nezjištěný. Hodnocení kvality/spolehlivosti jednotlivých typů bude doplněno v samostatné
+            úpravě.
+        </p>
+        <div class="transmission-table-wrap">
+            <table class="transmission-table">
+                <thead>
+                    <tr>
+                        <th>Typ</th>
+                        <th>Princip</th>
+                        <th>Typické vozy / motorizace v datasetu</th>
+                        <th>Poznámka</th>
+                        <th>Počet v datasetu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr data-trans-row="manual">
+                        <td class="trans-name">Manuální</td>
+                        <td>Klasická převodovka řazená ručně přes spojkový pedál — bez měniče
+                            i bez elektronicky ovládaného spojkového balení.</td>
+                        <td>Nižší a střední motorizace spalovacích modelů (Škoda Fabia/Octavia,
+                            VW Golf, Hyundai i20/i30); u výkonnějších vozů nad 100 kW v datasetu
+                            už je vzácná.</td>
+                        <td>Nejnižší pořizovací i servisní náklady, žádná další elektronika
+                            k řešení.</td>
+                        <td class="trans-count" data-count-key="manual">–</td>
+                    </tr>
+                    <tr data-trans-row="automat">
+                        <td class="trans-name">Automat (hydrodynamický měnič)</td>
+                        <td>Planetové soukolí spojené s motorem přes hydrodynamický měnič
+                            (torque converter) místo spojky; řazení je plně automatické a měnič
+                            tlumí rázy při rozjezdu.</td>
+                        <td>Německé prémiové vozy s automatem ZF 8HP (BMW, Mercedes-Benz),
+                            klasické planetové automaty Toyota/Lexus, řada SUV.</td>
+                        <td>Hladký a komfortní chod, dobrá dlouhodobá životnost; o něco vyšší
+                            spotřeba než dvouspojkové převodovky.</td>
+                        <td class="trans-count" data-count-key="automat">–</td>
+                    </tr>
+                    <tr data-trans-row="dsg">
+                        <td class="trans-name">DSG / DCT (dvouspojková)</td>
+                        <td>Dvě souběžné spojky (pro sudé a liché převodové stupně) umožňují
+                            řazení bez přerušení výkonu. Dělí se na suchou spojku (nižší točivý
+                            moment) a mokrou spojku v olejové lázni (vyšší točivý moment).</td>
+                        <td>VW/Škoda/Audi/SEAT s DSG (suchá DQ200, mokrá DQ381 a vyšší), Audi
+                            S-tronic, Porsche PDK, Ford Powershift, ostatní značky s vlastním
+                            DCT/EDC/7DCT řešením.</td>
+                        <td>Rychlé a úsporné řazení; suchá spojka DQ200 je známý slabý bod
+                            (opotřebení mechatroniku a spojkových lamel), mokré varianty jsou
+                            robustnější.</td>
+                        <td class="trans-count" data-count-key="dsg">–</td>
+                    </tr>
+                    <tr data-trans-row="cvt">
+                        <td class="trans-name">CVT (variátor)</td>
+                        <td>Plynule měnitelný převod řemenem nebo řetězem mezi dvěma kuželovými
+                            řemenicemi — bez pevných převodových stupňů.</td>
+                        <td>Zejména japonské a korejské modely mimo hybridní řady (Nissan,
+                            Subaru a další).</td>
+                        <td>Plynulý rozjezd bez cukání, ale specifický zvukový projev
+                            („gumování“) při plné akceleraci.</td>
+                        <td class="trans-count" data-count-key="cvt" title="Dataset CVT odděleně neeviduje — sloupec Převodovka rozlišuje jen Manuální / Automatická.">n/a</td>
+                    </tr>
+                    <tr data-trans-row="ecvt">
+                        <td class="trans-name">eCVT (planetové soukolí, hybridní pohon)</td>
+                        <td>Planetové soukolí bez spojek i bez měniče, které dělí výkon mezi
+                            spalovací a elektromotor (Toyota/Lexus HSD, Honda e:HEV). Funkčně jde
+                            o plynulý převod, mechanicky se ale s klasickým CVT nepřekrývá.</td>
+                        <td>Toyota/Lexus a Honda hybridy v datasetu (typicky Hybrid typ HEV).</td>
+                        <td>Bezúdržbová — žádné spojky ani měnič k opotřebení.</td>
+                        <td class="trans-count" data-count-key="ecvt" title="Dataset eCVT odděleně neeviduje — u hybridů se převodovka nerozlišuje od klasického automatu.">n/a</td>
+                    </tr>
+                    <tr data-trans-row="ev">
+                        <td class="trans-name">Redukční jednostupňová (EV)</td>
+                        <td>Elektromotor má širokou provozní otáčkovou charakteristiku, takže
+                            stačí jediný pevný převodový poměr — bez řazení a bez spojky.</td>
+                        <td>Všechny elektromobily v datasetu (Typ = Elektrické).</td>
+                        <td>Žádné řazení, minimum pohyblivých částí, prakticky bezúdržbová.</td>
+                        <td class="trans-count" data-count-key="ev">–</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <script type="module" src="transmissions.js"></script>
+</body>
+
+</html>

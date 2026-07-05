@@ -6,8 +6,8 @@ few light inline checks, and screenshots key views to tmp/ui-verify/.
 Exit 0 = pass, 1 = fail. Read the PNGs afterwards to confirm visual correctness.
 
 Usage:
-    python3 build/verify_ui.py [--page index|reference] \\
-                               [--scenario grid|stav-filter] [--port N]
+    python3 build/verify_ui.py [--page index|reference|transmissions] \\
+                               [--scenario grid|stav-filter|transmissions] [--port N]
 
 Defaults: --page index --scenario grid --port 0 (OS-assigned free port).
 """
@@ -26,7 +26,11 @@ SITE_DIR = os.path.join(BASE_DIR, "site")
 OUT_DIR = os.path.join(BASE_DIR, "tmp", "ui-verify")
 CARS_PARQUET = os.path.join(SITE_DIR, "data", "cars.parquet")
 
-PAGE_FILES = {"index": "index.html", "reference": "reference.html"}
+PAGE_FILES = {"index": "index.html", "reference": "reference.html", "transmissions": "transmissions.html"}
+
+# Pages that render an AG Grid (".ag-row" is the universal "did content load"
+# signal for those); transmissions.html is a plain HTML table instead.
+GRID_PAGES = {"index", "reference"}
 
 
 class _QuietHandler(http.server.SimpleHTTPRequestHandler):
@@ -245,6 +249,23 @@ def scenario_missing_specs(page):
     return None
 
 
+def scenario_transmissions(page):
+    """transmissions.html (#28) has no AG Grid — confirm the static catalogue
+    table rendered (all seed rows present) and the live per-type counts were
+    filled in from cars.parquet (still "–"/"n/a" placeholders would mean the
+    hyparquet fetch/decode silently failed)."""
+    page.wait_for_selector(".transmission-table tbody tr", timeout=15000)
+    rows = page.locator(".transmission-table tbody tr").count()
+    if rows < 5:
+        raise AssertionError(f"expected the full seed catalogue, got {rows} rows")
+    page.wait_for_function(
+        "document.querySelector('.trans-count[data-count-key=\"manual\"]')"
+        ".textContent.indexOf('vozů') >= 0",
+        timeout=15000,
+    )
+    return ".transmission-table-wrap"
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
@@ -256,6 +277,7 @@ SCENARIOS = {
     "ref-search": scenario_ref_search,
     "pairing-gap": scenario_pairing_gap,
     "missing-specs": scenario_missing_specs,
+    "transmissions": scenario_transmissions,
 }
 
 
@@ -335,12 +357,17 @@ def main():
                 failures.append(f"scenario '{args.scenario}' failed: {e}")
                 target = None
 
-            row_count = page.locator(".ag-row").count()
-            if row_count == 0:
-                failures.append("no grid rows rendered (.ag-row count == 0)")
+            if args.page in GRID_PAGES:
+                row_count = page.locator(".ag-row").count()
+                if row_count == 0:
+                    failures.append("no grid rows rendered (.ag-row count == 0)")
 
-            if args.scenario == "grid":
-                failures.extend(check_cd_format(page))
+                if args.scenario == "grid":
+                    failures.extend(check_cd_format(page))
+            else:
+                row_count = page.locator(".transmission-table tbody tr").count()
+                if row_count == 0:
+                    failures.append("no table rows rendered (transmission-table has 0 rows)")
 
             if target:
                 page.locator(target).screenshot(path=shot_path)
