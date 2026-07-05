@@ -294,7 +294,22 @@ def _rebuild():
                    check=True, cwd=BASE_DIR)
 
 
+_GAPS_ICE_UNSUPPORTED_MSG = (
+    "gaps --fuel ice not implemented: ICE listings pair via "
+    "scrapers.core.matching.match_to_authoritative (brand + model_base + "
+    "weighted scoring), not the EV case-insensitive prefix join this command "
+    "models — its clusters/projections would be semantically wrong for ICE. "
+    "Use --fuel ev.\n"
+    "gaps --fuel ice není implementováno: ICE inzeráty se párují přes "
+    "scrapers.core.matching.match_to_authoritative (značka + model + vážené "
+    "skóre), ne přes prefixové párování EV, které tento příkaz modeluje — "
+    "shluky/projekce by pro ICE byly věcně špatně. Použij --fuel ev."
+)
+
+
 def _cmd_gaps(a):
+    if a.fuel == "ice":
+        sys.exit(_GAPS_ICE_UNSUPPORTED_MSG)
     if a.rebuild:
         _rebuild()
     unpaired = load_unpaired(CARS_PARQUET, a.fuel)
@@ -383,7 +398,12 @@ def main(argv=None):
     import argparse
     p = argparse.ArgumentParser(description="grow-reference: covergrowth for reference models")
     sub = p.add_subparsers(dest="cmd", required=True)
-    g = sub.add_parser("gaps"); g.add_argument("--fuel", required=True, choices=list(FUELS))
+    g = sub.add_parser("gaps", description="EV-only: ICE pairs via match_to_authoritative, "
+                       "not this command's prefix-join model — see reference_gap._GAPS_ICE_UNSUPPORTED_MSG")
+    g.add_argument("--fuel", required=True, choices=list(FUELS),
+                    help="ev is fully supported; ice is accepted by argparse but rejected at "
+                         "runtime with an explanation (ICE pairs via match_to_authoritative, "
+                         "a different, non-prefix matching model — use ev)")
     g.add_argument("--rebuild", action="store_true"); g.add_argument("--top", type=int, default=0)
     g.set_defaults(fn=_cmd_gaps)
     v = sub.add_parser("validate"); v.add_argument("--fuel", required=True, choices=["ev"])

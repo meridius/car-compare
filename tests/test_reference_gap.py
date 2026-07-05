@@ -170,10 +170,22 @@ class TestCLIGuards(unittest.TestCase):
         with self.assertRaises(SystemExit):
             rg.main(["apply", "--fuel", "ice", "--in", "nope.json"])
 
-    def test_gaps_still_accepts_both_fuels(self):
-        # gaps is read-only; argparse should accept ice as a valid choice (parse only)
+    def test_gaps_help_still_lists_both_fuel_choices(self):
+        # argparse itself still parses either fuel (--help exits 0 regardless);
+        # the ICE restriction is enforced at runtime with a clear message, not
+        # by narrowing argparse choices, so --fuel ice still reaches _cmd_gaps.
         with self.assertRaises(SystemExit):
             rg.main(["gaps", "--help"])   # --help exits 0; proves 'gaps' subparser exists
+
+    def test_gaps_ice_exits_with_clear_message(self):
+        # ICE pairs via match_to_authoritative, not the EV prefix join gaps
+        # models — gaps must refuse --fuel ice with an explicit explanation
+        # rather than silently producing semantically-wrong output.
+        with self.assertRaises(SystemExit) as cm:
+            rg.main(["gaps", "--fuel", "ice"])
+        msg = str(cm.exception)
+        self.assertIn("match_to_authoritative", msg)
+        self.assertIn("--fuel ev", msg)
 
 
 class TestAppendAndCount(unittest.TestCase):
