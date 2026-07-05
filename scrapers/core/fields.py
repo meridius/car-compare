@@ -267,6 +267,45 @@ def extract_awd(text: str) -> str:
     return "Ano" if _AWD_EXTRA_RE.search(text) else "Ne"
 
 
+# #24: docs/sauto-api-fields.md documents no cylinder-count field, so the
+# actual detail API key (if any) is unconfirmed. Probe every plausible name
+# rather than hard-coding one guess that might silently never match; blank
+# when none of them carry a plausible value. mobile.de's "attr" object has no
+# known equivalent key either (see docs/gotchas.md), so this only feeds sauto.
+_CYLINDER_KEYS = (
+    "engine_cylinders", "cylinder_count", "cylinders", "num_cylinders", "cylinder",
+)
+MIN_CYLINDERS = 2
+MAX_CYLINDERS = 16
+
+
+def extract_cylinder_count(detail) -> str:
+    """Tolerant lookup of cylinder count from a source detail payload.
+
+    Accepts both a plain int/str value and the '*_cb': {'name'|'value': ...}
+    coded-object shape used by other sauto detail fields. Returns '' when no
+    plausible (MIN_CYLINDERS..MAX_CYLINDERS) value is found — never invented.
+    """
+    if not detail:
+        return ""
+    for key in _CYLINDER_KEYS:
+        val = detail.get(key)
+        cb_val = detail.get(f"{key}_cb")
+        if isinstance(cb_val, dict):
+            val = cb_val.get("value", cb_val.get("name"))
+        if isinstance(val, dict):
+            val = val.get("value", val.get("name"))
+        if val is None or val == "":
+            continue
+        try:
+            n = int(str(val).strip())
+        except (TypeError, ValueError):
+            continue
+        if MIN_CYLINDERS <= n <= MAX_CYLINDERS:
+            return str(n)
+    return ""
+
+
 def normalize_ano_ne(value) -> str:
     """Normalize boolean Ano/Ne values to proper case, stripping whitespace.
 

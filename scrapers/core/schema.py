@@ -6,7 +6,7 @@ TYP_ICE = "Spalovací"
 # Canonical column order. Every source emits exactly these columns.
 CANONICAL_COLS = [
     "Typ", "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby",
-    "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ", "Výkon (kW)",
+    "Palivo", "Objem motoru", "Typ motoru", "Počet válců", "Hybrid typ", "Výkon (kW)",
     "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
     "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Tepelné čerpadlo",
     "Spárováno", "Skóre shody", "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj",

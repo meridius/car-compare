@@ -125,6 +125,36 @@ class RepairYearTest(unittest.TestCase):
             F.repair_year("2002", "2022-01-01", None, 2026), "2022",
         )
 
+
+class ExtractCylinderCountTest(unittest.TestCase):
+    """#24: the sauto detail API's exact cylinder-count field name is
+    unconfirmed (not documented in docs/sauto-api-fields.md), so the lookup
+    probes several plausible keys rather than hard-coding one guess."""
+
+    def test_plain_engine_cylinders_key(self):
+        self.assertEqual(F.extract_cylinder_count({"engine_cylinders": 4}), "4")
+
+    def test_alternate_cylinders_key(self):
+        self.assertEqual(F.extract_cylinder_count({"cylinders": 6}), "6")
+
+    def test_cylinder_count_key(self):
+        self.assertEqual(F.extract_cylinder_count({"cylinder_count": "3"}), "3")
+
+    def test_coded_cb_object_form(self):
+        # Mirrors the *_cb.{name,value} shape used by other sauto detail fields.
+        self.assertEqual(F.extract_cylinder_count({"cylinders_cb": {"value": 8}}), "8")
+
+    def test_missing_field_is_blank(self):
+        self.assertEqual(F.extract_cylinder_count({}), "")
+        self.assertEqual(F.extract_cylinder_count(None), "")
+
+    def test_implausible_value_is_blank(self):
+        self.assertEqual(F.extract_cylinder_count({"engine_cylinders": 0}), "")
+        self.assertEqual(F.extract_cylinder_count({"engine_cylinders": 42}), "")
+
+    def test_unparseable_value_is_blank(self):
+        self.assertEqual(F.extract_cylinder_count({"engine_cylinders": "n/a"}), "")
+
     def test_century_swap_repaired(self):
         # 19XX/20XX mixup falls out of the same "trust the detail fields" rule.
         self.assertEqual(

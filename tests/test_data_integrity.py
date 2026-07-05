@@ -278,6 +278,20 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                          f"(e.g. {offenders[0].get('Objem motoru') if offenders else ''} "
                          f"{_name(offenders[0]) if offenders else ''})")
 
+    # -- Počet válců ---------------------------------------------------------
+
+    def test_pocet_valcu_plausible_range_when_present(self):
+        """#24: no production passenger car has fewer than 2 or more than 16
+        cylinders. Column is only populated for sauto ICE rows today; blank
+        elsewhere is expected, not an error."""
+        offenders = [c for c in self.cars
+                     if isinstance(c.get("Počet válců"), (int, float))
+                     and not (2 <= c["Počet válců"] <= 16)]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows with implausible Počet válců "
+                         f"(e.g. {offenders[0].get('Počet válců') if offenders else ''} "
+                         f"{_name(offenders[0]) if offenders else ''})")
+
     # -- Enum columns --------------------------------------------------------
 
     def test_typ_enum(self):

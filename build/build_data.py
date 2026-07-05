@@ -632,6 +632,7 @@ def add_brand_model_columns(df):
 
 PAYLOAD_NUMERIC_COLS = [
     "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
+    "Počet válců",
     "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
     "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
     "Skóre shody", "Cd",
@@ -759,7 +760,7 @@ def main():
 
     ordered_cols = [
         "Typ", "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby", "Výkon (kW)",
-        "Palivo", "Objem motoru", "Typ motoru", "Hybrid typ",
+        "Palivo", "Objem motoru", "Typ motoru", "Počet válců", "Hybrid typ",
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
         "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Spárováno",
         "Skóre shody", "Tepelné čerpadlo",

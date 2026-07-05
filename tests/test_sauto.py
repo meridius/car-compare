@@ -132,5 +132,34 @@ class InvalidYearTest(unittest.TestCase):
         self.assertIsNone(S.build_ice(item, ice_detail))
 
 
+class CylinderCountTest(unittest.TestCase):
+    """#24: build_ice populates 'Počet válců' from the detail payload via the
+    tolerant scrapers.core.fields.extract_cylinder_count() lookup."""
+
+    def test_build_ice_populates_cylinder_count(self):
+        item = _make_item(
+            manufacturer_cb={"name": "Škoda", "seo_name": "skoda"},
+            model_cb={"name": "Octavia", "seo_name": "octavia"},
+            additional_model_name="1.5 TSI Style",
+        )
+        detail = _make_detail(fuel_cb={"name": "Benzín"}, engine_cylinders=4)
+        row = S.build_ice(item, detail)
+        self.assertIsNotNone(row)
+        self.assertEqual(row["Počet válců"], "4")
+
+    def test_build_ice_leaves_cylinder_count_blank_when_absent(self):
+        # Current sauto detail payloads don't document a cylinder field at all
+        # (docs/sauto-api-fields.md) — must stay blank, never invented.
+        item = _make_item(
+            manufacturer_cb={"name": "Škoda", "seo_name": "skoda"},
+            model_cb={"name": "Octavia", "seo_name": "octavia"},
+            additional_model_name="1.5 TSI Style",
+        )
+        detail = _make_detail(fuel_cb={"name": "Benzín"})
+        row = S.build_ice(item, detail)
+        self.assertIsNotNone(row)
+        self.assertEqual(row["Počet válců"], "")
+
+
 if __name__ == "__main__":
     unittest.main()

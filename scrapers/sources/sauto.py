@@ -8,7 +8,7 @@ from scrapers.core.normalize import normalize_model
 from scrapers.core.fields import (
     extract_body_type, extract_engine_volume, extract_engine_type,
     extract_hybrid_type, extract_trim, extract_warranty, extract_dct,
-    extract_particle_filter, extract_awd, clean_extra,
+    extract_particle_filter, extract_awd, extract_cylinder_count, clean_extra,
     sanitize_engine_volume, sanitize_ev_power, clean_ev_suffix, repair_year,
 )
 
@@ -197,6 +197,7 @@ def build_ice(item, detail):
     extracted = {
         "Objem motoru": engine_volume,
         "Typ motoru": extract_engine_type(suffix),
+        "Počet válců": extract_cylinder_count(detail),
         "Hybrid typ": extract_hybrid_type(suffix),
         "Karoserie": body_type,
         "Výbava": extract_trim(suffix),

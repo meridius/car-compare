@@ -275,6 +275,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = větší kufr, červená = menší." },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },
+    { field: "Počet válců", filter: "agNumberColumnFilter", w: 70, num: true, hi: true, hdr: "Počet\nválců", tip: "Počet válců spalovacího motoru. Zatím dostupné jen u části inzerátů (Sauto.cz).\nBarva buňky: zelená = více válců, červená = méně." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },

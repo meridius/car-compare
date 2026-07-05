@@ -127,6 +127,26 @@ class MergeTest(unittest.TestCase):
         self.assertEqual(gone["Stav"], "Odstraněno")
         self.assertEqual(gone["Odstraněno dne"], "2026-07-04")
 
+    def test_previous_state_missing_pocet_valcu_column(self):
+        """#24: a previous state file predating the 'Počet válců' column (not
+        referenced by key inside merge_with_previous — unlike 'Odstraněno dne')
+        must still merge, relying on pandas' natural key-union + NaN-fill when
+        building the result frame from per-row dicts."""
+        prev = pd.DataFrame(
+            [["A", "Dostupný", "https://x/1"]],
+            columns=["Model auta", "Stav", "Odkaz na auto"],
+        )
+        new = pd.DataFrame(
+            [["B", "Dostupný", "4", "https://x/2"]],
+            columns=["Model auta", "Stav", "Počet válců", "Odkaz na auto"],
+        )
+        out = _merge(new, prev)
+        self.assertEqual(len(out), 2)
+        fresh = out[out["Odkaz na auto"] == "https://x/2"].iloc[0]
+        self.assertEqual(fresh["Počet válců"], "4")
+        old = out[out["Odkaz na auto"] == "https://x/1"].iloc[0]
+        self.assertTrue(pd.isna(old["Počet válců"]) or old["Počet válců"] == "")
+
 
 if __name__ == "__main__":
     unittest.main()
