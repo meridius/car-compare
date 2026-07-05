@@ -165,11 +165,13 @@ jobs:
             --title "Data (rolling)" \
             --notes "Current scraper state + built payload. Assets are clobbered daily; monthly data-YYYY-MM releases are the immutable history." \
             2>/dev/null || true
+          # Upload only the state parquets that exist. A failed scrape leg
+          # (mobilede is continue-on-error) leaves its parquet absent; nullglob
+          # drops it from the list and the release keeps the copy it already had.
+          # The site/data payload files always exist after a successful build.
+          shopt -s nullglob
           gh release upload data --clobber \
-            scrapers/data/scrapes/sauto.parquet \
-            scrapers/data/scrapes/autodraft.parquet \
-            scrapers/data/scrapes/energycars.parquet \
-            scrapers/data/scrapes/mobilede.parquet \
+            scrapers/data/scrapes/*.parquet \
             site/data/cars.parquet \
             site/data/cars-archived.parquet \
             site/data/cars-meta.json \
@@ -183,13 +185,11 @@ jobs:
         run: |
           if [ "$(date -u +%d)" = "01" ]; then
             TAG="data-$(date -u +%Y-%m)"
+            shopt -s nullglob   # a failed scrape leg's parquet just drops from the list
             gh release create "$TAG" \
               --title "Data snapshot $(date -u +%Y-%m)" \
               --notes "Immutable monthly snapshot (see docs/decisions/001-scalable-storage.md)." \
-              scrapers/data/scrapes/sauto.parquet \
-              scrapers/data/scrapes/autodraft.parquet \
-              scrapers/data/scrapes/energycars.parquet \
-              scrapers/data/scrapes/mobilede.parquet \
+              scrapers/data/scrapes/*.parquet \
               site/data/cars.parquet \
               site/data/cars-archived.parquet \
               site/data/cars-meta.json \
