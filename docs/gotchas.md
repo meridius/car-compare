@@ -91,6 +91,21 @@ The `fuel_seo` parameter accepts comma-separated values: `"benzin,nafta,lpg-benz
 
 `detail.get("engine_volume")` returns displacement in cubic centimetres (e.g. 1498). Code divides by 1000 when value > 100 to get litres (1.5). Values ≤ 100 are passed through as-is.
 
+### detail API has NO cylinder-count field (probed live 2026-07-05)
+
+`https://www.sauto.cz/api/v1/items/{id}` carries `engine_power` / `engine_volume` but
+no cylinder field of any spelling (checked against a live listing). The #24 column
+"Počet válců" therefore stays blank from sauto; `extract_cylinder_count()`
+(core/fields.py) probes plausible keys defensively in case the API grows one, and the
+#30 "Spolehlivost" score degrades to volume-only by design.
+
+### Převodovka value spelling differs per source
+
+sauto (`gearbox_cb.name`) and mobile.de's German→Czech map emit "Automatická" /
+"Manuální"; autodraft's extractor emits short "Automat" / "Manual". Anything consuming
+the column must accept both spellings — `derive_transmission_type()` (build_data.py)
+and `AUTOMAT_VALUES`/`MANUAL_VALUES` (site/transmissions.js) do.
+
 ### vehicle_body_cb is the primary body type source
 
 The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatchback). These are used directly — `extract_body_type()` is only a fallback when the API field is empty. Applies to both EV and ICE rows.
