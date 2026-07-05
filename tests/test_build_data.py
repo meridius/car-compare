@@ -8,6 +8,7 @@ case or those cars silently go unmatched.
 import os
 import sys
 import unittest
+from unittest import mock
 
 import pandas as pd
 
@@ -687,6 +688,69 @@ class ReliabilityScoreTest(unittest.TestCase):
         out = B.add_reliability_column(df)
         cols = list(out.columns)
         self.assertEqual(cols.index("Spolehlivost"), cols.index("Počet válců") + 1)
+
+
+def _auth_entry(entry, trim):
+    return {"entry": entry, "brand": "", "model_base": "", "body": "", "engine_vol": "",
+            "engine_type": "", "hybrid": "", "fuel": "", "trim": trim, "seats": ""}
+
+
+class ApplyVerzeDisplayTest(unittest.TestCase):
+    """apply_verze_display() is the payload-time overwrite: the displayed
+    'Verze' comes only from a confidently-matched (Spárováno == 'Ano') ICE
+    reference row's trim — never the scrape-extracted value, and never for
+    EV (no trim concept) or weak/unmatched ICE matches."""
+
+    def test_confident_ice_match_gets_reference_trim(self):
+        df = pd.DataFrame([{
+            "Typ": "Spalovací", "Model auta": "Škoda Octavia Combi Style 1.5 TSI",
+            "Spárováno": "Ano",
+        }])
+        with mock.patch.object(
+            B.comb_utils, "load_authoritative_list",
+            return_value=[_auth_entry("Škoda Octavia Combi Style 1.5 TSI", "Style")],
+        ):
+            out = B.apply_verze_display(df)
+        self.assertEqual(out.iloc[0]["Verze"], "Style")
+
+    def test_uncertain_ice_match_is_blanked(self):
+        df = pd.DataFrame([{
+            "Typ": "Spalovací", "Model auta": "Škoda Octavia Combi Style 1.5 TSI",
+            "Spárováno": "Nejisté",
+        }])
+        with mock.patch.object(
+            B.comb_utils, "load_authoritative_list",
+            return_value=[_auth_entry("Škoda Octavia Combi Style 1.5 TSI", "Style")],
+        ):
+            out = B.apply_verze_display(df)
+        self.assertEqual(out.iloc[0]["Verze"], "")
+
+    def test_unmatched_ice_is_blanked(self):
+        df = pd.DataFrame([{
+            "Typ": "Spalovací", "Model auta": "Opel Mokka 1.2 Turbo", "Spárováno": "Ne",
+        }])
+        with mock.patch.object(B.comb_utils, "load_authoritative_list", return_value=[]):
+            out = B.apply_verze_display(df)
+        self.assertEqual(out.iloc[0]["Verze"], "")
+
+    def test_ev_row_always_blanked_even_when_marked_ano(self):
+        # EV rows are "matched" via a prefix join with no trim concept — never
+        # show a reference trim on an EV row even if Spárováno somehow says Ano.
+        df = pd.DataFrame([{
+            "Typ": "Elektrické", "Model auta": "Škoda Enyaq iV 80", "Spárováno": "Ano",
+        }])
+        with mock.patch.object(
+            B.comb_utils, "load_authoritative_list",
+            return_value=[_auth_entry("Škoda Enyaq iV 80", "Should never show")],
+        ):
+            out = B.apply_verze_display(df)
+        self.assertEqual(out.iloc[0]["Verze"], "")
+
+    def test_empty_df_is_a_noop(self):
+        df = pd.DataFrame(columns=["Typ", "Model auta", "Spárováno"])
+        out = B.apply_verze_display(df)
+        self.assertIn("Verze", out.columns)
+        self.assertEqual(len(out), 0)
 
 
 if __name__ == "__main__":

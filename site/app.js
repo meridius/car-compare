@@ -263,9 +263,13 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
   var COL_CONFIG = [
     { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS, tip: "Dostupnost inzerátu: Dostupný / Zamluvené / Chystá se / Prodané / Odstraněno" },
-    { field: "Odstraněno dne", filter: "agTextColumnFilter", w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
     { field: "Značka", filter: "agSetColumnFilter", w: 110, pinned: "left", align: "left" },
     { field: "Model", filter: "agTextColumnFilter", w: 200, pinned: "left", align: "left" },
+    // Verze is declared first among the non-pinned columns (ahead of "Odstraněno
+    // dne", which predates it here) so it renders immediately after the pinned
+    // Značka/Model pair, with nothing in between — the "right after Model" spot.
+    { field: "Verze", filter: "agSetColumnFilter", w: 110, align: "left" },
+    { field: "Odstraněno dne", filter: "agTextColumnFilter", w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
     { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší cena, červená = vyšší." },
@@ -293,7 +297,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Filtr pevných částic", filter: "agSetColumnFilter", w: 90, hdr: "Filtr pevn.\nčástic", tip: "GPF (benzín) nebo DPF (nafta) – zachycuje saze z výfukových plynů." },
     { field: "Tepelné čerpadlo", filter: "agSetColumnFilter", w: 80, hdr: "Tepelné\nčerpadlo", tip: "Efektivní vytápění a chlazení EV. V zimě výrazně šetří kapacitu baterie." },
     { field: "Tepelné čerpadlo možné", filter: "agSetColumnFilter", w: 90, hdr: "Tep. čerp.\nmožné", tip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
-    { field: "Výbava", filter: "agSetColumnFilter", w: 110 },
     { field: "Kola", filter: "agSetColumnFilter", w: 70 },
     { field: "Záruka", filter: "agSetColumnFilter", w: 80 },
     { field: "Spárováno", filter: "agSetColumnFilter", w: 90, sparovano: true, tip: "Ano = jistá shoda s referenčním modelem, Nejisté = slabá nebo nejednoznačná shoda, Ne = nespárováno.\nBarva buňky: červená = Ne, oranžová = Nejisté." },

@@ -153,6 +153,26 @@ class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
         self.assertEqual(out.iloc[1]["Spárováno"], "Ne")
         self.assertEqual(out.iloc[1]["Skóre shody"], "")
 
+    def test_verze_column_feeds_trim_scoring(self):
+        """Verze column plumbing: match_to_authoritative reads the scraped-side
+        trim from the canonical 'Verze' column (renamed from 'Výbava'), not a
+        stale 'Výbava' column. The auth-side CSV column name is unaffected."""
+        import pandas as pd
+        from scrapers.core.schema import blank_row, CANONICAL_COLS
+
+        al = [auth("Škoda Octavia Combi Style 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI", trim="Style"),
+              auth("Škoda Octavia Combi Selection 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI", trim="Selection")]
+        r1 = blank_row(); r1.update({"Model auta": "Škoda Octavia Combi",
+                                     "Karoserie": "Kombi", "Objem motoru": "1.5",
+                                     "Typ motoru": "TSI", "Verze": "Style"})
+        df = pd.DataFrame([r1], columns=CANONICAL_COLS)
+
+        out = M.match_to_authoritative(df, al)
+        self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
+        self.assertEqual(out.iloc[0]["Model auta"], "Škoda Octavia Combi Style 1.5 TSI")
+
     def test_score_assignment_survives_strict_column_dtypes(self):
         """Regression: pandas 3.x makes a column's dtype strict, and the
         'Skóre shody' column arrives with different dtypes across the pipeline:

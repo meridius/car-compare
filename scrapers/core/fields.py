@@ -353,7 +353,7 @@ _EXTRA_CLEANUP_RES = [
 
 def clean_extra(text: str, extracted: dict) -> str:
     """Remove substrings already captured in dedicated columns from Extra text."""
-    for field in ("Typ motoru", "Výbava", "Karoserie", "Hybrid typ"):
+    for field in ("Typ motoru", "Verze", "Karoserie", "Hybrid typ"):
         val = extracted.get(field, "")
         if val:
             text = re.sub(re.escape(val), "", text, count=1, flags=re.IGNORECASE)

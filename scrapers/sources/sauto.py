@@ -200,7 +200,7 @@ def build_ice(item, detail):
         "Počet válců": extract_cylinder_count(detail),
         "Hybrid typ": extract_hybrid_type(suffix),
         "Karoserie": body_type,
-        "Výbava": extract_trim(suffix),
+        "Verze": extract_trim(suffix),
         "Záruka": extract_warranty(suffix),
         "Dvouspojková převodovka": extract_dct(gearbox + " " + suffix + " " + extra_text),
         "Filtr pevných částic": extract_particle_filter(suffix),

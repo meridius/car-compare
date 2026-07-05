@@ -8,7 +8,7 @@ CANONICAL_COLS = [
     "Typ", "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby",
     "Palivo", "Objem motoru", "Typ motoru", "Počet válců", "Hybrid typ", "Výkon (kW)",
     "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
-    "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Tepelné čerpadlo",
+    "Kola", "Náhon 4x4", "Karoserie", "Verze", "Záruka", "Tepelné čerpadlo",
     "Spárováno", "Skóre shody", "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj",
     "Odkaz na auto",
 ]

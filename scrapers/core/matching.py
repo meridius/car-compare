@@ -300,7 +300,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
             "engine_type": engine_type,
             "hybrid": str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else "",
             "fuel": str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else "",
-            "trim": str(df.at[idx, "Výbava"]) if "Výbava" in df.columns and pd.notna(df.at[idx, "Výbava"]) else "",
+            "trim": str(df.at[idx, "Verze"]) if "Verze" in df.columns and pd.notna(df.at[idx, "Verze"]) else "",
         }
 
         res = classify_match(scraped, auth_list)

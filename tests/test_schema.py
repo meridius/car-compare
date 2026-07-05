@@ -28,6 +28,11 @@ class SchemaTest(unittest.TestCase):
             CANONICAL_COLS.index("Počet válců") + 1,
         )
 
+    def test_verze_replaces_vybava(self):
+        """Verze column plumbing: canonical column renamed, count unchanged."""
+        self.assertIn("Verze", CANONICAL_COLS)
+        self.assertNotIn("Výbava", CANONICAL_COLS)
+
     def test_blank_row_covers_every_column(self):
         row = blank_row()
         self.assertEqual(set(row), set(CANONICAL_COLS))

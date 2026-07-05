@@ -23,6 +23,21 @@ def _stringly(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
+# Column renames applied to state read from disk, oldest first. Old parquet/CSV
+# state files (and the frozen seed CSVs) still carry the pre-rename header; this
+# is the single choke point every reader (pipeline merge, build_data) goes
+# through, so callers never need to know a column was ever named differently.
+_COLUMN_RENAMES = {
+    "Výbava": "Verze",  # Verze column plumbing (2026-07-05)
+}
+
+
+def _apply_column_renames(df: pd.DataFrame) -> pd.DataFrame:
+    renames = {old: new for old, new in _COLUMN_RENAMES.items()
+               if old in df.columns and new not in df.columns}
+    return df.rename(columns=renames) if renames else df
+
+
 def write_state(df: pd.DataFrame, base_path: Path) -> Path:
     path = Path(base_path).with_suffix(".parquet")
     _stringly(df).to_parquet(path, compression=PARQUET_COMPRESSION, index=False)
@@ -33,8 +48,8 @@ def read_state(base_path: Path) -> pd.DataFrame | None:
     base_path = Path(base_path)
     parquet = base_path.with_suffix(".parquet")
     if parquet.exists():
-        return _stringly(pd.read_parquet(parquet))
+        return _apply_column_renames(_stringly(pd.read_parquet(parquet)))
     csv = base_path.with_suffix(".csv")
     if csv.exists():
-        return pd.read_csv(csv, dtype=str).fillna("")
+        return _apply_column_renames(pd.read_csv(csv, dtype=str).fillna(""))
     return None

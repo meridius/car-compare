@@ -199,6 +199,33 @@ def backfill_country(df):
     return df
 
 
+def apply_verze_display(df):
+    """Payload-time 'Verze' semantics (Verze column plumbing task): the display
+    value is sourced from the matched reference row's trim, never from the
+    scrape-extracted value carried in state. Only ICE rows confidently matched
+    (Spárováno == "Ano") get a value — at that confidence "Model auta" has
+    already been rewritten to the auth entry string, so it's also the lookup
+    key into the auth list's trim column. Nejisté/Ne ICE rows and every EV row
+    (the EV reference has no trim concept) are blanked — we'd otherwise be
+    showing a guess dressed up as a fact.
+
+    This only overwrites the in-memory/payload column; the canonical state
+    parquet keeps whatever extract_trim() found (still needed for matching's
+    trim-disambiguation scoring)."""
+    df["Verze"] = ""
+    if df.empty or "Model auta" not in df.columns:
+        return df
+    ice_path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
+    auth_by_entry = {r["entry"]: r["trim"] for r in comb_utils.load_authoritative_list(ice_path)}
+    typ = df.get("Typ", pd.Series("", index=df.index))
+    sparovano = df.get("Spárováno", pd.Series("", index=df.index)).astype(str)
+    matched_ice = (typ == "Spalovací") & (sparovano == "Ano")
+    df.loc[matched_ice, "Verze"] = (
+        df.loc[matched_ice, "Model auta"].map(auth_by_entry).fillna("")
+    )
+    return df
+
+
 def rematch_combustion(combustion):
     """Strip noise prefixes and re-run authoritative matching over every row."""
     if combustion.empty or "Model auta" not in combustion.columns:
@@ -502,6 +529,7 @@ def build_reference_json(comb_ref, elec_ref, df):
         karoserie = listing.get("Karoserie") or auth.get("body", "") or ""
         rec = {
             "Model auta": model,
+            "Verze": auth.get("trim", "") or "",
             "Typ": "Spalovací",
             "Palivo": palivo,
             "Karoserie": karoserie,
@@ -522,6 +550,7 @@ def build_reference_json(comb_ref, elec_ref, df):
         listing = ev_specs.get(model, {})
         rec = {
             "Model auta": model,
+            "Verze": "",  # EV reference carries no trim concept
             "Typ": "Elektrické",
             "Palivo": "Elektro",
             "Karoserie": listing.get("Karoserie") or "",
@@ -903,6 +932,9 @@ def main():
     print("Joining electric reference...")
     df = join_electric_reference(df, elec_ref)
 
+    print("Deriving display 'Verze' (confidently-matched reference trim only)...")
+    df = apply_verze_display(df)
+
     print("Backfilling body/fuel for overview...")
     df = backfill_body_fuel(df)
     df = backfill_country(df)
@@ -915,10 +947,10 @@ def main():
         df.loc[df["Hybrid typ"].astype(str).str.upper() == "PHEV", "Spotřeba (l/100 km)"] = None
 
     ordered_cols = [
-        "Typ", "Model auta", "Cena (Kč)", "Nájezd (km)", "Rok výroby", "Výkon (kW)",
+        "Typ", "Model auta", "Verze", "Cena (Kč)", "Nájezd (km)", "Rok výroby", "Výkon (kW)",
         "Palivo", "Objem motoru", "Typ motoru", "Počet válců", "Hybrid typ",
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
-        "Kola", "Náhon 4x4", "Karoserie", "Výbava", "Záruka", "Spárováno",
+        "Kola", "Náhon 4x4", "Karoserie", "Záruka", "Spárováno",
         "Skóre shody", "Tepelné čerpadlo",
         "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",

@@ -94,6 +94,41 @@ class SchemaEvolutionTest(unittest.TestCase):
             evolved = back.reindex(columns=["Model auta", "Odkaz na auto"]).fillna("")
         self.assertNotIn("Cena (Kč)", evolved.columns)
 
+    def test_old_vybava_parquet_column_reads_back_as_verze(self):
+        """Verze column plumbing: old state parquet still carries 'Výbava' —
+        read_state must rename it transparently so every consumer (pipeline
+        merge, build_data) only ever sees 'Verze'."""
+        old = _df([["m", "1", "https://x/1", "Style"]],
+                  cols=("Model auta", "Cena (Kč)", "Odkaz na auto", "Výbava"))
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td) / "s"
+            storage.write_state(old, base)
+            back = storage.read_state(base)
+        self.assertNotIn("Výbava", back.columns)
+        self.assertIn("Verze", back.columns)
+        self.assertEqual(back.iloc[0]["Verze"], "Style")
+
+    def test_old_vybava_seed_csv_column_reads_back_as_verze(self):
+        old = _df([["m", "1", "https://x/1", "Style"]],
+                  cols=("Model auta", "Cena (Kč)", "Odkaz na auto", "Výbava"))
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td) / "s"
+            old.to_csv(base.with_suffix(".csv"), index=False)
+            back = storage.read_state(base)
+        self.assertNotIn("Výbava", back.columns)
+        self.assertEqual(back.iloc[0]["Verze"], "Style")
+
+    def test_new_state_already_named_verze_is_left_alone(self):
+        """If a state file already has 'Verze' (post-rename scrape), the rename
+        must be a no-op — never overwrite real Verze data with a stray legacy
+        'Výbava' column that happens to also be present."""
+        df = pd.DataFrame([{"Model auta": "m", "Verze": "Fresh", "Výbava": "Stale"}])
+        with tempfile.TemporaryDirectory() as td:
+            base = Path(td) / "s"
+            storage.write_state(df, base)
+            back = storage.read_state(base)
+        self.assertEqual(back.iloc[0]["Verze"], "Fresh")
+
 
 if __name__ == "__main__":
     unittest.main()

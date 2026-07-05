@@ -167,7 +167,7 @@ def _build_row(item, rate):
         "Typ motoru": extract_engine_type(sub),
         "Hybrid typ": hybrid,
         "Karoserie": body,
-        "Výbava": extract_trim(sub),
+        "Verze": extract_trim(sub),
         "Záruka": "Ano" if attr.get("gi") else extract_warranty(sub),
         "Dvouspojková převodovka": extract_dct(f"{gearbox} {sub}"),
         "Filtr pevných částic": extract_particle_filter(sub),

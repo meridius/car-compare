@@ -285,6 +285,7 @@
       headerTooltip: "Počet chybějících klíčových údajů (najeďte myší na ikonu pro seznam)",
     },
     { field: "Model auta", filter: "agTextColumnFilter", width: 280 },
+    { field: "Verze", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "Verze/výbava dle referenčního záznamu. Prázdné, pokud pro tento model není určena." },
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Spotřeba (l/100 km)", filter: "agNumberColumnFilter", width: 120, type: "numericColumn", headerTooltip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nU plug-in hybridů (PHEV) je prázdná: oficiální WLTP hodnota (~1 l/100 km) předpokládá nabitou baterii a je zavádějící.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
