@@ -633,9 +633,95 @@ def add_brand_model_columns(df):
     return df
 
 
+# --- Reliability score (task #30, payload-derived display column) --------
+# Owner's rule of thumb: "more cylinders and bigger displacement = more
+# reliable". This is a coarse heuristic, NOT empirical reliability data —
+# there is no dataset backing it, just a monotonic mapping from engine size
+# to a 1-5 score. Cylinder count (#24) is populated for only a slice of sauto
+# ICE rows today (sauto's detail API has no confirmed cylinder field, and no
+# other source carries one at all), so the score must degrade gracefully to a
+# volume-only estimate whenever cylinders are blank — which is most rows.
+_RELIABILITY_VOLUME_BINS = [
+    (1.0, 1),
+    (1.3, 2),
+    (1.6, 3),
+    (2.0, 4),
+]  # (inclusive upper bound in litres, score); above the last bound -> 5
+
+_RELIABILITY_CYLINDER_MAP = {4: 3, 5: 4}  # 3 (or fewer) -> 1; 6+ -> 5 (see _cylinder_component)
+
+
+def _volume_component(volume_l):
+    for upper, score in _RELIABILITY_VOLUME_BINS:
+        if volume_l <= upper:
+            return score
+    return 5
+
+
+def _cylinder_component(cylinders):
+    if cylinders <= 3:
+        return 1
+    if cylinders in _RELIABILITY_CYLINDER_MAP:
+        return _RELIABILITY_CYLINDER_MAP[cylinders]
+    return 5  # >= 6 cylinders
+
+
+def reliability_score(engine_volume, cylinder_count):
+    """Derived "Spolehlivost" score (1-5, as a string) from displacement, blended
+    with cylinder count when known. Pure helper — the ICE-only gating (EV rows
+    never get a score) lives in the caller, `add_reliability_column`, which has
+    access to 'Typ'.
+
+    Returns "" when engine_volume is missing/blank/NaN — the rule needs an
+    engine to reason about. When cylinder_count is also missing/blank, the
+    score is volume-only; when present, it's round(mean(volume component,
+    cylinder component)), clamped to [1, 5].
+    """
+    try:
+        vol = float(engine_volume)
+    except (TypeError, ValueError):
+        return ""
+    if vol != vol:  # NaN
+        return ""
+    vol_score = _volume_component(vol)
+
+    cyl = None
+    if cylinder_count not in (None, ""):
+        try:
+            cyl_f = float(cylinder_count)
+            if cyl_f == cyl_f:  # not NaN
+                cyl = cyl_f
+        except (TypeError, ValueError):
+            cyl = None
+
+    score = vol_score if cyl is None else round((vol_score + _cylinder_component(cyl)) / 2)
+    return str(int(max(1, min(5, score))))
+
+
+def add_reliability_column(df):
+    """Insert the payload-only 'Spolehlivost' column (task #30) right after
+    'Počet válců', derived from 'Objem motoru' (+ 'Počet válců' when present).
+    ICE only — EV rows have no combustion engine, so the rule doesn't apply
+    and the column stays blank. Not part of CANONICAL_COLS: this is a display
+    column computed at build time, same treatment as 'Značka'/'Model'."""
+    df = df.copy()
+    if "Typ" not in df.columns or "Objem motoru" not in df.columns:
+        return df
+    from scrapers.core.schema import TYP_ICE
+    cyl_col = df["Počet válců"] if "Počet válců" in df.columns else pd.Series("", index=df.index)
+    scores = [
+        reliability_score(vol, cyl) if typ == TYP_ICE else ""
+        for typ, vol, cyl in zip(df["Typ"], df["Objem motoru"], cyl_col)
+    ]
+    pos_col = "Počet válců" if "Počet válců" in df.columns else "Objem motoru"
+    pos = list(df.columns).index(pos_col) + 1
+    df.insert(pos, "Spolehlivost", scores)
+    return df
+
+
 PAYLOAD_NUMERIC_COLS = [
     "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
-    "Počet válců",
+    "Počet válců", "Spolehlivost",
     "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
     "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
     "Skóre shody", "Cd",
@@ -668,9 +754,13 @@ def write_payload(df, metadata, out_dir):
     Task #3: also splits 'Model auta' into the payload-only 'Značka' + 'Model'
     display columns and drops 'Model auta' — the canonical schema keeps the
     single column; only the browser-facing payload is split.
+
+    Task #30: also derives the payload-only 'Spolehlivost' column (see
+    add_reliability_column) — likewise not part of the canonical schema.
     """
     os.makedirs(out_dir, exist_ok=True)
     df = add_brand_model_columns(df)
+    df = add_reliability_column(df)
     removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
 
     live_path = os.path.join(out_dir, "cars.parquet")

@@ -276,6 +276,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },
     { field: "Počet válců", filter: "agNumberColumnFilter", w: 70, num: true, hi: true, hdr: "Počet\nválců", tip: "Počet válců spalovacího motoru. Zatím dostupné jen u části inzerátů (Sauto.cz).\nBarva buňky: zelená = více válců, červená = méně." },
+    { field: "Spolehlivost", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Hrubý odhad dle pravidla: více válců a větší objem = vyšší spolehlivost. Není to empirická spolehlivost.\nPočet válců chybí u většiny inzerátů — odhad je pak jen z objemu motoru. Jen pro spalovací motory.\nBarva buňky: zelená = vyšší, červená = nižší." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },

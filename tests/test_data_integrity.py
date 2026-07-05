@@ -292,6 +292,37 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                          f"(e.g. {offenders[0].get('Počet válců') if offenders else ''} "
                          f"{_name(offenders[0]) if offenders else ''})")
 
+    # -- Spolehlivost (#30) ---------------------------------------------------
+
+    def test_spolehlivost_in_plausible_range_when_present(self):
+        """Derived score is always an int 1-5 when present."""
+        offenders = [c for c in self.cars
+                     if isinstance(c.get("Spolehlivost"), (int, float))
+                     and not (1 <= c["Spolehlivost"] <= 5)]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows with out-of-range Spolehlivost "
+                         f"(e.g. {offenders[0].get('Spolehlivost') if offenders else ''} "
+                         f"{_name(offenders[0]) if offenders else ''})")
+
+    def test_spolehlivost_blank_for_electric_rows(self):
+        """The heuristic is about combustion engines; EV rows never get a score."""
+        offenders = [c for c in self.cars
+                     if c.get("Typ") == "Elektrické"
+                     and isinstance(c.get("Spolehlivost"), (int, float))]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} electric rows unexpectedly carry a Spolehlivost score")
+
+    def test_spolehlivost_blank_only_when_volume_blank_for_ice_rows(self):
+        """ICE rows with a known Objem motoru must always get a score — the
+        column should degrade to volume-only, never disappear outright."""
+        offenders = [c for c in self.cars
+                     if c.get("Typ") == "Spalovací"
+                     and isinstance(c.get("Objem motoru"), (int, float))
+                     and not isinstance(c.get("Spolehlivost"), (int, float))]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} combustion rows with a known engine volume "
+                         f"but no Spolehlivost score (e.g. {_name(offenders[0]) if offenders else ''})")
+
     # -- Enum columns --------------------------------------------------------
 
     def test_typ_enum(self):

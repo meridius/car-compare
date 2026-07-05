@@ -548,6 +548,63 @@ class JSONFormatTest(unittest.TestCase):
             # Verify valid JSON
             data = json.loads(content)
             self.assertIsInstance(data, list)
+class ReliabilityScoreTest(unittest.TestCase):
+    """Task #30: coarse "more cylinders + bigger displacement = more reliable"
+    heuristic (owner's rule of thumb, NOT empirical reliability data). Cylinder
+    count (#24) is populated for only a slice of sauto ICE rows today, so the
+    score must degrade gracefully to a volume-only estimate when it's blank."""
+
+    def test_small_engine_low_cylinder_count_scores_1(self):
+        self.assertEqual(B.reliability_score(1.0, 3), "1")
+
+    def test_volume_only_midsize_scores_3(self):
+        self.assertEqual(B.reliability_score(1.5, ""), "3")
+
+    def test_volume_only_two_liter_scores_4(self):
+        self.assertEqual(B.reliability_score(2.0, None), "4")
+
+    def test_big_engine_six_cylinders_scores_5(self):
+        self.assertEqual(B.reliability_score(3.0, 6), "5")
+
+    def test_blank_volume_scores_blank_regardless_of_cylinders(self):
+        # The rule needs an engine to reason about; EV rows and any ICE row
+        # missing displacement stay blank even if cylinders happen to be known.
+        self.assertEqual(B.reliability_score("", 4), "")
+        self.assertEqual(B.reliability_score(None, 4), "")
+
+    def test_nan_volume_scores_blank(self):
+        self.assertEqual(B.reliability_score(float("nan"), 4), "")
+
+    def test_blend_rounds_up_from_volume_alone(self):
+        # 1.0 l alone would score 1, but paired with 6 cylinders the blend
+        # (volume=1, cylinders=5) averages to 3 -- cylinders can lift a small
+        # engine's score, not just confirm a big one.
+        self.assertEqual(B.reliability_score(1.0, 6), "3")
+
+    def test_four_cylinders_component_is_3(self):
+        # Volume component for 1.3l is 2; blended with 4-cyl (component 3)
+        # averages to 2.5 -> rounds to 2 (Python banker's rounding: round(2.5)==2).
+        self.assertEqual(B.reliability_score(1.3, 4), "2")
+
+    def test_score_never_exceeds_bounds(self):
+        for vol, cyl in [(0.1, 1), (0.1, 2), (10.0, 12)]:
+            score = B.reliability_score(vol, cyl)
+            self.assertIn(score, {"1", "2", "3", "4", "5"})
+
+    def test_add_reliability_column_ice_only(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Objem motoru": 2.0, "Počet válců": ""},
+            {"Typ": "Elektrické", "Objem motoru": "", "Počet válců": ""},
+        ])
+        out = B.add_reliability_column(df)
+        self.assertEqual(out.loc[0, "Spolehlivost"], "4")
+        self.assertEqual(out.loc[1, "Spolehlivost"], "")
+
+    def test_add_reliability_column_positioned_after_pocet_valcu(self):
+        df = pd.DataFrame([{"Typ": "Spalovací", "Objem motoru": 1.5, "Počet válců": ""}])
+        out = B.add_reliability_column(df)
+        cols = list(out.columns)
+        self.assertEqual(cols.index("Spolehlivost"), cols.index("Počet válců") + 1)
 
 
 if __name__ == "__main__":
