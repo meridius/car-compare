@@ -82,9 +82,67 @@ class AddBrandModelColumnsTest(unittest.TestCase):
         self.assertIn("Značka", out.columns)
         self.assertIn("Model", out.columns)
         self.assertEqual(out.iloc[0]["Značka"], "Škoda")
-        self.assertEqual(out.iloc[0]["Model"], "Karoq 1.5 TSI")
+        self.assertEqual(out.iloc[0]["Model"], "Karoq")
         self.assertEqual(out.iloc[1]["Značka"], "Alfa Romeo")
-        self.assertEqual(out.iloc[1]["Model"], "Tonale 1.5")
+        self.assertEqual(out.iloc[1]["Model"], "Tonale")
+
+    def test_task4_strips_engine_vol_and_type_from_ice_model(self):
+        """Task #4: the displayed 'Model' column must not carry Objem
+        motoru / Typ motoru tokens baked into the matched auth string
+        ('Karoq 1.5 TSI') or the unmatched '_format_unmatched' tail
+        ('Mokka 1.2 Turbo') — ICE rows only."""
+        df = pd.DataFrame([
+            {"Model auta": "Škoda Karoq 1.5 TSI", "Typ": "Spalovací"},
+            {"Model auta": "Opel Mokka 1.2 Turbo", "Typ": "Spalovací"},
+            {"Model auta": "VW Golf 8 Variant 2.0 TDI", "Typ": "Spalovací"},
+        ])
+        out = B.add_brand_model_columns(df)
+        self.assertEqual(out.iloc[0]["Model"], "Karoq")
+        self.assertEqual(out.iloc[1]["Model"], "Mokka")
+        self.assertEqual(out.iloc[2]["Model"], "Golf 8 Variant")
+
+    def test_task4_ev_variant_number_not_stripped(self):
+        """'iV 80' is a battery-tier variant number, not engine displacement —
+        must survive untouched on EV rows."""
+        df = pd.DataFrame([
+            {"Model auta": "Škoda Enyaq iV 80", "Typ": "Elektrické"},
+        ])
+        out = B.add_brand_model_columns(df)
+        self.assertEqual(out.iloc[0]["Model"], "Enyaq iV 80")
+
+    def test_task4_missing_typ_column_leaves_model_untouched(self):
+        """Without a 'Typ' column we can't safely tell ICE from EV — skip
+        stripping rather than risk mangling an EV variant number."""
+        df = pd.DataFrame([{"Model auta": "Škoda Karoq 1.5 TSI"}])
+        out = B.add_brand_model_columns(df)
+        self.assertEqual(out.iloc[0]["Model"], "Karoq 1.5 TSI")
+
+
+class StripIceEngineTokensTest(unittest.TestCase):
+    """Task #4: strip_ice_engine_tokens() reuses core.fields extraction/strip
+    helpers (no parallel engine-keyword list) to remove Objem motoru / Typ
+    motoru tokens from a display 'Model' string."""
+
+    def test_strips_vol_and_type(self):
+        self.assertEqual(B.strip_ice_engine_tokens("Karoq 1.5 TSI"), "Karoq")
+
+    def test_strips_turbo_as_engine_type(self):
+        self.assertEqual(B.strip_ice_engine_tokens("Mokka 1.2 Turbo"), "Mokka")
+
+    def test_strips_tokens_from_the_middle(self):
+        self.assertEqual(
+            B.strip_ice_engine_tokens("Golf 8 Variant 2.0 TDI"), "Golf 8 Variant")
+
+    def test_no_tokens_present_returns_unchanged(self):
+        self.assertEqual(B.strip_ice_engine_tokens("Enyaq iV 80"), "Enyaq iV 80")
+
+    def test_never_returns_empty_string(self):
+        # Stripping "1.5 TSI" down to nothing would leave a blank Model —
+        # keep the original instead.
+        self.assertEqual(B.strip_ice_engine_tokens("1.5 TSI"), "1.5 TSI")
+
+    def test_blank_input(self):
+        self.assertEqual(B.strip_ice_engine_tokens(""), "")
 
 
 class PayloadWriterTest(unittest.TestCase):
@@ -143,10 +201,10 @@ class PayloadWriterTest(unittest.TestCase):
             self.assertIn("Model", frame.columns)
         row = live[live["Odkaz na auto"] == "https://x/1"].iloc[0]
         self.assertEqual(row["Značka"], "Škoda")
-        self.assertEqual(row["Model"], "Karoq 1.5 TSI")
+        self.assertEqual(row["Model"], "Karoq")  # task #4: engine tokens stripped
         row2 = archived.iloc[0]
         self.assertEqual(row2["Značka"], "Audi")
-        self.assertEqual(row2["Model"], "A4 2.0 TDI")
+        self.assertEqual(row2["Model"], "A4")  # task #4: engine tokens stripped
 
     def test_live_excludes_removed_archive_holds_only_removed(self):
         import tempfile

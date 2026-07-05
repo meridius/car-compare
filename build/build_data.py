@@ -569,11 +569,47 @@ def split_brand_model(model_auta):
     return comb_utils._parse_brand(model_auta.strip())
 
 
+def strip_ice_engine_tokens(model):
+    """Strip Objem motoru / Typ motoru tokens from a display 'Model' string
+    (task #4). ICE auth strings and `_format_unmatched()` output both append
+    displacement + engine tech to the tail (e.g. "Karoq 1.5 TSI",
+    "Mokka 1.2 Turbo") — those columns exist separately in the payload, so the
+    'Model' column showing them too is a duplicate/leak.
+
+    Reuses the existing core.fields extraction/strip helpers rather than a
+    parallel keyword list: `extract_engine_type` / `extract_engine_volume_from_model`
+    detect what's present, `strip_engine_from_model` removes it (also handles
+    prefixed variants like "eTSI").
+
+    Never returns an empty string — if stripping would blank the model
+    entirely (e.g. a bare "1.5 TSI" with no name left), the original is kept.
+    Call only for ICE rows: EV model names never carry engine vol/type by
+    construction (e.g. Enyaq's "iV 80" is a battery-tier variant number, not
+    displacement, and must not be touched).
+    """
+    if not model:
+        return model
+    from scrapers.core import fields as _fields
+    engine_type = _fields.extract_engine_type(model)
+    engine_vol = _fields.extract_engine_volume_from_model(model)
+    if not engine_type and not engine_vol:
+        return model
+    stripped = _fields.strip_engine_from_model(model, engine_vol, engine_type)
+    return stripped if stripped.strip() else model
+
+
 def add_brand_model_columns(df):
     """Payload-only transform (task #3): derive 'Značka' + 'Model' from
     'Model auta' and drop 'Model auta' from the frame. Called once, right
     before the payload is written — every upstream step (matching, merge,
-    reference joins) still reads/writes the single 'Model auta' column."""
+    reference joins) still reads/writes the single 'Model auta' column.
+
+    Task #4: on ICE rows (Typ == "Spalovací"), also strips engine
+    volume/type tokens from the derived 'Model' (see strip_ice_engine_tokens)
+    so the display column never duplicates the dedicated 'Objem motoru' /
+    'Typ motoru' columns. EV rows are left untouched — a 'Typ' column is
+    required to gate this safely; if it's absent, no stripping happens.
+    """
     df = df.copy()
     if "Model auta" not in df.columns:
         return df
@@ -581,6 +617,13 @@ def add_brand_model_columns(df):
     split = df["Model auta"].map(split_brand_model)
     znacka = split.map(lambda t: t[0])
     model = split.map(lambda t: t[1])
+    if "Typ" in df.columns:
+        from scrapers.core.schema import TYP_ICE
+        is_ice = df["Typ"] == TYP_ICE
+        model = pd.Series(
+            [strip_ice_engine_tokens(m) if ice else m for m, ice in zip(model, is_ice)],
+            index=df.index,
+        )
     df = df.drop(columns=["Model auta"])
     df.insert(pos, "Model", model)
     df.insert(pos, "Značka", znacka)

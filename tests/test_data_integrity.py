@@ -17,6 +17,7 @@ sys.path.insert(0, ROOT)
 
 from scrapers.core.schema import CANONICAL_COLS  # noqa: E402
 from scrapers.core.matching import load_authoritative_list  # noqa: E402
+from build.build_data import strip_ice_engine_tokens  # noqa: E402
 
 CARS_PARQUET = os.path.join(ROOT, "site", "data", "cars.parquet")
 CARS_META = os.path.join(ROOT, "site", "data", "cars-meta.json")
@@ -366,11 +367,14 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         entry in ice_specs.csv's PK column ('Jednoznačná varianta vozu') —
         match_to_authoritative rewrites it to that exact string on a
         confident match (core/matching.py). The payload no longer carries
-        'Model auta' directly (task #3 split it into 'Značka' + 'Model'), so
-        reconstruct it via _name() — the exact inverse of
-        build_data.split_brand_model for single-space-joined names — to keep
-        this guard meaningful."""
-        entries = {r["entry"] for r in load_authoritative_list(ICE_SPECS_CSV)}
+        'Model auta' directly: task #3 split it into 'Značka' + 'Model', and
+        task #4 additionally strips Objem motoru / Typ motoru tokens (e.g.
+        "1.5 TSI") off the displayed 'Model' so it isn't duplicated with the
+        dedicated columns. Reconstruct via _name() and apply the identical
+        strip to each auth entry before comparing, so the guard still checks
+        real identity rather than being neutered by the stripped suffix."""
+        entries = {strip_ice_engine_tokens(r["entry"])
+                   for r in load_authoritative_list(ICE_SPECS_CSV)}
         offenders = [c for c in self.ice
                      if c.get("Spárováno") == "Ano" and _name(c) not in entries]
         self.assertEqual(offenders, [],
