@@ -35,7 +35,10 @@ HEADERS = {**http.DEFAULT_HEADERS, "X-Mobile-Client": "de.mobile.android.app"}
 # queries are split recursively on price bands (EUR) until each slice fits.
 RESULT_CAP = 2000
 PAGE_SIZE = 100
-CONCURRENCY = 5
+# Low on purpose: the endpoint is behind Akamai Bot Manager (see _search). Steady,
+# low-concurrency access from the CI (datacenter) IP is far less likely to trip a
+# behavioural block than the old bursty fan-out. Every request is sem-bounded.
+CONCURRENCY = 3
 
 EV_COUNTRIES = ("CZ", "SK", "AT", "PL", "DE")
 ICE_COUNTRIES = ("CZ", "SK", "AT", "PL", "DE")
@@ -208,34 +211,83 @@ async def _get_eur_czk_rate(session):
     return EUR_CZK_FALLBACK
 
 
-async def _search(session, params, offset, page_size=PAGE_SIZE):
-    """One search GET; retries once, then propagates (a dead endpoint must abort
-    the source before pipeline writes the CSV, keeping yesterday's file intact)."""
+# The endpoint sits behind Akamai Bot Manager, which returns a bare 403 (no
+# Retry-After / rate-limit headers) once a datacenter IP crosses a cumulative,
+# behavioural threshold — it doesn't trip on instantaneous concurrency (probed
+# 120 concurrent = all 200) but on sustained volume from a flagged (cloud) IP.
+# So: bound EVERY request through the semaphore (incl. counts — see below) and,
+# on a block, back off progressively to let the (windowed) block clear before
+# giving up. 503/429 are treated the same way.
+_RATE_LIMIT_STATUSES = {403, 429, 503}
+_SEARCH_ATTEMPTS = 5
+_RATE_LIMIT_BACKOFF = (5, 15, 45, 90)  # seconds; index by attempt, last repeats
+
+
+class _RateLimited(Exception):
+    def __init__(self, retry_after=None):
+        self.retry_after = retry_after
+
+
+class _AsyncNull:
+    """Async no-op context — lets _search run without a semaphore (tests)."""
+    async def __aenter__(self):
+        return self
+
+    async def __aexit__(self, *exc):
+        return False
+
+
+def _parse_retry_after(headers):
+    """Seconds from a Retry-After header, if present and numeric (Akamai sends
+    none, but honour it if the endpoint ever grows one). HTTP-date form → None."""
+    val = headers.get("Retry-After") if headers else None
+    try:
+        return float(val) if val else None
+    except (TypeError, ValueError):
+        return None
+
+
+async def _search(session, params, offset, sem, page_size=PAGE_SIZE):
+    """One semaphore-bounded search GET. Retries with progressive backoff on an
+    Akamai rate-limit response (403/429/503); the backoff sleep happens OUTSIDE
+    the semaphore so a throttled worker never holds a slot. Propagates after
+    _SEARCH_ATTEMPTS so a hard block aborts the source before the pipeline
+    overwrites good state (the leg is continue-on-error in CI)."""
     query = [(k, str(v)) for k, v in params] + [("ps", str(offset)), ("psz", str(page_size))]
-    for attempt in (1, 2):
+    guard = sem if sem is not None else _AsyncNull()
+    for attempt in range(_SEARCH_ATTEMPTS):
         try:
-            await asyncio.sleep(random.uniform(0.05, 0.2))  # politeness jitter
-            async with session.get(SEARCH_URL, params=query) as resp:
-                resp.raise_for_status()
-                return await resp.json()
+            async with guard:
+                await asyncio.sleep(random.uniform(0.1, 0.35))  # politeness jitter
+                async with session.get(SEARCH_URL, params=query) as resp:
+                    if resp.status in _RATE_LIMIT_STATUSES:
+                        raise _RateLimited(_parse_retry_after(resp.headers))
+                    resp.raise_for_status()
+                    return await resp.json()
+        except _RateLimited as rl:
+            if attempt == _SEARCH_ATTEMPTS - 1:
+                raise
+            wait = rl.retry_after
+            if wait is None:
+                wait = _RATE_LIMIT_BACKOFF[min(attempt, len(_RATE_LIMIT_BACKOFF) - 1)]
+            await asyncio.sleep(wait + random.random())
         except Exception:
-            if attempt == 2:
+            if attempt == _SEARCH_ATTEMPTS - 1:
                 raise
             await asyncio.sleep(1 + random.random())
 
 
-async def _count(session, params):
-    data = await _search(session, params, 0, page_size=1)
+async def _count(session, params, sem):
+    data = await _search(session, params, 0, sem, page_size=1)
     return data.get("numResultsTotal") or 0
 
 
 async def _fetch_slice(session, params, total, sem):
     """Page one sub-cap query to its end. Pages are serial inside the slice;
-    the semaphore bounds cross-slice concurrency."""
+    the semaphore (applied per request in _search) bounds cross-slice concurrency."""
     items = []
     for offset in range(0, min(total, RESULT_CAP), PAGE_SIZE):
-        async with sem:
-            data = await _search(session, params, offset)
+        data = await _search(session, params, offset, sem)
         batch = data.get("items") or []
         if not batch:
             break
@@ -246,9 +298,10 @@ async def _fetch_slice(session, params, total, sem):
 async def _fetch_banded(session, params, price_lo, price_hi, sem):
     """Fetch every result by recursively halving the EUR price band while a
     band would hit the 2000-result cap. Boundary duplicates are deduped by
-    link in pipeline.run_source."""
+    link in pipeline.run_source. Every request (counts included) goes through
+    the semaphore, so the recursive gather fan-out can't burst the endpoint."""
     banded = tuple(params) + (("p", f"{price_lo}:{price_hi}"),)
-    total = await _count(session, banded)
+    total = await _count(session, banded, sem)
     if total == 0:
         return []
     if total < RESULT_CAP or price_hi - price_lo <= 1:

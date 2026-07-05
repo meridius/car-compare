@@ -186,14 +186,15 @@ daily-fixing text endpoint at scrape time; on any failure a fallback constant
 Only `price.type == "FIXED"` is accepted (leasing/financing offers carry other
 types), and sauto's `MIN_PRICE_KC = 100000` backstop applies after conversion.
 
-### fuels are include-only; DE is EV-only
+### fuels are include-only; DE enabled for both EV and ICE
 
 The API has no exclude operator — LPG/CNG/hydrogen are excluded by simply not
 requesting them (`ft=PETROL&ft=DIESEL&ft=ELECTRICITY&ft=HYBRID&ft=HYBRID_DIESEL`
 is the full allowed universe; repeated params are OR). `_build_row` re-checks
-`attr.ft` against `_FUEL_MAP` as belt-and-suspenders. Germany is in `EV_COUNTRIES`
-but **not** `ICE_COUNTRIES`: DE ICE under our filters is ~123k listings (vs ~1.3k
-for CZ+SK+AT+PL), which would swamp the dataset. Hybrids arrive as
+`attr.ft` against `_FUEL_MAP` as belt-and-suspenders. Germany is now in **both**
+`EV_COUNTRIES` and `ICE_COUNTRIES` (decision 001 enabled DE ICE — ~123k listings
+vs ~1.3k for CZ+SK+AT+PL, the bulk of the dataset). That request volume is what
+makes the Akamai block below matter. Hybrids arrive as
 `ft="Hybrid (Benzin/Elektro)"` / `"Hybrid (Diesel/Elektro)"` → Palivo Benzín/Nafta +
 `Hybrid typ` from `extract_hybrid_type(subTitle)`, defaulting to HEV.
 
@@ -206,6 +207,35 @@ Make names lose their diacritics ("Skoda", "Citroen") — BRAND_MAP restores the
 otherwise ICE matching finds no brand candidates. Category `attr.c` uses mobile.de's
 own body taxonomy (OffRoad→SUV, EstateCar→Kombi, Limousine→Sedan/limuzína, …) — note
 German "Limousine" lumps sedans with some hatchbacks.
+
+### Akamai Bot Manager — low concurrency + patient backoff, no rate headers
+
+The `/api/s/` endpoint sits behind Akamai Bot Manager (`Akamai-GRN` header,
+`ak_bmsc` cookie). Probed 2026-07-05: it does **not** trip on instantaneous
+concurrency (120 concurrent = all 200) nor on sustained low-rate sequential load
+(225 sequential @ ~4/s = all 200). It blocks with a **bare 403 — no Retry-After
+or X-RateLimit-\* headers** — once a *datacenter* IP crosses a cumulative,
+behavioural threshold: a GitHub-hosted (Azure) runner gets flagged where a
+residential IP doesn't, and in CI the daily scrape 403'd only after EV's hundreds
+of requests, mid-ICE. So the block is about *who + how much over time*, not raw
+burst rate. Mitigations in the adapter:
+
+- **Every** request is semaphore-bounded. `_count` used to bypass the semaphore,
+  so the recursive `_fetch_banded` gather fanned out *unbounded* concurrent count
+  requests (the burstiest, most bot-like phase). All requests now go through
+  `_search(…, sem)`.
+- `CONCURRENCY = 3` (was 5): steady low-concurrency pacing over bursts.
+- `_search` rides out `403/429/503` with a progressive backoff
+  (`_RATE_LIMIT_BACKOFF = 5/15/45/90 s`; honours a numeric `Retry-After` if the
+  endpoint ever grows one) so a *windowed* block clears before the leg gives up.
+  The backoff sleep is **outside** the semaphore so a throttled worker doesn't
+  hold a slot. After `_SEARCH_ATTEMPTS` it propagates.
+- The leg staying `continue-on-error` in CI is deliberate: a hard block aborts
+  the source so the pipeline reuses last-known state. A *partial* ICE scrape must
+  never be written — merge would mark the missing bands' listings `Odstraněno`.
+- Ceiling on what this can achieve: Akamai ultimately wants a real browser's JS
+  sensor (unavailable here). If the datacenter IP is hard-blocked regardless,
+  the sanctioned Search-API (see the keyless-endpoint gotcha) is the fallback.
 
 ### Stav is always blank
 

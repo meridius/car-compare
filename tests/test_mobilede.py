@@ -5,6 +5,8 @@ import sys
 import unittest
 from unittest import mock
 
+import aiohttp
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scrapers.core.normalize import normalize_model
@@ -178,7 +180,7 @@ class FetchBandedTest(unittest.TestCase):
         """counts: {(lo, hi): total}. Fake _count/_fetch_slice; items = one dict per result."""
         fetched = []
 
-        async def fake_count(session, params):
+        async def fake_count(session, params, sem):
             band = dict(params)["p"]
             lo, hi = (int(x) for x in band.split(":"))
             return counts.get((lo, hi), 0)
@@ -208,6 +210,105 @@ class FetchBandedTest(unittest.TestCase):
         items, fetched = self._run({(0, 30000): 0})
         self.assertEqual(items, [])
         self.assertEqual(fetched, [])
+
+
+class _FakeResp:
+    def __init__(self, status, json_data=None, headers=None):
+        self.status = status
+        self._json = json_data if json_data is not None else {}
+        self.headers = headers or {}
+
+    def raise_for_status(self):
+        if self.status >= 400:
+            raise aiohttp.ClientResponseError(
+                request_info=mock.Mock(), history=(), status=self.status)
+
+    async def json(self):
+        return self._json
+
+
+class _FakeGetCtx:
+    def __init__(self, resp):
+        self.resp = resp
+
+    async def __aenter__(self):
+        return self.resp
+
+    async def __aexit__(self, *exc):
+        return False
+
+
+class _FakeSession:
+    """Yields the queued responses in order; the last one repeats."""
+    def __init__(self, responses):
+        self.responses = list(responses)
+        self.calls = 0
+
+    def get(self, url, params=None):
+        resp = self.responses[min(self.calls, len(self.responses) - 1)]
+        self.calls += 1
+        return _FakeGetCtx(resp)
+
+
+class SearchBackoffTest(unittest.TestCase):
+    """_search must ride out Akamai rate-limit (403/429/503) responses with
+    progressive backoff, and give up only after _SEARCH_ATTEMPTS."""
+
+    def _run(self, responses):
+        sem = asyncio.Semaphore(mobilede.CONCURRENCY)
+        session = _FakeSession(responses)
+        slept = []
+
+        async def fake_sleep(secs):
+            slept.append(secs)
+
+        async def drive():
+            return await mobilede._search(session, (), 0, sem)
+
+        with mock.patch.object(mobilede.asyncio, "sleep", fake_sleep):
+            result = asyncio.run(drive())
+        return result, session.calls, slept
+
+    def test_recovers_after_rate_limit(self):
+        # two 403s then a 200 → returns the payload, after backoff sleeps
+        responses = [_FakeResp(403), _FakeResp(403),
+                     _FakeResp(200, {"numResultsTotal": 5, "items": []})]
+        result, calls, slept = self._run(responses)
+        self.assertEqual(result["numResultsTotal"], 5)
+        self.assertEqual(calls, 3)
+        # backoff waits (>= first two schedule entries) were used, not just jitter
+        big = [s for s in slept if s >= mobilede._RATE_LIMIT_BACKOFF[0]]
+        self.assertGreaterEqual(len(big), 2)
+
+    def test_persistent_rate_limit_raises(self):
+        responses = [_FakeResp(403)]  # always 403
+        with self.assertRaises(mobilede._RateLimited):
+            self._run(responses)
+
+    def test_honours_numeric_retry_after(self):
+        responses = [_FakeResp(429, headers={"Retry-After": "7"}),
+                     _FakeResp(200, {"numResultsTotal": 1, "items": []})]
+        _, _, slept = self._run(responses)
+        self.assertTrue(any(7 <= s < 9 for s in slept),
+                        f"Retry-After not honoured; sleeps={slept}")
+
+    def test_non_rate_error_also_retried(self):
+        # a 500 is retried on the generic path, then succeeds
+        responses = [_FakeResp(500), _FakeResp(200, {"numResultsTotal": 2, "items": []})]
+        result, calls, _ = self._run(responses)
+        self.assertEqual(result["numResultsTotal"], 2)
+        self.assertEqual(calls, 2)
+
+
+class RetryAfterParseTest(unittest.TestCase):
+    def test_numeric(self):
+        self.assertEqual(mobilede._parse_retry_after({"Retry-After": "12"}), 12.0)
+
+    def test_missing(self):
+        self.assertIsNone(mobilede._parse_retry_after({}))
+
+    def test_http_date_ignored(self):
+        self.assertIsNone(mobilede._parse_retry_after({"Retry-After": "Wed, 21 Oct 2026 07:28:00 GMT"}))
 
 
 class CnbRateTest(unittest.TestCase):
