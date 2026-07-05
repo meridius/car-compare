@@ -206,6 +206,14 @@ jobs:
     # Pages only deploys from main (the github-pages environment blocks other refs),
     # so keep the branch guard to keep feature-branch runs green.
     if: ${{ always() && needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
+    # Guard against two runs deploying the same content at once (e.g. a push and a
+    # manual scrape dispatch fired together) — they otherwise race on the single
+    # github-pages deployment and both fail with "Deployment failed, try again
+    # later". A deploy-scoped group with cancel-in-progress lets the newer deploy
+    # supersede the older cleanly; the latest content is always what we want live.
+    concurrency:
+      group: pages-deploy
+      cancel-in-progress: true
     runs-on: ubuntu-latest
     environment:
       name: github-pages
