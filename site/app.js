@@ -900,6 +900,11 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         card4.appendChild(link);
         body.appendChild(card4);
       }
+
+      // Data-selection criteria (hard filters each scraper applies)
+      if (appMetadata.filters && appMetadata.filters.length) {
+        body.appendChild(makeFiltersCard(appMetadata.filters));
+      }
     } else {
       var noData = makeCard("");
       var p = document.createElement("p");
@@ -1085,6 +1090,64 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     }
     tbl.appendChild(tr);
     return tr;
+  }
+
+  // "Kritéria výběru dat" — renders the per-source hard filters carried in
+  // cars-meta.json.filters (source of truth: scrapers/core/filters.py).
+  function makeFiltersCard(sources) {
+    var card = makeCard("Kritéria výběru dat");
+    var intro = document.createElement("p");
+    intro.className = "filters-intro";
+    intro.textContent = "Pevné filtry, kterými je omezen sběr dat z každého zdroje. "
+      + "Auta mimo tato kritéria se do databáze vůbec nedostanou.";
+    card.appendChild(intro);
+
+    function bulletList(items) {
+      var ul = document.createElement("ul");
+      ul.className = "filters-list";
+      for (var i = 0; i < items.length; i++) {
+        var li = document.createElement("li");
+        li.textContent = items[i];
+        ul.appendChild(li);
+      }
+      return ul;
+    }
+
+    for (var s = 0; s < sources.length; s++) {
+      var src = sources[s];
+      var block = document.createElement("div");
+      block.className = "filters-source";
+
+      var h = document.createElement("h4");
+      h.textContent = src.source;
+      block.appendChild(h);
+
+      if (src.note) {
+        var note = document.createElement("p");
+        note.className = "filters-note";
+        note.textContent = src.note;
+        block.appendChild(note);
+      }
+
+      var common = src.common || [], ev = src.ev || [], ice = src.ice || [];
+      if (common.length) block.appendChild(bulletList(common));
+      if (ev.length) {
+        var evLbl = document.createElement("p");
+        evLbl.className = "filters-sublabel";
+        evLbl.textContent = "Elektrické navíc:";
+        block.appendChild(evLbl);
+        block.appendChild(bulletList(ev));
+      }
+      if (ice.length) {
+        var iceLbl = document.createElement("p");
+        iceLbl.className = "filters-sublabel";
+        iceLbl.textContent = "Spalovací navíc:";
+        block.appendChild(iceLbl);
+        block.appendChild(bulletList(ice));
+      }
+      card.appendChild(block);
+    }
+    return card;
   }
 
   function loadChart() {

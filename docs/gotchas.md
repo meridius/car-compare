@@ -118,6 +118,20 @@ The API field `vehicle_body_cb.name` returns Czech body names (Kombi, SUV, Hatch
 
 sauto sometimes returns `model_cb` "Ostatní" for not-yet-indexed models (e.g. a just-launched EV); the real model hides in `additional_model_name` as a project code / trim string. `_recover_ostatni_model()` maps known cases (e.g. Kia EV2 via "QV1" / 42.2 kWh battery) so the car still matches the reference list.
 
+### hard filters are centralized + surfaced on the dashboard
+
+The numeric search thresholds both API scrapers enforce (year, mileage, price,
+power, seats) live in **one** place — `scrapers/core/filters.py`. sauto.py and
+mobilede.py import the constants (`MAX_MILEAGE_KM` etc.) rather than hard-coding
+literals, and `filters.SOURCE_FILTERS` (human-readable, built from the same
+constants) is written into `cars-meta.json.filters` by `build_data` and shown in
+the dashboard "Přehled dat" overview as the "Kritéria výběru dat" card. So the
+enforced value, the advertised value, and `tests/test_filters.py` can never
+drift. To change a filter, edit `filters.py` only. Mileage ceiling is
+`MAX_MILEAGE_KM = 150000` (raised from 100k on a family request). autodraft and
+energycars scrape whole dealer inventories — they apply no numeric filter and
+their `SOURCE_FILTERS` entries are empty (just a note).
+
 ### operating-lease takeovers leak past the `operating_lease=false` filter
 
 Some listings are operating-lease takeovers ("Převzetí Op. Leasingu") whose `price`
@@ -125,7 +139,7 @@ is a buyout fee / akontace, not a purchase price (e.g. a Nissan X-Trail at 12 02
 The search filter `operating_lease=false` doesn't catch them. `_is_valid_purchase()`
 (sauto.py) rejects them via detail fields `price_payment_count` /
 `price_original_compensation` / `price_leasing`, plus a `MIN_PRICE_KC = 100000`
-floor backstop (under our year≥2021 / km≤100k filters nothing real is cheaper — the
+floor backstop (under our year≥2021 / km≤150k filters nothing real is cheaper — the
 3 bogus rows were 12 023 / 17 009 / 60 500, the next legit car jumps to 150 000+).
 Both `build_ev` and `build_ice` drop the row (`return None`).
 

@@ -446,9 +446,11 @@ class PayloadContractTest(unittest.TestCase):
         self.assertEqual(
             set(meta),
             {"buildDate", "trigger", "sources", "matching", "referenceData",
-             "totalCars", "archivedCars"},
+             "totalCars", "archivedCars", "filters"},
         )
         self.assertGreater(meta["totalCars"], 0)
+        # filters carries the per-source hard-filter criteria for the dashboard
+        self.assertTrue(any(s["source"] == "Sauto.cz" for s in meta["filters"]))
 
     def test_live_payload_has_no_removed_rows(self):
         """cars.parquet is the always-loaded live set — removed listings belong

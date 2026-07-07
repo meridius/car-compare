@@ -150,11 +150,24 @@ Body types use synonym groups (`_BODY_GROUPS`): Kombi↔Combi↔Variant↔SW↔A
 - **ICE**: matched twice. At scrape time (`pipeline.run_source` → `match_to_authoritative` against `ice_specs.csv`) and again in `build_data.py` (re-match the concatenated dataset). Matching **rewrites "Model auta"** to the canonical reference string.
 - **EV**: not matched at scrape time. Enriched only in `build_data.py` via a **prefix join** against `ev_specs.csv` (adds spec columns; does not rewrite the model name).
 
+## Hard Filters (single source of truth)
+
+The shared numeric thresholds both API scrapers enforce live in
+`scrapers/core/filters.py` (`MIN_YEAR`, `MAX_MILEAGE_KM`, `MIN_PRICE_KC`,
+`MAX_PRICE_KC`, `MIN_POWER_KW_ICE`, `MIN_SEATS`). The adapters import them (no
+literals), and `filters.SOURCE_FILTERS` — a human-readable per-source
+description built *from* those constants — is emitted into
+`cars-meta.json.filters` by `build_data` and rendered in the dashboard's
+"Přehled dat" overview ("Kritéria výběru dat" card). Change a threshold once;
+adapter query, dashboard text, and `tests/test_filters.py` move together.
+autodraft/energycars scrape a curated dealer inventory whole — no numeric filter.
+
 ## sauto API Filters
 
-Hard-coded in `scrapers/sources/sauto.py`. Shared `_BASE_PARAMS`, then per-fuel:
+Hard-coded in `scrapers/sources/sauto.py`, thresholds from `core/filters.py`.
+Shared `_BASE_PARAMS`, then per-fuel:
 
-`_BASE_PARAMS`: `price_to` 750 000 Kč · `vehicle_age_from` 2021 · `tachometer_to` 100 000 km · `capacity_from` 4 seats · `door_from` 5 doors · `category_id` 838 (passenger) · `operating_lease` false.
+`_BASE_PARAMS`: `price_to` 750 000 Kč · `vehicle_age_from` 2021 · `tachometer_to` 150 000 km · `capacity_from` 4 seats · `door_from` 5 doors · `category_id` 838 (passenger) · `operating_lease` false.
 
 - **EV** (`EV_PARAMS`): `fuel_seo` `elektro` + `equipment_seo` `tepelne-cerpadlo` (heat pump required).
 - **ICE** (`ICE_PARAMS`): `fuel_seo` `benzin,nafta,lpg-benzin,cng-benzin` · `engine_power_from` 100 kW · `condition_seo` `nove,ojete,predvadeci` · `typ_seo` `cuv,kombi,suv,hatchback,mpv`.
@@ -164,7 +177,7 @@ The result is a **pre-screened subset**, not all listings.
 ## mobile.de API Filters
 
 Hard-coded in `scrapers/sources/mobilede.py`, mirroring sauto where the app API allows.
-Shared `_BASE_PARAMS`: `fr` 2021: · `ml` :100000 km · `sc` 4: seats · `door`
+Shared `_BASE_PARAMS`: `fr` 2021: · `ml` :150000 km · `sc` 4: seats · `door`
 FOUR_OR_FIVE · `dam` false (no damaged cars) · price band `p` 0:⌈750 000 Kč / CNB
 rate⌉ EUR. Repeated params are OR (`ft`, `cn`).
 

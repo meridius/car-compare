@@ -121,6 +121,24 @@ def scenario_overview_matching(page):
     return "#summary-overlay"
 
 
+def scenario_data_filters(page):
+    """Open the dataset overview and scroll the 'Kritéria výběru dat' card into
+    view — the per-source hard filters (mileage, price, year, …) fed from
+    cars-meta.json.filters."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-overlay .filters-source", timeout=10000)
+    page.wait_for_timeout(300)
+    page.evaluate(
+        "var h=[].slice.call(document.querySelectorAll('#summary-overlay h3'))"
+        ".find(function(e){return (e.textContent||'').trim()==="
+        "'Kritéria výběru dat';});"
+        "if(h){h.scrollIntoView({block:'start'});}"
+    )
+    page.wait_for_timeout(200)
+    return "#summary-overlay"
+
+
 def scenario_archive(page):
     """Click 'Načíst archiv' to lazy-load cars-archived.parquet, then filter the
     grid to the loaded removed listings so the archive rows are visible in the
@@ -283,6 +301,7 @@ SCENARIOS = {
     "sparovano": scenario_sparovano,
     "transmission-type-col": scenario_transmission_type_col,
     "overview-matching": scenario_overview_matching,
+    "data-filters": scenario_data_filters,
     "archive": scenario_archive,
     "filter-chips": scenario_filter_chips,
     "ref-search": scenario_ref_search,

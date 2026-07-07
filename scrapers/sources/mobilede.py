@@ -11,6 +11,7 @@ import re
 import aiohttp
 
 from scrapers.core import http, schema
+from scrapers.core import filters
 from scrapers.core.normalize import normalize_model
 from scrapers.core.fields import (
     extract_body_type, extract_engine_type, extract_hybrid_type, extract_trim,
@@ -26,8 +27,8 @@ SEARCH_URL = "https://www.mobile.de/api/s/"
 CNB_RATE_URL = ("https://www.cnb.cz/cs/financni_trhy/devizovy_trh/"
                 "kurzy_devizoveho_trhu/denni_kurz.txt")
 EUR_CZK_FALLBACK = 24.5
-PRICE_CEILING_KC = 750000
-MIN_PRICE_KC = 100000  # same operating-lease/deposit backstop as sauto
+PRICE_CEILING_KC = filters.MAX_PRICE_KC
+MIN_PRICE_KC = filters.MIN_PRICE_KC  # same operating-lease/deposit backstop as sauto
 
 HEADERS = {**http.DEFAULT_HEADERS, "X-Mobile-Client": "de.mobile.android.app"}
 
@@ -45,12 +46,12 @@ ICE_COUNTRIES = ("CZ", "SK", "AT", "PL", "DE")
 
 _BASE_PARAMS = (
     ("s", "Car"), ("vc", "Car"),
-    ("fr", "2021:"), ("ml", ":100000"),
-    ("sc", "4:"), ("door", "FOUR_OR_FIVE"), ("dam", "false"),
+    ("fr", f"{filters.MIN_YEAR}:"), ("ml", f":{filters.MAX_MILEAGE_KM}"),
+    ("sc", f"{filters.MIN_SEATS}:"), ("door", "FOUR_OR_FIVE"), ("dam", "false"),
 )
 EV_FUELS = (("ft", "ELECTRICITY"),)
 ICE_FUELS = tuple(("ft", f) for f in ("PETROL", "DIESEL", "HYBRID", "HYBRID_DIESEL"))
-ICE_EXTRA = (("pw", "100:"),)
+ICE_EXTRA = (("pw", f"{filters.MIN_POWER_KW_ICE}:"),)
 
 # attr.cn is an ISO-3166 alpha-2 code; the canonical "Země" column carries the
 # Czech country name. Unknown codes fall through as-is (never silently dropped).

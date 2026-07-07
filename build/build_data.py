@@ -13,6 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # scraper never re-processes) — get backed by the current reference list.
 sys.path.insert(0, BASE_DIR)
 from scrapers.core import matching as comb_utils  # noqa: E402
+from scrapers.core.filters import SOURCE_FILTERS  # noqa: E402
 from scrapers.core.normalize import normalize_model as _normalize_model  # noqa: E402
 
 
@@ -983,6 +984,10 @@ def main():
         },
         "totalCars": len(df_live),       # rows in the always-loaded cars.parquet
         "archivedCars": archived_count,  # rows in the lazy-loaded cars-archived.parquet
+        # Hard search filters each scraper applies (scrapers/core/filters.py),
+        # surfaced in the dashboard "Přehled dat" overview so users see the
+        # selection criteria that shaped the dataset.
+        "filters": SOURCE_FILTERS,
     }
     live_count = len(df_live)
 

@@ -638,6 +638,62 @@ a:hover { text-decoration: underline; }
     margin-top: 8px;
 }
 
+/* ── Data-selection criteria card ── */
+.filters-intro {
+    font-size: 0.82rem;
+    color: var(--clr-text-muted);
+    margin-bottom: 12px;
+}
+
+/* sources laid out two-up on wide screens, stacked on narrow */
+.summary-card .filters-source {
+    display: inline-block;
+    vertical-align: top;
+    width: calc(50% - 12px);
+    margin-right: 12px;
+    margin-bottom: 12px;
+}
+
+@media (max-width: 640px) {
+    .summary-card .filters-source {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+    }
+}
+
+.filters-source h4 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--clr-text);
+    margin-bottom: 2px;
+}
+
+.filters-note {
+    font-size: 0.75rem;
+    color: var(--clr-text-muted);
+    font-style: italic;
+    margin-bottom: 6px;
+}
+
+.filters-sublabel {
+    font-size: 0.75rem;
+    color: var(--clr-text-muted);
+    margin: 4px 0 2px;
+}
+
+.filters-list {
+    list-style: disc;
+    padding-left: 18px;
+    margin: 0 0 6px;
+}
+
+.filters-list li {
+    font-size: 0.8rem;
+    color: var(--clr-text);
+    line-height: 1.5;
+}
+
 /* ── Navigation ── */
 .nav-link {
     font-size: 0.85rem;

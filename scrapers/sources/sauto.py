@@ -4,6 +4,7 @@ import re
 import aiohttp
 
 from scrapers.core import http, schema
+from scrapers.core import filters
 from scrapers.core.normalize import normalize_model
 from scrapers.core.fields import (
     extract_body_type, extract_engine_volume, extract_engine_type,
@@ -23,12 +24,15 @@ DETAIL_URL = "https://www.sauto.cz/api/v1/items/{id}"
 LISTING_URL = "https://www.sauto.cz/osobni/detail/{man}/{mod}/{id}"
 
 _BASE_PARAMS = {
-    "price_to": 750000, "vehicle_age_from": 2021, "tachometer_to": 100000,
-    "capacity_from": 4, "door_from": 5, "category_id": 838, "operating_lease": "false",
+    "price_to": filters.MAX_PRICE_KC, "vehicle_age_from": filters.MIN_YEAR,
+    "tachometer_to": filters.MAX_MILEAGE_KM,
+    "capacity_from": filters.MIN_SEATS, "door_from": 5, "category_id": 838,
+    "operating_lease": "false",
 }
 EV_PARAMS = {**_BASE_PARAMS, "fuel_seo": "elektro", "equipment_seo": "tepelne-cerpadlo"}
 ICE_PARAMS = {**_BASE_PARAMS, "fuel_seo": "benzin,nafta,lpg-benzin,cng-benzin",
-              "engine_power_from": 100, "condition_seo": "nove,ojete,predvadeci",
+              "engine_power_from": filters.MIN_POWER_KW_ICE,
+              "condition_seo": "nove,ojete,predvadeci",
               "typ_seo": "cuv,kombi,suv,hatchback,mpv"}
 
 AWD_RE = re.compile(r'všech\s+kol|4x4|AWD|4MATIC|quattro|xDrive', re.IGNORECASE)
@@ -86,9 +90,9 @@ def _common(item, detail):
     return model_base, suffix, price, mileage, year
 
 
-# Below this, under our year(>=2021)/mileage(<=100k) filters, a figure is never a
-# real purchase price — it's a buyout fee / akontace / monthly scheme.
-MIN_PRICE_KC = 100000
+# Below this, under our year/mileage filters, a figure is never a real purchase
+# price — it's a buyout fee / akontace / monthly scheme. Shared with mobile.de.
+MIN_PRICE_KC = filters.MIN_PRICE_KC
 
 
 def _is_valid_purchase(price, detail):
