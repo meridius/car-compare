@@ -349,7 +349,7 @@ def main():
     row_count = 0
 
     def on_console(msg):
-        if msg.type == "error" and "favicon" not in msg.text.lower() and "error #239" not in msg.text:
+        if msg.type == "error" and "favicon" not in msg.text.lower():
             errors.append("console: " + msg.text)
 
     try:

@@ -767,6 +767,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     renderThresholdInputs();
 
     var gridOptions = {
+      theme: "legacy",
       columnDefs: buildColumnDefs(),
       rowData: data,
       rowHeight: 25,
