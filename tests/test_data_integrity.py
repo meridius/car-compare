@@ -470,5 +470,64 @@ class PayloadContractTest(unittest.TestCase):
         self.assertEqual(meta["archivedCars"], len(_records(CARS_ARCHIVED)))
 
 
+class BodyTypeConsistencyTest(unittest.TestCase):
+    """Pins the family bug fix: reference-driven + vocabulary-folded Karoserie
+    (build_data.apply_reference_body_specs + canonicalize_body_vocab). The core
+    invariant is 'same car → one body'."""
+
+    # The canonical display vocabulary the whole grid must collapse onto.
+    CANON = {"SUV", "Hatchback", "Kombi", "Sedan", "MPV", "Kupé", "Pick-up"}
+
+    @classmethod
+    def setUpClass(cls):
+        cls.cars = _records(CARS_PARQUET)
+
+    def test_vocab_is_canonical(self):
+        """No synonym sprawl leaks: every non-blank Karoserie is in the canonical
+        set (no CUV / Terénní / VAN / Combi / Liftback / Sedan-limuzína …)."""
+        stray = sorted({str(c["Karoserie"]) for c in self.cars
+                        if c.get("Karoserie") and str(c["Karoserie"]) not in self.CANON})
+        self.assertEqual(stray, [], f"non-canonical body labels leaked: {stray}")
+
+    def test_matched_ice_entry_has_single_body(self):
+        """Every confidently-matched (Ano) ICE auth entry maps to exactly one
+        body — the invariant Miroslav reported broken. Group by the fields that
+        together identify an auth entry in the payload (Model auta is split into
+        Značka+Model, so use those + Verze + engine)."""
+        from collections import defaultdict
+        groups = defaultdict(set)
+        for c in self.cars:
+            if c.get("Typ") == "Spalovací" and c.get("Spárováno") == "Ano" and c.get("Karoserie"):
+                key = (c.get("Značka"), c.get("Model"), c.get("Verze"),
+                       c.get("Objem motoru"), c.get("Typ motoru"))
+                groups[key].add(str(c["Karoserie"]))
+        split = {k: v for k, v in groups.items() if len(v) > 1}
+        self.assertEqual(split, {}, f"auth entries with >1 body: {split}")
+
+    def test_matched_ev_nameplate_has_single_body(self):
+        """Matched (Ano) EV rows of one nameplate share one body — the reported
+        car (Škoda Enyaq) must not scatter across SUV/Hatchback/Terénní again."""
+        from collections import defaultdict
+        groups = defaultdict(set)
+        for c in self.cars:
+            if c.get("Typ") == "Elektrické" and c.get("Spárováno") == "Ano" and c.get("Karoserie"):
+                groups[(c.get("Značka"), c.get("Model"))].add(str(c["Karoserie"]))
+        split = {k: v for k, v in groups.items() if len(v) > 1}
+        self.assertEqual(split, {}, f"EV nameplates with >1 body: {split}")
+
+    def test_enyaq_is_uniformly_suv(self):
+        bodies = {str(c["Karoserie"]) for c in self.cars
+                  if (c.get("Značka") == "Škoda"
+                      and str(c.get("Model") or "").startswith("Enyaq")
+                      and c.get("Karoserie"))}
+        self.assertEqual(bodies, {"SUV"}, f"Enyaq bodies: {bodies}")
+
+    def test_body_coverage_not_regressed(self):
+        """Reference-pairing + fold + vote + derive must keep body near-fully
+        populated (blanks were 3/24k at build time)."""
+        blank = sum(1 for c in self.cars if not c.get("Karoserie"))
+        self.assertLessEqual(blank, 50, f"{blank} rows have a blank Karoserie")
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -23,9 +23,13 @@ _BODY_GROUPS = {
               "Wagon", "Grandtour"},
     "Hatchback": {"Hatchback", "Liftback"},
     "Fastback": {"Fastback"},
-    "SUV": {"SUV", "Crossover"},
+    # SUV absorbs the listing-side synonyms sauto/mobile.de emit (CUV, Czech
+    # "Terénní", English "Offroad") so a scraped-body vs auth-body scoring
+    # comparison doesn't spuriously penalise an obvious SUV.
+    "SUV": {"SUV", "Crossover", "CUV", "Terénní", "Offroad", "OffRoad"},
     "Sedan": {"Sedan", "Sedan/limuzína", "Limuzína"},
-    "MPV": {"MPV"},
+    "MPV": {"MPV", "VAN", "Van"},
+    "Kupé": {"Kupé", "Coupé", "Coupe"},
     "Shooting Brake": {"Shooting Brake"},
     "Sportback": {"Sportback", "Coupé-SUV"},
 }
@@ -80,6 +84,11 @@ def load_authoritative_list(csv_path) -> list[dict]:
                 "brand": col(row, "Značka"),
                 "model_base": col(row, "Model"),
                 "body": _canonicalize_body(col(row, "Karoserie")),
+                # Unfolded reference body — the display value the dashboard shows
+                # for matched rows (build_data.apply_reference_body_specs). "body"
+                # above is scoring-folded (e.g. Liftback→Hatchback) and must NOT be
+                # used for display; "body_raw" keeps Liftback/Sportback/… distinct.
+                "body_raw": col(row, "Karoserie"),
                 "engine_vol": col(row, "Objem motoru"),
                 "engine_type": col(row, "Typ motoru"),
                 "hybrid": col(row, "Hybrid typ"),

@@ -1,90 +1,90 @@
-Model auta,Objem kufru (l),Hlučnost (dB),Kapacita baterie (kWh),Dojezd komb. letní WLTP (km),Dojezd komb. letní EV-database (km),Cd,Cd zdroj,Tepelné čerpadlo možné (ano/ne)
-Audi Q4 e-tron,520,,77,527,425,0.28,reálné,ne
-Audi RS e-tron GT,366,,97,598,525,0.24,reálné,ne
-Audi e-tron,660,,"86,5",441,340,0.28,reálné,ne
-BMW i3,260,,38,359,250,0.29,reálné,ne
-BMW iX,500,,"94,8",630,470,0.25,reálné,ano
-BYD ATTO 2,335,,"64,8",425,340,0.29,odhad,ano
-BYD ATTO 3,440,,"60,5",420,340,0.29,reálné,ano
-BYD Dolphin Surf,294,,"43,2",345,265,0.29,odhad,ano
-BYD Seal,400,,"82,5",570,480,0.219,reálné,ano
-Citroën Berlingo,775,,50,295,235,0.33,odhad,ne
-Citroën ë-C4,380,,"50,8",420,325,0.29,reálné,ne
-Cupra Born,385,,58,424,360,0.272,reálné,ne
-Fiat 600e,360,,"50,8",404,310,0.29,odhad,ne
-Honda e,171,,"35,5",222,175,0.27,reálné,ne
-Hyundai Inster,280,,46,370,300,0.309,reálné,ne
-Hyundai Ioniq 5,531,,80,600,450,0.288,reálné,ano
-Hyundai Kona,332,,"64,8",514,385,0.27,reálné,ne
-JAC iEV7S,350,,55,400,,0.29,odhad,ne
-Jeep Avenger,355,,"50,8",406,310,0.33,reálné,ne
-Kia EV2,350,,41,308,240,0.29,reálné,ne
-Kia EV2 61 kWh,350,,58,400,340,0.29,reálné,ano
-Kia EV3,460,,55,600,455,0.27,reálné,ano
-Kia EV6,490,,80,599,455,0.28,reálné,ano
-Kia Niro,385,,"64,8",463,385,0.29,reálné,ano
-Kia Soul,315,,64,452,370,0.35,reálné,ne
-Leapmotor B10,380,,"56,2",380,305,0.265,reálné,ano
-MG MG4,363,,"61,7",450,360,0.279,reálné,ne
-MG Marvel R,357,,70,402,330,0.29,odhad,ne
-Mini Cooper SE,211,,"49,2",402,330,0.3,reálné,ne
-Mazda MX-30,341,,"35,5",200,165,0.34,reálné,ano
-Mercedes-Benz EQA,340,,"66,5",528,395,0.28,reálné,ne
-Mercedes-Benz EQE,430,,96,654,555,0.22,reálné,ano
-Nissan LEAF,435,,52,385,330,0.28,reálné,ne
-Opel Corsa,267,,"50,8",406,335,0.29,reálné,ne
-Opel Mokka,310,,"50,8",338,285,0.32,reálné,ne
-Peugeot 2008,434,,"50,8",406,300,0.29,odhad,ne
-Peugeot 208,267,,"50,8",406,335,0.29,reálné,ne
-Polestar 2,405,,79,620,475,0.278,reálné,ano
-Renault Mégane,440,,60,470,380,0.29,reálné,ne
-Renault R4,420,,52,410,315,0.29,odhad,ne
-Renault ZOE,338,,52,395,315,0.29,odhad,ne
-Seat Mii,251,,"32,3",260,210,0.308,reálné,ne
-Tesla Model 3,594,,60,513,445,0.23,reálné,ano
-Tesla Model X,745,,95,580,490,0.24,reálné,ano
-VW Crafter,,,"83,7",165,135,0.33,odhad,ne
-VW ID.3,385,,58,426,365,0.267,reálné,ne
-VW ID.4,543,,79,531,460,0.28,reálné,ne
-VW ID.5,549,,79,539,465,0.26,reálné,ne
-VW ID.5 GTX,549,,77,526,430,0.27,reálné,ne
-Volvo C40,413,,79,515,420,0.329,reálné,ano
-Volvo EX30,318,,65,475,365,0.28,reálné,ano
-Volvo XC40,419,,79,530,400,0.329,reálné,ano
-Škoda Enyaq,585,,77,534,445,0.257,reálné,ano
-Škoda Enyaq iV 50,585,,52,361,295,0.257,reálné,ano
-Škoda Enyaq iV 60,585,,58,412,335,0.257,reálné,ano
-Škoda Enyaq iV 80x,585,,77,500,410,0.257,reálné,ano
-Cupra Tavascan,540,,77,568,460,0.26,reálné,ano
-VW ID.7,532,,77,621,515,0.23,reálné,ano
-VW ID.7 Tourer,605,,77,601,500,0.24,reálné,ano
-Renault R5,277,,52,410,315,0.32,reálné,ano
-MG MGS5 EV,479,,"61,1",400,320,0.27,reálné,ne
-Mercedes-Benz EQB,495,,"66,5",420,330,0.28,reálné,ne
-Opel Combo,597,,50,280,225,0.33,odhad,ne
-Mini Cooper,211,,"54,2",402,305,0.28,reálné,ne
-Dacia Spring,308,,25,230,190,0.29,odhad,ne
-Fiat 500 e,185,,"37,3",315,270,0.32,reálné,ne
-Kia EV4,435,,55,405,360,0.23,reálné,ano
-MG ZS EV,448,,"68,3",440,420,0.29,odhad,ne
-Nissan Micra,326,,52,415,330,0.29,odhad,ano
-Omoda E5,380,,"58,9",415,330,0.281,reálné,ano
-Tesla Model Y,854,,75,600,455,0.23,reálné,ano
-Škoda Elroq,470,,77,552,515,0.26,reálné,ano
-Dongfeng Forthing T5 EVO,480,,85.9,510,,0.29,odhad,
-BMW iX1,490,,64.7,475,390,0.26,reálné,
-BMW iX2,525,,64.7,478,395,0.25,reálné,
-Ford Puma Gen-E,523,,43.6,376,280,0.29,reálné,
-KGM Torres EVX,703,,72,462,370,0.29,odhad,
-Volvo EX40,452,,79,576,400,0.33,reálné,
-Renault Twingo,360,,"27,5",263,,,,ne
-GWM Ora 03,228,,"45,4",310,257,0.33,odhad,ano
-BYD DOLPHIN,345,,60,427,400,0.301,reálné,ano
-Opel Frontera,460,,44,305,310,,,ne
-Renault Megane,440,,60,450,440,0.29,reálné,ano
-Fiat Grande Panda,361,,"43,8",320,,,,ano
-Citroën ë-C3,310,,"43,8",327,,,,ne
-VW e-up!,250,,"32,3",260,,0.31,reálné,ne
-Citroën C4,380,,"46,3",354,330,0.3,odhad,ano
-Leapmotor T03,210,,36,265,,0.33,odhad,ne
-Renault R 5,326,,52,402,,0.32,odhad,ano
+Model auta,Karoserie,Objem kufru (l),Hlučnost (dB),Kapacita baterie (kWh),Dojezd komb. letní WLTP (km),Dojezd komb. letní EV-database (km),Cd,Cd zdroj,Tepelné čerpadlo možné (ano/ne)
+Audi Q4 e-tron,SUV,520,,77,527,425,0.28,reálné,ne
+Audi RS e-tron GT,Sedan,366,,97,598,525,0.24,reálné,ne
+Audi e-tron,SUV,660,,"86,5",441,340,0.28,reálné,ne
+BMW i3,Hatchback,260,,38,359,250,0.29,reálné,ne
+BMW iX,SUV,500,,"94,8",630,470,0.25,reálné,ano
+BYD ATTO 2,SUV,335,,"64,8",425,340,0.29,odhad,ano
+BYD ATTO 3,SUV,440,,"60,5",420,340,0.29,reálné,ano
+BYD Dolphin Surf,Hatchback,294,,"43,2",345,265,0.29,odhad,ano
+BYD Seal,Sedan,400,,"82,5",570,480,0.219,reálné,ano
+Citroën Berlingo,MPV,775,,50,295,235,0.33,odhad,ne
+Citroën ë-C4,Hatchback,380,,"50,8",420,325,0.29,reálné,ne
+Cupra Born,Hatchback,385,,58,424,360,0.272,reálné,ne
+Fiat 600e,SUV,360,,"50,8",404,310,0.29,odhad,ne
+Honda e,Hatchback,171,,"35,5",222,175,0.27,reálné,ne
+Hyundai Inster,SUV,280,,46,370,300,0.309,reálné,ne
+Hyundai Ioniq 5,SUV,531,,80,600,450,0.288,reálné,ano
+Hyundai Kona,SUV,332,,"64,8",514,385,0.27,reálné,ne
+JAC iEV7S,SUV,350,,55,400,,0.29,odhad,ne
+Jeep Avenger,SUV,355,,"50,8",406,310,0.33,reálné,ne
+Kia EV2,SUV,350,,41,308,240,0.29,reálné,ne
+Kia EV2 61 kWh,SUV,350,,58,400,340,0.29,reálné,ano
+Kia EV3,SUV,460,,55,600,455,0.27,reálné,ano
+Kia EV6,SUV,490,,80,599,455,0.28,reálné,ano
+Kia Niro,SUV,385,,"64,8",463,385,0.29,reálné,ano
+Kia Soul,SUV,315,,64,452,370,0.35,reálné,ne
+Leapmotor B10,SUV,380,,"56,2",380,305,0.265,reálné,ano
+MG MG4,Hatchback,363,,"61,7",450,360,0.279,reálné,ne
+MG Marvel R,SUV,357,,70,402,330,0.29,odhad,ne
+Mini Cooper SE,Hatchback,211,,"49,2",402,330,0.3,reálné,ne
+Mazda MX-30,SUV,341,,"35,5",200,165,0.34,reálné,ano
+Mercedes-Benz EQA,SUV,340,,"66,5",528,395,0.28,reálné,ne
+Mercedes-Benz EQE,Sedan,430,,96,654,555,0.22,reálné,ano
+Nissan LEAF,Hatchback,435,,52,385,330,0.28,reálné,ne
+Opel Corsa,Hatchback,267,,"50,8",406,335,0.29,reálné,ne
+Opel Mokka,SUV,310,,"50,8",338,285,0.32,reálné,ne
+Peugeot 2008,SUV,434,,"50,8",406,300,0.29,odhad,ne
+Peugeot 208,Hatchback,267,,"50,8",406,335,0.29,reálné,ne
+Polestar 2,Liftback,405,,79,620,475,0.278,reálné,ano
+Renault Mégane,SUV,440,,60,470,380,0.29,reálné,ne
+Renault R4,SUV,420,,52,410,315,0.29,odhad,ne
+Renault ZOE,Hatchback,338,,52,395,315,0.29,odhad,ne
+Seat Mii,Hatchback,251,,"32,3",260,210,0.308,reálné,ne
+Tesla Model 3,Sedan,594,,60,513,445,0.23,reálné,ano
+Tesla Model X,SUV,745,,95,580,490,0.24,reálné,ano
+VW Crafter,MPV,,,"83,7",165,135,0.33,odhad,ne
+VW ID.3,Hatchback,385,,58,426,365,0.267,reálné,ne
+VW ID.4,SUV,543,,79,531,460,0.28,reálné,ne
+VW ID.5,SUV,549,,79,539,465,0.26,reálné,ne
+VW ID.5 GTX,SUV,549,,77,526,430,0.27,reálné,ne
+Volvo C40,SUV,413,,79,515,420,0.329,reálné,ano
+Volvo EX30,SUV,318,,65,475,365,0.28,reálné,ano
+Volvo XC40,SUV,419,,79,530,400,0.329,reálné,ano
+Škoda Enyaq,SUV,585,,77,534,445,0.257,reálné,ano
+Škoda Enyaq iV 50,SUV,585,,52,361,295,0.257,reálné,ano
+Škoda Enyaq iV 60,SUV,585,,58,412,335,0.257,reálné,ano
+Škoda Enyaq iV 80x,SUV,585,,77,500,410,0.257,reálné,ano
+Cupra Tavascan,SUV,540,,77,568,460,0.26,reálné,ano
+VW ID.7,Liftback,532,,77,621,515,0.23,reálné,ano
+VW ID.7 Tourer,Kombi,605,,77,601,500,0.24,reálné,ano
+Renault R5,Hatchback,277,,52,410,315,0.32,reálné,ano
+MG MGS5 EV,SUV,479,,"61,1",400,320,0.27,reálné,ne
+Mercedes-Benz EQB,SUV,495,,"66,5",420,330,0.28,reálné,ne
+Opel Combo,MPV,597,,50,280,225,0.33,odhad,ne
+Mini Cooper,Hatchback,211,,"54,2",402,305,0.28,reálné,ne
+Dacia Spring,SUV,308,,25,230,190,0.29,odhad,ne
+Fiat 500 e,Hatchback,185,,"37,3",315,270,0.32,reálné,ne
+Kia EV4,Sedan,435,,55,405,360,0.23,reálné,ano
+MG ZS EV,SUV,448,,"68,3",440,420,0.29,odhad,ne
+Nissan Micra,Hatchback,326,,52,415,330,0.29,odhad,ano
+Omoda E5,SUV,380,,"58,9",415,330,0.281,reálné,ano
+Tesla Model Y,SUV,854,,75,600,455,0.23,reálné,ano
+Škoda Elroq,SUV,470,,77,552,515,0.26,reálné,ano
+Dongfeng Forthing T5 EVO,SUV,480,,85.9,510,,0.29,odhad,
+BMW iX1,SUV,490,,64.7,475,390,0.26,reálné,
+BMW iX2,SUV,525,,64.7,478,395,0.25,reálné,
+Ford Puma Gen-E,SUV,523,,43.6,376,280,0.29,reálné,
+KGM Torres EVX,SUV,703,,72,462,370,0.29,odhad,
+Volvo EX40,SUV,452,,79,576,400,0.33,reálné,
+Renault Twingo,Hatchback,360,,"27,5",263,,,,ne
+GWM Ora 03,Hatchback,228,,"45,4",310,257,0.33,odhad,ano
+BYD DOLPHIN,Hatchback,345,,60,427,400,0.301,reálné,ano
+Opel Frontera,SUV,460,,44,305,310,,,ne
+Renault Megane,SUV,440,,60,450,440,0.29,reálné,ano
+Fiat Grande Panda,SUV,361,,"43,8",320,,,,ano
+Citroën ë-C3,Hatchback,310,,"43,8",327,,,,ne
+VW e-up!,Hatchback,250,,"32,3",260,,0.31,reálné,ne
+Citroën C4,Hatchback,380,,"46,3",354,330,0.3,odhad,ano
+Leapmotor T03,Hatchback,210,,36,265,,0.33,odhad,ne
+Renault R 5,Hatchback,326,,52,402,,0.32,odhad,ano

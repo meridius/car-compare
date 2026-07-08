@@ -146,6 +146,47 @@ class StripIceEngineTokensTest(unittest.TestCase):
         self.assertEqual(B.strip_ice_engine_tokens(""), "")
 
 
+class CanonicalizeBodyTest(unittest.TestCase):
+    """Bug (Rodina report): the same model shows different Karoserie across its
+    listings because sauto's per-listing vehicle_body_cb is seller-tagged and
+    noisy (e.g. 17 Enyaq listings 'SUV', one 'Hatchback', one 'Terénní'). That
+    breaks the body-type filter. canonicalize_body() overrides the minority
+    outliers within an exact-'Model auta' group when one body is a strict
+    majority; genuinely split groups (no majority) are left untouched."""
+
+    def _df(self, rows):
+        return pd.DataFrame(
+            [{"Model auta": m, "Karoserie": b} for m, b in rows])
+
+    def test_minority_outliers_overridden_to_majority(self):
+        df = self._df(
+            [("Škoda Enyaq iV 80", "SUV")] * 17
+            + [("Škoda Enyaq iV 80", "Hatchback"),
+               ("Škoda Enyaq iV 80", "Terénní")])
+        out = B.canonicalize_body(df)
+        self.assertEqual(set(out["Karoserie"]), {"SUV"})
+
+    def test_blank_filled_from_majority(self):
+        df = self._df(
+            [("VW ID.4", "SUV"), ("VW ID.4", "SUV"), ("VW ID.4", "")])
+        out = B.canonicalize_body(df)
+        self.assertEqual(list(out["Karoserie"]), ["SUV", "SUV", "SUV"])
+
+    def test_no_majority_left_untouched(self):
+        df = self._df(
+            [("X", "SUV"), ("X", "SUV"), ("X", "Sedan"), ("X", "Sedan")])
+        out = B.canonicalize_body(df)
+        self.assertEqual(list(out["Karoserie"]), ["SUV", "SUV", "Sedan", "Sedan"])
+
+    def test_distinct_model_strings_not_cross_contaminated(self):
+        df = self._df(
+            [("Škoda Octavia", "Liftback"), ("Škoda Octavia", "Liftback"),
+             ("Škoda Octavia Combi", "Kombi"), ("Škoda Octavia Combi", "Kombi")])
+        out = B.canonicalize_body(df)
+        self.assertEqual(
+            list(out["Karoserie"]), ["Liftback", "Liftback", "Kombi", "Kombi"])
+
+
 class DeriveTransmissionTypeTest(unittest.TestCase):
     """Task #26: 'Typ převodovky' is a derived payload column — finer than
     the existing 'Převodovka' (Automat/Manual) + 'Dvouspojková převodovka'

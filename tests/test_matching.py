@@ -134,6 +134,42 @@ class LoadAuthoritativeListTest(unittest.TestCase):
         r = M.load_authoritative_list(path)[0]
         self.assertEqual(r["trim"], "Style")
 
+    def test_body_raw_is_unfolded(self):
+        # body_raw keeps the display value; body is scoring-folded. A Liftback
+        # reference row must expose body_raw="Liftback" (display) even though
+        # body="Hatchback" (scoring group).
+        path = self._write(self._HEADER +
+                           "Škoda Octavia Liftback 1.5 TSI,Škoda,Octavia,,,Liftback,,1.5,TSI,Benzín,,5.6,600,69,0.27\n")
+        r = M.load_authoritative_list(path)[0]
+        self.assertEqual(r["body_raw"], "Liftback")
+        self.assertEqual(r["body"], "Hatchback")  # scoring fold, unchanged
+
+
+class BodyCanonScoringFoldTest(unittest.TestCase):
+    """Scoring-side _canonicalize_body must fold the listing-emitted synonyms so
+    an obvious SUV/MPV/coupé listing doesn't lose match points against the
+    reference (which uses the canonical label)."""
+
+    def test_suv_synonyms(self):
+        for syn in ("CUV", "Terénní", "Offroad", "Crossover"):
+            self.assertEqual(M._canonicalize_body(syn), "SUV", syn)
+
+    def test_mpv_synonyms(self):
+        self.assertEqual(M._canonicalize_body("VAN"), "MPV")
+
+    def test_kupe_synonyms(self):
+        for syn in ("Kupé", "Coupé", "Coupe"):
+            self.assertEqual(M._canonicalize_body(syn), "Kupé", syn)
+
+    def test_unknown_passes_through(self):
+        self.assertEqual(M._canonicalize_body("Pick-up"), "Pick-up")
+
+    def test_cuv_listing_scores_against_suv_reference(self):
+        scraped = {"body": "CUV"}
+        a = auth("Škoda Karoq 1.5 TSI", "Škoda", "Karoq", body="SUV")
+        # Before the fold, CUV != SUV → −2; after, +3.
+        self.assertGreater(M._score_match(scraped, a), 0)
+
 
 class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
     def test_df_gets_tristate_and_score_columns(self):

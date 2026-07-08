@@ -915,11 +915,14 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
     // Body type / Drivetrain matrix from loaded grid data
     if (gridApi) {
+      // Karoserie now arrives already folded onto the canonical display set by
+      // build_data.canonicalize_body_vocab (SUV/Hatchback/Kombi/Sedan/MPV/Kupé;
+      // Liftback/Sportback/Fastback fold into Hatchback — the reference labels
+      // that body class inconsistently). Synonyms kept for defence in depth.
       var bodyGroups = {
         "Kombi": ["Kombi", "Combi", "Variant", "SW", "Touring", "Sports Tourer", "Avant"],
         "SUV": ["SUV", "CUV", "Terénní"],
-        "Hatchback": ["Hatchback"],
-        "Liftback": ["Liftback", "Sportback"],
+        "Hatchback": ["Hatchback", "Liftback", "Sportback", "Fastback"],
         "Sedan": ["Sedan/limuzína", "Sedan"],
         "MPV": ["MPV", "VAN", "Allspace"],
         "Kupé / Kabrio": ["Kupé", "Kabriolet"],

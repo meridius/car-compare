@@ -188,6 +188,90 @@ def backfill_body_fuel(df):
     return df
 
 
+def canonicalize_body(df):
+    """Make Karoserie consistent within each exact-'Model auta' group.
+
+    sauto's per-listing vehicle_body_cb is seller-tagged and noisy — the same
+    model gets scattered across bodies (e.g. Škoda Enyaq iV 80: 17 'SUV', one
+    'Hatchback', one 'Terénní'), which breaks the body-type filter (a family
+    bug report). When one body value is a strict majority of the group's
+    non-empty values, override the minority outliers *and* fill blanks with it.
+    Groups with no strict majority (genuine variants, or a tie) are untouched,
+    and distinct model strings ('Octavia' vs 'Octavia Combi') never mix because
+    grouping is on the exact name."""
+    if df.empty or "Model auta" not in df.columns or "Karoserie" not in df.columns:
+        return df
+
+    def norm(v):
+        if v is None or (isinstance(v, float) and v != v):
+            return ""
+        return str(v)
+
+    body = df["Karoserie"].map(norm)
+    for model, idx in df.groupby("Model auta").groups.items():
+        vals = [body[i] for i in idx if body[i]]
+        if not vals:
+            continue
+        counts = {}
+        for v in vals:
+            counts[v] = counts.get(v, 0) + 1
+        winner = max(counts, key=lambda k: counts[k])
+        if counts[winner] * 2 > len(vals):  # strict majority
+            df.loc[idx, "Karoserie"] = winner
+    return df
+
+
+# Display body vocabulary: collapse the synonym sprawl the sources emit (CUV /
+# Terénní / VAN / Combi / Sedan-limuzína …) onto the clean set the dashboard
+# filters on, so one real body = one filter bucket (the root of the family
+# "filtering is broken" report).
+#
+# The liftback family (Liftback / Sportback / Fastback) folds INTO Hatchback —
+# not a stylistic choice but a data-forced one: the hand-curated ice_specs.csv
+# is itself INCONSISTENT for this body class (Škoda Octavia non-Combi appears as
+# both "Hatchback" and "Liftback" across entries; Superb→Hatchback, Arteon→
+# Hatchback, A5→Sportback, C5 X→Liftback — all the same 5-door-liftback shape).
+# Reference-pairing therefore hands different Octavia listings different bodies;
+# the only way to guarantee "same car → one body" without a full manual reference
+# re-audit is to fold the whole family to Hatchback. This also aligns the display
+# taxonomy with matching._canonicalize_body (which already folds Liftback→
+# Hatchback for scoring). Czech buyers filter these as hatchbacks anyway.
+_DISPLAY_BODY_CANON = {
+    "suv": "SUV", "cuv": "SUV", "terénní": "SUV", "terenni": "SUV",
+    "offroad": "SUV", "off-road": "SUV", "crossover": "SUV",
+    "kombi": "Kombi", "combi": "Kombi", "variant": "Kombi", "sw": "Kombi",
+    "avant": "Kombi", "touring": "Kombi", "sports tourer": "Kombi",
+    "sportstourer": "Kombi", "shooting brake": "Kombi",
+    "hatchback": "Hatchback",
+    "liftback": "Hatchback", "sportback": "Hatchback", "fastback": "Hatchback",
+    "sedan": "Sedan", "sedan/limuzína": "Sedan", "limuzína": "Sedan",
+    "limuzina": "Sedan",
+    "mpv": "MPV", "van": "MPV",
+    "kupé": "Kupé", "kupe": "Kupé", "coupé": "Kupé", "coupe": "Kupé",
+    "kabriolet": "Kupé", "kabrio": "Kupé", "grand sport": "Kupé",
+    "pick-up": "Pick-up", "pickup": "Pick-up",
+}
+
+
+def canonicalize_body_vocab(df):
+    """Fold every Karoserie cell onto the canonical display vocabulary
+    (_DISPLAY_BODY_CANON) so synonyms stop splitting one body across several
+    grid-filter buckets. Runs on the whole column — reference-driven,
+    listing-derived, and majority-voted values alike — so the source of a value
+    never leaks a stray label. Unknown values pass through unchanged."""
+    if "Karoserie" not in df.columns:
+        return df
+
+    def fold(v):
+        if v is None or (isinstance(v, float) and v != v):
+            return v
+        s = str(v).strip()
+        return _DISPLAY_BODY_CANON.get(s.lower(), s)
+
+    df["Karoserie"] = df["Karoserie"].map(fold)
+    return df
+
+
 def backfill_country(df):
     """Populate a blank 'Země' for the Czech-only sources whose CSVs predate the
     column (sauto/autodraft/energycars are all CZ). mobile.de rows already carry
@@ -224,6 +308,62 @@ def apply_verze_display(df):
     df.loc[matched_ice, "Verze"] = (
         df.loc[matched_ice, "Model auta"].map(auth_by_entry).fillna("")
     )
+    return df
+
+
+def apply_reference_body_specs(df):
+    """Reference-drive body type (and, for confident matches, engine specs) from
+    the matched ICE reference row, so every listing sharing an auth entry shows
+    the identical curated value — the invariant the "same model, different
+    Karoserie" bug (family report) needs. Modeled on apply_verze_display.
+
+    Body: written for any Spalovací row whose "Model auta" is an entry that ALSO
+    appears as a confident (Ano) match — the entry is corroborated, so its body
+    is trustworthy even for a Nejisté sibling (matching writes the same entry
+    string for both Ano and Nejisté). Uses the UNFOLDED reference body
+    (`body_raw`) so Liftback/Sportback survive; the whole-column display fold
+    (canonicalize_body_vocab) runs after. Only overwrites when the reference
+    body is non-blank (6 ICE ref rows have none) so a correct listing body is
+    never blanked. Uncorroborated Nejisté-only groups and Ne rows fall through
+    to canonicalize_body's majority vote / derive_body.
+
+    Engine (Objem motoru / Typ motoru / Hybrid typ): overwritten on Ano only —
+    these disambiguate variants, so are never trusted on an uncertain match.
+    Per-listing extraction is documented-noisy (a car matched to "Formentor 1.5
+    TSI" can carry Objem motoru 2.0); the structured reference column is the
+    single source of truth (build_reference_json already uses it on the
+    reference page — this makes the grid consistent with it). EV is untouched
+    here (handled in join_electric_reference)."""
+    if df.empty or "Model auta" not in df.columns:
+        return df
+    ice_path = os.path.join(BASE_DIR, "scrapers", "data", "reference", "ice_specs.csv")
+    auth = {r["entry"]: r for r in comb_utils.load_authoritative_list(ice_path)}
+    typ = df.get("Typ", pd.Series("", index=df.index))
+    sparovano = df.get("Spárováno", pd.Series("", index=df.index)).astype(str)
+    model = df["Model auta"]
+
+    is_ice = (typ == "Spalovací")
+    ano_entries = set(model[is_ice & (sparovano == "Ano")])
+
+    # Body: any ICE row keyed on a corroborated (Ano-seen) entry, non-blank ref body.
+    body_map = {e: auth[e]["body_raw"] for e in ano_entries
+                if e in auth and auth[e]["body_raw"]}
+    if body_map:
+        m = is_ice & model.isin(body_map)
+        df.loc[m, "Karoserie"] = model[m].map(body_map)
+
+    # Engine specs: Ano rows only (their Model auta is exactly an ano_entry).
+    ano_mask = is_ice & (sparovano == "Ano")
+    for col, key in (("Objem motoru", "engine_vol"),
+                     ("Typ motoru", "engine_type"),
+                     ("Hybrid typ", "hybrid")):
+        if col not in df.columns:
+            continue
+        spec_map = {e: auth[e][key] for e in ano_entries
+                    if e in auth and auth[e][key]}
+        if spec_map:
+            m = ano_mask & model.isin(spec_map)
+            df.loc[m, col] = model[m].map(spec_map)
     return df
 
 
@@ -369,6 +509,7 @@ def join_electric_reference(df, ref):
     ref_models_folded = _sorted_ref_pairs(ref_models, _fold_accents)
 
     add_cols_map = {
+        "Karoserie": "Karoserie",
         "Objem kufru (l)": "Objem kufru (l)",
         "Hlučnost (dB)": "Hlučnost (dB)",
         "Kapacita baterie (kWh)": "Kapacita baterie (kWh)",
@@ -378,6 +519,12 @@ def join_electric_reference(df, ref):
         "Cd zdroj": "Cd zdroj",
         "Tepelné čerpadlo možné (ano/ne)": "Tepelné čerpadlo možné",
     }
+    # Karoserie is OVERWRITTEN from the reference (the curated body wins over the
+    # noisy per-listing value — every listing of one EV nameplate then shows the
+    # same body); the other spec cols use fillna-only (don't clobber scraped
+    # values). Requires the Karoserie column in ev_specs.csv; absent it, the
+    # src_col guard below makes this a no-op.
+    OVERWRITE_COLS = {"Karoserie"}
 
     for dst_col in add_cols_map.values():
         if dst_col not in electric.columns:
@@ -405,7 +552,9 @@ def join_electric_reference(df, ref):
                 if src_col in ref_row.index:
                     val = ref_row[src_col]
                     if pd.notna(val) and val != "":
-                        if pd.isna(electric.at[idx, dst_col]) if dst_col in electric.columns else True:
+                        if dst_col in OVERWRITE_COLS:
+                            electric.at[idx, dst_col] = val  # reference body wins
+                        elif pd.isna(electric.at[idx, dst_col]) if dst_col in electric.columns else True:
                             electric.at[idx, dst_col] = val
             electric.at[idx, "Spárováno"] = "Ano"
             matched += 1
@@ -935,6 +1084,15 @@ def main():
 
     print("Deriving display 'Verze' (confidently-matched reference trim only)...")
     df = apply_verze_display(df)
+
+    print("Reference-driving body/engine specs for confident matches...")
+    df = apply_reference_body_specs(df)
+
+    print("Folding body type onto the canonical display vocabulary...")
+    df = canonicalize_body_vocab(df)
+
+    print("Canonicalizing body type within each model (majority-vote fallback)...")
+    df = canonicalize_body(df)
 
     print("Backfilling body/fuel for overview...")
     df = backfill_body_fuel(df)

@@ -69,6 +69,17 @@ def scenario_stav_filter(page):
     return ".set-filter"
 
 
+def scenario_body_filter(page):
+    """Open the Karoserie set filter — after the reference-driven + folded body
+    vocabulary, the checkboxes must be the clean canonical set (SUV / Hatchback /
+    Kombi / Sedan / MPV / Kupé), not the old synonym sprawl (CUV, Terénní, VAN,
+    Combi, Sedan/limuzína, Liftback)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.__gridApi.showColumnFilter('Karoserie')")
+    page.wait_for_selector(".set-filter", timeout=5000)
+    return ".set-filter"
+
+
 def scenario_summary(page):
     page.wait_for_selector(".ag-row", timeout=15000)
     page.evaluate("window.toggleSummary()")
@@ -297,6 +308,7 @@ def scenario_transmissions(page):
 SCENARIOS = {
     "grid": scenario_grid,
     "stav-filter": scenario_stav_filter,
+    "body-filter": scenario_body_filter,
     "summary": scenario_summary,
     "sparovano": scenario_sparovano,
     "transmission-type-col": scenario_transmission_type_col,

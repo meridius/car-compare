@@ -31,7 +31,9 @@ scrapers/
                       Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,
                       Spotřeba,Objem kufru,Hlučnost,Cd,Cd zdroj); PK = Jednoznačná
                       varianta vozu (clean, paren-free); exact join on "Model auta"
-      ev_specs.csv    EV reference (comma-delim; …,Cd,Cd zdroj,…); prefix-match join
+      ev_specs.csv    EV reference (comma-delim; Model auta,Karoserie,…,Cd,Cd zdroj,
+                      Tepelné čerpadlo možné); prefix-match join. Karoserie is the
+                      curated per-nameplate body driven onto matched EV rows.
 
 bin/run_all.sh    dep check (once) + fan out `python -m scrapers.run --source NAME` per source in parallel
 build/build_data.py  concat states + per-fuel reference enrichment → site/data/cars.parquet (+ cars-meta.json)
@@ -149,6 +151,19 @@ Body types use synonym groups (`_BODY_GROUPS`): Kombi↔Combi↔Variant↔SW↔A
 
 - **ICE**: matched twice. At scrape time (`pipeline.run_source` → `match_to_authoritative` against `ice_specs.csv`) and again in `build_data.py` (re-match the concatenated dataset). Matching **rewrites "Model auta"** to the canonical reference string.
 - **EV**: not matched at scrape time. Enriched only in `build_data.py` via a **prefix join** against `ev_specs.csv` (adds spec columns; does not rewrite the model name).
+
+### Reference-driven body / specs (not per-listing)
+
+Both fuels take **`Karoserie`** from the matched reference, not the noisy
+per-listing value: confidently-matched ICE (`apply_reference_body_specs`, from
+the auth entry's raw body; also `Objem motoru`/`Typ motoru`/`Hybrid typ` on Ano
+rows) and matched EV (`join_electric_reference`, from `ev_specs.csv`'s hand-kept
+`Karoserie` column, overwriting). The whole column is then folded onto a
+canonical display vocabulary (`canonicalize_body_vocab` — the liftback family
+collapses into Hatchback because the reference labels it inconsistently), and a
+majority-vote (`canonicalize_body`) + `derive_body` fill whatever the reference
+can't reach (unmatched/uncertain rows). See gotchas → build for the full order
+and the "same car → one body" invariant.
 
 ## Hard Filters (single source of truth)
 

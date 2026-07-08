@@ -451,6 +451,51 @@ Previously `merge_with_previous()` did `df.set_index("Odkaz na auto").loc[link]`
 
 ## build — reference enrichment
 
+### Karoserie (and ICE engine specs) are reference-driven, then vocab-folded, then vote-filled
+
+Family bug: sauto's per-listing `vehicle_body_cb` is seller-tagged and noisy, so
+one model scatters across bodies (Škoda Enyaq iV 80: 17 `SUV`, one `Hatchback`,
+one `Terénní`) — breaking the body-type filter. The fix is a **hybrid** built in
+this order in `main()` (each later step is the fallback for what the earlier
+can't reach):
+
+1. **`apply_reference_body_specs(df)`** (reference-driven, the trustworthy source).
+   For ICE, overwrites `Karoserie` from the matched auth entry's **`body_raw`**
+   (the *unfolded* reference body — `matching.load_authoritative_list` also carries
+   the scoring-folded `body`; don't use that for display) for every `Spalovací`
+   row whose "Model auta" is an entry seen as a confident **Ano** match — this
+   covers Ano rows **and** their Nejisté siblings (matching writes the same entry
+   string for both), so the body is uniform inside one variant. Only overwrites
+   when the ref body is non-blank (6 ICE ref rows have none). It **also**
+   overwrites `Objem motoru` / `Typ motoru` / `Hybrid typ` on **Ano only** (these
+   disambiguate variants; per-listing extraction is noisy — a car matched to
+   "Formentor 1.5 TSI" can carry 2.0). This is the same reference-as-truth
+   principle as `apply_verze_display`, and makes the grid consistent with the
+   reference page.
+2. **`canonicalize_body_vocab(df)`** folds the whole column onto the canonical
+   display set (`_DISPLAY_BODY_CANON`): SUV←CUV/Terénní/VAN(no)/…, Kombi←Combi/
+   Variant/SW/…, Sedan←Sedan/limuzína, MPV←VAN, Kupé←Coupé/Kabriolet. **The
+   liftback family (Liftback/Sportback/Fastback) folds into Hatchback** — forced
+   by data, not taste: `ice_specs.csv` labels that 5-door body class
+   *inconsistently* (Octavia non-Combi appears as both "Hatchback" and "Liftback"
+   across entries), so the only way to guarantee "same car → one body" without a
+   full manual ref re-audit is to collapse them. This is deliberately **not**
+   `matching._canonicalize_body` (that scoring fold also collapses Liftback→
+   Hatchback but lacks CUV/VAN/Terénní/Kupé).
+3. **`canonicalize_body(df)`** (majority vote) — the fallback for what reference
+   can't set (EV/ICE-Ne, Nejisté-only groups): groups on exact "Model auta",
+   overrides minority outliers when one value is a **strict majority**
+   (`count*2 > n`); no-majority groups untouched. Runs on already-folded values,
+   so synonym splits (Kombi/Combi) can't defeat the vote.
+4. **`backfill_body_fuel`→`derive_body`** fills any still-blank body from the
+   model name.
+
+EV body: `ev_specs.csv` now has a hand-populated **`Karoserie`** column (89 rows;
+an EV nameplate has one body). `join_electric_reference` carries it and
+**overwrites** (reference wins, unlike the fillna-only spec cols) on prefix
+match. `site/app.js` `bodyGroups` folds Liftback/Sportback into Hatchback to
+match. Invariants pinned in `tests/test_data_integrity.py::BodyTypeConsistencyTest`.
+
 ### EV body type vs ICE
 
 EV body type comes from `vehicle_body_cb` (sauto) or `extract_body_type()` (autodraft/energycars). ICE uses the same primary/fallback pattern. EV rows are enriched in `build_data.py` via a prefix join against `ev_specs.csv`; ICE rows via an exact join + re-match against `ice_specs.csv`.
