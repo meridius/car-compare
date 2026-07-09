@@ -1,10 +1,17 @@
 #!/usr/bin/env bash
 # Serve the site/ directory locally for development.
-# Usage: ./bin/serve.sh [port]
+# Usage: ./bin/serve.sh [--pull] [port]
+#   --pull   first download the prod payload from the `data` release
+#            (via bin/bootstrap-data.sh) so you see the same data as prod
 #   default port: 8000
 
 set -euo pipefail
 cd "$(dirname "$0")/.."
+
+if [ "${1:-}" = "--pull" ]; then
+  shift
+  ./bin/bootstrap-data.sh
+fi
 
 PORT="${1:-8000}"
 DIR="site"
