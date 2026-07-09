@@ -84,7 +84,7 @@ always wins. See gotchas for `merge_with_previous` behaviour.
 | sauto      | EV + ICE | `aiohttp` (REST API)  | `fetch_all_details(concurrency=20)`      | No browser; pre-filtered at API level  |
 | autodraft  | EV + ICE | Playwright (Chromium) | single page, sequential                  | EV + benzin + diesel + "na cestě" URLs |
 | energycars | EV only  | Playwright (Chromium) | `DETAIL_CONCURRENCY = 5` detail pages     | Listing page → detail page per car     |
-| mobilede   | EV + ICE | `aiohttp` (app JSON)  | `CONCURRENCY = 5`, price-band slices      | Keyless app endpoint; EUR→Kč via CNB; EV: CZ/SK/AT/PL/DE, ICE: no DE |
+| mobilede   | EV + ICE | `aiohttp` (app JSON)  | `CONCURRENCY = 3`, price-band slices      | Keyless app endpoint; EUR→Kč via CNB; EV + ICE: CZ/SK/AT/PL/DE (decision 001 enabled DE ICE) |
 
 ## Column Schema
 
@@ -199,8 +199,8 @@ rate⌉ EUR. Repeated params are OR (`ft`, `cn`).
 - **EV** (`EV_FUELS`): `ft=ELECTRICITY`, countries CZ SK AT PL **DE**.
 - **ICE** (`ICE_FUELS`): `ft=PETROL,DIESEL,HYBRID,HYBRID_DIESEL` (include-only — the
   API has no exclude operator, so LPG/CNG/hydrogen simply aren't requested) +
-  `pw=100:` kW, countries CZ SK AT PL (**no DE** — ~123k results even at ≥ 100 kW;
-  `ICE_COUNTRIES` is the knob).
+  `pw=100:` kW, countries CZ SK AT PL **DE** (decision 001 enabled DE ICE — ~123k
+  DE results at ≥ 100 kW, the bulk of the dataset; `ICE_COUNTRIES` is the knob).
 
 Any query is capped at 2000 reachable results; `_fetch_banded()` recursively halves
 the EUR price band until every slice fits, then pages with `psz=100`/`ps`. Prices are
