@@ -269,6 +269,31 @@ already in the rolling `data` release**, no fetch. Mechanics: `scrape` is gated
 scrape succeeded *or* was skipped (`always() && result != 'failure'/'cancelled'`) and
 only pulls the `state-*` artifacts when scrape actually ran.
 
+### "Andere" is mobile.de's junk model bucket (like sauto's "Ostatní")
+
+mobile.de returns `Andere` (German "Other") as the model for cars its taxonomy
+doesn't index — the scraped name becomes e.g. "JAC Andere", "ORA Andere", even
+"Andere Andere" (~117 EV listings across ~20 clusters, 2026-07). These are NOT
+missing reference models: never add an "X Andere" reference row (it would
+prefix-match every future unindexed car of that brand regardless of what it is).
+The real fix is adapter-side recovery from other attrs, mirroring sauto's
+`_recover_ostatni_model()` — TODO, not yet implemented for mobile.de.
+
+### German "Hybrid" listings fabricate PHEV/HEV variants that never existed
+
+mobile.de delivers mild hybrids under the same `ft="Hybrid (Benzin/Elektro)"`
+umbrella as full/plug-in hybrids, and `_build_row` → `extract_hybrid_type(subTitle)`
+then stamps `Hybrid typ` HEV (default) or PHEV (on plug-in-ish tokens) — so the
+state contains hundreds of e.g. "BMW 118 PHEV" rows although no 1-series PHEV was
+ever built (BMW's PHEV line starts at 225xe/230e). Consequence for reference
+growth: data-generated ICE rows with `Hybrid typ` set were web-checked, and rows
+whose hybrid variant does not exist (23 of the first 47 researched) were dropped —
+simulation showed dropping them *raises* confident matches (+989 Ano) because the
+mislabeled listings still pair with the non-hybrid row (one-sided hybrid penalty
+is only −1) while a fake PHEV sibling row ties everything into Nejisté. Genuine
+PHEVs (330e, DS7 E-Tense, …) keep their own rows. Adapter-level MHEV detection is
+the proper upstream fix — TODO.
+
 ### country → the shared "Země" column, not Extra
 
 `attr.cn` (ISO code) maps via `_COUNTRY_MAP` to the Czech country name in the canonical
@@ -354,9 +379,14 @@ archive, and doubles up once they do.
 
 `normalize_model()` (`core/normalize.py`) applies `BRAND_MAP` first, then `MODEL_CLEANUP_PATTERNS`. A pattern that expects a short brand name (e.g. `"VW"`) will fail if run before BRAND_MAP expansion replaces `"Volkswagen"`.
 
-### Cee´d accent normalisation
+### Cee´d accent normalisation — three apostrophe spellings
 
-Sauto returns "Kia Cee´d" with an accent character (´). The reference list uses "Kia Ceed" without accent. `MODEL_CLEANUP_PATTERNS` includes `Cee´d → Ceed` to normalize before matching.
+Sauto returns "Kia Cee´d" with an acute accent (´, U+00B4); mobile.de writes
+"cee'd" / "cee’d" (straight U+0027 / typographic U+2019 apostrophe). The reference
+list uses "Kia Ceed" without any of them. `MODEL_CLEANUP_PATTERNS` folds all three
+spellings (`Cee[´'’]d`, case-insensitive) — the apostrophe variants alone hid 859
+mobile.de ICE listings from matching. Rows already sitting in state heal at build
+time because `build_data` re-runs `normalize_model()` on ICE names before re-match.
 
 ---
 
@@ -495,6 +525,18 @@ an EV nameplate has one body). `join_electric_reference` carries it and
 **overwrites** (reference wins, unlike the fillna-only spec cols) on prefix
 match. `site/app.js` `bodyGroups` folds Liftback/Sportback into Hatchback to
 match. Invariants pinned in `tests/test_data_integrity.py::BodyTypeConsistencyTest`.
+
+### grow-reference reads the payload — which no longer carries "Model auta"
+
+`reference_gap.load_unpaired()` clusters unpaired listings from
+`site/data/cars.parquet`, but `write_payload()` splits "Model auta" into
+Značka + Model and **drops the original column** (task #3). Before the fix the
+gaps command silently reported *0 clusters against 2177 unpaired EVs* — the count
+comes from `Spárováno` while the cluster keys all folded to "". `load_unpaired`
+now reconstructs "Model auta" from Značka+Model (faithful for EV; ICE payload
+strips engine tokens, but gaps is EV-only). Any new payload-side column surgery
+can break this tooling again — it's pinned by
+`test_load_unpaired_reconstructs_model_from_brand_model_split`.
 
 ### EV body type vs ICE
 

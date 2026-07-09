@@ -6,6 +6,7 @@ internally consistent and that the matcher never relapses into the old
 offline in well under a second.
 """
 import datetime
+import collections
 import json
 import os
 import subprocess
@@ -401,8 +402,10 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
         link is a distinct domain); within a source, merge_with_previous dedups
         on this column (core/merge.py, keep='first'). If this ever fails it's
         a real merge/dedup regression, not a bound to weaken."""
-        links = [c["Odkaz na auto"] for c in self.cars]
-        dupes = {l for l in links if links.count(l) > 1}
+        # O(n) count — list.count() in a comprehension is O(n²) and times out
+        # once the live payload grows past ~100k rows.
+        counts = collections.Counter(c["Odkaz na auto"] for c in self.cars)
+        dupes = {l for l, n in counts.items() if n > 1}
         self.assertFalse(dupes, f"{len(dupes)} duplicate 'Odkaz na auto' values in live payload")
 
     # -- Model/column mismatch guard -----------------------------------------

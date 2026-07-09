@@ -45,6 +45,15 @@ def load_unpaired_from_rows(rows, fuel):
 def load_unpaired(cars_path, fuel):
     import pandas as pd
     df = pd.read_parquet(cars_path)
+    if "Model auta" not in df.columns and {"Značka", "Model"}.issubset(df.columns):
+        # write_payload splits "Model auta" into Značka + Model and drops the
+        # original (task #3). Reconstruct it for clustering — faithful for EV
+        # (ICE payload strips engine tokens, but gaps is EV-only).
+        df["Model auta"] = (
+            df["Značka"].fillna("").astype(str).str.strip()
+            + " "
+            + df["Model"].fillna("").astype(str).str.strip()
+        ).str.strip()
     rows = [
         {k: (None if (isinstance(v, float) and v != v) else v) for k, v in rec.items()}
         for rec in df.to_dict("records")

@@ -28,6 +28,23 @@ class TestCluster(unittest.TestCase):
         self.assertEqual(by_prefix["Renault Twingo"]["volume"], 2)  # bare + E-Tech merged
         self.assertEqual(clusters[0]["volume"], 2)  # sorted by volume desc
 
+    def test_load_unpaired_reconstructs_model_from_brand_model_split(self):
+        # write_payload drops "Model auta" (split into Značka + Model, task #3);
+        # load_unpaired must reconstruct it or every cluster key goes empty.
+        import pandas as pd
+        df = pd.DataFrame([
+            {"Typ": "Elektrické", "Spárováno": "Ne", "Značka": "Renault",
+             "Model": "Twingo E-Tech", "Odkaz na auto": "u1"},
+            {"Typ": "Elektrické", "Spárováno": "Ano", "Značka": "BYD",
+             "Model": "Dolphin", "Odkaz na auto": "u2"},
+        ])
+        with tempfile.TemporaryDirectory() as d:
+            path = os.path.join(d, "cars.parquet")
+            df.to_parquet(path)
+            unpaired = rg.load_unpaired(path, "ev")
+        self.assertEqual(len(unpaired), 1)
+        self.assertEqual(unpaired[0]["Model auta"], "Renault Twingo E-Tech")
+
     def test_cluster_folds_diacritics_across_sources(self):
         listings = [
             {"Typ": "Elektrické", "Spárováno": "Ne", "Model auta": "Citroën ë-C3", "Odkaz na auto": "a"},

@@ -88,3 +88,103 @@ VW e-up!,Hatchback,250,,"32,3",260,,0.31,reálné,ne
 Citroën C4,Hatchback,380,,"46,3",354,330,0.3,odhad,ano
 Leapmotor T03,Hatchback,210,,36,265,,0.33,odhad,ne
 Renault R 5,Hatchback,326,,52,402,,0.32,odhad,ano
+Aiways U5,SUV,432,,60,410,,0.29,reálné,
+Alfa Romeo Junior,SUV,400,,"50,8",410,365,0.33,odhad,ano
+Audi Q4,SUV,520,71,77,520,465,0.28,reálné,ano
+BMW i4,Kupé,470,,"83,9",590,525,0.24,reálné,ano
+Citroën C3,Sedan,310,,44,326,255,0.30,odhad,ne
+Citroën C3 Aircross,SUV,460,,44,306,285,0.33,odhad,ne
+Citroën Jumpy,MPV,507,,68,330,285,0.35,odhad,ano
+Citroën SpaceTourer,MPV,603,,75,350,265,0.35,odhad,ne
+Citroën ë-Berlingo,MPV,775,,"46,3",280,235,0.35,odhad,ano
+Citroën ë-Spacetourer,,507,,68,330,281,0.35,odhad,ano
+Cupra Raval,Sedan,441,,"51,5",446,,0.30,odhad,ano
+DFSK Forthing 5,SUV,370,,"85,9",371,,0.33,odhad,
+DFSK Seres 3,SUV,318,,"52,5",329,300,0.33,odhad,
+DS Automobiles DS3,SUV,350,,"50,8",402,,0.33,odhad,ano
+DS Automobiles DS3 Crossback,SUV,350,68,50,,305,,,ano
+Fiat 500,Hatchback,185,,42,320,270,0.311,reálné,ne
+Fiat 500e,Hatchback,185,"70,4",42,320,270,0.311,reálné,ne
+Fiat 600,SUV,360,66,54,409,360,0.28,reálné,ano
+Fiat Doblo,MPV,597,,45,280,,0.35,odhad,
+Fiat Scudo,,,,68,330,,0.35,odhad,
+Fiat Ulysse,,450,,68,330,295,0.35,odhad,ano
+Fisker Ocean,SUV,476,,"106,5",707,507,0.33,odhad,ano
+Ford Capri,,572,,77,627,455,0.26,reálné,ano
+Ford Explorer,SUV,450,,77,602,450,0.33,odhad,ano
+Ford Mustang Mach-E,SUV,519,,88,610,530,0.29,reálné,ne
+Ford Puma,SUV,523,,43,376,320,0.29,reálné,ne
+Ford Tourneo Courier,MPV,570,,43,288,,0.35,odhad,ano
+GWM Ora 07,Sedan,333,,"64,3",440,400,0.22,reálné,ano
+Genesis GV60,SUV,432,,74,470,426,0.29,reálné,ano
+Hyundai IONIQ,SUV,357,,"38,3",311,290,0.24,reálné,ano
+Hyundai Ioniq 6,Sedan,401,,84,680,545,0.21,reálné,ano
+Jaguar I-Pace,SUV,656,,"84,7",470,380,0.29,reálné,ano
+KGM Korando,SUV,551,,"55,3",339,290,0.33,odhad,ano
+Kia PV5,,,,67,412,329,0.35,odhad,ano
+Leapmotor B05,Hatchback,345,,"56,2",401,320,0.26,reálné,ano
+Leapmotor C10,SUV,435,76,"69,9",420,355,0.28,reálné,ano
+Lexus UX,SUV,367,,"54,3",305,235,0.33,reálné,ano
+Lynk&Co 02,SUV,410,,66,445,,0.25,reálné,ano
+MAN TGE,MPV,,,"35,8",115,,0.35,odhad,
+MG MG5,Kombi,479,,"61,1",400,385,0.30,odhad,ano
+MG S5,SUV,453,,64,480,418,0.27,reálné,ne
+MG ZS,SUV,448,,"72,6",440,420,0.28,reálné,ne
+MINI Aceman,Sedan,300,,"49,2",406,345,0.30,odhad,ano
+MINI Aceman E,Sedan,300,,"42,5",309,230,0.30,odhad,ano
+Maxus Euniq 5,MPV,,,"52,5",260,,0.35,odhad,
+Maxus Euniq 6,SUV,754,,70,354,,0.33,odhad,
+Maxus T90,SUV,,,"88,5",330,,0.40,odhad,
+Maxus eDeliver 9,,,,"88,55",358,,0.35,odhad,
+Mazda E series,Sedan,337,,"68,8",479,420,0.27,odhad,ano
+Mercedes-Benz Citan,MPV,517,,44,285,,0.35,odhad,ano
+Mercedes-Benz EQC,SUV,500,,80,432,364,0.28,reálné,ano
+Mercedes-Benz EQT,MPV,551,,45,282,225,0.35,odhad,ano
+Mercedes-Benz Vito,MPV,,,90,350,,0.35,odhad,ano
+Mercedes-Benz eCitan,MPV,517,,45,284,,0.35,odhad,ano
+Mercedes-Benz eSprinter,,,,113,438,331,0.35,odhad,ano
+Mercedes-Benz eVito,Kombi,,,60,256,,0.35,odhad,ano
+NIO ET5,Sedan,386,,75,445,410,0.24,reálné,ano
+NIO ET7,Sedan,365,,100,580,505,0.208,reálné,
+Nissan Ariya,SUV,468,,87,533,,0.297,reálné,ano
+Nissan NV200,MPV,443,,36,200,,0.35,odhad,ne
+Nissan Townstar,MPV,775,,45,285,242,0.35,odhad,ano
+OMODA 5 EV,,380,,"60,7",430,395,0.281,reálné,ano
+Opel Astra,Sedan,352,,54,413,315,0.26,reálné,ano
+Opel Astra Electric,Kombi,352,,58,454,345,0.26,reálné,ano
+Opel Grandland (X),SUV,550,,73,523,470,0.28,reálné,ano
+Opel Vivaro,MPV,507,,68,330,265,0.35,odhad,
+Opel Zafira Electric,MPV,603,,50,223,205,0.35,odhad,ano
+Opel Zafira Life,MPV,603,,,,265,0.35,odhad,
+Opel Zafira Tourer,MPV,603,,"46,3",230,,0.35,odhad,ano
+Peugeot 308,Sedan,361,,54,,345,0.28,reálné,ano
+Peugeot Rifter,MPV,775,68,50,,235,,,ano
+Peugeot Traveller,MPV,603,,69,351,290,0.35,odhad,
+Peugeot e-2008,SUV,434,,"46,3",320,290,0.33,odhad,ano
+Peugeot e-208,Hatchback,311,,"46,3",362,280,0.30,odhad,ano
+Peugeot e-308,Sedan,361,,51,410,345,0.29,reálné,ano
+Peugeot e-Rifter,MPV,775,68,50,282,230,0.35,odhad,ano
+Renault Kangoo,MPV,850,,45,285,225,0.35,odhad,ano
+Renault R 4,SUV,420,,52,409,,0.33,odhad,ano
+Renault Scenic E-TECH,SUV,545,64,87,620,480,0.29,reálné,ano
+Seres 3,SUV,318,,52,300,,0.33,odhad,ano
+Seres 5,SUV,367,,76,483,,0.278,reálné,ano
+Smart #1,SUV,313,,62,440,380,0.29,reálné,ano
+Smart #3,SUV,370,66,,455,405,0.27,reálné,ano
+Smart ForFour,Sedan,185,,"17,6",130,,0.35,odhad,ne
+Ssangyong Korando,SUV,551,,"55,3",339,290,0.33,odhad,ano
+Subaru Solterra,SUV,452,,"71,4",465,320,0.26,reálné,ano
+Suzuki Vitara,SUV,306,,61,425,330,0.33,odhad,ano
+Suzuki e Vitara,SUV,306,,61,425,,0.33,odhad,ano
+Toyota Proace (Verso),MPV,603,,68,330,285,0.35,odhad,ano
+Toyota Proace City,MPV,775,,"46,3",280,210,0.35,odhad,ano
+Toyota Proace Verso Electric,MPV,550,,75,330,265,0.35,odhad,ano
+Toyota Urban Cruiser,,310,,"61,1",426,336,0.33,odhad,ano
+Toyota bZ4X,SUV,452,,"73,1",569,385,0.27,reálné,ano
+VW ID. Polo,Sedan,441,,"51,7",454,400,0.264,reálné,
+VW T6 Caravelle,MPV,,,"32,5",138,,0.35,odhad,
+VW up!,Hatchback,251,,"32,3",258,205,0.31,reálné,ne
+VinFast VF6,Sedan,423,,"59,6",410,360,0.33,odhad,ne
+Volvo EC40,SUV,413,,82,581,475,0.329,reálné,ano
+Škoda Citigo,Hatchback,250,,"36,8",265,205,0.325,reálné,ne
+Škoda Epiq,SUV,475,,,,235,0.275,reálné,ano

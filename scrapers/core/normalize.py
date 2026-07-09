@@ -17,7 +17,9 @@ MODEL_CLEANUP_PATTERNS = [
     (re.compile(r'\bcombi\b'), 'Combi'),
     (re.compile(r'\bScout Combi\b'), 'Combi Scout'),
     (re.compile(r'\bRS Combi\b'), 'Combi RS'),
-    (re.compile(r'Cee´d', re.IGNORECASE), 'Ceed'),
+    # sauto writes Cee´d (acute accent), mobile.de writes cee'd / cee’d
+    # (straight/typographic apostrophe) — fold every spelling to "Ceed".
+    (re.compile(r"Cee[´'’]d", re.IGNORECASE), 'Ceed'),
     # listings write the ProCeed shooting brake as "Pro_Ceed" / "Pro Ceed";
     # fold to the reference spelling so they match "Kia ProCeed ...".
     (re.compile(r'Pro[_\s]?Ceed'), 'ProCeed'),

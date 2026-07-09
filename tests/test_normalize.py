@@ -38,3 +38,20 @@ class OraFunkyCatAliasTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CeedApostropheTest(unittest.TestCase):
+    """Cee´d/cee'd/cee’d spelling variants all fold to the reference "Ceed"."""
+
+    def test_acute_accent_variant(self):
+        self.assertEqual(normalize_model("Kia Cee´d 1.4"), "Kia Ceed 1.4")
+
+    def test_straight_apostrophe_variant(self):
+        self.assertEqual(normalize_model("Kia cee'd Sportswagon 1.6 CRDi"),
+                         "Kia Ceed Sportswagon 1.6 CRDi")
+
+    def test_typographic_apostrophe_variant(self):
+        self.assertEqual(normalize_model("Kia cee’d 1.0 T-GDI"), "Kia Ceed 1.0 T-GDI")
+
+    def test_plain_ceed_unaffected(self):
+        self.assertEqual(normalize_model("Kia Ceed SW"), "Kia Ceed SW")

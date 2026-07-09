@@ -300,3 +300,104 @@ VW Golf Hatchback 2.0 TDI,VW,Golf,,Gen 8,Hatchback,,2.0,TDI,Nafta,,"5,0",380,,0.
 Omoda C5 1.6 T-GDI,Omoda,C5,,,SUV,,1.6,T-GDI,Benzín,,"7,5",378,,0.33,odhad
 Audi SQ8 4.0 TFSI,Audi,SQ8,,,SUV,,4.0,TFSI,Benzín,,"12,3",605,,0.34,reálné
 Renault Grand Scénic 1.3 TCe,Renault,Grand Scénic,,,MPV,,1.3,TCe,Benzín,,"7,0",597,,0.33,odhad
+BMW 118 Hatchback 1.5,BMW,118,,F40 (2019-2024),Hatchback,5,1.5,,Benzín,,"5,7",380,,0.26,reálné
+BMW 118 Sedan 1.5,BMW,118,,F40 (2019-2024),Sedan,5,1.5,,Benzín,,"5,7",380,68,0.26,reálné
+BMW 118 Sedan 2.0 d,BMW,118,,F40 (2019-2024),Sedan,5,2,,Nafta,,"4,3",380,,0.26,reálné
+BMW 120 Sedan 1.5,BMW,120,,F40 (2019-2024),Sedan,5,1.5,,Benzín,,"5,9",300,,,
+BMW 120 Sedan 2.0,BMW,120,,F40 (2019-2024),Sedan,5,2,,Benzín,,"6,2",375,,0.28,odhad
+BMW 120 Sedan 2.0 d,BMW,120,,F40 (2019-2024),Sedan,5,2,,Nafta,,"4,3",380,,0.26,reálné
+BMW 128 Sedan 2.0,BMW,128,,F40 (2019-2024),Sedan,5,2,,Benzín,,"6,2",380,,0.32,reálné
+BMW 218 Gran Coupé Kupé 1.5,BMW,218 Gran Coupé,,F44 (2019-2024),Kupé,5,1.5,,Benzín,,"5,6",430,,0.25,reálné
+BMW 218 Gran Coupé Kupé 2.0 d,BMW,218 Gran Coupé,,F44 (2019-2024),Kupé,5,2,,Nafta,,"4,2",430,,0.26,reálné
+BMW 218 Gran Coupé Sedan 1.5,BMW,218 Gran Coupé,,F44 (2019-2024),Sedan,4,1.5,,Benzín,,,,,,
+BMW 218 Gran Coupé Sedan 2.0 d,BMW,218 Gran Coupé,,F44 (2019-2024),Sedan,5,2,,Nafta,,"4,2",430,,0.26,reálné
+BMW 218 Gran Tourer VAN 1.5,BMW,218 Gran Tourer,,F46 LCI (2018-2021),VAN,5,1.5,,Benzín,,"5,9",645,,0.28,reálné
+BMW 218 Gran Tourer VAN 2.0 d,BMW,218 Gran Tourer,,"F46 (2015-2021, LCI facelift 2018-2021)",VAN,5,2,,Nafta,,"5,0",645,,0.28,reálné
+BMW 218 Kupé 1.5,BMW,218,,F22 LCI (2017-2021),Kupé,4,1.5,,Benzín,,"5,8",390,,0.29,reálné
+BMW 218 Kupé 2.0 d,BMW,218,,F22 LCI (2017-2020/21),Kupé,4,2,,Nafta,,"4,2",390,,0.29,reálné
+BMW 218 Sedan 1.5,BMW,218,,F44 (2019-2024),Sedan,5,1.5,,Benzín,,,430,,,
+BMW 218 VAN 1.5 PHEV,BMW,218,,U06 (2021+) or F45 (2016-2021),VAN,5,1.5,,Benzín,PHEV,,645,,0.35,odhad
+BMW 220 Gran Coupé Kupé 1.5,BMW,220 Gran Coupé,,F44 (2019-2024),Kupé,5,1.5,,Benzín,,"5,5",430,,0.25,reálné
+BMW 220 Gran Coupé Kupé 2.0,BMW,220 Gran Coupé,,F44 (2019-2024),Kupé,5,2,,Benzín,,"6,2",430,,0.25,reálné
+BMW 220 Gran Coupé Kupé 2.0 d,BMW,220 Gran Coupé,,G42 (2021+),Kupé,4,2,,Nafta,,"4,6",390,65,0.26,reálné
+BMW 220 Gran Coupé Sedan 2.0 d,BMW,220 Gran Coupé,,F44 (2019-2024),Sedan,5,2,,Nafta,,"4,3",430,,0.25,reálné
+BMW 220 Gran Tourer VAN 2.0 d,BMW,220 Gran Tourer,,F46 LCI (facelift 2018 – July 2022),VAN,5,2,,Nafta,,"4,8",645,71,0.30,reálné
+BMW 220 Sedan 2.0,BMW,220,,F44 (2019-2024),Sedan,5,2,,Benzín,,"5,9",430,,0.25,reálné
+BMW 220 Tourer Kombi 1.5 PHEV,BMW,220 Tourer,,U06 (2022–present),Kombi,5,1.5,,Benzín,PHEV,,406,68,0.26,reálné
+BMW 220 VAN 1.5 PHEV,BMW,220,,U06 (2021-present),VAN,5,1.5,,Benzín,PHEV,,406,,0.26,reálné
+BMW 225 Tourer VAN 1.5 PHEV,BMW,225 Tourer,,U06 (2022-present),VAN,5,1.5,,Benzín,PHEV,,406,,0.30,reálné
+BMW 2er Gran Coupé Kupé 1.5,BMW,2er Gran Coupé,,F44 (2019-2025),Kupé,5,1.5,,Benzín,,"5,7",430,70,0.26,reálné
+BMW 2er Gran Coupé Sedan 1.5,BMW,2er Gran Coupé,,"F44 (2019–present, facelift 2023)",Sedan,5,1.5,,Benzín,,"5,6",430,,0.25,reálné
+BMW 318 Kombi 2.0,BMW,318,,G21 (2019-2024),Kombi,5,2,,Benzín,,"6,2",620,69,0.23,reálné
+BMW 318 Kombi 2.0 d,BMW,318,,G21 (2019-2024),Kombi,5,2,,Nafta,,"4,8",500,66,0.27,reálné
+BMW 318 Sedan 2.0,BMW,318,,"G20 (2019-2026, incl. 2022 LCI facelift)",Sedan,5,2,,Benzín,,"6,8",480,,0.23,reálné
+BMW 318 Sedan 2.0 d,BMW,318,,"G20 (2019-2022, pre-facelift/LCI)",Sedan,5,2,,Nafta,,"4,4",480,,0.23,reálné
+BMW 320 Kombi 2.0 HEV,BMW,320,,G21 (2021-2024),Kombi,5,2,,Benzín,HEV,"1,6",410,,0.28,reálné
+BMW 320 Kombi 2.0 PHEV,BMW,320,,G20/G21 (2019-2024),Kombi,5,2,,Benzín,PHEV,"2,3",480,71,0.30,odhad
+BMW 320 Kombi 2.0 d HEV,BMW,320,,G21 (2019-present); 48V mild-hybrid standard from 2022 LCI facelift,Kombi,5,2,,Nafta,HEV,"5,7",500,,0.27,reálné
+BMW 320 Sedan 2.0 PHEV,BMW,320,,G20 (2019-2024),Sedan,5,2,,Benzín,PHEV,"1,6",375,,0.25,reálné
+BMW 330 Kombi 2.0 PHEV,BMW,330,,G21 (2020-2024),Kombi,5,2,,Benzín,PHEV,"1,6",410,,0.28,reálné
+BMW 330 Sedan 2.0 PHEV,BMW,330,,G20 (2019-2024),Sedan,5,2,,Benzín,PHEV,"1,6",375,,0.25,reálné
+BMW 520 Kombi 2.0,BMW,520,,G31 LCI (2020-2024),Kombi,5,2,,Benzín,,"5,6",560,,0.27,reálné
+BMW 520 Kombi 2.0 d,BMW,520,,G31 (2017-2024),Kombi,5,2,,Nafta,,,,,,
+BMW 530 Kombi 2.0 PHEV,BMW,530,,G31 LCI (2020-2023),Kombi,5,2,,Benzín,PHEV,"1,9",430,,0.29,reálné
+BMW 530 Sedan 2.0 HEV,BMW,530,,G30 LCI (2020-2023),Sedan,5,2,,Benzín,HEV,"6,3",530,,0.24,reálné
+BYD DOLPHIN Hatchback 1.5 HEV,BYD,DOLPHIN,,G (2026),Hatchback,5,1.5,,Benzín,HEV,"1,4",425,,0.301,odhad
+BYD DOLPHIN Hatchback 1.5 PHEV,BYD,DOLPHIN,,Dolphin G / DM-i (2026+),Hatchback,5,1.5,,Benzín,PHEV,"1,4",425,,0.30,odhad
+BYD SEAL 6 Kombi 1.5 HEV,BYD,SEAL 6,,2025+,Kombi,5,1.5,,Benzín,HEV,"1,7",500,,0.248,reálné
+Citroën Jumper VAN 2.2 d,Citroën,Jumper,,II Facelift (2019-present),VAN,3,2.2,,Nafta,,"8,0",,71,0.35,odhad
+Citroën SpaceTourer VAN 2.0 d,Citroën,SpaceTourer,,"1st gen (2016-2024, facelift 2023)",VAN,8,2,,Nafta,,"7,1",655,71,0.35,odhad
+Cupra Terramar SUV 1.5,Cupra,Terramar,,"1. generace (2024–present, ""Techn. Information MY25"")",SUV,5,1.5,,Benzín,,"6,4",508,,0.33,odhad
+DFSK Forthing 4 SUV 1.5,DFSK,Forthing 4,,U-Tour (2023-present),SUV,7,1.5,,Benzín,,"7,6",390,,0.33,odhad
+DFSK Forthing 4 VAN 1.5,DFSK,Forthing 4,,I (2023+),VAN,7,1.5,,Benzín,,"7,6",390,,0.35,odhad
+DFSK Forthing 5 SUV 1.5,DFSK,Forthing 5,,"1. generace (2023–present, EU: ""Forthing 5"" / PL: ""Forthing T-Five"")",SUV,5,1.5,,Benzín,,"7,2",,,0.33,odhad
+DFSK Rich 6 SUV 2.3 d,DFSK,Rich 6,,"Rich 6 (2017-present, sold in EU as a double-cab pickup)",SUV,5,2.3,,Nafta,,"8,9",,,0.33,odhad
+DS Automobiles DS4 Sedan 1.6 PHEV,DS,Automobiles DS4,,II (2021-2025),Sedan,5,1.6,,Benzín,PHEV,"1,3",390,,0.27,odhad
+DS Automobiles DS7 (Crossback) SUV 1.6 HEV,DS,Automobiles DS7 (Crossback),,I (2017-2021),SUV,5,1.6,,Benzín,HEV,"1,6",555,68,0.26,reálné
+DS Automobiles DS7 (Crossback) SUV 1.6 PHEV,DS,Automobiles DS7 (Crossback),,I (2017-2022),SUV,5,1.6,,Benzín,PHEV,"1,5",555,68,0.26,reálné
+Fiat 500X Hatchback 1.4,Fiat,500X,,1st gen facelift (2019-2023),Hatchback,5,1.4,,Benzín,,"6,3",350,,0.33,odhad
+Fiat 500X SUV 1.3,Fiat,500X,,500X facelift (2018-2023),SUV,5,1.3,,Benzín,,"6,5",350,,0.33,odhad
+Fiat 500X Sedan 1.3,Fiat,500X,,Series 2 / facelift (2018-2023),Sedan,5,1.3,,Benzín,,"6,3",350,,0.35,odhad
+Ford EcoSport SUV 1.0,Ford,EcoSport,,"EcoSport II facelift (2017-2022, EU)",SUV,5,1,,Benzín,,"5,2",310,,0.33,odhad
+Ford Galaxy VAN 2.0 d,Ford,Galaxy,,Galaxy III facelift (2019-2023),VAN,7,2,,Nafta,,"6,2",300,73,0.35,odhad
+Ford Galaxy VAN 2.5 HEV,Ford,Galaxy,,Mk3 facelift (2019-2023),VAN,7,2.5,,Benzín,HEV,"6,5",300,,0.35,odhad
+GWM HAVAL H6 SUV 1.5 HEV,GWM,HAVAL H6,,H6 III (2021-2026),SUV,5,1.5,,Benzín,HEV,"5,9",560,,0.33,odhad
+GWM HAVAL Jolion Pro SUV 1.5,GWM,HAVAL Jolion Pro,,Jolion Pro (2024+),SUV,5,1.5,,Benzín,,"7,5",291,,0.33,odhad
+GWM HAVAL Jolion Pro Sedan 1.5,GWM,HAVAL Jolion Pro,,"I, Pro facelift (2021-2026+)",Sedan,5,1.5,,Benzín,,"7,4",381,,0.33,odhad
+Hyundai IONIQ Sedan 1.6 HEV,Hyundai,IONIQ,,"AD (2016-2022, facelift 2019)",Sedan,5,1.6,,Benzín,HEV,"4,5",443,70,0.24,reálné
+Jeep Avenger SUV 1.2 HEV,Jeep,Avenger,,1. generace (2023–present),SUV,5,1.2,,Benzín,HEV,"5,1",380,,0.33,reálné
+Jeep Avenger SUV 1.2 MHEV,Jeep,Avenger,,1st generation (2022-present),SUV,5,1.2,,Benzín,MHEV,"4,9",380,,0.33,odhad
+Lexus UX SUV 2.0 HEV,Lexus,UX,,"1st generation (2018-2024, facelift 2022)",SUV,5,2,,Benzín,HEV,"4,3",320,,0.33,reálné
+Lynk&Co 01 SUV 1.5 HEV,Lynk&Co,01,,"01 facelift (2021-2022 HEV ""1.5TD 197hp""; superseded by EM-F facelift 2022+, 245hp, same HEV concept)",SUV,5,1.5,,Benzín,HEV,"6,6",466,,0.33,odhad
+Mazda CX-3 SUV 2.0,Mazda,CX-3,,"DJ (facelift 2018, 2018-2021)",SUV,5,2,,Benzín,,"6,1",350,,0.33,odhad
+Mazda MX-30 SUV 0.8 HEV,Mazda,MX-30,,DR (2020-present) — R-EV variant introduced 2023,SUV,5,0.8,,Benzín,HEV,"1,0",350,,0.34,reálné
+Mazda MX-30 SUV 0.8 PHEV,Mazda,MX-30,,"1st gen ""DR"" (2020–present); R-EV rotary-PHEV variant from Feb 2023",SUV,5,0.8,,Benzín,PHEV,"1,0",350,,0.33,odhad
+Mercedes-Benz E Kombi 1.6 d,Mercedes-Benz,E,,"S213 (2016-2023, facelift 2020+)",Kombi,5,1.6,,Nafta,,"5,6",640,,0.28,reálné
+Mercedes-Benz E Kombi 1.9 d HEV,Mercedes-Benz,E,,W213 (2016-2024),Kombi,5,1.9,,Nafta,HEV,"4,4",640,,0.25,odhad
+Mercedes-Benz E Kombi 2.0 d,Mercedes-Benz,E,,W213 Facelift (2021-2023),Kombi,5,2,,Nafta,,"5,6",640,,0.28,reálné
+Mercedes-Benz E Sedan 1.9 d HEV,Mercedes-Benz,E,,W213 facelift (2020-2023),Sedan,5,1.9,,Nafta,HEV,"5,2",540,,0.23,reálné
+Mercedes-Benz GLC SUV 1.9 d HEV,Mercedes-Benz,GLC,,X254 (2022-present),SUV,5,1.9,,Nafta,HEV,"5,2",620,68,0.29,reálné
+Mercedes-Benz Vito Kombi 1.9 d,Mercedes-Benz,Vito,,W447 facelift (2019/2021+),Kombi,8,1.9,,Nafta,,"5,8",580,,0.35,odhad
+Mercedes-Benz Vito VAN 1.9 d,Mercedes-Benz,Vito,,W447 facelift (2020-2024),VAN,3,1.9,,Nafta,,"7,1",,,0.35,odhad
+Mitsubishi Colt Hatchback 1.6 HEV,Mitsubishi,Colt,,Colt VII (2023-present),Hatchback,5,1.6,,Benzín,HEV,"4,1",301,,0.30,odhad
+Mitsubishi Colt Sedan 1.6 HEV,Mitsubishi,Colt,,VII (2023-present),Sedan,5,1.6,,Benzín,HEV,"4,1",254,,0.30,odhad
+Nissan NV300 VAN 2.0 d,Nissan,NV300,,"X82-based facelift, 2.0 dCi engine (MY2019-2022)",VAN,3,2,,Nafta,,"7,6",,,0.35,odhad
+Nissan Navara SUV 2.3 d,Nissan,Navara,,"D23/NP300 facelift (2021-2024, EU sales through 2021)",SUV,5,2.3,,Nafta,,"9,0",,,0.42,odhad
+Nissan Primastar Kombi 2.0 d,Nissan,Primastar,,Primastar II / Trafic III-based (2021–present),Kombi,9,2,,Nafta,,"7,0",,70,0.35,odhad
+Nissan Primastar VAN 2.0 d,Nissan,Primastar,,III (2021-present),VAN,3,2,,Nafta,,"6,9",,,0.35,odhad
+Opel Corsa Hatchback 1.2 HEV,Opel,Corsa,,F (facelift 2023+),Hatchback,5,1.2,,Benzín,HEV,"4,6",309,,0.29,reálné
+Opel Corsa Hatchback 1.2 MHEV,Opel,Corsa,,F facelift (2023–2025),Hatchback,5,1.2,,Benzín,MHEV,"4,6",309,65,0.29,reálné
+Opel Movano 2.3 d,Opel,Movano,,Movano B facelift (2019-2021),VAN,3,2.3,,Nafta,,"6,3",,71,0.35,odhad
+Peugeot 208 Hatchback 1.2 HEV,Peugeot,208,,II (2019-2025),Hatchback,5,1.2,,Benzín,HEV,"4,6",352,67,0.29,reálné
+Peugeot 208 Hatchback 1.2 MHEV,Peugeot,208,,"II, Phase II facelift (2023+)",Hatchback,5,1.2,,Benzín,MHEV,"5,1",352,,0.29,reálné
+Peugeot 208 Sedan 1.2 HEV,Peugeot,208,,"II (P21, 2019+)",Sedan,5,1.2,,Benzín,HEV,"4,6",387,65,0.29,odhad
+Renault Espace VAN 2.0 d,Renault,Espace,,V Phase II (2020-2023),VAN,5,2,,Nafta,,"5,1",680,,0.35,odhad
+Renault Master VAN 2.3 d,Renault,Master,,X62 facelift (2019-2024),VAN,3,2.3,,Nafta,,"8,8",,,0.35,odhad
+Renault Megane Kombi 1.3,Renault,Megane,,"IV (Phase II, 2020-2023)",Kombi,5,1.3,,Benzín,,"6,5",521,,0.30,odhad
+Renault Megane Kombi 1.6 PHEV,Renault,Megane,,IV Phase II (2020-2023),Kombi,5,1.6,,Benzín,PHEV,"1,3",447,,0.30,odhad
+Renault Megane Sedan 1.3,Renault,Megane,,"IV Sedan, Phase II (2021-2023)",Sedan,5,1.3,,Benzín,,"5,9",503,,0.27,odhad
+Seat Ibiza Hatchback 1.5,Seat,Ibiza,,V (facelift 2021),Hatchback,5,1.5,,Benzín,,"4,9",355,67,0.30,odhad
+Seat Ibiza Sedan 1.5,Seat,Ibiza,,"FB (2017-present, facelift 2021+)",Sedan,5,1.5,,Benzín,,"4,9",355,70,0.30,odhad
+Toyota RAV 4 SUV 2.5 HEV,Toyota,RAV 4,,XA50 (2018-2025),SUV,5,2.5,,Benzín,HEV,"5,7",580,69,0.32,reálné
+VW Crafter VAN 2.0 d,VW,Crafter,,"II / SY (2017-2024, facelift 2024)",VAN,9,2,,Nafta,,"8,2",,,0.33,reálné
+Volvo S60 Sedan 2.0,Volvo,S60,,"S60 III (2018–present, SPA platform)",Sedan,5,2,,Benzín,,"6,1",442,,0.27,reálné
