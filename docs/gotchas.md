@@ -371,6 +371,31 @@ removed the size pressure that motivated a hard cap.
 row leaking into `cars.parquet` means it shows without the user loading the
 archive, and doubles up once they do.
 
+### to reproduce prod locally, pull the payload from Pages — not the release
+
+The built payload lives in two places, and they can disagree. The **deployed
+Pages** files (`https://<org>.github.io/car-compare/data/cars.parquet` + sidecars)
+are always what prod serves and are **publicly fetchable with no auth**. The
+rolling **`data` release** payload asset, however, is only refreshed by *scrape*
+runs (daily cron / manual), because that upload step is gated
+`if: needs.scrape.result == 'success'`. A **push** deploy rebuilds the payload
+and ships it to Pages but historically did *not* republish it to the release — so
+after any push (e.g. a reference-CSV change) the release payload lagged prod,
+sometimes by tens of thousands of matches. This bit us live 2026-07-09: prod
+showed 1 021 unpaired (ref 402/189) while the release asset still held the 09:43
+schedule build (1 pull → 14 909 unpaired, ref 301/89).
+
+Two consequences:
+
+- **`bin/serve.sh --pull` downloads the deployed Pages payload directly** (curl,
+  no `gh`), so local == prod byte-for-byte regardless of release staleness.
+  `bin/bootstrap-data.sh` still pulls the *release* (state parquets, for running
+  scrapers locally) — a different job; don't use it to mirror prod's grid.
+- The workflow now publishes the **payload** on *every* successful build (push
+  included) in a separate step from **state** (scrape-only), so the release asset
+  no longer lags Pages. A stale local `site/data/cars.parquet` served without
+  `--pull` looks like a prod/local data mismatch — rebuild or `--pull`.
+
 ---
 
 ## core — normalize

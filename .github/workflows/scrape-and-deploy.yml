@@ -153,11 +153,13 @@ jobs:
           path: site/data
           if-no-files-found: error
 
-      # Only when a scrape actually ran — on a no-scrape push/redeploy the state
-      # parquets aren't present (nothing to publish), and the release already holds
-      # the current state. The Pages deploy below is what a push run produces.
-      - name: Update rolling data release
-        if: ${{ needs.scrape.result == 'success' }}
+      # The built payload publishes on EVERY successful build — push redeploys
+      # included — so the release payload never lags what's deployed to Pages.
+      # (Previously this whole step was gated on a scrape, so a push deploy
+      # refreshed Pages but left the release payload asset stale; a `--pull` that
+      # copied the release payload then showed old data. See docs/gotchas.md →
+      # "release payload must track deployed Pages".)
+      - name: Publish built payload to release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -165,17 +167,27 @@ jobs:
             --title "Data (rolling)" \
             --notes "Current scraper state + built payload. Assets are clobbered daily; monthly data-YYYY-MM releases are the immutable history." \
             2>/dev/null || true
-          # Upload only the state parquets that exist. A failed scrape leg
-          # (mobilede is continue-on-error) leaves its parquet absent; nullglob
-          # drops it from the list and the release keeps the copy it already had.
-          # The site/data payload files always exist after a successful build.
-          shopt -s nullglob
+          # site/data payload files always exist after a successful build.
           gh release upload data --clobber \
-            scrapers/data/scrapes/*.parquet \
             site/data/cars.parquet \
             site/data/cars-archived.parquet \
             site/data/cars-meta.json \
-            site/data/reference.json \
+            site/data/reference.json
+
+      # State + scrape history change only when we actually scraped — a no-scrape
+      # push has no state-* artifacts to publish, and the release already holds the
+      # current state.
+      - name: Publish scraper state to release
+        if: ${{ needs.scrape.result == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Upload only the state parquets that exist. A failed scrape leg
+          # (mobilede is continue-on-error) leaves its parquet absent; nullglob
+          # drops it from the list and the release keeps the copy it already had.
+          shopt -s nullglob
+          gh release upload data --clobber \
+            scrapers/data/scrapes/*.parquet \
             site/data/scrape_history.json
 
       - name: Monthly immutable snapshot
