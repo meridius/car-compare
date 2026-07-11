@@ -349,8 +349,178 @@ def scenario_verze_ev(page):
     return None
 
 
+def _codec_battery(page):
+    """Round-trip filters + thresholds through window.UrlState and assert enc()
+    never emits a raw delimiter. Shared by the index + reference url-state checks
+    (window.UrlState is loaded on both pages)."""
+    import json
+
+    filter_cases = [
+        {"Model": {"filterType": "text", "type": "contains", "filter": "ceed"}},
+        {"Extra": {"filterType": "text", "type": "notContains", "filter": "a,b;c~d-e_f*g|h=i"}},
+        {"Typ": {"filterType": "set", "values": ["Elektrické", "Spalovací"]}},
+        {"Stav": {"filterType": "set", "values": ["Dostupný", None]}},
+        {"Cena (Kč)": {"filterType": "number", "type": "inRange", "filter": 100000, "filterTo": 750000}},
+        {"Objem motoru": {"filterType": "number", "type": "equals", "filter": 1.5}},
+        {"Model": {"filterType": "text", "type": "blank"}},
+        {"Cena (Kč)": {"filterType": "number", "operator": "OR", "conditions": [
+            {"filterType": "number", "type": "lessThan", "filter": 50000},
+            {"filterType": "number", "type": "greaterThan", "filter": 700000}]}},
+    ]
+    for i, case in enumerate(filter_cases):
+        back = page.evaluate("(m)=>window.UrlState.decFilters(window.UrlState.encFilters(m))", case)
+        if back != case:
+            raise AssertionError(f"filter round-trip {i} mismatch: in={json.dumps(case,ensure_ascii=False)} out={json.dumps(back,ensure_ascii=False)}")
+
+    for case in [{"Cena (Kč)": {"min": 12345}}, {"Rok výroby": {"max": 2020}},
+                 {"Cena (Kč)": {"min": 100000, "max": 750000}, "Výkon (kW)": {"min": 90}}]:
+        back = page.evaluate("(m)=>window.UrlState.decThresholds(window.UrlState.encThresholds(m))", case)
+        if back != case:
+            raise AssertionError(f"threshold round-trip mismatch: out={json.dumps(back,ensure_ascii=False)}")
+
+    leak = page.evaluate(
+        "()=>{var bad=[];['a;b','a,b','a~b','a-b','a_b','a|b','a=b','a*b','Cena (Kč)','Škoda'].forEach("
+        "function(s){var e=window.UrlState.enc(s);if(/[;,~*_=|-]/.test(e))bad.push(s+'->'+e);"
+        "if(window.UrlState.dec(e)!==s)bad.push('rt '+s+'->'+e);});return bad;}")
+    if leak:
+        raise AssertionError(f"enc() delimiter/round-trip leak: {leak}")
+
+
+def scenario_url_state(page):
+    """Exercise the shared URL-state codec on index.html end-to-end:
+
+    1. round-trip a battery of filter + threshold models through window.UrlState
+       (delimiters-in-value, null set value, inRange, combined AND/OR);
+    2. live filter → URL gains #f= (no legacy ?filters=); reload restores it;
+    3. column layout (sort/reorder/width/pin) persists to localStorage and is
+       restored on reload, but MUST NOT appear in the URL (no #c=);
+    4. colour threshold → #t=; reload restores it;
+    5. legacy ?filters=<base64> link → applied AND auto-migrated to #f=.
+    """
+    import base64
+    import json
+
+    page.wait_for_selector(".ag-row", timeout=15000)
+    _codec_battery(page)
+
+    # live filter → # fragment (no legacy query)
+    page.evaluate("window.__gridApi.setFilterModel({'Model':{filterType:'text',type:'contains',filter:'ceed'}})")
+    page.wait_for_timeout(200)
+    u = page.url
+    if "#f=" not in u:
+        raise AssertionError(f"live filter: no #f= in URL: {u}")
+    if "filters=" in u.split("#")[0]:
+        raise AssertionError(f"live filter: legacy ?filters= present: {u}")
+    page.goto(u, wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    if page.evaluate("window.__gridApi.getFilterModel().Model.filter") != "ceed":
+        raise AssertionError("live reload: filter not restored from #f=")
+
+    # column layout: persists to localStorage, restored on reload, NEVER in the URL
+    page.evaluate(
+        "window.__gridApi.applyColumnState({"
+        "  state:[{colId:'Palivo'},{colId:'Cena (Kč)',sort:'desc'},{colId:'Model',width:300},{colId:'Výkon (kW)',pinned:'right'}],"
+        "  applyOrder:false});"
+        "window.__gridApi.moveColumns(['Palivo'],0);")
+    page.wait_for_timeout(200)
+    ucol = page.url
+    if "c=" in ucol.split("#")[-1]:
+        raise AssertionError(f"column layout leaked into URL fragment: {ucol}")
+    if not page.evaluate("!!localStorage.getItem('carCompareColState')"):
+        raise AssertionError("column layout not persisted to localStorage")
+    page.goto(ucol, wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    cs = page.evaluate("window.__gridApi.getColumnState()")
+    order = [c["colId"] for c in cs]
+    if order[0] != "Palivo":
+        raise AssertionError(f"cols reload: reorder not restored, first={order[0]}")
+    if abs(next(c for c in cs if c["colId"] == "Model")["width"] - 300) > 2:
+        raise AssertionError("cols reload: width not restored")
+    if next(c for c in cs if c["colId"] == "Výkon (kW)")["pinned"] != "right":
+        raise AssertionError("cols reload: pin not restored")
+    if next(c for c in cs if c["colId"] == "Cena (Kč)")["sort"] != "desc":
+        raise AssertionError("cols reload: sort not restored")
+
+    # reset the layout so it doesn't bleed into the threshold reloads below
+    page.evaluate("window.resetColOrder()")
+
+    # live threshold → #t=, restored on reload
+    page.evaluate("window.__gridApi.setFilterModel(null)")
+    page.evaluate("(function(){var r=document.querySelector('#threshold-inputs .threshold-row');"
+                  "r.querySelector('.th-min').value='55555';window.saveThresholds();})()")
+    page.wait_for_timeout(200)
+    u3 = page.url
+    if "t=" not in u3.split("#")[-1]:
+        raise AssertionError(f"live threshold: no t= in fragment: {u3}")
+    page.goto(u3, wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    if "55555" not in (page.evaluate("localStorage.getItem('carCompareThresholds')") or ""):
+        raise AssertionError("live reload: threshold not restored from #t=")
+
+    # legacy ?filters=<base64> link → applied + migrated to #
+    page.evaluate("localStorage.clear()")
+    legacy_b64 = base64.b64encode(json.dumps(
+        {"Model": {"filterType": "text", "type": "contains", "filter": "enyaq"}}).encode()).decode()
+    base = page.url.split("#")[0].split("?")[0]
+    page.goto(f"{base}?filters={legacy_b64}", wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.wait_for_timeout(300)
+    if page.evaluate("window.__gridApi.getFilterModel().Model.filter") != "enyaq":
+        raise AssertionError("legacy: base64 filter not applied")
+    lu = page.url
+    if "#f=" not in lu or "filters=" in lu.split("#")[0]:
+        raise AssertionError(f"legacy: not migrated to #/old query not stripped: {lu}")
+    page.wait_for_timeout(200)
+    return None
+
+
+def scenario_url_state_ref(page):
+    """reference.html shares the codec but has no colour thresholds. Verify:
+    codec battery; live filter → #f= (no legacy query); reload restores it;
+    a sort persists to localStorage but NOT the URL; legacy ?filters= migrates."""
+    import base64
+    import json
+
+    page.wait_for_selector(".ag-row", timeout=15000)
+    _codec_battery(page)
+
+    page.evaluate("window.__gridApi.setFilterModel({'Model auta':{filterType:'text',type:'contains',filter:'octavia'}})")
+    page.wait_for_timeout(200)
+    u = page.url
+    if "#f=" not in u or "filters=" in u.split("#")[0]:
+        raise AssertionError(f"ref live filter: bad URL: {u}")
+    page.goto(u, wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    if page.evaluate("window.__gridApi.getFilterModel()['Model auta'].filter") != "octavia":
+        raise AssertionError("ref reload: filter not restored from #f=")
+
+    # sort → localStorage only, not URL
+    page.evaluate("window.__gridApi.applyColumnState({state:[{colId:'Výkon (kW)',sort:'desc'}]})")
+    page.wait_for_timeout(200)
+    if "c=" in page.url.split("#")[-1]:
+        raise AssertionError(f"ref: column layout leaked into URL: {page.url}")
+    if not page.evaluate("!!localStorage.getItem('refCompareColState')"):
+        raise AssertionError("ref: column layout not persisted to localStorage")
+
+    # legacy ?filters= migrates
+    page.evaluate("localStorage.clear()")
+    legacy_b64 = base64.b64encode(json.dumps(
+        {"Model auta": {"filterType": "text", "type": "contains", "filter": "enyaq"}}).encode()).decode()
+    base = page.url.split("#")[0].split("?")[0]
+    page.goto(f"{base}?filters={legacy_b64}", wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.wait_for_timeout(300)
+    if page.evaluate("window.__gridApi.getFilterModel()['Model auta'].filter") != "enyaq":
+        raise AssertionError("ref legacy: base64 filter not applied")
+    if "#f=" not in page.url or "filters=" in page.url.split("#")[0]:
+        raise AssertionError(f"ref legacy: not migrated to #: {page.url}")
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
+    "url-state": scenario_url_state,
+    "url-state-ref": scenario_url_state_ref,
     "loading": scenario_loading,
     "verze-ev": scenario_verze_ev,
     "stav-filter": scenario_stav_filter,

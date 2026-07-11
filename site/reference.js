@@ -397,7 +397,9 @@
     }
   }
 
-  // ── Filter persistence (URL + localStorage) ──
+  // ── State persistence — filters in the URL fragment (#f=, shared codec in
+  //    site/url-state.js), column layout in localStorage only (never the URL). ──
+  var U = window.UrlState;
 
   function saveFiltersToStorage(model) {
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(model)); } catch (_) {}
@@ -410,55 +412,45 @@
     } catch (_) { return null; }
   }
 
-  function saveFiltersToUrl(model) {
-    var url = new URL(window.location);
-    if (model && Object.keys(model).length > 0) {
-      url.searchParams.set("filters", btoa(unescape(encodeURIComponent(JSON.stringify(model)))));
-    } else {
-      url.searchParams.delete("filters");
-    }
-    history.replaceState(null, "", url);
+  function writeHash() {
+    U.writeHash({ filters: gridApi ? gridApi.getFilterModel() : null });
   }
 
-  function loadFiltersFromUrl() {
-    var url = new URL(window.location);
-    var b64 = url.searchParams.get("filters");
-    if (!b64) return null;
-    try { return JSON.parse(decodeURIComponent(escape(atob(b64)))); }
-    catch (_) { return null; }
-  }
-
-  // ── Column state persistence (URL + localStorage) ──
-
-  function saveColState() {
+  function persistColState() {
     if (!gridApi) return;
-    var state = gridApi.getColumnState();
-    var ids = state.map(function (c) { return c.colId; });
-    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(ids)); } catch (_) {}
-    var url = new URL(window.location);
-    url.searchParams.set("cols", btoa(JSON.stringify(ids)));
-    history.replaceState(null, "", url);
+    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(gridApi.getColumnState())); } catch (_) {}
   }
 
-  function loadColState() {
-    var url = new URL(window.location);
-    var b64 = url.searchParams.get("cols");
-    if (b64) {
-      try { return JSON.parse(atob(b64)); } catch (_) {}
-    }
+  function loadColStateFromStorage() {
     try {
       var s = localStorage.getItem(COL_STATE_KEY);
-      return s ? JSON.parse(s) : null;
+      if (!s) return null;
+      var v = JSON.parse(s);
+      if (!v || !v.length) return null;
+      // old format: array of colId strings; new format: array of full state objects
+      return typeof v[0] === "string" ? v.map(function (id) { return { colId: id }; }) : v;
     } catch (_) { return null; }
   }
 
-  function applyColState(ids) {
-    if (!gridApi || !ids || !ids.length) return;
-    var state = ids.map(function (id) {
-      return { colId: id, sort: null, sortIndex: null };
+  function applyColState(state) {
+    if (!gridApi || !state || !state.length) return;
+    gridApi.applyColumnState({
+      state: state.map(function (c) {
+        return {
+          colId: c.colId,
+          sort: c.sort || null,
+          sortIndex: c.sortIndex != null ? c.sortIndex : null,
+          pinned: c.pinned || null,
+          hide: !!c.hide,
+          width: c.width,
+        };
+      }),
+      applyOrder: true,
+      defaultState: { sort: null },
     });
-    gridApi.applyColumnState({ state: state, applyOrder: true });
   }
+
+  function onColResized(e) { if (e && e.finished) persistColState(); }
 
   // ── Filter chips bar ──
 
@@ -512,22 +504,22 @@
 
   window.clearFilters = function () {
     localStorage.removeItem(STORAGE_KEY);
-    var url = new URL(window.location);
-    url.searchParams.delete("filters");
-    history.replaceState(null, "", url);
-    if (gridApi) gridApi.setFilterModel(null);
+    if (gridApi) gridApi.setFilterModel(null); // fires onFilterChanged → writeHash
+    else writeHash();
     updateRowCount();
   };
 
   window.resetColOrder = function () {
     localStorage.removeItem(COL_STATE_KEY);
-    var url = new URL(window.location);
-    url.searchParams.delete("cols");
-    history.replaceState(null, "", url);
     if (gridApi) {
-      gridApi.applyColumnState({ defaultState: { sort: null } });
-      var defaultIds = COL_DEFS.map(function (c) { return c.field; });
-      applyColState(defaultIds);
+      gridApi.applyColumnState({
+        state: COL_DEFS.map(function (c) {
+          return { colId: c.field, sort: null, sortIndex: null, pinned: c.pinned || null, hide: false, width: c.width };
+        }),
+        applyOrder: true,
+        defaultState: { sort: null },
+      });
+      persistColState();
     }
   };
 
@@ -602,20 +594,34 @@
       onFilterChanged: function () {
         var model = gridApi ? gridApi.getFilterModel() : null;
         saveFiltersToStorage(model);
-        saveFiltersToUrl(model);
+        writeHash();
         updateRowCount();
         updateFilterChips();
       },
-      onDragStopped: saveColState,
+      onDragStopped: persistColState,
+      onSortChanged: persistColState,
+      onColumnPinned: persistColState,
+      onColumnVisible: persistColState,
+      onColumnResized: onColResized,
       onGridReady: function (params) {
         gridApi = params.api;
         window.__gridApi = params.api;
-        var savedCols = loadColState();
-        if (savedCols) applyColState(savedCols);
-        var urlFilters = loadFiltersFromUrl();
-        var storageFilters = loadFiltersFromStorage();
-        var filters = urlFilters || storageFilters;
+
+        var hash = U.parseHash();
+        var legacyFilters = hash.f ? null : U.decodeLegacyFilters();
+
+        // Column layout: localStorage only (never the URL).
+        var colState = loadColStateFromStorage();
+        if (colState) applyColState(colState);
+
+        // Filters: URL fragment (#f=) → legacy ?filters= → localStorage.
+        var urlFilters = hash.f ? U.decFilters(hash.f) : legacyFilters;
+        var filters = urlFilters || loadFiltersFromStorage();
         if (filters) gridApi.setFilterModel(filters);
+
+        // Migrate an old ?filters= link to the canonical #fragment form.
+        if (legacyFilters) writeHash();
+
         initSearchBox();
         updateIncompleteButton();
         updateRowCount();

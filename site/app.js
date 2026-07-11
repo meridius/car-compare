@@ -481,53 +481,54 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     } catch (_) { return null; }
   }
 
-  function saveFiltersToUrl(model) {
-    var url = new URL(window.location);
-    if (model && Object.keys(model).length > 0) {
-      url.searchParams.set("filters", btoa(unescape(encodeURIComponent(JSON.stringify(model)))));
-    } else {
-      url.searchParams.delete("filters");
-    }
-    history.replaceState(null, "", url);
+  // ── URL/localStorage state (shared codec in site/url-state.js → window.UrlState) ──
+  //
+  // Filters + colour thresholds live in the URL fragment (#f= / #t=); column
+  // layout is per-browser localStorage only (NOT the URL — it would bloat every
+  // link with the full ordered column list). See docs/gotchas.md.
+  var U = window.UrlState;
+
+  function writeHash() {
+    U.writeHash({ filters: getFilterModel(), thresholds: userThresholds });
   }
 
-  function loadFiltersFromUrl() {
-    var url = new URL(window.location);
-    var b64 = url.searchParams.get("filters");
-    if (!b64) return null;
-    try { return JSON.parse(decodeURIComponent(escape(atob(b64)))); }
-    catch (_) { return null; }
-  }
-
-  function saveColState() {
+  function persistColState() {
     if (!gridApi) return;
-    var state = gridApi.getColumnState();
-    var ids = state.map(function (c) { return c.colId; });
-    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(ids)); } catch (_) {}
-    var url = new URL(window.location);
-    url.searchParams.set("cols", btoa(JSON.stringify(ids)));
-    history.replaceState(null, "", url);
+    try { localStorage.setItem(COL_STATE_KEY, JSON.stringify(gridApi.getColumnState())); } catch (_) {}
   }
 
-  function loadColState() {
-    var url = new URL(window.location);
-    var b64 = url.searchParams.get("cols");
-    if (b64) {
-      try { return JSON.parse(atob(b64)); } catch (_) {}
-    }
+  function loadColStateFromStorage() {
     try {
       var s = localStorage.getItem(COL_STATE_KEY);
-      return s ? JSON.parse(s) : null;
+      if (!s) return null;
+      var v = JSON.parse(s);
+      if (!v || !v.length) return null;
+      // old format: array of colId strings; new format: array of full state objects
+      return typeof v[0] === "string" ? v.map(function (id) { return { colId: id }; }) : v;
     } catch (_) { return null; }
   }
 
-  function applyColState(ids) {
-    if (!gridApi || !ids || !ids.length) return;
-    var state = ids.map(function (id, idx) {
-      return { colId: id, sort: null, sortIndex: null };
+  function applyColState(state) {
+    if (!gridApi || !state || !state.length) return;
+    gridApi.applyColumnState({
+      state: state.map(function (c) {
+        return {
+          colId: c.colId,
+          sort: c.sort || null,
+          sortIndex: c.sortIndex != null ? c.sortIndex : null,
+          pinned: c.pinned || null,
+          hide: !!c.hide,
+          width: c.width,
+        };
+      }),
+      applyOrder: true,
+      defaultState: { sort: null },
     });
-    gridApi.applyColumnState({ state: state, applyOrder: true });
   }
+
+  // Column-layout changes (sort / drag-reorder / resize / pin / hide) persist to
+  // localStorage only — deliberately not the URL.
+  function onColResized(e) { if (e && e.finished) persistColState(); }
 
   function updateFilterChips() {
     if (!window.renderFilterChips) return;
@@ -542,7 +543,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   function onFilterChanged() {
     var model = getFilterModel();
     saveFiltersToStorage(model);
-    saveFiltersToUrl(model);
+    writeHash();
     updateRowCount();
     updateFilterChips();
     updatePairingGapButton();
@@ -569,6 +570,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       }
     });
     localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds));
+    writeHash();
     if (gridApi) gridApi.refreshCells({ force: true });
   };
 
@@ -576,6 +578,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     userThresholds = {};
     localStorage.removeItem(THRESHOLD_KEY);
     renderThresholdInputs();
+    writeHash();
     if (gridApi) gridApi.refreshCells({ force: true });
   };
 
@@ -724,22 +727,23 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
   window.clearFilters = function () {
     localStorage.removeItem(STORAGE_KEY);
-    var url = new URL(window.location);
-    url.searchParams.delete("filters");
-    history.replaceState(null, "", url);
-    if (gridApi) gridApi.setFilterModel(null);
+    if (gridApi) gridApi.setFilterModel(null); // fires onFilterChanged → writeHash
+    else writeHash();
     updateRowCount();
   };
 
   window.resetColOrder = function () {
     localStorage.removeItem(COL_STATE_KEY);
-    var url = new URL(window.location);
-    url.searchParams.delete("cols");
-    history.replaceState(null, "", url);
     if (gridApi) {
-      gridApi.applyColumnState({ defaultState: { sort: null } });
-      var defaultIds = COL_CONFIG.map(function (c) { return c.field; });
-      applyColState(defaultIds);
+      // Restore the COL_CONFIG defaults: original order, default widths/pins, no sort.
+      gridApi.applyColumnState({
+        state: COL_CONFIG.map(function (c) {
+          return { colId: c.field, sort: null, sortIndex: null, pinned: c.pinned || null, hide: false, width: c.w };
+        }),
+        applyOrder: true,
+        defaultState: { sort: null },
+      });
+      persistColState();
     }
   };
 
@@ -786,16 +790,38 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       enableCellTextSelection: true,
       onFilterChanged: onFilterChanged,
       onModelUpdated: updatePairingGapButton,
-      onDragStopped: saveColState,
+      onDragStopped: persistColState,
+      onSortChanged: persistColState,
+      onColumnPinned: persistColState,
+      onColumnVisible: persistColState,
+      onColumnResized: onColResized,
       onGridReady: function (params) {
         gridApi = params.api;
         window.__gridApi = params.api;
-        var savedCols = loadColState();
-        if (savedCols) applyColState(savedCols);
-        var urlFilters = loadFiltersFromUrl();
-        var storageFilters = loadFiltersFromStorage();
-        var filters = urlFilters || storageFilters;
+
+        var hash = U.parseHash();
+        var legacyFilters = (hash.f || hash.t) ? null : U.decodeLegacyFilters();
+
+        // Column layout: localStorage only (never the URL).
+        var colState = loadColStateFromStorage();
+        if (colState) applyColState(colState);
+
+        // Colour thresholds: URL fragment (#t=) overrides the localStorage default.
+        if (hash.t) {
+          userThresholds = U.decThresholds(hash.t);
+          try { localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds)); } catch (_) {}
+          renderThresholdInputs();
+          gridApi.refreshCells({ force: true });
+        }
+
+        // Filters: URL fragment (#f=) → legacy ?filters= → localStorage.
+        var urlFilters = hash.f ? U.decFilters(hash.f) : legacyFilters;
+        var filters = urlFilters || loadFiltersFromStorage();
         if (filters) setFilterModel(filters);
+
+        // Migrate an old ?filters= link (or stray #t=) to the canonical fragment.
+        if (legacyFilters || hash.t) writeHash();
+
         updateRowCount();
         updateFilterChips();
         updatePairingGapButton();

@@ -398,6 +398,71 @@ Two consequences:
 
 ---
 
+## site — URL state codec (`#f=` / `#t=`)
+
+Shareable dashboard state lives in the URL **fragment**, not the query string:
+filters `#f=` (both pages) + colour thresholds `#t=` (index only). Encoded by a
+compact custom codec in **`site/url-state.js`** (`window.UrlState`), shared by
+`app.js` and `reference.js`, **not** base64 — the `ceed` example went from a
+~120-char base64 blob to `#f=Model~tcceed`. Column layout is deliberately **not**
+in the URL (see below). Pinned by `build/verify_ui.py` scenarios `url-state`
+(index) and `url-state-ref` (reference): round-trip battery + live reload +
+column-in-localStorage-not-URL + legacy migration.
+
+`url-state.js` is a plain `<script>` loaded **before** the page script in both
+HTML files (index's `app.js` is an ES module = deferred, so the plain script runs
+first and `window.UrlState` is ready).
+
+### fragment, not query — Referer leak + `btoa` non-Latin1 throw
+
+Two reasons the state moved from `?filters=`/`?cols=` to `#`:
+- **Referer leak**: query strings are sent in the `Referer` header to third parties
+  (the page loads hyparquet from the jsdelivr CDN), so `?filters=…` leaked the user's
+  filters off-site. A `#fragment` is never sent anywhere.
+- **`btoa` throws on Czech column names**: the old `saveColState` did
+  `btoa(JSON.stringify(ids))` where ids include "Značka"/"Nájezd"/… — `btoa` can't
+  encode non-Latin1 and **throws**. `localStorage.setItem` ran first (order-only), so
+  the localStorage copy survived but the URL write silently died — `?cols=` had been
+  **broken the whole time**. The filters path avoided it with the
+  `btoa(unescape(encodeURIComponent(…)))` idiom; cols never got it. The new codec uses
+  `encodeURIComponent` throughout — no `btoa`, no throw.
+
+### enc()/dec() escaping — the four raw delimiters
+
+`enc()` = `encodeURIComponent` **plus** percent-encoding the four chars it leaves raw
+that the codec uses structurally: `-` `_` `~` `*`. So an `enc()`'d token is drawn from
+`[A-Za-z0-9.!'()]` + `%XX` and can never contain a delimiter → splitting on `; , ~ | -`
+is always unambiguous, even when a filter *value* contains those chars. `*` (raw) is the
+reserved sentinel for a **null set value** (the SetFilter's blank/`(∅)` bucket, which
+`getModel()` emits as `null` in `values`). Number `inRange` uses raw `-` as the
+from/to separator — safe because a negative value's own `-` is escaped to `%2D`.
+
+### column layout is localStorage-only, never the URL
+
+Full column state (order + sort + width + pin + hide) is persisted to
+`localStorage` (`carCompareColState` / `refCompareColState`) on every layout event
+(`onDragStopped`/`onSortChanged`/`onColumnPinned`/`onColumnVisible`/resize-finished)
+and restored on load — but it is **not** written to the URL. Reason: expressing a
+reorder needs the full ordered column list, so any single change would bloat every
+shared link with ~40 column tokens. Layout is per-browser convenience state;
+filters are the shareable thing. `writeHash()` therefore only ever emits `#f=`/`#t=`
+and always strips the legacy `?cols=` param. localStorage stores the full
+`getColumnState()` JSON (old format was a bare colId array — `loadColStateFromStorage`
+still reads it: `typeof v[0] === "string"` ⇒ map to `{colId}`).
+
+### legacy `?filters=<b64>` links auto-migrate; no `#f=b64:` forward fallback
+
+`onGridReady` reads `#` first; if absent, `UrlState.decodeLegacyFilters()` decodes an
+old base64 `?filters=` link, applies it, then `writeHash()` rewrites the address bar
+to `#f=` and strips `?filters`/`?cols`. Old shared links keep working and silently
+upgrade. (Old `?cols=` links never actually existed — that write always threw on the
+`btoa` bug — so only filters are migrated.) There is intentionally **no** forward
+`#f=b64:` fallback: the codec is total over the grid's filter universe
+(text/number/set/combined), so a fallback would catch nothing; an unknown future
+filter type should fail loud, not emit opaque base64.
+
+---
+
 ## core — normalize
 
 ### normalisation order matters
