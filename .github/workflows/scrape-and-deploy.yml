@@ -58,16 +58,16 @@ jobs:
     # back to the previous state from the rolling `data` release).
     continue-on-error: ${{ matrix.source == 'mobilede' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
 
       - run: pip install playwright pandas pyarrow beautifulsoup4 aiohttp
 
-      - uses: actions/cache@v4
+      - uses: actions/cache@v6
         with:
           path: ~/.cache/ms-playwright
           key: playwright-${{ runner.os }}-${{ hashFiles('**/requirements.txt') }}
@@ -89,7 +89,7 @@ jobs:
 
       - run: python -m scrapers.run --source ${{ matrix.source }}
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: state-${{ matrix.source }}
           path: scrapers/data/scrapes/${{ matrix.source }}.parquet
@@ -106,9 +106,9 @@ jobs:
     if: ${{ always() && needs.scrape.result != 'failure' && needs.scrape.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: '3.12'
           cache: pip
@@ -127,14 +127,18 @@ jobs:
           if [ -d /tmp/release-data ]; then
             mkdir -p scrapers/data/scrapes site/data
             for src in sauto autodraft energycars mobilede; do
-              [ -f "/tmp/release-data/$src.parquet" ] && cp "/tmp/release-data/$src.parquet" scrapers/data/scrapes/
+              if [ -f "/tmp/release-data/$src.parquet" ]; then
+                cp "/tmp/release-data/$src.parquet" scrapers/data/scrapes/
+              fi
             done
-            [ -f /tmp/release-data/scrape_history.json ] && cp /tmp/release-data/scrape_history.json site/data/
+            if [ -f /tmp/release-data/scrape_history.json ]; then
+              cp /tmp/release-data/scrape_history.json site/data/
+            fi
           fi
 
       # …then overlay whatever the scrape legs produced today — only when we
       # actually scraped (on a no-scrape run there are no state-* artifacts).
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         if: ${{ needs.scrape.result == 'success' }}
         with:
           pattern: state-*
@@ -147,7 +151,7 @@ jobs:
 
       # Everything the deploy job puts under site/data — parquet payload, meta,
       # reference.json, scrape_history.json.
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: site-data
           path: site/data
@@ -231,12 +235,12 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
 
       # Data is not in git — inject the freshly built payload into the Pages artifact.
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v8
         with:
           name: site-data
           path: site/data
