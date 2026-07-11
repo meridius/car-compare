@@ -107,6 +107,19 @@ def scenario_summary(page):
     return "#summary-overlay"
 
 
+def scenario_build_info(page):
+    """Open the dataset overview and keep the first card ('Poslední sestavení')
+    in view, so the 'Spuštění' label is visible — a push-triggered build must
+    read 'Automaticky (push)', not 'Manuální' (only workflow_dispatch is manual)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-body", timeout=10000)
+    page.wait_for_timeout(300)
+    page.evaluate("document.getElementById('summary-body').scrollTop = 0")
+    page.wait_for_timeout(200)
+    return "#summary-overlay"
+
+
 def scenario_sparovano(page):
     """Filter to uncertain+unmatched rows and scroll the match columns into view,
     so the tri-state Spárováno coloring (amber=Nejisté, red=Ne) and the new
@@ -343,6 +356,7 @@ SCENARIOS = {
     "stav-filter": scenario_stav_filter,
     "body-filter": scenario_body_filter,
     "summary": scenario_summary,
+    "build-info": scenario_build_info,
     "sparovano": scenario_sparovano,
     "transmission-type-col": scenario_transmission_type_col,
     "overview-matching": scenario_overview_matching,

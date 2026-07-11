@@ -842,7 +842,17 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     while (body.firstChild) body.removeChild(body.firstChild);
 
     if (appMetadata) {
-      var trigger = appMetadata.trigger === "schedule" ? "Automatick\u00fd" : "Manu\u00e1ln\u00ed";
+      // github.event_name (schedule/push/workflow_dispatch) or "manual" for a
+      // local build. A push-triggered rebuild is automatic \u2014 only a
+      // workflow_dispatch is genuinely hand-started, so don't label push
+      // "Manu\u00e1ln\u00ed".
+      var TRIGGER_LABELS = {
+        schedule: "Automaticky (pl\u00e1n)",
+        push: "Automaticky (push)",
+        workflow_dispatch: "Ru\u010dn\u011b (dispatch)",
+        manual: "Lok\u00e1ln\u00ed sestaven\u00ed",
+      };
+      var trigger = TRIGGER_LABELS[appMetadata.trigger] || appMetadata.trigger || "\u2013";
 
       // Build info card
       var card1 = makeCard("Posledn\u00ed sestaven\u00ed");
