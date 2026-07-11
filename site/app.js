@@ -1263,9 +1263,16 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         appMetadata = results[1];
         init(rows);
         setupArchiveButton();
+        hideLoadingOverlay();
       });
     })
     .catch(function (err) {
+      hideLoadingOverlay();
       document.getElementById("grid").textContent = "Chyba načítání dat: " + err.message;
     });
+
+  function hideLoadingOverlay() {
+    var overlay = document.getElementById("loading-overlay");
+    if (overlay) overlay.classList.add("hidden");
+  }
 })();

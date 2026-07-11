@@ -62,6 +62,23 @@ def scenario_grid(page):
     return None
 
 
+def scenario_loading(page):
+    """Capture the loading overlay (spinner + 'Načítání dat…') that covers the
+    grid while cars.parquet is fetched+decoded. The decode is fast enough locally
+    that the overlay would vanish before the screenshot, so throttle the parquet
+    response by ~3 s and reload, keeping the overlay on screen to capture."""
+    import time
+
+    def _slow(route):
+        time.sleep(3)
+        route.continue_()
+
+    page.route("**/cars.parquet", _slow)
+    page.reload(wait_until="commit")
+    page.wait_for_selector("#loading-overlay:not(.hidden)", timeout=5000)
+    return "#loading-overlay"
+
+
 def scenario_stav_filter(page):
     page.wait_for_selector(".ag-row", timeout=15000)
     page.evaluate("window.__gridApi.showColumnFilter('Stav')")
@@ -307,6 +324,7 @@ def scenario_transmissions(page):
 
 SCENARIOS = {
     "grid": scenario_grid,
+    "loading": scenario_loading,
     "stav-filter": scenario_stav_filter,
     "body-filter": scenario_body_filter,
     "summary": scenario_summary,
@@ -399,7 +417,11 @@ def main():
                 failures.append(f"scenario '{args.scenario}' failed: {e}")
                 target = None
 
-            if args.page in GRID_PAGES:
+            if args.scenario == "loading":
+                # 'loading' deliberately screenshots the pre-data overlay (parquet
+                # fetch throttled), so the grid has no rows yet — skip row checks.
+                pass
+            elif args.page in GRID_PAGES:
                 row_count = page.locator(".ag-row").count()
                 if row_count == 0:
                     failures.append("no grid rows rendered (.ag-row count == 0)")

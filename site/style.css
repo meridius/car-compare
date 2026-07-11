@@ -297,6 +297,43 @@ a:hover { text-decoration: underline; }
     height: calc(100vh - 52px);
 }
 
+/* ── Loading overlay (parquet fetch+decode blocks the grid ~1.5 s+) ── */
+#loading-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 900;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    background: var(--clr-bg);
+}
+
+#loading-overlay.hidden { display: none; }
+
+.loading-spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid var(--clr-border);
+    border-top-color: var(--clr-accent);
+    border-radius: 50%;
+    animation: loading-spin 0.8s linear infinite;
+}
+
+.loading-text {
+    font-size: 0.9rem;
+    color: var(--clr-text-muted);
+}
+
+@keyframes loading-spin {
+    to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loading-spinner { animation-duration: 2s; }
+}
+
 .ag-header-cell-label {
     justify-content: center;
 }
