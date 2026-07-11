@@ -56,7 +56,20 @@ perfectly good 148k scrape was thrown away and `deploy` was skipped. Prod kept s
 whatever a prior **push**-triggered rebuild had last shipped from stale release state:
 20,754 rows.
 
-## Resolution — already fixed
+## Resolution — two build bugs, both now fixed
+
+**Update 2026-07-11 (later):** the release-download fix below was necessary but **not
+sufficient**. A manual scraping `workflow_dispatch` (run `29160534079`) got all four
+scrapes green (mobile.de 147,942 rows) but `build` **still failed** — a *second*, unrelated
+bug: the reference-versioning EV extractor (`extract_ev_extra_specs` → `parse_battery_kwh`)
+crashed with `TypeError: … got 'float'` because the full dataset's arrow-backed `Extra`
+column carries nulls that `.astype(str).map` feeds as float NaN. It passed local tests
+because the seed-CSV build has `""`, not null. Fixed by guarding the parse helpers against
+non-string input (`fix(build): guard EV Extra parsers …`), verified by rebuilding the real
+157k-row state that crashed CI. Lesson: **verify build changes against real full state, not
+just the seed CSVs** — pulled via `gh run download <run-id>`.
+
+### Bug 1 — release-download guard (fixed by `3282a2b`)
 
 Commit **`3282a2b`** ("fix(ci): stop build failing on absent release assets; bump
 actions off Node 20"), pushed **2026-07-11 15:57 UTC** — *after* the two failed crons

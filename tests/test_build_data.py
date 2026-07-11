@@ -828,6 +828,21 @@ class ExtractEvExtraSpecsTest(unittest.TestCase):
         self.assertEqual(float(out.iloc[0]["Kapacita baterie (kWh)"]), 55.0)
         self.assertEqual(out.iloc[0]["Verze"], "Essence")
 
+    def test_arrow_null_extra_does_not_crash(self):
+        # Regression: on the full dataset the Extra column is arrow-backed and
+        # carries nulls, so .astype(str).map fed float NaN to parse_battery_kwh
+        # and the CI build crashed (TypeError: expected string ... got 'float').
+        df = pd.DataFrame([
+            self._row("Elektrické", "Baterie 60 kWh / Comfort"),
+            self._row("Elektrické", None),
+        ])
+        df["Extra"] = df["Extra"].astype("string[pyarrow]")
+        out = B.extract_ev_extra_specs(df)               # must not raise
+        self.assertEqual(float(out.iloc[0]["Kapacita baterie (kWh)"]), 60.0)
+        self.assertEqual(out.iloc[0]["Verze"], "Comfort")
+        self.assertEqual(out.iloc[1]["Kapacita baterie (kWh)"], "")
+        self.assertEqual(out.iloc[1]["Verze"], "")
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -222,6 +222,12 @@ class ParseBatteryKwhTest(unittest.TestCase):
         self.assertEqual(F.parse_battery_kwh("Baterie 5 kWh"), "")     # too small
         self.assertEqual(F.parse_battery_kwh("Baterie 900 kWh"), "")   # too large
 
+    def test_non_string_is_blank(self):
+        # Arrow-backed Extra columns feed float NaN / None through .map on the
+        # full dataset; the helper must return "" not raise (CI build crash).
+        self.assertEqual(F.parse_battery_kwh(float("nan")), "")
+        self.assertEqual(F.parse_battery_kwh(None), "")
+
 
 class ParseEvEditionTest(unittest.TestCase):
     def test_single_keyword(self):
@@ -240,6 +246,10 @@ class ParseEvEditionTest(unittest.TestCase):
 
     def test_absent_blank(self):
         self.assertEqual(F.parse_ev_edition(""), "")
+
+    def test_non_string_is_blank(self):
+        self.assertEqual(F.parse_ev_edition(float("nan")), "")
+        self.assertEqual(F.parse_ev_edition(None), "")
 
 
 if __name__ == "__main__":

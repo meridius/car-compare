@@ -64,7 +64,7 @@ def parse_battery_kwh(extra: str) -> str:
 
     Returns the integer kWh as a string, or "" when absent or outside the
     plausibility band. No decimals occur in the source data."""
-    if not extra:
+    if not isinstance(extra, str) or not extra:
         return ""
     m = _BATTERY_KWH_RE.search(extra)
     if not m:
@@ -79,7 +79,7 @@ def parse_ev_edition(extra: str) -> str:
     """Extract an EV edition/version name from the Extra text against the curated
     EV_EDITION_KEYWORDS allow-list. Returns canonical casing, or "" when no known
     edition is present. Never guesses from unknown/free text."""
-    if not extra:
+    if not isinstance(extra, str) or not extra:
         return ""
     for kw, rx in _EV_EDITION_RES:
         if rx.search(extra):

@@ -330,7 +330,10 @@ def extract_ev_extra_specs(df):
     is_ev = df["Typ"] == "Elektrické"
     if not is_ev.any():
         return df
-    extra = df.loc[is_ev, "Extra"].astype(str)
+    # fillna before astype: on an arrow-backed column .astype(str) preserves
+    # nulls, so .map would feed float NaN to the parse helpers (they guard
+    # against non-str too, but coercing here keeps the mapped values clean).
+    extra = df.loc[is_ev, "Extra"].fillna("").astype(str)
 
     bat = extra.map(parse_battery_kwh)
     has_bat = bat != ""
