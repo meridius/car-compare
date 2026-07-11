@@ -15,6 +15,7 @@ sys.path.insert(0, BASE_DIR)
 from scrapers.core import matching as comb_utils  # noqa: E402
 from scrapers.core.filters import SOURCE_FILTERS  # noqa: E402
 from scrapers.core.normalize import normalize_model as _normalize_model  # noqa: E402
+from scrapers.core.fields import parse_battery_kwh, parse_ev_edition  # noqa: E402
 
 
 def _fold_accents(s):
@@ -308,6 +309,37 @@ def apply_verze_display(df):
     df.loc[matched_ice, "Verze"] = (
         df.loc[matched_ice, "Model auta"].map(auth_by_entry).fillna("")
     )
+    return df
+
+
+def extract_ev_extra_specs(df):
+    """Parse the EV listing's free-text Extra into dedicated columns
+    (2026-07-09 Extra-extraction task). EV-only; ICE rows untouched.
+
+    - 'Kapacita baterie (kWh)': the per-listing battery from Extra
+      ('Baterie 43 kWh') WINS over the reference-join nominal (which is one value
+      per nameplate and wrong for multi-battery variants). Reference is the
+      fallback when Extra carries no plausible value.
+    - 'Verze': the edition token from Extra (allow-list) — display-only, does not
+      drive matching. Blank when no known edition is present.
+
+    MUST run after apply_verze_display() (which blanks Verze then fills ICE) and
+    after join_electric_reference() (which sets the nominal battery)."""
+    if df.empty or "Typ" not in df.columns:
+        return df
+    is_ev = df["Typ"] == "Elektrické"
+    if not is_ev.any():
+        return df
+    extra = df.loc[is_ev, "Extra"].astype(str)
+
+    bat = extra.map(parse_battery_kwh)
+    has_bat = bat != ""
+    if "Kapacita baterie (kWh)" not in df.columns:
+        df["Kapacita baterie (kWh)"] = ""
+    idx = extra.index[has_bat.values]
+    df.loc[idx, "Kapacita baterie (kWh)"] = bat[has_bat].astype(float).values
+
+    df.loc[is_ev, "Verze"] = extra.map(parse_ev_edition).values
     return df
 
 
@@ -1084,6 +1116,9 @@ def main():
 
     print("Deriving display 'Verze' (confidently-matched reference trim only)...")
     df = apply_verze_display(df)
+
+    print("Extracting EV battery + edition from Extra...")
+    df = extract_ev_extra_specs(df)
 
     print("Reference-driving body/engine specs for confident matches...")
     df = apply_reference_body_specs(df)

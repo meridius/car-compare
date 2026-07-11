@@ -322,9 +322,24 @@ def scenario_transmissions(page):
     return ".transmission-table-wrap"
 
 
+def scenario_verze_ev(page):
+    """Filter to a splittable EV nameplate (BYD Dolphin Surf) and reveal the
+    'Verze' column, so the Extra-extracted editions (Active/Boost/Comfort) are
+    visible in the grid — the default 'grid' scenario scrolls Verze off-screen."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate(
+        "window.__gridApi.setFilterModel("
+        "{ 'Model': { filterType: 'text', type: 'contains', filter: 'Dolphin Surf' } });"
+        "window.__gridApi.ensureColumnVisible('Verze');"
+    )
+    page.wait_for_timeout(400)
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
     "loading": scenario_loading,
+    "verze-ev": scenario_verze_ev,
     "stav-filter": scenario_stav_filter,
     "body-filter": scenario_body_filter,
     "summary": scenario_summary,

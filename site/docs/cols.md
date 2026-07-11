@@ -31,7 +31,7 @@ Data cols:
 - Filtr pevných částic
 - Tepelné čerpadlo
 - Tepelné čerpadlo možné
-- Výbava
+- Verze
 - Kola
 - Záruka
 - Extra

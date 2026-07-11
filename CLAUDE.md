@@ -91,7 +91,7 @@ One canonical 27-column schema for every source, defined in `scrapers/core/schem
 Typ | Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
 Palivo | Objem motoru | Typ motoru | Hybrid typ | Výkon (kW)
 Převodovka | Dvouspojková převodovka | Filtr pevných částic
-Kola | Náhon 4x4 | Karoserie | Výbava | Záruka | Tepelné čerpadlo
+Kola | Náhon 4x4 | Karoserie | Verze | Záruka | Tepelné čerpadlo
 Spárováno | Skóre shody | Extra | Stav | Odstraněno dne | Země | Zdroj | Odkaz na auto
 ```
 
@@ -124,7 +124,7 @@ python build/build_data.py
 
 Reference data (per fuel, joined by `Typ`):
 
-- `scrapers/data/reference/ice_specs.csv` — exact join on "Model auta" (ICE). **Column-structured**: matching features live in dedicated columns (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo, Hybrid typ, Výbava, …), not parsed from the name. PK = `Jednoznačná varianta vozu` (clean, paren-free, unique). `matching.load_authoritative_list()` reads the columns directly.
+- `scrapers/data/reference/ice_specs.csv` — exact join on "Model auta" (ICE). **Column-structured**: matching features live in dedicated columns (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo, Hybrid typ, Verze, …), not parsed from the name. PK = `Jednoznačná varianta vozu` (clean, paren-free, unique). `matching.load_authoritative_list()` reads the columns directly.
 - `scrapers/data/reference/ev_specs.csv` — prefix-match join (EV); comma-delimited (decimal cells quoted).
 
 Both carry `Cd` (drag coefficient) + `Cd zdroj` flag (`reálné` measured / `odhad` body-shape estimate). To add a reference model, add a row with its structured columns — don't bake specs into the name.

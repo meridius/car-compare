@@ -34,6 +34,58 @@ BODY_KEYWORDS = [
     "Fastback", "Allspace", "SUV", "Sportback",
 ]
 
+# EV edition/version names seen in the Extra column (mobile.de + sauto), curated
+# to exclude feature abbreviations (LED, ACC, SHZ, Navi, Kamera, …). Multiword
+# entries first so "First Edition" wins over a bare token; matched
+# case-insensitively, returned in this canonical casing. Growable — add only
+# real edition names, never feature words.
+EV_EDITION_KEYWORDS = [
+    "First Edition", "Top Selection", "Long Range", "Extended Range",
+    "Pro Performance", "Pro S",
+    "Essence", "Selection", "Sportline", "Essential", "Evolution",
+    "Ultimate", "Performance", "Premium", "Techno", "Allure", "Elegance",
+    "Comfort", "Active", "Boost", "Design", "Extreme", "Urban", "Trend",
+    "Pure", "Style", "Ambition", "Exclusive", "Highline", "Acenta",
+    "Pro",
+]
+
+# Plausible EV usable-battery band (kWh); values outside are treated as noise.
+_EV_BATTERY_MIN_KWH = 20
+_EV_BATTERY_MAX_KWH = 120
+_BATTERY_KWH_RE = re.compile(r"Baterie\s*(\d+)\s*kWh", re.IGNORECASE)
+_EV_EDITION_RES = [
+    (kw, re.compile(r"\b" + re.escape(kw) + r"\b", re.IGNORECASE))
+    for kw in EV_EDITION_KEYWORDS
+]
+
+
+def parse_battery_kwh(extra: str) -> str:
+    """Extract usable battery capacity ('Baterie 43 kWh') from the Extra text.
+
+    Returns the integer kWh as a string, or "" when absent or outside the
+    plausibility band. No decimals occur in the source data."""
+    if not extra:
+        return ""
+    m = _BATTERY_KWH_RE.search(extra)
+    if not m:
+        return ""
+    kwh = int(m.group(1))
+    if _EV_BATTERY_MIN_KWH <= kwh <= _EV_BATTERY_MAX_KWH:
+        return str(kwh)
+    return ""
+
+
+def parse_ev_edition(extra: str) -> str:
+    """Extract an EV edition/version name from the Extra text against the curated
+    EV_EDITION_KEYWORDS allow-list. Returns canonical casing, or "" when no known
+    edition is present. Never guesses from unknown/free text."""
+    if not extra:
+        return ""
+    for kw, rx in _EV_EDITION_RES:
+        if rx.search(extra):
+            return kw
+    return ""
+
 TRIM_KEYWORDS = [
     "Laurin & Klement",
     "Monte Carlo",

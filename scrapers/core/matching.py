@@ -67,7 +67,7 @@ def load_authoritative_list(csv_path) -> list[dict]:
     """Parse the structured reference CSV into matching records.
 
     Feature columns (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo,
-    Hybrid typ, Výbava) are read directly — no regex-parsing of the display name.
+    Hybrid typ, Verze) are read directly — no regex-parsing of the display name.
     The display name ('Jednoznačná varianta vozu') is the entry/PK only."""
     def col(row, name):
         return (row.get(name) or "").strip()
@@ -93,7 +93,7 @@ def load_authoritative_list(csv_path) -> list[dict]:
                 "engine_type": col(row, "Typ motoru"),
                 "hybrid": col(row, "Hybrid typ"),
                 "fuel": col(row, "Palivo"),
-                "trim": col(row, "Výbava"),
+                "trim": col(row, "Verze"),
                 "seats": col(row, "Počet míst"),
             })
     return records
@@ -202,7 +202,7 @@ def _score_match(scraped: dict, auth: dict) -> int:
         else:
             score -= 1
 
-    # Trim (Výbava) disambiguates otherwise-identical variants kept as separate
+    # Trim (Verze) disambiguates otherwise-identical variants kept as separate
     # reference rows (e.g. Octavia Style vs Selection). Only scored when both sides
     # carry a trim, so the many trim-less reference rows are unaffected.
     st = scraped.get("trim", "")

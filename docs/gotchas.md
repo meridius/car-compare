@@ -419,7 +419,7 @@ time because `build_data` re-runs `normalize_model()` on ICE names before re-mat
 
 ### Extra field is cleaned after extraction
 
-`clean_extra()` removes substrings already captured in dedicated columns (Typ motoru, Výbava, Karoserie, engine volume, kW values) from the Extra text. Extraction must happen **before** cleaning. Adapters build an `extracted` dict first, then pass it to `clean_extra()`.
+`clean_extra()` removes substrings already captured in dedicated columns (Typ motoru, Verze, Karoserie, engine volume, kW values) from the Extra text. Extraction must happen **before** cleaning. Adapters build an `extracted` dict first, then pass it to `clean_extra()`.
 
 ### DCT regex uses lookahead, not trailing \b
 
@@ -431,7 +431,7 @@ time because `build_data` re-runs `normalize_model()` on ICE names before re-mat
 
 ### clean_extra strips ALL trim keywords, not just extracted one
 
-Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in extra text). `extract_trim()` returns only the first match (for the Výbava column), but `clean_extra()` strips ALL `TRIM_KEYWORDS` from Extra to prevent duplicates leaking through.
+Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in extra text). `extract_trim()` returns only the first match (for the Verze column), but `clean_extra()` strips ALL `TRIM_KEYWORDS` from Extra to prevent duplicates leaking through.
 
 ### _TRANSMISSION_EXTRA_RE uses no trailing \b after Man
 
@@ -454,7 +454,7 @@ feature columns directly — the old auth-side name parsers (`_strip_known_parts
 arrive messy, so `_parse_brand` / `_clean_model_for_matching` / `_extract_body_from_model`
 still parse the listing's "Model auta". The display name (`Jednoznačná varianta vozu`)
 is a clean, paren-free, **unique PK decoupled from the matching features** — editing
-a name never changes how it matches (the columns do that). Trim (`Výbava`) is scored
+a name never changes how it matches (the columns do that). Trim (`Verze`) is scored
 (+2/−1) so kept trim variants (Octavia Style vs Selection) don't tie into `Nejisté`.
 The golden tests build `auth()` dicts directly, so they're insulated from the CSV format.
 
@@ -505,6 +505,32 @@ Previously `merge_with_previous()` did `df.set_index("Odkaz na auto").loc[link]`
 ---
 
 ## build — reference enrichment
+
+### EV battery + edition are extracted from the free-text Extra column
+
+`build_data.extract_ev_extra_specs(df)` (EV rows only) parses the `Extra` string
+into two dedicated columns, using pure parsers in `core/fields.py`
+(`parse_battery_kwh`, `parse_ev_edition`):
+
+- **`Kapacita baterie (kWh)`**: the per-listing `Baterie NN kWh` (mobile.de +
+  sauto) **overwrites** the reference-join nominal (one value per nameplate,
+  wrong for multi-battery variants like Dolphin Surf 30/43 kWh); reference is the
+  fallback when Extra has no plausible value (guard 20–120 kWh). This is the one
+  build-time column where the listing beats the reference.
+- **`Verze`**: an edition token matched against the curated
+  `EV_EDITION_KEYWORDS` allow-list (Essence/Selection/Active/Boost/Comfort/
+  Pro/Pro Performance/…). Display-only — it does **not** drive matching (EV is a
+  prefix-join, ICE `Verze` stays reference-trim-driven). Free text / feature
+  abbreviations (LED, ACC, SHZ, …) yield blank; ~57% of EV rows are blank, which
+  is honest. **Never** free-text-guess an edition — grow the allow-list instead.
+
+**Ordering is load-bearing**: `extract_ev_extra_specs()` MUST run *after*
+`apply_verze_display()` (which does `df["Verze"]=""` then fills ICE-Ano — it
+would wipe EV editions) and after `join_electric_reference()` (which sets the
+nominal battery). See `main()`. Blank `Verze` serialises as parquet NULL (NaN on
+read) — same as ICE `Verze` has always done; not a bug. This is the foundation
+for future reference version-splitting (the listing name almost never carries the
+variant token, so name prefix-join can't assign versions — the Extra can).
 
 ### Karoserie (and ICE engine specs) are reference-driven, then vocab-folded, then vote-filled
 

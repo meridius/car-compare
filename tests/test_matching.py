@@ -103,7 +103,7 @@ class LoadAuthoritativeListTest(unittest.TestCase):
         self.addCleanup(lambda: os.remove(f.name))
         return f.name
 
-    _HEADER = ("Jednoznačná varianta vozu,Značka,Model,Výbava,Generace,Karoserie,"
+    _HEADER = ("Jednoznačná varianta vozu,Značka,Model,Verze,Generace,Karoserie,"
                "Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,"
                "Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd\n")
 
@@ -239,6 +239,34 @@ class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
                     out = M.match_to_authoritative(df, al)  # must not raise
                 self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
                 self.assertGreaterEqual(int(out.iloc[0]["Skóre shody"]), M.STRONG_FLOOR)
+
+
+class ReferenceCSVSchemaTest(unittest.TestCase):
+    """Reference-versioning plumbing: the auth-side reference CSVs carry the
+    'Verze' column (ICE renamed from 'Výbava'; EV newly added) so version data
+    can be curated there. Pins the header contract load_authoritative_list and
+    the EV reference loader depend on."""
+
+    _REF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "scrapers", "data", "reference")
+
+    def _header(self, name):
+        with open(os.path.join(self._REF, name), encoding="utf-8") as f:
+            return f.readline().rstrip("\n").split(",")
+
+    def test_ice_specs_has_verze_not_vybava(self):
+        cols = self._header("ice_specs.csv")
+        self.assertIn("Verze", cols)
+        self.assertNotIn("Výbava", cols)
+
+    def test_ev_specs_has_verze(self):
+        self.assertIn("Verze", self._header("ev_specs.csv"))
+
+    def test_load_authoritative_reads_trim_from_verze(self):
+        path = os.path.join(self._REF, "ice_specs.csv")
+        recs = M.load_authoritative_list(path)
+        self.assertTrue(any(r["trim"] for r in recs),
+                        "no trims read — 'Verze' column not wired into matching")
 
 
 if __name__ == "__main__":

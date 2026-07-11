@@ -794,5 +794,40 @@ class ApplyVerzeDisplayTest(unittest.TestCase):
         self.assertEqual(len(out), 0)
 
 
+class ExtractEvExtraSpecsTest(unittest.TestCase):
+    def _row(self, typ, extra, battery="", verze=""):
+        return {"Typ": typ, "Extra": extra,
+                "Kapacita baterie (kWh)": battery, "Verze": verze}
+
+    def test_listing_battery_overrides_reference(self):
+        df = pd.DataFrame([self._row(
+            "Elektrické", "Oldenburg / Baterie 43 kWh / Dolphin Surf 43kWh Boost",
+            battery=30.0)])  # reference nominal 30
+        out = B.extract_ev_extra_specs(df)
+        self.assertEqual(float(out.iloc[0]["Kapacita baterie (kWh)"]), 43.0)
+        self.assertEqual(out.iloc[0]["Verze"], "Boost")
+
+    def test_absent_battery_keeps_reference(self):
+        df = pd.DataFrame([self._row(
+            "Elektrické", "LED*KLIMA*ACC", battery=58.0)])
+        out = B.extract_ev_extra_specs(df)
+        self.assertEqual(float(out.iloc[0]["Kapacita baterie (kWh)"]), 58.0)
+        self.assertEqual(out.iloc[0]["Verze"], "")
+
+    def test_ice_rows_untouched(self):
+        df = pd.DataFrame([self._row(
+            "Spalovací", "Baterie 43 kWh / Comfort", battery="", verze="Style")])
+        out = B.extract_ev_extra_specs(df)
+        self.assertEqual(out.iloc[0]["Verze"], "Style")       # ICE Verze preserved
+        self.assertEqual(out.iloc[0]["Kapacita baterie (kWh)"], "")  # not populated
+
+    def test_edition_only_no_battery(self):
+        df = pd.DataFrame([self._row(
+            "Elektrické", "Suhl / 55 Essence LED", battery=55.0)])
+        out = B.extract_ev_extra_specs(df)
+        self.assertEqual(float(out.iloc[0]["Kapacita baterie (kWh)"]), 55.0)
+        self.assertEqual(out.iloc[0]["Verze"], "Essence")
+
+
 if __name__ == "__main__":
     unittest.main()

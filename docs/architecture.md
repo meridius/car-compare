@@ -27,7 +27,7 @@ scrapers/
     scrapes/      per-source parquet state (git-ignored; frozen seed CSVs tracked)
     seed/         scrape_history.json bootstrap copy
     reference/
-      ice_specs.csv   ICE reference — structured cols (Značka,Model,Výbava,Generace,
+      ice_specs.csv   ICE reference — structured cols (Značka,Model,Verze,Generace,
                       Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,
                       Spotřeba,Objem kufru,Hlučnost,Cd,Cd zdroj); PK = Jednoznačná
                       varianta vozu (clean, paren-free); exact join on "Model auta"
@@ -94,7 +94,7 @@ One canonical 26-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
 Typ, Model auta, Cena (Kč), Nájezd (km), Rok výroby,
 Palivo, Objem motoru, Typ motoru, Hybrid typ, Výkon (kW),
 Převodovka, Dvouspojková převodovka, Filtr pevných částic,
-Kola, Náhon 4x4, Karoserie, Výbava, Záruka, Tepelné čerpadlo,
+Kola, Náhon 4x4, Karoserie, Verze, Záruka, Tepelné čerpadlo,
 Spárováno, Skóre shody, Extra, Stav, Země, Zdroj, Odkaz na auto
 ```
 
@@ -103,7 +103,7 @@ CZ-only sources always emit `Česko`; mobile.de maps `attr.cn` (ISO code) to the
 country name. `build_data.backfill_country()` fills any blank `Země` on a non-mobile.de
 row with `Česko`, so CSVs written before the column existed still display correctly.
 
-EV rows leave the ICE-only columns blank (Palivo, Objem motoru, Typ motoru, Hybrid typ, Převodovka, Dvouspojková převodovka, Filtr pevných částic, Výbava, Záruka). ICE rows leave `Tepelné čerpadlo` blank. `blank_row()` seeds every column to `""`.
+EV rows leave the ICE-only columns blank (Palivo, Objem motoru, Typ motoru, Hybrid typ, Převodovka, Dvouspojková převodovka, Filtr pevných částic, Verze, Záruka). ICE rows leave `Tepelné čerpadlo` blank. `blank_row()` seeds every column to `""`.
 
 ## Normalisation Pipeline
 
@@ -135,11 +135,11 @@ Extraction must run **before** `clean_extra()`.
 
 Each ICE car is matched against `scrapers/data/reference/ice_specs.csv` (`core/matching.py`):
 
-1. `load_authoritative_list(csv_path)` — reads the **structured feature columns** directly (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo, Hybrid typ, Výbava). It does **not** parse the display name — the name (`Jednoznačná varianta vozu`) is the entry/PK only. (Reference CSV is now column-structured; the old name-parsing auth helpers were deleted.)
+1. `load_authoritative_list(csv_path)` — reads the **structured feature columns** directly (Značka, Model, Karoserie, Objem motoru, Typ motoru, Palivo, Hybrid typ, Verze). It does **not** parse the display name — the name (`Jednoznačná varianta vozu`) is the entry/PK only. (Reference CSV is now column-structured; the old name-parsing auth helpers were deleted.)
 2. `match_to_authoritative(df, auth_list)` — for each row:
     - Parse brand + model_base from the **scraped** "Model auta" (listings still arrive as messy strings; only the auth side is pre-structured)
     - Find candidates: brand must match (with `_BRAND_MATCH_ALIASES` for SsangYong↔KGM) AND model_base must match
-    - Score candidates by weighted multi-field matching: body(3), hybrid(3), engine_vol(2), engine_type(2), trim/Výbava(2), fuel(1) — trim disambiguates kept trim variants (Octavia Style vs Selection)
+    - Score candidates by weighted multi-field matching: body(3), hybrid(3), engine_vol(2), engine_type(2), trim/Verze(2), fuel(1) — trim disambiguates kept trim variants (Octavia Style vs Selection)
     - Classify via `classify_match()` into tri-state `Spárováno` + numeric `Skóre shody`:
         - **Ano** (confident: best score ≥ `STRONG_FLOOR` and beats runner-up by ≥ `MARGIN_REQ`) → "Model auta" set to full auth string (e.g. "Škoda Karoq 1.5 TSI")
         - **Nejisté** (candidate found but weak/contradictory/tie) → best-guess auth string written, flagged uncertain

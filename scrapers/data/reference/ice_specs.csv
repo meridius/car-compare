@@ -1,4 +1,4 @@
-Jednoznačná varianta vozu,Značka,Model,Výbava,Generace,Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd,Cd zdroj
+Jednoznačná varianta vozu,Značka,Model,Verze,Generace,Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,Spotřeba (l/100 km),Objem kufru (l),Hlučnost (dB),Cd,Cd zdroj
 DFSK Fengon 5 1.5 CVT,DFSK,Fengon,,,MPV,,1.5,,Benzín,,"9,0",385,71,0.33,odhad
 Alfa Romeo Giulia 2.0 GME,Alfa Romeo,Giulia,,,Sedan,,2.0,,Benzín,,"7,4",480,69,0.28,reálné
 Alfa Romeo Giulia 2.2 JTDM,Alfa Romeo,Giulia,,,Sedan,,2.2,,Nafta,,"5,3",480,70,0.28,reálné

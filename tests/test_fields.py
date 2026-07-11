@@ -204,5 +204,43 @@ class ExtractCylinderCountTest(unittest.TestCase):
         self.assertEqual(F.repair_year("2023", None, None, 2026), "2023")
 
 
+class ParseBatteryKwhTest(unittest.TestCase):
+    def test_mobilede_format(self):
+        self.assertEqual(F.parse_battery_kwh("Gera / Baterie 56 kWh / 55 Essence"), "56")
+
+    def test_sauto_format(self):
+        self.assertEqual(F.parse_battery_kwh("Dojezd 310 km / Baterie 43 kWh / COMFORT"), "43")
+
+    def test_case_insensitive_and_spacing(self):
+        self.assertEqual(F.parse_battery_kwh("baterie30kwh"), "30")
+
+    def test_absent_blank(self):
+        self.assertEqual(F.parse_battery_kwh("LED*KLIMA*ACC"), "")
+        self.assertEqual(F.parse_battery_kwh(""), "")
+
+    def test_implausible_blanked(self):
+        self.assertEqual(F.parse_battery_kwh("Baterie 5 kWh"), "")     # too small
+        self.assertEqual(F.parse_battery_kwh("Baterie 900 kWh"), "")   # too large
+
+
+class ParseEvEditionTest(unittest.TestCase):
+    def test_single_keyword(self):
+        self.assertEqual(F.parse_ev_edition("Suhl / Baterie 51 kWh / 55 Essence LED"), "Essence")
+        self.assertEqual(F.parse_ev_edition("Baterie 30 kWh / ... Active Carplay"), "Active")
+
+    def test_canonical_casing_from_uppercase(self):
+        self.assertEqual(F.parse_ev_edition("Baterie 43 kWh / COMFORT"), "Comfort")
+
+    def test_multiword_wins_over_bare_token(self):
+        # "First Edition" precedes any bare token in the allow-list order.
+        self.assertEqual(F.parse_ev_edition("Škoda Epiq First Edition 55"), "First Edition")
+
+    def test_feature_noise_yields_blank(self):
+        self.assertEqual(F.parse_ev_edition("LED*KLIMA*DAB+*ACC*SHZ*PDCh*18\"ALU"), "")
+
+    def test_absent_blank(self):
+        self.assertEqual(F.parse_ev_edition(""), "")
+
+
 if __name__ == "__main__":
     unittest.main()
