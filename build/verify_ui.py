@@ -88,6 +88,27 @@ def scenario_stav_filter(page):
     return ".set-filter"
 
 
+def scenario_cena_filter(page):
+    """Open the Cena (Kč) column filter — the custom RangeFilter renders a dual
+    min/max slider (track = the column's good→bad heat gradient) above od/do number
+    boxes, instead of AG's default two text inputs."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.__gridApi.showColumnFilter('Cena (Kč)')")
+    page.wait_for_selector(".range-filter .th-slider", timeout=5000)
+    page.wait_for_timeout(200)
+    return ".range-filter"
+
+
+def scenario_range_filter_ref(page):
+    """Reference page: open the Výkon (kW) column filter — the custom RangeFilter
+    dual slider + od/do boxes + reset, coupled to the colour-drawer slider."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.__gridApi.showColumnFilter('Kapacita baterie (kWh)')")
+    page.wait_for_selector(".range-filter .th-slider", timeout=5000)
+    page.wait_for_timeout(200)
+    return ".range-filter"
+
+
 def scenario_body_filter(page):
     """Open the Karoserie set filter — after the reference-driven + folded body
     vocabulary, the checkboxes must be the clean canonical set (SUV / Hatchback /
@@ -554,6 +575,8 @@ SCENARIOS = {
     "loading": scenario_loading,
     "verze-ev": scenario_verze_ev,
     "stav-filter": scenario_stav_filter,
+    "cena-filter": scenario_cena_filter,
+    "range-filter-ref": scenario_range_filter_ref,
     "body-filter": scenario_body_filter,
     "summary": scenario_summary,
     "build-info": scenario_build_info,

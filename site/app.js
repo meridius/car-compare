@@ -260,6 +260,247 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   ColTooltip.prototype.getGui = function () { return this.eGui; };
   ColTooltip.prototype.destroy = function () {};
 
+  // ── Numeric range: ONE shared state drives BOTH colouring and filtering. ──
+  // userThresholds[field] = {min,max} is the single source of truth. The colour-
+  // settings slider (Nastavení barev drawer) and the column-filter slider (this
+  // RangeFilter popup) are two views of that same value — edit either and the
+  // other updates live, the heat-map recolours, and rows filter. Every editor
+  // (either slider, either number box, either reset) routes through commitRange().
+  //
+  // The filter side emits the STANDARD AG number model ({type:"inRange",filter,
+  // filterTo}, null bound = open), so the URL codec (url-state.js), filter chips
+  // and localStorage persistence all work unchanged.
+
+  // cs-CZ thousands separator for display; parse tolerates spaces/NBSP + comma.
+  function fmtRangeNum(field, v) {
+    if (v == null || v === "" || isNaN(v)) return "";
+    var group = field !== "Rok výroby";   // a year is not a thousand
+    return Number(v).toLocaleString("cs-CZ", { useGrouping: group, maximumFractionDigits: 3 });
+  }
+  function parseNum(s) {
+    if (s == null) return null;
+    s = String(s).replace(/[\s  ]/g, "").replace(",", ".");
+    if (s === "" || s === "-" || s === ".") return null;
+    var n = parseFloat(s);
+    return isNaN(n) ? null : n;
+  }
+  function cssEsc(s) {
+    return (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/["\\]/g, "\\$&");
+  }
+  function mkNumInput(placeholder) {
+    var i = document.createElement("input");
+    i.type = "text"; i.inputMode = "decimal"; i.autocomplete = "off"; i.spellcheck = false;
+    i.placeholder = placeholder;
+    return i;
+  }
+
+  function rangeOf(field) {
+    var th = userThresholds[field] || {};
+    return { min: th.min != null ? th.min : null, max: th.max != null ? th.max : null };
+  }
+  function setRange(field, min, max) {
+    if (min == null && max == null) { delete userThresholds[field]; return; }
+    var o = {};
+    if (min != null) o.min = min;
+    if (max != null) o.max = max;
+    userThresholds[field] = o;
+  }
+  function rangeModel(field) {
+    var r = rangeOf(field);
+    if (r.min == null && r.max == null) return null;
+    return { filterType: "number", type: "inRange", filter: r.min, filterTo: r.max };
+  }
+  function persistThresholds() {
+    try { localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds)); } catch (_) {}
+  }
+
+  var rangeFilters = {};   // field -> live RangeFilter instance (for cross-view sync)
+  var _rangeTimers = {};
+
+  // The one entry point every range editor calls. Updates shared state, mirrors it
+  // into BOTH views (skipping whatever control the user is touching), then debounces
+  // the expensive part — recolour + (re)activate the grid filter — off the 152k-row
+  // hot path so dragging stays smooth.
+  function commitRange(field, min, max) {
+    setRange(field, min, max);
+    syncSidebarRow(field);
+    if (rangeFilters[field]) rangeFilters[field].renderState();
+    updateThresholdOverrides();
+    if (_rangeTimers[field]) clearTimeout(_rangeTimers[field]);
+    _rangeTimers[field] = setTimeout(function () {
+      persistThresholds();
+      if (gridApi) {
+        gridApi.refreshCells({ force: true });
+        // setColumnFilterModel instantiates + activates the filter even if its popup
+        // was never opened (e.g. edited from the colour drawer). Its setModel writes
+        // the same state back — idempotent, no loop.
+        gridApi.setColumnFilterModel(field, rangeModel(field)).then(function () {
+          gridApi.onFilterChanged();
+        });
+      }
+    }, 220);
+  }
+
+  // Mirror shared state into the colour-drawer row for `field` (if rendered).
+  function syncSidebarRow(field) {
+    var container = document.getElementById("threshold-inputs");
+    if (!container) return;
+    var row = container.querySelector('.threshold-row[data-field="' + cssEsc(field) + '"]');
+    if (!row) return;
+    var r = rangeOf(field), rg = colRanges[field] || {};
+    var mn = row.querySelector(".th-min"), mx = row.querySelector(".th-max");
+    if (mn && document.activeElement !== mn) mn.value = fmtRangeNum(field, r.min);
+    if (mx && document.activeElement !== mx) mx.value = fmtRangeNum(field, r.max);
+    var rMin = row.querySelector(".th-range-min"), rMax = row.querySelector(".th-range-max");
+    if (rMin && document.activeElement !== rMin) rMin.value = r.min != null ? r.min : rg.min;
+    if (rMax && document.activeElement !== rMax) rMax.value = r.max != null ? r.max : rg.max;
+    row.classList.toggle("overridden", r.min != null || r.max != null);
+  }
+
+  // Activate grid filters for every column that already has a saved threshold/range
+  // (restored from localStorage or #t=), so colouring-only state also filters.
+  function activateRangeFilters() {
+    if (!gridApi) return;
+    Object.keys(userThresholds).forEach(function (field) {
+      if (NUMERIC_COLS[field] === undefined) return;
+      var m = rangeModel(field);
+      if (m) gridApi.setColumnFilterModel(field, m);
+    });
+    gridApi.onFilterChanged();
+  }
+
+  function RangeFilter() {}
+
+  RangeFilter.prototype.init = function (params) {
+    this.params = params;
+    this.field = params.colDef.field;
+    rangeFilters[this.field] = this;
+
+    var field = this.field;
+    var range = colRanges[field] || {};
+    var greenHigh = NUMERIC_COLS[field];
+    this.range = range;
+
+    this.gui = document.createElement("div");
+    this.gui.className = "range-filter";
+
+    var self = this;
+
+    if (range.min != null && range.max != null && range.max > range.min) {
+      var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
+      this.step = step;
+      var slider = document.createElement("div");
+      slider.className = "th-slider";
+      slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
+      var rMin = document.createElement("input"), rMax = document.createElement("input");
+      [rMin, rMax].forEach(function (r) { r.type = "range"; r.min = range.min; r.max = range.max; r.step = step; });
+      rMin.setAttribute("aria-label", field + " min");
+      rMax.setAttribute("aria-label", field + " max");
+      this.rMin = rMin; this.rMax = rMax;
+      rMin.addEventListener("input", function () {
+        if (+rMin.value > +rMax.value) rMin.value = rMax.value;
+        var v = _sliderRound(+rMin.value, step);
+        self._edit(v <= range.min ? null : v, undefined);
+      });
+      rMax.addEventListener("input", function () {
+        if (+rMax.value < +rMin.value) rMax.value = rMin.value;
+        var v = _sliderRound(+rMax.value, step);
+        self._edit(undefined, v >= range.max ? null : v);
+      });
+      slider.appendChild(rMin); slider.appendChild(rMax);
+      this.gui.appendChild(slider);
+    }
+
+    var pair = document.createElement("div");
+    pair.className = "th-pair";
+    var minInput = mkNumInput("od"); minInput.className = "th-min";
+    var maxInput = mkNumInput("do"); maxInput.className = "th-max";
+    this.minInput = minInput; this.maxInput = maxInput;
+    minInput.addEventListener("input", function () { self._edit(parseNum(minInput.value), undefined); });
+    maxInput.addEventListener("input", function () { self._edit(undefined, parseNum(maxInput.value)); });
+    minInput.addEventListener("change", function () { minInput.value = fmtRangeNum(field, rangeOf(field).min); });
+    maxInput.addEventListener("change", function () { maxInput.value = fmtRangeNum(field, rangeOf(field).max); });
+    pair.appendChild(minInput); pair.appendChild(maxInput);
+    this.gui.appendChild(pair);
+
+    var reset = document.createElement("button");
+    reset.type = "button"; reset.className = "range-reset";
+    reset.textContent = "Vymazat rozsah";
+    reset.addEventListener("click", function () { commitRange(field, null, null); });
+    this.gui.appendChild(reset);
+
+    this.renderState();
+  };
+
+  // Change one bound (undefined = leave the other as-is), keeping the paired value.
+  RangeFilter.prototype._edit = function (min, max) {
+    var r = rangeOf(this.field);
+    commitRange(this.field, min === undefined ? r.min : min, max === undefined ? r.max : max);
+  };
+
+  // Mirror shared state into this popup's own controls (skip the focused one).
+  RangeFilter.prototype.renderState = function () {
+    var r = rangeOf(this.field), rg = this.range || {};
+    if (this.rMin && document.activeElement !== this.rMin) this.rMin.value = r.min != null ? r.min : rg.min;
+    if (this.rMax && document.activeElement !== this.rMax) this.rMax.value = r.max != null ? r.max : rg.max;
+    if (this.minInput && document.activeElement !== this.minInput) this.minInput.value = fmtRangeNum(this.field, r.min);
+    if (this.maxInput && document.activeElement !== this.maxInput) this.maxInput.value = fmtRangeNum(this.field, r.max);
+  };
+
+  RangeFilter.prototype.doesFilterPass = function (params) {
+    var r = rangeOf(this.field);
+    var v = params.data[this.field];
+    if (v == null || v === "") return false;              // blanks fail when active (AG number default)
+    var n = typeof v === "number" ? v : parseFloat(v);    // some columns arrive as numeric strings
+    if (isNaN(n)) return false;
+    if (r.min != null && n < r.min) return false;
+    if (r.max != null && n > r.max) return false;
+    return true;
+  };
+
+  RangeFilter.prototype.isFilterActive = function () {
+    var r = rangeOf(this.field);
+    return r.min != null || r.max != null;
+  };
+
+  RangeFilter.prototype.getModel = function () { return rangeModel(this.field); };
+
+  RangeFilter.prototype.setModel = function (model) {
+    var min = null, max = null;
+    if (model) {
+      if (model.type === "inRange") {
+        min = model.filter != null ? +model.filter : null;
+        max = model.filterTo != null ? +model.filterTo : null;
+      } else {
+        // Tolerate simple bound models (e.g. a legacy greaterThanOrEqual link).
+        var v = model.filter != null ? +model.filter : null;
+        if (model.type === "greaterThan" || model.type === "greaterThanOrEqual") min = v;
+        else if (model.type === "lessThan" || model.type === "lessThanOrEqual") max = v;
+        else if (model.type === "equals") { min = v; max = v; }
+      }
+    }
+    setRange(this.field, min, max);       // no commitRange → no debounce/loop; AG drives the filter pass
+    syncSidebarRow(this.field);
+    this.renderState();
+    if (gridApi) gridApi.refreshCells({ force: true, columns: [this.field] });
+  };
+
+  RangeFilter.prototype.getGui = function () { return this.gui; };
+  RangeFilter.prototype.destroy = function () { if (rangeFilters[this.field] === this) delete rangeFilters[this.field]; };
+
+  RangeFilter.prototype.getModelAsString = function () {
+    var r = rangeOf(this.field);
+    if (r.min == null && r.max == null) return "";
+    var f = function (n) { return fmtRangeNum(this.field, n); }.bind(this);
+    if (r.min != null && r.max != null) return f(r.min) + "–" + f(r.max);
+    if (r.min != null) return "≥ " + f(r.min);
+    return "≤ " + f(r.max);
+  };
+
+  RangeFilter.prototype.afterGuiAttached = function () {
+    if (this.minInput) this.minInput.focus();
+  };
+
   var STAV_GROUPS = [
     { label: "Dostupné", values: ["Dostupný", "Nové", "Předváděcí", "Ojeté", "Havarované"] },
     { label: "Nedostupné", values: ["Zamluvené", "Prodané", "Odstraněno"] },
@@ -486,7 +727,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       var def = {
         field: cfg.field,
         headerName: cfg.hdr || makeHeaderName(cfg.field),
-        filter: cfg.filter === "agSetColumnFilter" ? SetFilter : cfg.filter,
+        filter: cfg.num ? RangeFilter : (cfg.filter === "agSetColumnFilter" ? SetFilter : cfg.filter),
         filterParams: cfg.groups ? { groups: cfg.groups } : undefined,
         width: cfg.w,
       };
@@ -618,30 +859,26 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     } catch (_) { userThresholds = {}; }
   }
 
+  // Kept for any external caller; state now flows through commitRange, so this
+  // only re-persists + repaints the current shared state (no DOM parsing).
   window.saveThresholds = function () {
-    var rows = document.querySelectorAll("#threshold-inputs .threshold-row");
-    userThresholds = {};
-    rows.forEach(function (row) {
-      var field = row.dataset.field;
-      var minVal = row.querySelector(".th-min").value.trim();
-      var maxVal = row.querySelector(".th-max").value.trim();
-      if (minVal !== "" || maxVal !== "") {
-        userThresholds[field] = {};
-        if (minVal !== "") userThresholds[field].min = parseFloat(minVal);
-        if (maxVal !== "") userThresholds[field].max = parseFloat(maxVal);
-      }
-    });
-    localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds));
+    persistThresholds();
     writeHash();
     if (gridApi) gridApi.refreshCells({ force: true });
   };
 
+  // Reset ALL columns: clears every colour threshold AND its coupled range filter.
   window.resetThresholds = function () {
+    var fields = Object.keys(userThresholds);
     userThresholds = {};
     localStorage.removeItem(THRESHOLD_KEY);
     renderThresholdInputs();
+    if (gridApi) {
+      fields.forEach(function (f) { if (NUMERIC_COLS[f] !== undefined) gridApi.setColumnFilterModel(f, null); });
+      gridApi.refreshCells({ force: true });
+      gridApi.onFilterChanged();
+    }
     writeHash();
-    if (gridApi) gridApi.refreshCells({ force: true });
   };
 
   // Mini style preview for a choice chip (uses the current palette).
@@ -690,12 +927,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     });
   }
 
-  var _thTimer = null;
-  function scheduleThresholdApply() {
-    if (_thTimer) clearTimeout(_thTimer);
-    _thTimer = setTimeout(function () { window.saveThresholds(); updateThresholdOverrides(); }, 300);
-  }
-
   function updateThresholdOverrides() {
     document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
       var th = userThresholds[row.dataset.field] || {};
@@ -720,12 +951,12 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     while (container.firstChild) container.removeChild(container.firstChild);
 
     Object.keys(NUMERIC_COLS).forEach(function (field) {
-      var th = userThresholds[field] || {};
+      var r = rangeOf(field);
       var range = colRanges[field] || {};
       var greenHigh = NUMERIC_COLS[field];
 
       var row = document.createElement("div");
-      row.className = "threshold-row" + ((th.min != null || th.max != null) ? " overridden" : "");
+      row.className = "threshold-row" + ((r.min != null || r.max != null) ? " overridden" : "");
       row.dataset.field = field;
 
       var labelWrap = document.createElement("div");
@@ -736,24 +967,26 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       dir.className = "th-dir";
       dir.textContent = greenHigh ? "více = lépe" : "méně = lépe";
       labelWrap.appendChild(name); labelWrap.appendChild(dir);
+      var reset = document.createElement("button");
+      reset.type = "button"; reset.className = "th-reset";
+      reset.title = "Vymazat rozsah"; reset.setAttribute("aria-label", "Vymazat rozsah " + field);
+      reset.textContent = "⟲";
+      reset.addEventListener("click", function () { commitRange(field, null, null); });
+      labelWrap.appendChild(reset);
       row.appendChild(labelWrap);
 
-      var minInput = document.createElement("input");
-      minInput.type = "number";
-      minInput.className = "th-min";
-      minInput.placeholder = "min: " + (range.min != null ? range.min : "");
-      if (th.min != null) minInput.value = th.min;
-      var maxInput = document.createElement("input");
-      maxInput.type = "number";
-      maxInput.className = "th-max";
-      maxInput.placeholder = "max: " + (range.max != null ? range.max : "");
-      if (th.max != null) maxInput.value = th.max;
-      minInput.addEventListener("input", scheduleThresholdApply);
-      maxInput.addEventListener("input", scheduleThresholdApply);
+      var minInput = mkNumInput("min"); minInput.className = "th-min";
+      var maxInput = mkNumInput("max"); maxInput.className = "th-max";
+      minInput.value = fmtRangeNum(field, r.min);
+      maxInput.value = fmtRangeNum(field, r.max);
+      minInput.addEventListener("input", function () { commitRange(field, parseNum(minInput.value), rangeOf(field).max); });
+      maxInput.addEventListener("input", function () { commitRange(field, rangeOf(field).min, parseNum(maxInput.value)); });
+      minInput.addEventListener("change", function () { minInput.value = fmtRangeNum(field, rangeOf(field).min); });
+      maxInput.addEventListener("change", function () { maxInput.value = fmtRangeNum(field, rangeOf(field).max); });
 
-      // Dual-range slider; the track is the column's good→bad gradient. Kept in
-      // sync with the number inputs both ways; a thumb parked at the data edge
-      // clears its input (= automatic bound).
+      // Dual-range slider; the track is the column's good→bad gradient. Shares the
+      // same state as the number boxes and the column-filter slider via commitRange;
+      // a thumb parked at the data edge clears that bound (= automatic / open).
       if (range.min != null && range.max != null && range.max > range.min) {
         var slider = document.createElement("div");
         slider.className = "th-slider";
@@ -761,30 +994,23 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
         var rMin = document.createElement("input");
         var rMax = document.createElement("input");
-        [rMin, rMax].forEach(function (r) {
-          r.type = "range"; r.min = range.min; r.max = range.max; r.step = step;
+        [rMin, rMax].forEach(function (rr) {
+          rr.type = "range"; rr.min = range.min; rr.max = range.max; rr.step = step;
         });
-        rMin.value = th.min != null ? th.min : range.min;
-        rMax.value = th.max != null ? th.max : range.max;
+        rMin.className = "th-range-min"; rMax.className = "th-range-max";
+        rMin.value = r.min != null ? r.min : range.min;
+        rMax.value = r.max != null ? r.max : range.max;
         rMin.setAttribute("aria-label", field + " min");
         rMax.setAttribute("aria-label", field + " max");
         rMin.addEventListener("input", function () {
           if (+rMin.value > +rMax.value) rMin.value = rMax.value;
           var v = _sliderRound(+rMin.value, step);
-          minInput.value = v <= range.min ? "" : v;
-          scheduleThresholdApply();
+          commitRange(field, v <= range.min ? null : v, rangeOf(field).max);
         });
         rMax.addEventListener("input", function () {
           if (+rMax.value < +rMin.value) rMax.value = rMin.value;
           var v = _sliderRound(+rMax.value, step);
-          maxInput.value = v >= range.max ? "" : v;
-          scheduleThresholdApply();
-        });
-        minInput.addEventListener("input", function () {
-          rMin.value = minInput.value !== "" ? minInput.value : range.min;
-        });
-        maxInput.addEventListener("input", function () {
-          rMax.value = maxInput.value !== "" ? maxInput.value : range.max;
+          commitRange(field, rangeOf(field).min, v >= range.max ? null : v);
         });
         slider.appendChild(rMin);
         slider.appendChild(rMax);
@@ -1095,6 +1321,11 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         var urlFilters = hash.f ? U.decFilters(hash.f) : legacyFilters;
         var filters = urlFilters || loadFiltersFromStorage();
         if (filters) setFilterModel(filters);
+
+        // Colour thresholds and range filters are one coupled state: a threshold
+        // restored from localStorage / #t= (colour-only, no #f= entry) must also
+        // switch its column filter on.
+        activateRangeFilters();
 
         // Migrate an old ?filters= link (or stray #t=) to the canonical fragment.
         if (legacyFilters || hash.t) writeHash();

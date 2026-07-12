@@ -467,6 +467,58 @@ a:hover { text-decoration: underline; }
 
 .threshold-row .th-pair { display: flex; gap: 6px; grid-column: 1 / -1; }
 
+/* ── RangeFilter popup (slider filter for numeric columns) ── */
+.range-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px 12px 10px;
+    min-width: 200px;
+    background: var(--clr-surface);
+    color: var(--clr-text);
+}
+.range-filter .th-slider { margin: 4px 6px 2px; }
+.range-filter .th-pair { display: flex; gap: 6px; }
+.range-filter .th-pair input {
+    width: 100%;
+    padding: 4px 7px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-size: 0.8rem;
+}
+/* Reset buttons: ghost "clear this range" — popup (full width) + sidebar (icon). */
+.range-reset {
+    align-self: stretch;
+    padding: 4px 8px;
+    border: 1px solid var(--clr-border);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+}
+.range-reset:hover { background: var(--clr-bg); color: var(--clr-text); }
+.th-reset {
+    margin-left: auto;
+    width: 20px; height: 20px;
+    padding: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 0.9rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.12s;
+}
+.threshold-row:hover .th-reset,
+.threshold-row.overridden .th-reset { opacity: 1; }
+.th-reset:hover { border-color: var(--clr-border); color: var(--clr-accent); }
+
 /* ── Active filter chips ── */
 .filter-chips-bar {
     display: flex;

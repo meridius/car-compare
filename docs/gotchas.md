@@ -465,6 +465,37 @@ filter type should fail loud, not emit opaque base64.
 
 ## site — UI (redesign 2026-07)
 
+### numeric filter = a dual slider, and it's the SAME state as the colour threshold
+
+Every numeric column filters through a custom AG Grid `RangeFilter` (IFilterComp,
+both `site/app.js` and `site/reference.js`) — a dual min/max slider (track = the
+column's good→bad heat gradient) + od/do number boxes + a reset, rendered in the
+column-filter popup instead of AG's two text inputs. It is **coupled** to the
+Nastavení-barev colour slider: `userThresholds[field] = {min,max}` is the **single
+source of truth** for both the heat-map colouring AND row filtering. Editing either
+view drives the other — every editor (either slider, either box, either reset)
+routes through `commitRange(field,min,max)`, which mirrors state into the other view
+(skipping the focused control) and debounces (220 ms) the expensive recolour +
+`setColumnFilterModel` + `onFilterChanged` off the 150k-row hot path. `setModel`
+writes shared state but does **not** call `commitRange` (AG drives the filter pass),
+so there's no loop. On load, `activateRangeFilters()` switches the filter on for any
+threshold restored colour-only from localStorage/`#t=`. The filter emits the
+standard AG number `inRange` model (null bound = open), so the URL codec
+(`url-state.js`), filter chips and persistence work unchanged.
+
+- **`fmtRangeNum`, not `fmtNum`** — `app.js` already has a 1-arg `fmtNum(n)` for the
+  overview tables. The range formatter is 2-arg (`field, v`, cs-CZ thousands
+  separator, `useGrouping:false` for "Rok výroby" — a year is not a thousand) and is
+  named `fmtRangeNum` to avoid the hoisted-declaration collision that silently made
+  every input read "NaN". Number boxes are `type=text inputmode=decimal` (a
+  `type=number` box can't render a thousands separator); `parseNum` strips `\s`
+  (JS `\s` covers NBSP/narrow-NBSP that `toLocaleString` emits) and folds the comma
+  decimal.
+- **`doesFilterPass` coerces** — `reference.json` stores some numeric columns as
+  strings ("150"); `computeRanges` (typeof number) skips them so they get number
+  boxes but no slider, and `doesFilterPass` does `parseFloat` so filtering still
+  works. `app.js`'s payload is float64 so this never bites there.
+
 ### heat-map colouring is a user-selectable palette × style, theme-aware
 
 `numericCellStyle` (both `site/app.js` and `site/reference.js`) no longer bakes a
