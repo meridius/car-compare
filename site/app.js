@@ -11,15 +11,19 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   var THRESHOLD_KEY = "carCompareThresholds";
   var THEME_KEY = "carCompareTheme";
   var COL_STATE_KEY = "carCompareColState";
+  var HEATMODE_KEY = "carCompareHeatMode";
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
-    document.getElementById("btn-theme").textContent = theme === "dark" ? "\u263E" : "\u2600";
+    var glyph = document.querySelector("#btn-theme .theme-glyph");
+    if (glyph) glyph.textContent = theme === "dark" ? "\u263E" : "\u2600";
     var gridEl = document.getElementById("grid");
     if (gridEl) {
       gridEl.classList.remove("ag-theme-alpine", "ag-theme-alpine-dark");
       gridEl.classList.add(theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine");
     }
+    // Heat colours are theme-aware (see heatColor) \u2014 re-tint on theme change.
+    if (gridApi) gridApi.refreshCells({ force: true });
   }
 
   window.toggleTheme = function () {
@@ -279,7 +283,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Objem kufru (l)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = větší kufr, červená = menší." },
     { field: "Výkon (kW)", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },
-    { field: "Počet válců", filter: "agNumberColumnFilter", w: 70, num: true, hi: true, hdr: "Počet\nválců", tip: "Počet válců spalovacího motoru. Zatím dostupné jen u části inzerátů (Sauto.cz).\nBarva buňky: zelená = více válců, červená = méně." },
+    { field: "Počet válců", filter: "agNumberColumnFilter", w: 82, num: true, hi: true, hdr: "Počet\nválců", tip: "Počet válců spalovacího motoru. Zatím dostupné jen u části inzerátů (Sauto.cz).\nBarva buňky: zelená = více válců, červená = méně." },
     { field: "Spolehlivost", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Hrubý odhad dle pravidla: více válců a větší objem = vyšší spolehlivost. Není to empirická spolehlivost.\nPočet válců chybí u většiny inzerátů — odhad je pak jen z objemu motoru. Jen pro spalovací motory.\nBarva buňky: zelená = vyšší, červená = nižší." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
@@ -329,30 +333,87 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   // Removed listings live in a separate cars-archived.parquet, fetched on demand
   // (decision 001, option C). "unloaded" | "loading" | "loaded".
   var archiveState = "unloaded";
+  var archiveVisible = false;   // Archiv toggle: are removed rows shown?
+  var archivedLoaded = 0;       // count of rows added from the archive
 
-  function hslToRgb(h, s, l) {
-    s /= 100; l /= 100;
-    var c = (1 - Math.abs(2 * l - 1)) * s;
-    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
-    var m = l - c / 2;
-    var r, g, b;
-    if (h < 60) { r = c; g = x; b = 0; }
-    else if (h < 120) { r = x; g = c; b = 0; }
-    else if (h < 180) { r = 0; g = c; b = x; }
-    else if (h < 240) { r = 0; g = x; b = c; }
-    else if (h < 300) { r = x; g = 0; b = c; }
-    else { r = c; g = 0; b = x; }
-    return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+  // ── Heat-map colouring: user-selectable palette × style, theme-aware. ──
+  // palette = which diverging colours (good→bad); style = how they're painted.
+  // Default is soft red-green full-cell (familiar); every combo is switchable in
+  // Nastavení barev and persisted to localStorage. All styles paint via the cell
+  // background only (no cellRenderer) so column virtualisation stays fast.
+  var HEAT_PALETTES = {
+    redgreen:   { good: [46, 160, 60],  bad: [205, 55, 55],  label: "Červená–zelená" },
+    bluered:    { good: [47, 111, 176], bad: [214, 69, 69],  label: "Modrá–červená" },
+    blueorange: { good: [47, 111, 176], bad: [224, 138, 46], label: "Modrá–oranžová" },
+    tealamber:  { good: [45, 196, 182], bad: [224, 135, 46], label: "Tyrkys–jantar" },
+  };
+  var HEAT_STYLES = { fullcell: "Plná buňka", databar: "Datové pruhy", combo: "Pruh + tón" };
+  var heatMode = { palette: "redgreen", style: "combo" };
+
+  function loadHeatMode() {
+    try {
+      var s = JSON.parse(localStorage.getItem(HEATMODE_KEY));
+      if (s && HEAT_PALETTES[s.palette] && HEAT_STYLES[s.style]) heatMode = { palette: s.palette, style: s.style };
+    } catch (_) {}
   }
 
-  function colorForValue(val, min, max, greenHigh) {
-    if (val == null || min === max) return null;
-    var t = (val - min) / (max - min);
-    t = Math.max(0, Math.min(1, t));
-    if (!greenHigh) t = 1 - t;
-    var hue = t * 120;
-    var rgb = hslToRgb(hue, 80, 35);
-    return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+  window.getHeatMode = function () { return { palette: heatMode.palette, style: heatMode.style }; };
+  window.setHeatMode = function (palette, style) {
+    if (HEAT_PALETTES[palette]) heatMode.palette = palette;
+    if (HEAT_STYLES[style]) heatMode.style = style;
+    try { localStorage.setItem(HEATMODE_KEY, JSON.stringify(heatMode)); } catch (_) {}
+    if (gridApi) gridApi.refreshCells({ force: true });
+    renderHeatModeChoices();      // reflect new active state
+    updateThresholdGradients();   // recolour the per-row direction swatches
+  };
+
+  function isDarkTheme() {
+    return (document.documentElement.getAttribute("data-theme") || "dark") === "dark";
+  }
+
+  function lerp3(a, b, u) {
+    return [Math.round(a[0] + (b[0] - a[0]) * u),
+            Math.round(a[1] + (b[1] - a[1]) * u),
+            Math.round(a[2] + (b[2] - a[2]) * u)];
+  }
+
+  // t: 0 = good, 1 = bad. Diverges good→mid→bad; mid is a theme-tuned slate so
+  // the tint reads on both backgrounds. Returns "r,g,b".
+  function heatRGBof(paletteKey, t) {
+    var pal = HEAT_PALETTES[paletteKey] || HEAT_PALETTES.redgreen;
+    var mid = isDarkTheme() ? [71, 85, 105] : [148, 163, 184];
+    var c = t < 0.5 ? lerp3(pal.good, mid, t * 2) : lerp3(mid, pal.bad, (t - 0.5) * 2);
+    return c[0] + "," + c[1] + "," + c[2];
+  }
+
+  function heatRGB(t) { return heatRGBof(heatMode.palette, t); }
+
+  // A left→right good/bad gradient preview for a column direction (greenHigh =
+  // higher-is-better ⇒ min is bad/left). Used for the drawer swatches.
+  function heatGradientCSS(paletteKey, greenHigh) {
+    var lo = greenHigh ? 1 : 0, hi = greenHigh ? 0 : 1;
+    return "linear-gradient(90deg,rgb(" + heatRGBof(paletteKey, lo) + "),rgb(" +
+      heatRGBof(paletteKey, 0.5) + "),rgb(" + heatRGBof(paletteKey, hi) + "))";
+  }
+
+  // CSS background for a value's badness t (0..1) and magnitude pos (0..1).
+  // Alphas are theme-tuned so the cell text (theme foreground, not forced white)
+  // stays legible over both the filled and unfilled parts.
+  function heatBackground(t, pos) {
+    var dark = isDarkTheme();
+    var rgb = heatRGB(t);
+    var pct = Math.round(Math.max(0, Math.min(1, pos)) * 100);
+    if (heatMode.style === "fullcell") {
+      return { backgroundColor: "rgba(" + rgb + "," + (dark ? 0.5 : 0.32) + ")" };
+    }
+    if (heatMode.style === "databar") {
+      var a = dark ? 0.82 : 0.55;
+      return { background: "linear-gradient(90deg, rgba(" + rgb + "," + a + ") 0, rgba(" + rgb + "," + a + ") " + pct + "%, transparent " + pct + "%, transparent 100%)" };
+    }
+    // combo: strong bar up to pct, faint full-cell tint for the remainder
+    var barA = dark ? 0.8 : 0.5;
+    var tintA = dark ? 0.18 : 0.12;
+    return { background: "linear-gradient(90deg, rgba(" + rgb + "," + barA + ") 0, rgba(" + rgb + "," + barA + ") " + pct + "%, rgba(" + rgb + "," + tintA + ") " + pct + "%, rgba(" + rgb + "," + tintA + ") 100%)" };
   }
 
   function makeHeaderName(field) {
@@ -371,9 +432,13 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       var range = colRanges[field] || {};
       var min = th.min != null ? th.min : range.min;
       var max = th.max != null ? th.max : range.max;
-      if (min == null || max == null) return style;
-      var bg = colorForValue(params.value, min, max, greenHigh);
-      if (bg) { style.backgroundColor = bg; style.color = "#fff"; }
+      if (min == null || max == null || min === max) return style;
+      var pos = (params.value - min) / (max - min);
+      pos = Math.max(0, Math.min(1, pos));
+      var t = greenHigh ? (1 - pos) : pos;   // badness: 0 good … 1 bad
+      var bg = heatBackground(t, pos);
+      if (bg.backgroundColor) style.backgroundColor = bg.backgroundColor;
+      if (bg.background) style.background = bg.background;
       return style;
     };
   }
@@ -400,7 +465,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
   function stavRenderer(params) {
     var text = params.value || "";
     var url = params.data && params.data["Odkaz na auto"];
-    var sp = params.data && params.data["Spárováno"];
     var el;
     if (url) {
       el = document.createElement("a");
@@ -411,11 +475,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     } else {
       el = document.createElement("span");
       el.textContent = text;
-    }
-    if (sp === "Ne") {
-      el.title = "Nespárováno – auto nebylo nalezeno v referenčních datech";
-    } else if (sp === "Nejisté") {
-      el.title = "Nejisté spárování – málo dat nebo nejednoznačná shoda; zkontrolujte";
     }
     return el;
   }
@@ -435,19 +494,22 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       if (cfg.pinned) def.pinned = cfg.pinned;
 
       if (cfg.stav) {
+        // Stav = availability only. Match-confidence colour/tooltip lives on the
+        // Spárováno column (where it agrees with the cell's own value) — not here,
+        // where an amber Stav cell meant something unrelated to its "Ojeté" text.
         def.cellRenderer = stavRenderer;
-        def.cellStyle = function (params) {
-          var style = { textAlign: "center" };
-          var bg = params.data ? sparovanoBg(params.data["Spárováno"]) : "";
-          if (bg) style.backgroundColor = bg;
-          return style;
-        };
+        def.cellStyle = { textAlign: "center" };
       } else if (cfg.sparovano) {
         def.cellStyle = function (params) {
           var style = { textAlign: "center" };
           var bg = sparovanoBg(params.value);
           if (bg) style.backgroundColor = bg;
           return style;
+        };
+        def.tooltipValueGetter = function (p) {
+          if (p.value === "Ne") return "Nespárováno – auto nebylo nalezeno v referenčních datech.";
+          if (p.value === "Nejisté") return "Nejisté spárování – málo dat nebo nejednoznačná shoda; zkontrolujte.";
+          return null;
         };
       } else if (cfg.num) {
         def.cellStyle = numericCellStyle(cfg.field);
@@ -582,51 +644,260 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     if (gridApi) gridApi.refreshCells({ force: true });
   };
 
+  // Mini style preview for a choice chip (uses the current palette).
+  function styleIcoBg(styleKey) {
+    var dark = isDarkTheme();
+    var rgb = heatRGB(0.72);
+    var barA = dark ? 0.8 : 0.5, tintA = dark ? 0.18 : 0.12;
+    if (styleKey === "fullcell") return "rgba(" + rgb + "," + (dark ? 0.5 : 0.32) + ")";
+    if (styleKey === "databar") return "linear-gradient(90deg,rgba(" + rgb + "," + barA + ") 0,rgba(" + rgb + "," + barA + ") 60%,transparent 60%)";
+    return "linear-gradient(90deg,rgba(" + rgb + "," + barA + ") 0,rgba(" + rgb + "," + barA + ") 60%,rgba(" + rgb + "," + tintA + ") 60%)";
+  }
+
+  function renderHeatModeChoices() {
+    var palWrap = document.getElementById("palette-choices");
+    var styWrap = document.getElementById("style-choices");
+    if (!palWrap || !styWrap) return;
+    while (palWrap.firstChild) palWrap.removeChild(palWrap.firstChild);
+    while (styWrap.firstChild) styWrap.removeChild(styWrap.firstChild);
+
+    Object.keys(HEAT_PALETTES).forEach(function (key) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (heatMode.palette === key ? " active" : "");
+      var sw = document.createElement("span");
+      sw.className = "swatch";
+      sw.style.background = heatGradientCSS(key, false);
+      var lbl = document.createElement("span");
+      lbl.textContent = HEAT_PALETTES[key].label;
+      btn.appendChild(sw); btn.appendChild(lbl);
+      btn.onclick = function () { window.setHeatMode(key, heatMode.style); };
+      palWrap.appendChild(btn);
+    });
+
+    Object.keys(HEAT_STYLES).forEach(function (key) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (heatMode.style === key ? " active" : "");
+      var ico = document.createElement("span");
+      ico.className = "style-ico";
+      ico.style.background = styleIcoBg(key);
+      var lbl = document.createElement("span");
+      lbl.textContent = HEAT_STYLES[key];
+      btn.appendChild(ico); btn.appendChild(lbl);
+      btn.onclick = function () { window.setHeatMode(heatMode.palette, key); };
+      styWrap.appendChild(btn);
+    });
+  }
+
+  var _thTimer = null;
+  function scheduleThresholdApply() {
+    if (_thTimer) clearTimeout(_thTimer);
+    _thTimer = setTimeout(function () { window.saveThresholds(); updateThresholdOverrides(); }, 300);
+  }
+
+  function updateThresholdOverrides() {
+    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
+      var th = userThresholds[row.dataset.field] || {};
+      row.classList.toggle("overridden", th.min != null || th.max != null);
+    });
+  }
+
+  function updateThresholdGradients() {
+    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
+      var g = row.querySelector(".th-slider");
+      if (g) g.style.background = heatGradientCSS(heatMode.palette, NUMERIC_COLS[row.dataset.field]);
+    });
+  }
+
+  function _sliderRound(v, step) {
+    return parseFloat((Math.round(v / step) * step).toFixed(4));
+  }
+
   function renderThresholdInputs() {
     var container = document.getElementById("threshold-inputs");
+    if (!container) return;
     while (container.firstChild) container.removeChild(container.firstChild);
 
-    var fields = Object.keys(NUMERIC_COLS);
-    for (var i = 0; i < fields.length; i++) {
-      var field = fields[i];
+    Object.keys(NUMERIC_COLS).forEach(function (field) {
       var th = userThresholds[field] || {};
       var range = colRanges[field] || {};
+      var greenHigh = NUMERIC_COLS[field];
 
       var row = document.createElement("div");
-      row.className = "threshold-row";
+      row.className = "threshold-row" + ((th.min != null || th.max != null) ? " overridden" : "");
       row.dataset.field = field;
 
-      var label = document.createElement("label");
-      label.textContent = field;
-      row.appendChild(label);
+      var labelWrap = document.createElement("div");
+      labelWrap.className = "th-label";
+      var name = document.createElement("span");
+      name.textContent = field;
+      var dir = document.createElement("span");
+      dir.className = "th-dir";
+      dir.textContent = greenHigh ? "více = lépe" : "méně = lépe";
+      labelWrap.appendChild(name); labelWrap.appendChild(dir);
+      row.appendChild(labelWrap);
 
       var minInput = document.createElement("input");
       minInput.type = "number";
       minInput.className = "th-min";
       minInput.placeholder = "min: " + (range.min != null ? range.min : "");
       if (th.min != null) minInput.value = th.min;
-      row.appendChild(minInput);
-
       var maxInput = document.createElement("input");
       maxInput.type = "number";
       maxInput.className = "th-max";
       maxInput.placeholder = "max: " + (range.max != null ? range.max : "");
       if (th.max != null) maxInput.value = th.max;
-      row.appendChild(maxInput);
+      minInput.addEventListener("input", scheduleThresholdApply);
+      maxInput.addEventListener("input", scheduleThresholdApply);
+
+      // Dual-range slider; the track is the column's good→bad gradient. Kept in
+      // sync with the number inputs both ways; a thumb parked at the data edge
+      // clears its input (= automatic bound).
+      if (range.min != null && range.max != null && range.max > range.min) {
+        var slider = document.createElement("div");
+        slider.className = "th-slider";
+        slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
+        var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
+        var rMin = document.createElement("input");
+        var rMax = document.createElement("input");
+        [rMin, rMax].forEach(function (r) {
+          r.type = "range"; r.min = range.min; r.max = range.max; r.step = step;
+        });
+        rMin.value = th.min != null ? th.min : range.min;
+        rMax.value = th.max != null ? th.max : range.max;
+        rMin.setAttribute("aria-label", field + " min");
+        rMax.setAttribute("aria-label", field + " max");
+        rMin.addEventListener("input", function () {
+          if (+rMin.value > +rMax.value) rMin.value = rMax.value;
+          var v = _sliderRound(+rMin.value, step);
+          minInput.value = v <= range.min ? "" : v;
+          scheduleThresholdApply();
+        });
+        rMax.addEventListener("input", function () {
+          if (+rMax.value < +rMin.value) rMax.value = rMin.value;
+          var v = _sliderRound(+rMax.value, step);
+          maxInput.value = v >= range.max ? "" : v;
+          scheduleThresholdApply();
+        });
+        minInput.addEventListener("input", function () {
+          rMin.value = minInput.value !== "" ? minInput.value : range.min;
+        });
+        maxInput.addEventListener("input", function () {
+          rMax.value = maxInput.value !== "" ? maxInput.value : range.max;
+        });
+        slider.appendChild(rMin);
+        slider.appendChild(rMax);
+        row.appendChild(slider);
+      }
+
+      var pair = document.createElement("div");
+      pair.className = "th-pair";
+      pair.appendChild(minInput); pair.appendChild(maxInput);
+      row.appendChild(pair);
 
       container.appendChild(row);
+    });
+  }
+
+
+  // \u2500\u2500 Gear menu (colour settings + theme) \u2500\u2500
+  window.toggleToolsMenu = function (ev) {
+    if (ev) ev.stopPropagation();
+    var pop = document.getElementById("tools-menu");
+    var btn = document.getElementById("btn-tools");
+    if (!pop) return;
+    var willOpen = pop.classList.contains("hidden");
+    pop.classList.toggle("hidden");
+    if (btn) btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  };
+
+  function closeToolsMenu() {
+    var pop = document.getElementById("tools-menu");
+    var btn = document.getElementById("btn-tools");
+    if (pop && !pop.classList.contains("hidden")) {
+      pop.classList.add("hidden");
+      if (btn) btn.setAttribute("aria-expanded", "false");
     }
   }
 
-  window.toggleSettings = function () {
-    document.getElementById("settings-panel").classList.toggle("hidden");
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest ? e.target.closest.bind(e.target) : function () { return null; };
+    if (!c(".menu-wrap")) closeToolsMenu();
+    // Drawer closes on any click outside it (opening click comes from .menu-wrap).
+    if (!c("#settings-panel") && !c(".menu-wrap")) window.closeColorSettings();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeToolsMenu(); window.closeColorSettings(); }
+  });
+
+  // Colour settings live in a right-side drawer (does not displace the grid).
+  window.openColorSettings = function () {
+    closeToolsMenu();
+    renderHeatModeChoices();
+    renderThresholdInputs();
+    var panel = document.getElementById("settings-panel");
+    if (panel) panel.classList.remove("hidden");
+  };
+
+  window.closeColorSettings = function () {
+    var panel = document.getElementById("settings-panel");
+    if (panel) panel.classList.add("hidden");
+  };
+
+  // \u2500\u2500 Archive toggle (load + show / hide removed listings) \u2500\u2500
+  function updateArchiveLabel() {
+    var lbl = document.getElementById("archive-label");
+    if (!lbl) return;
+    if (archiveState === "loading") { lbl.textContent = "Na\u010d\u00edt\u00e1m\u2026"; return; }
+    var n = (appMetadata && appMetadata.archivedCars) || archivedLoaded || 0;
+    lbl.textContent = n ? "Archiv (" + Number(n).toLocaleString("cs-CZ") + ")" : "Archiv";
+  }
+
+  function setupArchiveToggle() {
+    var wrap = document.getElementById("archive-toggle");
+    var chk = document.getElementById("archive-check");
+    if (!wrap || !chk) return;
+    var n = (appMetadata && appMetadata.archivedCars) || 0;
+    if (!n) {
+      wrap.classList.add("disabled");
+      wrap.title = "\u017d\u00e1dn\u00e9 archivovan\u00e9 inzer\u00e1ty";
+      chk.disabled = true;
+      return;
+    }
+    wrap.classList.remove("disabled");
+    chk.disabled = false;
+    updateArchiveLabel();
+  }
+
+  window.onArchiveToggle = function (on) {
+    archiveVisible = on;
+    if (on && archiveState === "unloaded") loadArchive();
+    if (gridApi) gridApi.onFilterChanged();  // re-eval external filter (show/hide Odstran\u011bno)
+    updateArchiveLabel();
+    updateRowCount();
   };
 
   function updateRowCount() {
-    var count = 0;
-    if (gridApi) gridApi.forEachNodeAfterFilter(function () { count++; });
-    var text = count < totalRows ? "Vyfiltrov\u00e1no " + count + " / " + totalRows + " aut" : totalRows + " aut";
-    document.getElementById("row-count").textContent = text;
+    var shown = 0;
+    if (gridApi) gridApi.forEachNodeAfterFilter(function () { shown++; });
+    var universe = totalRows + (archiveVisible ? archivedLoaded : 0);
+    var el = document.getElementById("row-count");
+    if (!el) return;
+    while (el.firstChild) el.removeChild(el.firstChild);
+    if (shown < universe) {
+      el.textContent = "Vyfiltrov\u00e1no " + shown.toLocaleString("cs-CZ") + " / " + universe.toLocaleString("cs-CZ") + " aut";
+    } else {
+      var num = document.createElement("span");
+      num.className = "num";
+      num.textContent = universe.toLocaleString("cs-CZ");
+      var lbl = document.createElement("span");
+      lbl.className = "lbl";
+      lbl.textContent = "aut";
+      el.appendChild(num);
+      el.appendChild(document.createTextNode(" "));
+      el.appendChild(lbl);
+    }
   }
 
   // #14: unpaired-listings shortcut — counts Spárováno == "Ne" / "Nejisté" over
@@ -680,48 +951,34 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     gridApi.setFilterModel(model);
   };
 
-  // Show the "load archive" button once we know how many removed listings exist.
-  // Hidden entirely when there are none. cars.parquet holds only live listings,
-  // so the archive stays out of memory until the user asks for it.
-  function setupArchiveButton() {
-    var btn = document.getElementById("btn-archive");
-    if (!btn) return;
-    var n = (appMetadata && appMetadata.archivedCars) || 0;
-    if (!n) { btn.style.display = "none"; return; }
-    btn.style.display = "";
-    btn.disabled = false;
-    btn.textContent = "Na\u010d\u00edst archiv (" + Number(n).toLocaleString("cs-CZ") + ")";
-  }
-
+  // Fetch removed listings on demand (the Archiv toggle). cars.parquet holds only
+  // live listings, so the archive stays out of memory until the user flips it on.
+  // Visibility is a grid external filter (hides Stav == "Odstran\u011bno" when off), so
+  // the rows stay loaded and toggling is instant after the first fetch.
   window.loadArchive = function () {
     if (archiveState !== "unloaded") return;
     archiveState = "loading";
-    var btn = document.getElementById("btn-archive");
-    if (btn) { btn.disabled = true; btn.textContent = "Na\u010d\u00edt\u00e1m archiv\u2026"; }
+    updateArchiveLabel();
     fetch("data/cars-archived.parquet")
       .then(function (r) { if (!r.ok) throw new Error("HTTP " + r.status); return r.arrayBuffer(); })
       .then(function (buf) { return parquetReadObjects({ file: buf }); })
       .then(function (rows) {
         if (gridApi && rows.length) {
           gridApi.applyTransaction({ add: rows });
-          totalRows += rows.length;
-          // If a Stav filter is active and excludes "Odstran\u011bno", the freshly
-          // added rows would stay hidden \u2014 the user clicked to see them, so
-          // add that value back into the active selection.
-          var model = gridApi.getFilterModel() || {};
-          var stav = model["Stav"];
-          if (stav && stav.values && stav.values.indexOf("Odstran\u011bno") === -1) {
-            stav.values.push("Odstran\u011bno");
-            gridApi.setFilterModel(model);
-          }
+          archivedLoaded = rows.length;
         }
         archiveState = "loaded";
-        if (btn) btn.textContent = "Archiv na\u010dten (" + Number(rows.length).toLocaleString("cs-CZ") + ")";
+        if (gridApi) gridApi.onFilterChanged();  // apply external filter to the new rows
+        updateArchiveLabel();
         updateRowCount();
       })
       .catch(function () {
         archiveState = "unloaded";
-        if (btn) { btn.disabled = false; btn.textContent = "Archiv \u2013 chyba, zkusit znovu"; }
+        archiveVisible = false;
+        var chk = document.getElementById("archive-check");
+        if (chk) chk.checked = false;
+        var lbl = document.getElementById("archive-label");
+        if (lbl) lbl.textContent = "Archiv \u2013 chyba";
       });
   };
 
@@ -768,10 +1025,27 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     totalRows = data.length;
     computeRanges(data);
     loadThresholds();
+    loadHeatMode();
     renderThresholdInputs();
 
     var gridOptions = {
       theme: "legacy",
+      // Czech labels for the built-in number/text filters (the custom SetFilter is
+      // already Czech). Without this AG shows "Equals" / "Filter…" in an otherwise
+      // Czech UI.
+      localeText: {
+        equals: "Rovná se", notEqual: "Nerovná se",
+        lessThan: "Menší než", lessThanOrEqual: "Menší nebo rovno",
+        greaterThan: "Větší než", greaterThanOrEqual: "Větší nebo rovno",
+        inRange: "V rozsahu", inRangeStart: "od", inRangeEnd: "do",
+        contains: "Obsahuje", notContains: "Neobsahuje",
+        startsWith: "Začíná na", endsWith: "Končí na",
+        blank: "Prázdné", notBlank: "Neprázdné",
+        filterOoo: "Filtrovat…", applyFilter: "Použít", resetFilter: "Vymazat",
+        clearFilter: "Vymazat", cancelFilter: "Zrušit",
+        andCondition: "A zároveň", orCondition: "Nebo",
+        noMatches: "Žádná shoda",
+      },
       columnDefs: buildColumnDefs(),
       rowData: data,
       rowHeight: 25,
@@ -788,6 +1062,9 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       tooltipMouseTrack: true,
       animateRows: false,
       enableCellTextSelection: true,
+      // Archiv toggle: hide removed listings unless the user asks for them.
+      isExternalFilterPresent: function () { return !archiveVisible; },
+      doesExternalFilterPass: function (node) { return !node.data || node.data["Stav"] !== "Odstraněno"; },
       onFilterChanged: onFilterChanged,
       onModelUpdated: updatePairingGapButton,
       onDragStopped: persistColState,
@@ -1298,7 +1575,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       return parquetReadObjects({ file: results[0] }).then(function (rows) {
         appMetadata = results[1];
         init(rows);
-        setupArchiveButton();
+        setupArchiveToggle();
         hideLoadingOverlay();
       });
     })

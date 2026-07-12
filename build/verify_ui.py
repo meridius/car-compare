@@ -7,9 +7,11 @@ Exit 0 = pass, 1 = fail. Read the PNGs afterwards to confirm visual correctness.
 
 Usage:
     python3 build/verify_ui.py [--page index|reference|transmissions] \\
-                               [--scenario grid|stav-filter|transmissions] [--port N]
+                               [--scenario grid|stav-filter|color-drawer|heat-combo|tools-menu|…] \\
+                               [--theme dark|light] [--port N]
 
-Defaults: --page index --scenario grid --port 0 (OS-assigned free port).
+Defaults: --page index --scenario grid --theme dark --port 0 (OS-assigned free port).
+Screenshots land in tmp/ui-verify/<page>-<scenario>-<theme>.png.
 """
 import argparse
 import functools
@@ -223,27 +225,6 @@ def scenario_filter_chips(page):
     page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
     page.wait_for_timeout(200)
     return "#filter-chips-bar"
-
-
-def scenario_ref_search(page):
-    """Type into the reference-page smart search box (#29) and confirm the grid
-    quick-filters down to matching, accent-folded rows (typing "skoda" without
-    diacritics must still find "Škoda")."""
-    page.wait_for_selector(".ag-row", timeout=15000)
-    # getDisplayedRowCount, not len(.ag-row): the grid virtualizes rows, so the
-    # DOM count is capped by the viewport and doesn't shrink with the total.
-    before = page.evaluate("window.__gridApi.getDisplayedRowCount()")
-    page.fill("#ref-search-input", "skoda")
-    # debounce (200ms) + grid re-filter
-    page.wait_for_timeout(600)
-    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
-    if not (after < before):
-        raise AssertionError(f"quick filter did not reduce rows: before={before} after={after}")
-    if after == 0:
-        raise AssertionError("quick filter for 'skoda' matched zero rows")
-    cells = page.locator('.ag-cell[col-id="Model auta"]').all_inner_texts()
-    if not cells or not all("škoda" in c.lower() for c in cells):
-        raise AssertionError(f"visible rows are not all Škoda: {cells[:10]}")
 
 
 def scenario_pairing_gap(page):
@@ -517,8 +498,57 @@ def scenario_url_state_ref(page):
     return None
 
 
+def scenario_color_drawer(page):
+    """Open the colour-settings drawer (gear menu → 'Nastavení barev…') and confirm
+    it renders the heat-map choice chips: #palette-choices and #style-choices must
+    both be populated with .choice buttons, and clicking a non-default palette chip
+    must move the .active state onto it (the setHeatMode wiring behind the chips)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.openColorSettings()")
+    page.wait_for_selector("#palette-choices .choice", timeout=5000)
+    if page.evaluate("document.querySelectorAll('#style-choices .choice').length") == 0:
+        raise AssertionError("#style-choices rendered no .choice buttons")
+    # clicking the 2nd palette chip (a non-default one) must make it the active chip
+    page.locator("#palette-choices .choice").nth(1).click()
+    page.wait_for_timeout(200)
+    active_idx = page.evaluate(
+        "[].findIndex.call(document.querySelectorAll('#palette-choices .choice'),"
+        "function(c){return c.classList.contains('active');})"
+    )
+    if active_idx != 1:
+        raise AssertionError(
+            f"palette click did not move .active onto the clicked chip (active idx={active_idx})"
+        )
+    return "#settings-panel"
+
+
+def scenario_heat_combo(page):
+    """Switch the heat-map colouring to the blue–red 'combo' (bar + tint) mode via
+    the public setHeatMode API and confirm it applies without error — the grid
+    re-tints in place (background only, no cellRenderer). Asserts the mode stuck."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.setHeatMode('bluered','combo')")
+    page.wait_for_timeout(300)
+    mode = page.evaluate("window.getHeatMode()")
+    if mode.get("palette") != "bluered" or mode.get("style") != "combo":
+        raise AssertionError(f"heat mode not applied: {mode}")
+    return None
+
+
+def scenario_tools_menu(page):
+    """Open the gear/tools popup menu (colour settings + theme toggle) and confirm
+    it becomes visible (drops the .hidden class)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleToolsMenu()")
+    page.wait_for_selector("#tools-menu:not(.hidden)", timeout=5000)
+    return "#tools-menu"
+
+
 SCENARIOS = {
     "grid": scenario_grid,
+    "color-drawer": scenario_color_drawer,
+    "heat-combo": scenario_heat_combo,
+    "tools-menu": scenario_tools_menu,
     "url-state": scenario_url_state,
     "url-state-ref": scenario_url_state_ref,
     "loading": scenario_loading,
@@ -533,7 +563,6 @@ SCENARIOS = {
     "data-filters": scenario_data_filters,
     "archive": scenario_archive,
     "filter-chips": scenario_filter_chips,
-    "ref-search": scenario_ref_search,
     "pairing-gap": scenario_pairing_gap,
     "missing-specs": scenario_missing_specs,
     "transmissions": scenario_transmissions,
@@ -583,6 +612,7 @@ def main():
     ap = argparse.ArgumentParser(description="Verify dashboard UI in a headless browser.")
     ap.add_argument("--page", choices=PAGE_FILES, default="index")
     ap.add_argument("--scenario", choices=SCENARIOS, default="grid")
+    ap.add_argument("--theme", choices=("dark", "light"), default="dark")
     ap.add_argument("--port", type=int, default=0)
     args = ap.parse_args()
 
@@ -590,7 +620,7 @@ def main():
     os.makedirs(OUT_DIR, exist_ok=True)
     httpd, port = start_server(args.port)
     url = f"http://127.0.0.1:{port}/{PAGE_FILES[args.page]}"
-    shot_path = os.path.join(OUT_DIR, f"{args.page}-{args.scenario}.png")
+    shot_path = os.path.join(OUT_DIR, f"{args.page}-{args.scenario}-{args.theme}.png")
 
     errors = []
     failures = []
@@ -603,7 +633,16 @@ def main():
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
-            page = browser.new_page(viewport={"width": 1600, "height": 1000})
+            # Seed the theme into localStorage BEFORE any page script runs: the pages
+            # read carCompareTheme on load (defaulting to dark), so an init script on
+            # the context makes the page render in the requested theme from the first
+            # paint. Init scripts re-run on every navigation, so scenarios that reload
+            # (or call localStorage.clear()) keep the requested theme.
+            context = browser.new_context(viewport={"width": 1600, "height": 1000})
+            context.add_init_script(
+                "try{localStorage.setItem('carCompareTheme','%s');}catch(e){}" % args.theme
+            )
+            page = context.new_page()
             page.on("console", on_console)
             page.on("pageerror", lambda exc: errors.append("pageerror: " + str(exc)))
 

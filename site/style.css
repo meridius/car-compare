@@ -2,6 +2,7 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-variant-numeric: tabular-nums;
     transition: background 0.2s, color 0.2s;
     background: var(--clr-bg);
     color: var(--clr-text);
@@ -15,8 +16,12 @@ body {
     --clr-border: #334155;
     --clr-text: #e2e8f0;
     --clr-text-muted: #94a3b8;
-    --clr-accent: #3b82f6;
-    --clr-accent-hover: #2563eb;
+    --clr-header-fg: #cbd5e1;
+    --clr-accent: #e0872e;
+    --clr-accent-hover: #c9731f;
+    --clr-accent-contrast: #1a1205;
+    --clr-accent-soft: rgba(224, 135, 46, 0.16);
+    --clr-accent-border: rgba(224, 135, 46, 0.45);
     --clr-hover: #1e3a5f;
     --clr-link: #60a5fa;
     --clr-selected: #1e3a5f;
@@ -29,74 +34,221 @@ body {
     --clr-border: #e2e8f0;
     --clr-text: #1e293b;
     --clr-text-muted: #64748b;
-    --clr-accent: #2563eb;
-    --clr-accent-hover: #1d4ed8;
-    --clr-hover: #e0ecff;
+    --clr-header-fg: #475569;
+    --clr-accent: #b4611c;
+    --clr-accent-hover: #97500f;
+    --clr-accent-contrast: #ffffff;
+    --clr-accent-soft: rgba(180, 97, 28, 0.12);
+    --clr-accent-border: rgba(180, 97, 28, 0.4);
+    --clr-hover: #fdf0e3;
     --clr-link: #2563eb;
-    --clr-selected: #dbeafe;
+    --clr-selected: #fdecd7;
 }
 
 /* ── Layout ── */
 header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
+    gap: 14px;
+    padding: 8px 16px;
     background: var(--clr-surface);
     border-bottom: 1px solid var(--clr-border);
 }
 
-header h1 {
-    font-size: 1.2rem;
-    font-weight: 600;
+/* Brand mark = home link (icon only, saves horizontal space) */
+.brand-home {
+    display: inline-flex;
+    padding: 5px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    background: none;
+    cursor: pointer;
     color: var(--clr-accent);
+    flex: 0 0 auto;
 }
+
+.brand-home:hover { background: var(--clr-hover); }
+.brand-home svg { width: 24px; height: 24px; display: block; }
+
+/* Page tabs (real <a> links → open-in-new-tab works) */
+.nav-tabs { display: flex; gap: 2px; flex: 0 0 auto; }
+
+.nav-tab {
+    padding: 6px 13px;
+    font-size: 0.85rem;
+    color: var(--clr-text-muted);
+    border: 1px solid transparent;
+    background: none;
+    border-radius: 6px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.nav-tab:hover { background: var(--clr-hover); color: var(--clr-text); text-decoration: none; }
+
+.nav-tab.active {
+    color: var(--clr-text);
+    font-weight: 600;
+    background: var(--clr-surface-alt);
+    box-shadow: inset 0 -2px 0 var(--clr-accent);
+}
+
+.header-spacer { flex: 1 1 auto; }
 
 .controls {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 8px;
+    flex: 0 0 auto;
 }
 
-#row-count {
-    font-size: 0.85rem;
-    color: var(--clr-text-muted);
-}
+/* Live stat readout */
+.readout { display: flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.readout .num { font-size: 1.05rem; font-weight: 700; color: var(--clr-text); }
+.readout .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--clr-text-muted); }
+
+.header-sep { width: 1px; height: 20px; background: var(--clr-border); flex: 0 0 auto; }
 
 button {
-    padding: 6px 14px;
+    padding: 6px 12px;
     border: 1px solid var(--clr-border);
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     background: var(--clr-surface);
     color: var(--clr-text);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
 }
 
-button:hover {
-    background: var(--clr-hover);
-}
+button:hover { background: var(--clr-hover); }
+button:focus-visible { outline: 2px solid var(--clr-accent); outline-offset: 1px; }
+button svg { width: 16px; height: 16px; flex: 0 0 auto; }
 
-#btn-theme {
-    font-size: 1.1rem;
-    padding: 4px 10px;
+.icon-btn { padding: 6px 9px; }
+
+/* Scoped to the standalone icon-button variant (transmissions header). Inside the
+   gear menu #btn-theme is a .menu-item — an unscoped ID rule would override its
+   font-size and make "Přepnout motiv" render oversized next to its siblings. */
+#btn-theme.icon-btn {
+    font-size: 1.05rem;
+    padding: 5px 9px;
     line-height: 1;
 }
 
-/* ── Pairing gap shortcut (#14) ── */
+/* Archive as a toggle switch in the readout area */
+.archive-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.78rem;
+    color: var(--clr-text-muted);
+    white-space: nowrap;
+    cursor: pointer;
+    user-select: none;
+}
+
+.archive-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+
+.archive-toggle .track {
+    width: 32px;
+    height: 17px;
+    border-radius: 999px;
+    background: var(--clr-border);
+    position: relative;
+    transition: background 0.15s;
+    flex: 0 0 auto;
+}
+
+.archive-toggle .track::after {
+    content: "";
+    position: absolute;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--clr-text-muted);
+    top: 2px;
+    left: 2px;
+    transition: transform 0.15s, background 0.15s;
+}
+
+.archive-toggle input:checked + .track { background: var(--clr-accent); }
+.archive-toggle input:checked + .track::after { transform: translateX(15px); background: var(--clr-accent-contrast); }
+.archive-toggle input:focus-visible + .track { outline: 2px solid var(--clr-accent); outline-offset: 2px; }
+.archive-toggle.disabled { opacity: 0.5; cursor: default; }
+
+/* Dropdown menu (gear = colours + theme) */
+.menu-wrap { position: relative; flex: 0 0 auto; }
+
+.menu-pop {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 6px);
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.35);
+    padding: 6px;
+    min-width: 210px;
+    z-index: 950;
+}
+
+.menu-pop.hidden { display: none; }
+
+.menu-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 10px;
+    border: none;
+    border-radius: 6px;
+    background: none;
+    color: var(--clr-text);
+    font-size: 0.83rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.menu-item:hover { background: var(--clr-hover); }
+.menu-item svg { width: 16px; height: 16px; color: var(--clr-text-muted); flex: 0 0 auto; }
+
+/* The theme item's glyph is a text char (☾/☀ swapped by applyTheme) — size and
+   align it exactly like the sibling SVG icons so the row doesn't look foreign. */
+.menu-item .theme-glyph {
+    width: 16px;
+    flex: 0 0 auto;
+    text-align: center;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--clr-text-muted);
+}
+
+.menu-sep { height: 1px; background: var(--clr-border); margin: 4px 8px; }
+
+/* ── Pairing gap shortcut (#14) — amber "problem count" chip ── */
 #btn-pairing-gap {
-    border-color: rgba(245, 158, 11, 0.5);
-    color: #f59e0b;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    border-color: var(--clr-accent-border);
+    background: var(--clr-accent-soft);
+    color: var(--clr-accent);
 }
 
 #btn-pairing-gap:hover {
-    background: rgba(245, 158, 11, 0.14);
+    background: var(--clr-accent-soft);
+    filter: brightness(1.12);
 }
 
 #btn-pairing-gap.active {
-    background: rgba(245, 158, 11, 0.22);
-    border-color: #f59e0b;
-    color: var(--clr-text);
+    background: var(--clr-accent);
+    border-color: var(--clr-accent);
+    color: var(--clr-accent-contrast);
 }
 
 /* ── Missing-spec indicator (#19) ── */
@@ -134,45 +286,186 @@ button:hover {
 a { color: var(--clr-link); text-decoration: none; }
 a:hover { text-decoration: underline; }
 
-/* ── Settings panel ── */
-.settings-panel {
-    padding: 16px 20px;
+/* ── Colour settings: right-side drawer (does not displace the grid) ── */
+.settings-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 370px;
+    max-width: 92vw;
+    height: 100vh;
     background: var(--clr-surface);
+    border-left: 1px solid var(--clr-border);
+    box-shadow: -8px 0 28px rgba(0, 0, 0, 0.28);
+    z-index: 960;
+    display: flex;
+    flex-direction: column;
+    transform: translateX(0);
+    transition: transform 0.2s ease;
+}
+
+.settings-drawer.hidden { transform: translateX(100%); }
+
+@media (prefers-reduced-motion: reduce) {
+    .settings-drawer { transition: none; }
+}
+
+.drawer-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--clr-border);
-    max-height: 300px;
-    overflow-y: auto;
 }
 
-.settings-panel.hidden { display: none; }
-.settings-panel h3 { margin-bottom: 8px; font-size: 1rem; }
-.settings-panel p { margin-bottom: 12px; font-size: 0.8rem; color: var(--clr-text-muted); }
+.drawer-head h3 { font-size: 1rem; color: var(--clr-text); }
 
-#threshold-inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 6px 24px;
+.drawer-close {
+    font-size: 1.4rem;
+    line-height: 1;
+    padding: 2px 8px;
+    border: none;
+    background: none;
+    color: var(--clr-text-muted);
+    cursor: pointer;
 }
+
+.drawer-close:hover { color: var(--clr-text); background: none; }
+
+.drawer-body { padding: 16px 18px; overflow-y: auto; flex: 1; }
+
+.drawer-body h4 {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--clr-text-muted);
+    margin: 4px 0 8px;
+}
+
+.drawer-section { margin-bottom: 22px; }
+.drawer-hint { font-size: 0.78rem; color: var(--clr-text-muted); margin-bottom: 10px; }
+
+/* Heat-mode choice chips */
+.choice-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+
+.choice {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    background: var(--clr-bg);
+    color: var(--clr-text);
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+
+.choice:hover { border-color: var(--clr-accent-border); }
+
+.choice.active {
+    border-color: var(--clr-accent);
+    box-shadow: inset 0 0 0 1px var(--clr-accent);
+}
+
+.choice .swatch {
+    width: 34px;
+    height: 14px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+}
+
+.choice .style-ico {
+    width: 30px;
+    height: 14px;
+    border-radius: 3px;
+    flex: 0 0 auto;
+    border: 1px solid var(--clr-border);
+}
+
+/* Threshold rows (one per numeric column) */
+#threshold-inputs { display: flex; flex-direction: column; gap: 10px; margin-bottom: 12px; }
 
 .threshold-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 4px 8px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 6px 8px;
 }
 
-.threshold-row label {
-    width: 100%;
-    font-size: 0.85rem;
+.threshold-row .th-label {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
     font-weight: 600;
 }
 
+.threshold-row .th-dir { font-size: 0.7rem; color: var(--clr-text-muted); font-weight: 400; }
+
+/* Dual min/max slider — the track itself is the column's good→bad gradient.
+   Two overlaid native range inputs; tracks are click-through, only thumbs grab. */
+.th-slider {
+    position: relative;
+    height: 18px;
+    border-radius: 4px;
+    grid-column: 1 / -1;
+}
+
+.th-slider input[type="range"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    border: none;
+    pointer-events: none;
+}
+
+.th-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: auto;
+    width: 12px;
+    height: 22px;
+    border-radius: 4px;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-text-muted);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    cursor: ew-resize;
+}
+
+.th-slider input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+    width: 10px;
+    height: 18px;
+    border-radius: 4px;
+    background: var(--clr-surface);
+    border: 2px solid var(--clr-text-muted);
+    cursor: ew-resize;
+}
+
+.th-slider input[type="range"]::-moz-range-track { background: transparent; }
+.th-slider input[type="range"]:focus-visible::-webkit-slider-thumb { border-color: var(--clr-accent); }
+.th-slider input[type="range"]:focus-visible::-moz-range-thumb { border-color: var(--clr-accent); }
+.threshold-row.overridden .th-label { color: var(--clr-accent); }
+
 .threshold-row input {
-    width: 120px;
-    padding: 3px 6px;
+    width: 100%;
+    padding: 4px 7px;
     border: 1px solid var(--clr-border);
-    border-radius: 3px;
+    border-radius: 4px;
     background: var(--clr-bg);
     color: var(--clr-text);
+    font-size: 0.8rem;
 }
+
+.threshold-row .th-pair { display: flex; gap: 6px; grid-column: 1 / -1; }
 
 /* ── Active filter chips ── */
 .filter-chips-bar {
@@ -237,60 +530,6 @@ a:hover { text-decoration: underline; }
     color: var(--clr-accent-hover);
 }
 
-/* ── Reference page smart search ── */
-.ref-search-bar {
-    display: flex;
-    align-items: center;
-    padding: 8px 20px;
-    background: var(--clr-surface);
-    border-bottom: 1px solid var(--clr-border);
-}
-
-.ref-search-input-wrap {
-    position: relative;
-    width: 100%;
-    max-width: 480px;
-}
-
-.ref-search-input {
-    width: 100%;
-    padding: 6px 30px 6px 10px;
-    border: 1px solid var(--clr-border);
-    border-radius: 4px;
-    background: var(--clr-bg);
-    color: var(--clr-text);
-    font-size: 0.85rem;
-}
-
-.ref-search-input::placeholder {
-    color: var(--clr-text-muted);
-}
-
-.ref-search-input:focus {
-    outline: none;
-    border-color: var(--clr-accent);
-}
-
-.ref-search-clear {
-    position: absolute;
-    top: 50%;
-    right: 4px;
-    transform: translateY(-50%);
-    padding: 0 6px;
-    border: none;
-    border-radius: 50%;
-    background: transparent;
-    color: var(--clr-text-muted);
-    font-size: 1rem;
-    line-height: 1.4;
-    cursor: pointer;
-}
-
-.ref-search-clear:hover {
-    background: var(--clr-hover);
-    color: var(--clr-text);
-}
-
 /* ── Grid ── */
 #grid {
     width: 100%;
@@ -336,6 +575,17 @@ a:hover { text-decoration: underline; }
 
 .ag-header-cell-label {
     justify-content: center;
+}
+
+/* Header wrapping: honour explicit "\n" hints in headerName (pre-wrap), break at
+   spaces, and hyphenate long single words at proper Czech points (lang="cs") —
+   never the random mid-word breaks AG's width-wrap produced ("Objem motor u"). */
+.ag-header-cell-text {
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    text-align: center;
+    line-height: 1.15;
 }
 
 /* ── Scrollbar styling (wider, visible, accessible) ── */
@@ -409,8 +659,9 @@ a:hover { text-decoration: underline; }
     --ag-row-hover-color: var(--clr-hover);
     --ag-foreground-color: var(--clr-text);
     --ag-border-color: var(--clr-border);
-    --ag-header-foreground-color: var(--clr-accent);
+    --ag-header-foreground-color: var(--clr-header-fg);
     --ag-secondary-foreground-color: var(--clr-text-muted);
+    font-variant-numeric: tabular-nums;
     --ag-input-border-color: var(--clr-border);
     --ag-input-background-color: var(--clr-surface);
     --ag-selected-row-background-color: var(--clr-selected);
@@ -458,8 +709,21 @@ a:hover { text-decoration: underline; }
     border-color: var(--clr-border);
 }
 
+/* Floating-filter row: the <input> spans the full 47px cell height while the
+   visible bordered box is the 24px .ag-input-wrapper — a filled input paints
+   blue bands above/below the box. Fill the wrapper, keep the input transparent. */
+.ag-theme-alpine-dark .ag-floating-filter input[type="text"],
+.ag-theme-alpine-dark .ag-floating-filter input[type="number"],
+.ag-theme-alpine-dark .ag-floating-filter .ag-input-field-input {
+    background-color: transparent;
+}
+
+.ag-theme-alpine-dark .ag-floating-filter .ag-input-wrapper,
+.ag-theme-alpine .ag-floating-filter .ag-input-wrapper {
+    background-color: var(--clr-bg);
+}
+
 .ag-theme-alpine-dark .ag-floating-filter-input {
-    background-color: var(--clr-surface);
     color: var(--clr-text);
 }
 
@@ -729,12 +993,6 @@ a:hover { text-decoration: underline; }
     font-size: 0.8rem;
     color: var(--clr-text);
     line-height: 1.5;
-}
-
-/* ── Navigation ── */
-.nav-link {
-    font-size: 0.85rem;
-    margin-left: 12px;
 }
 
 /* ── Column header tooltips ── */

@@ -12,24 +12,65 @@
 
 <body>
     <header>
-        <h1>Referenční modely</h1>
+        <a class="brand-home" href="index.html" title="Porovnání aut — domů" aria-label="Porovnání aut — domů">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a8 8 0 1116 0"/><path d="M12 18l4-5"/><circle cx="12" cy="18" r="1.1"/></svg>
+        </a>
+        <nav class="nav-tabs">
+            <a class="nav-tab" href="index.html">Porovnání aut</a>
+            <a class="nav-tab active" href="reference.html" aria-current="page">Referenční modely</a>
+            <a class="nav-tab" href="transmissions.html">Převodovky</a>
+        </nav>
+        <div class="header-spacer"></div>
         <div class="controls">
-            <span id="row-count"></span>
+            <span id="row-count" class="readout"></span>
             <button id="btn-incomplete" class="btn-incomplete" onclick="toggleIncomplete()"
                 title="Zobrazit jen modely s chybějícími klíčovými údaji">Neúplné: – / –</button>
-            <button id="btn-theme" onclick="toggleTheme()" title="Přepnout motiv">☾</button>
-            <button id="btn-clear" onclick="clearFilters()">Vymazat filtry</button>
-            <button id="btn-reset-cols" onclick="resetColOrder()">Reset sloupců</button>
-            <button class="nav-link" onclick="location.href='index.html'">Zpět na porovnání</button>
-            <button class="nav-link" onclick="location.href='transmissions.html'">Převodovky</button>
+            <span class="header-sep"></span>
+            <div class="menu-wrap">
+                <button id="btn-tools" class="icon-btn" onclick="toggleToolsMenu(event)" title="Nástroje" aria-haspopup="true" aria-expanded="false">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                    <span aria-hidden="true">▾</span>
+                </button>
+                <div class="menu-pop hidden" id="tools-menu" role="menu">
+                    <button class="menu-item" role="menuitem" id="btn-clear" onclick="clearFilters()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18l-7 8v5l-4 2v-7z"/><line x1="16" y1="14" x2="22" y2="20"/><line x1="22" y1="14" x2="16" y2="20"/></svg>
+                        Vymazat filtry
+                    </button>
+                    <button class="menu-item" role="menuitem" id="btn-reset-cols" onclick="resetColOrder()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4v5h5"/><path d="M4 9a8 8 0 103-4"/></svg>
+                        Reset sloupců
+                    </button>
+                    <div class="menu-sep" role="separator"></div>
+                    <button class="menu-item" role="menuitem" onclick="openColorSettings()">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+                        Nastavení barev…
+                    </button>
+                    <button class="menu-item" role="menuitem" id="btn-theme" onclick="toggleTheme()">
+                        <span class="theme-glyph" aria-hidden="true">☾</span>
+                        Přepnout motiv
+                    </button>
+                </div>
+            </div>
         </div>
     </header>
-    <div id="ref-search-bar" class="ref-search-bar">
-        <div class="ref-search-input-wrap">
-            <input type="text" id="ref-search-input" class="ref-search-input" autocomplete="off"
-                placeholder="Hledat model… (značka, model, výkon, objem, typ motoru, verze)">
-            <button type="button" id="ref-search-clear" class="ref-search-clear" title="Vymazat hledání"
-                style="display:none;">×</button>
+    <div id="settings-panel" class="settings-drawer hidden" role="dialog" aria-label="Nastavení barev">
+        <div class="drawer-head">
+            <h3>Nastavení barev</h3>
+            <button class="drawer-close" onclick="closeColorSettings()" title="Zavřít" aria-label="Zavřít">&times;</button>
+        </div>
+        <div class="drawer-body">
+            <div class="drawer-section">
+                <h4>Barevná škála</h4>
+                <div id="palette-choices" class="choice-row"></div>
+                <h4>Styl vybarvení</h4>
+                <div id="style-choices" class="choice-row"></div>
+            </div>
+            <div class="drawer-section">
+                <h4>Prahové hodnoty</h4>
+                <p class="drawer-hint">Prázdné = automatický rozsah (min/max sloupce). Změny se projeví ihned.</p>
+                <div id="threshold-inputs"></div>
+                <button class="btn" onclick="resetThresholds()">Obnovit výchozí prahy</button>
+            </div>
         </div>
     </div>
     <div id="filter-chips-bar" class="filter-chips-bar hidden"></div>

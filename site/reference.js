@@ -4,15 +4,19 @@
   var STORAGE_KEY = "refCompareFilters";
   var THEME_KEY = "carCompareTheme";
   var COL_STATE_KEY = "refCompareColState";
+  var THRESHOLD_KEY = "refCompareThresholds";   // isolated: reference has its own numeric columns
+  var HEATMODE_KEY = "carCompareHeatMode";       // shared with index (global appearance pref)
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
-    document.getElementById("btn-theme").textContent = theme === "dark" ? "\u263E" : "\u2600";
+    var glyph = document.querySelector("#btn-theme .theme-glyph");
+    if (glyph) glyph.textContent = theme === "dark" ? "\u263E" : "\u2600";
     var gridEl = document.getElementById("grid");
     if (gridEl) {
       gridEl.classList.remove("ag-theme-alpine", "ag-theme-alpine-dark");
       gridEl.classList.add(theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine");
     }
+    if (gridApi) gridApi.refreshCells({ force: true });
   }
 
   window.toggleTheme = function () {
@@ -194,6 +198,7 @@
   var gridApi = null;
   var colRanges = {};
   var totalRowCount = 0;
+  var userThresholds = {};
 
   // ── Missing-spec indicator (#19) ──
   // Flags reference rows missing "key" curated spec columns — the ones a human
@@ -263,15 +268,6 @@
     updateRowCount();
   };
 
-  // ── Smart search (accent-insensitive quick filter) ──
-  // Strips diacritics + lowercases so "skoda" matches "Škoda". Used both to
-  // build each row/column's quick-filter text and to normalize the user's
-  // query, so both sides fold the same way.
-  function foldAccents(value) {
-    if (value == null) return "";
-    return String(value).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  }
-
   // Shared columns follow the main grid's order (site/app.js COL_CONFIG) for
   // easier visual scanning between the two pages; reference-only columns
   // (Tepelné čerpadlo možné) go after, keeping their prior relative order.
@@ -323,31 +319,73 @@
     "Cd": false,
   };
 
-  // ── HSL gradient coloring for numeric columns ──
+  // ── Heat-map colouring: user-selectable palette × style, theme-aware (mirrors
+  //    site/app.js). Default soft red-green full-cell; switchable in the drawer. ──
+  var HEAT_PALETTES = {
+    redgreen:   { good: [46, 160, 60],  bad: [205, 55, 55],  label: "Červená–zelená" },
+    bluered:    { good: [47, 111, 176], bad: [214, 69, 69],  label: "Modrá–červená" },
+    blueorange: { good: [47, 111, 176], bad: [224, 138, 46], label: "Modrá–oranžová" },
+    tealamber:  { good: [45, 196, 182], bad: [224, 135, 46], label: "Tyrkys–jantar" },
+  };
+  var HEAT_STYLES = { fullcell: "Plná buňka", databar: "Datové pruhy", combo: "Pruh + tón" };
+  var heatMode = { palette: "redgreen", style: "combo" };
 
-  function hslToRgb(h, s, l) {
-    s /= 100; l /= 100;
-    var c = (1 - Math.abs(2 * l - 1)) * s;
-    var x = c * (1 - Math.abs((h / 60) % 2 - 1));
-    var m = l - c / 2;
-    var r, g, b;
-    if (h < 60) { r = c; g = x; b = 0; }
-    else if (h < 120) { r = x; g = c; b = 0; }
-    else if (h < 180) { r = 0; g = c; b = x; }
-    else if (h < 240) { r = 0; g = x; b = c; }
-    else if (h < 300) { r = x; g = 0; b = c; }
-    else { r = c; g = 0; b = x; }
-    return [Math.round((r + m) * 255), Math.round((g + m) * 255), Math.round((b + m) * 255)];
+  function loadHeatMode() {
+    try {
+      var s = JSON.parse(localStorage.getItem(HEATMODE_KEY));
+      if (s && HEAT_PALETTES[s.palette] && HEAT_STYLES[s.style]) heatMode = { palette: s.palette, style: s.style };
+    } catch (_) {}
   }
 
-  function colorForValue(val, min, max, greenHigh) {
-    if (val == null || min === max) return null;
-    var t = (val - min) / (max - min);
-    t = Math.max(0, Math.min(1, t));
-    if (!greenHigh) t = 1 - t;
-    var hue = t * 120;
-    var rgb = hslToRgb(hue, 80, 35);
-    return "rgb(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + ")";
+  window.getHeatMode = function () { return { palette: heatMode.palette, style: heatMode.style }; };
+  window.setHeatMode = function (palette, style) {
+    if (HEAT_PALETTES[palette]) heatMode.palette = palette;
+    if (HEAT_STYLES[style]) heatMode.style = style;
+    try { localStorage.setItem(HEATMODE_KEY, JSON.stringify(heatMode)); } catch (_) {}
+    if (gridApi) gridApi.refreshCells({ force: true });
+    renderHeatModeChoices();
+    updateThresholdGradients();
+  };
+
+  function isDarkTheme() {
+    return (document.documentElement.getAttribute("data-theme") || "dark") === "dark";
+  }
+
+  function lerp3(a, b, u) {
+    return [Math.round(a[0] + (b[0] - a[0]) * u),
+            Math.round(a[1] + (b[1] - a[1]) * u),
+            Math.round(a[2] + (b[2] - a[2]) * u)];
+  }
+
+  function heatRGBof(paletteKey, t) {
+    var pal = HEAT_PALETTES[paletteKey] || HEAT_PALETTES.redgreen;
+    var mid = isDarkTheme() ? [71, 85, 105] : [148, 163, 184];
+    var c = t < 0.5 ? lerp3(pal.good, mid, t * 2) : lerp3(mid, pal.bad, (t - 0.5) * 2);
+    return c[0] + "," + c[1] + "," + c[2];
+  }
+
+  function heatRGB(t) { return heatRGBof(heatMode.palette, t); }
+
+  function heatGradientCSS(paletteKey, greenHigh) {
+    var lo = greenHigh ? 1 : 0, hi = greenHigh ? 0 : 1;
+    return "linear-gradient(90deg,rgb(" + heatRGBof(paletteKey, lo) + "),rgb(" +
+      heatRGBof(paletteKey, 0.5) + "),rgb(" + heatRGBof(paletteKey, hi) + "))";
+  }
+
+  function heatBackground(t, pos) {
+    var dark = isDarkTheme();
+    var rgb = heatRGB(t);
+    var pct = Math.round(Math.max(0, Math.min(1, pos)) * 100);
+    if (heatMode.style === "fullcell") {
+      return { backgroundColor: "rgba(" + rgb + "," + (dark ? 0.5 : 0.32) + ")" };
+    }
+    if (heatMode.style === "databar") {
+      var a = dark ? 0.82 : 0.55;
+      return { background: "linear-gradient(90deg, rgba(" + rgb + "," + a + ") 0, rgba(" + rgb + "," + a + ") " + pct + "%, transparent " + pct + "%, transparent 100%)" };
+    }
+    var barA = dark ? 0.8 : 0.5;
+    var tintA = dark ? 0.18 : 0.12;
+    return { background: "linear-gradient(90deg, rgba(" + rgb + "," + barA + ") 0, rgba(" + rgb + "," + barA + ") " + pct + "%, rgba(" + rgb + "," + tintA + ") " + pct + "%, rgba(" + rgb + "," + tintA + ") 100%)" };
   }
 
   function numericCellStyle(field) {
@@ -355,10 +393,17 @@
       var style = { textAlign: "center" };
       if (params.value == null) return style;
       var greenHigh = NUMERIC_COLS[field];
+      var th = userThresholds[field] || {};
       var range = colRanges[field] || {};
-      if (range.min == null || range.max == null) return style;
-      var bg = colorForValue(params.value, range.min, range.max, greenHigh);
-      if (bg) { style.backgroundColor = bg; style.color = "#fff"; }
+      var min = th.min != null ? th.min : range.min;
+      var max = th.max != null ? th.max : range.max;
+      if (min == null || max == null || min === max) return style;
+      var pos = (params.value - min) / (max - min);
+      pos = Math.max(0, Math.min(1, pos));
+      var t = greenHigh ? (1 - pos) : pos;
+      var bg = heatBackground(t, pos);
+      if (bg.backgroundColor) style.backgroundColor = bg.backgroundColor;
+      if (bg.background) style.background = bg.background;
       return style;
     };
   }
@@ -464,42 +509,6 @@
     });
   }
 
-  // ── Smart search box (#29) ──
-  // Independent of the column filters / filter-chips bar: quick filter text
-  // is not part of getFilterModel(), so it never shows up as a chip and
-  // clearFilters()/the chips bar never touch it (and vice versa).
-  var SEARCH_DEBOUNCE_MS = 200;
-  var searchDebounceTimer = null;
-
-  function applyQuickFilter(rawQuery) {
-    if (!gridApi) return;
-    gridApi.setGridOption("quickFilterText", foldAccents(rawQuery));
-    updateRowCount();
-  }
-
-  function initSearchBox() {
-    var input = document.getElementById("ref-search-input");
-    var clearBtn = document.getElementById("ref-search-clear");
-    if (!input || !clearBtn) return;
-
-    input.addEventListener("input", function () {
-      clearBtn.style.display = input.value ? "" : "none";
-      clearTimeout(searchDebounceTimer);
-      var query = input.value;
-      searchDebounceTimer = setTimeout(function () {
-        applyQuickFilter(query);
-      }, SEARCH_DEBOUNCE_MS);
-    });
-
-    clearBtn.addEventListener("click", function () {
-      clearTimeout(searchDebounceTimer);
-      input.value = "";
-      clearBtn.style.display = "none";
-      applyQuickFilter("");
-      input.focus();
-    });
-  }
-
   // ── Toolbar actions ──
 
   window.clearFilters = function () {
@@ -533,10 +542,243 @@
     return n.toLocaleString("cs-CZ");
   }
 
+  // ── Colour settings: threshold system + heat-mode drawer (mirrors app.js) ──
+  function loadThresholds() {
+    try {
+      var s = localStorage.getItem(THRESHOLD_KEY);
+      userThresholds = s ? JSON.parse(s) : {};
+    } catch (_) { userThresholds = {}; }
+  }
+
+  // Reference keeps thresholds in localStorage only (no writeHash — its URL
+  // fragment carries filters only, and onGridReady never reads #t=).
+  window.saveThresholds = function () {
+    var rows = document.querySelectorAll("#threshold-inputs .threshold-row");
+    userThresholds = {};
+    rows.forEach(function (row) {
+      var field = row.dataset.field;
+      var minVal = row.querySelector(".th-min").value.trim();
+      var maxVal = row.querySelector(".th-max").value.trim();
+      if (minVal !== "" || maxVal !== "") {
+        userThresholds[field] = {};
+        if (minVal !== "") userThresholds[field].min = parseFloat(minVal);
+        if (maxVal !== "") userThresholds[field].max = parseFloat(maxVal);
+      }
+    });
+    try { localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds)); } catch (_) {}
+    if (gridApi) gridApi.refreshCells({ force: true });
+  };
+
+  window.resetThresholds = function () {
+    userThresholds = {};
+    try { localStorage.removeItem(THRESHOLD_KEY); } catch (_) {}
+    renderThresholdInputs();
+    if (gridApi) gridApi.refreshCells({ force: true });
+  };
+
+  var _thTimer = null;
+  function scheduleThresholdApply() {
+    if (_thTimer) clearTimeout(_thTimer);
+    _thTimer = setTimeout(function () { window.saveThresholds(); updateThresholdOverrides(); }, 300);
+  }
+
+  function updateThresholdOverrides() {
+    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
+      var th = userThresholds[row.dataset.field] || {};
+      row.classList.toggle("overridden", th.min != null || th.max != null);
+    });
+  }
+
+  function updateThresholdGradients() {
+    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
+      var g = row.querySelector(".th-slider");
+      if (g) g.style.background = heatGradientCSS(heatMode.palette, NUMERIC_COLS[row.dataset.field]);
+    });
+  }
+
+  function _sliderRound(v, step) {
+    return parseFloat((Math.round(v / step) * step).toFixed(4));
+  }
+
+  function renderThresholdInputs() {
+    var container = document.getElementById("threshold-inputs");
+    if (!container) return;
+    while (container.firstChild) container.removeChild(container.firstChild);
+
+    Object.keys(NUMERIC_COLS).forEach(function (field) {
+      var th = userThresholds[field] || {};
+      var range = colRanges[field] || {};
+      var greenHigh = NUMERIC_COLS[field];
+
+      var row = document.createElement("div");
+      row.className = "threshold-row" + ((th.min != null || th.max != null) ? " overridden" : "");
+      row.dataset.field = field;
+
+      var labelWrap = document.createElement("div");
+      labelWrap.className = "th-label";
+      var name = document.createElement("span");
+      name.textContent = field;
+      var dir = document.createElement("span");
+      dir.className = "th-dir";
+      dir.textContent = greenHigh ? "více = lépe" : "méně = lépe";
+      labelWrap.appendChild(name); labelWrap.appendChild(dir);
+      row.appendChild(labelWrap);
+
+      var minInput = document.createElement("input");
+      minInput.type = "number";
+      minInput.className = "th-min";
+      minInput.placeholder = "min: " + (range.min != null ? range.min : "");
+      if (th.min != null) minInput.value = th.min;
+      var maxInput = document.createElement("input");
+      maxInput.type = "number";
+      maxInput.className = "th-max";
+      maxInput.placeholder = "max: " + (range.max != null ? range.max : "");
+      if (th.max != null) maxInput.value = th.max;
+      minInput.addEventListener("input", scheduleThresholdApply);
+      maxInput.addEventListener("input", scheduleThresholdApply);
+
+      // Dual-range slider; the track is the column's good→bad gradient. Kept in
+      // sync with the number inputs both ways; a thumb parked at the data edge
+      // clears its input (= automatic bound).
+      if (range.min != null && range.max != null && range.max > range.min) {
+        var slider = document.createElement("div");
+        slider.className = "th-slider";
+        slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
+        var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
+        var rMin = document.createElement("input");
+        var rMax = document.createElement("input");
+        [rMin, rMax].forEach(function (r) {
+          r.type = "range"; r.min = range.min; r.max = range.max; r.step = step;
+        });
+        rMin.value = th.min != null ? th.min : range.min;
+        rMax.value = th.max != null ? th.max : range.max;
+        rMin.setAttribute("aria-label", field + " min");
+        rMax.setAttribute("aria-label", field + " max");
+        rMin.addEventListener("input", function () {
+          if (+rMin.value > +rMax.value) rMin.value = rMax.value;
+          var v = _sliderRound(+rMin.value, step);
+          minInput.value = v <= range.min ? "" : v;
+          scheduleThresholdApply();
+        });
+        rMax.addEventListener("input", function () {
+          if (+rMax.value < +rMin.value) rMax.value = rMin.value;
+          var v = _sliderRound(+rMax.value, step);
+          maxInput.value = v >= range.max ? "" : v;
+          scheduleThresholdApply();
+        });
+        minInput.addEventListener("input", function () {
+          rMin.value = minInput.value !== "" ? minInput.value : range.min;
+        });
+        maxInput.addEventListener("input", function () {
+          rMax.value = maxInput.value !== "" ? maxInput.value : range.max;
+        });
+        slider.appendChild(rMin);
+        slider.appendChild(rMax);
+        row.appendChild(slider);
+      }
+
+      var pair = document.createElement("div");
+      pair.className = "th-pair";
+      pair.appendChild(minInput); pair.appendChild(maxInput);
+      row.appendChild(pair);
+
+      container.appendChild(row);
+    });
+  }
+
+  function styleIcoBg(styleKey) {
+    var dark = isDarkTheme();
+    var rgb = heatRGB(0.72);
+    var barA = dark ? 0.8 : 0.5, tintA = dark ? 0.18 : 0.12;
+    if (styleKey === "fullcell") return "rgba(" + rgb + "," + (dark ? 0.5 : 0.32) + ")";
+    if (styleKey === "databar") return "linear-gradient(90deg,rgba(" + rgb + "," + barA + ") 0,rgba(" + rgb + "," + barA + ") 60%,transparent 60%)";
+    return "linear-gradient(90deg,rgba(" + rgb + "," + barA + ") 0,rgba(" + rgb + "," + barA + ") 60%,rgba(" + rgb + "," + tintA + ") 60%)";
+  }
+
+  function renderHeatModeChoices() {
+    var palWrap = document.getElementById("palette-choices");
+    var styWrap = document.getElementById("style-choices");
+    if (!palWrap || !styWrap) return;
+    while (palWrap.firstChild) palWrap.removeChild(palWrap.firstChild);
+    while (styWrap.firstChild) styWrap.removeChild(styWrap.firstChild);
+
+    Object.keys(HEAT_PALETTES).forEach(function (key) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (heatMode.palette === key ? " active" : "");
+      var sw = document.createElement("span");
+      sw.className = "swatch";
+      sw.style.background = heatGradientCSS(key, false);
+      var lbl = document.createElement("span");
+      lbl.textContent = HEAT_PALETTES[key].label;
+      btn.appendChild(sw); btn.appendChild(lbl);
+      btn.onclick = function () { window.setHeatMode(key, heatMode.style); };
+      palWrap.appendChild(btn);
+    });
+
+    Object.keys(HEAT_STYLES).forEach(function (key) {
+      var btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "choice" + (heatMode.style === key ? " active" : "");
+      var ico = document.createElement("span");
+      ico.className = "style-ico";
+      ico.style.background = styleIcoBg(key);
+      var lbl = document.createElement("span");
+      lbl.textContent = HEAT_STYLES[key];
+      btn.appendChild(ico); btn.appendChild(lbl);
+      btn.onclick = function () { window.setHeatMode(heatMode.palette, key); };
+      styWrap.appendChild(btn);
+    });
+  }
+
+  window.toggleToolsMenu = function (ev) {
+    if (ev) ev.stopPropagation();
+    var pop = document.getElementById("tools-menu");
+    var btn = document.getElementById("btn-tools");
+    if (!pop) return;
+    var willOpen = pop.classList.contains("hidden");
+    pop.classList.toggle("hidden");
+    if (btn) btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+  };
+
+  function closeToolsMenu() {
+    var pop = document.getElementById("tools-menu");
+    var btn = document.getElementById("btn-tools");
+    if (pop && !pop.classList.contains("hidden")) {
+      pop.classList.add("hidden");
+      if (btn) btn.setAttribute("aria-expanded", "false");
+    }
+  }
+
+  document.addEventListener("click", function (e) {
+    var c = e.target.closest ? e.target.closest.bind(e.target) : function () { return null; };
+    if (!c(".menu-wrap")) closeToolsMenu();
+    // Drawer closes on any click outside it (opening click comes from .menu-wrap).
+    if (!c("#settings-panel") && !c(".menu-wrap")) window.closeColorSettings();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape") { closeToolsMenu(); window.closeColorSettings(); }
+  });
+
+  window.openColorSettings = function () {
+    closeToolsMenu();
+    renderHeatModeChoices();
+    renderThresholdInputs();
+    var panel = document.getElementById("settings-panel");
+    if (panel) panel.classList.remove("hidden");
+  };
+
+  window.closeColorSettings = function () {
+    var panel = document.getElementById("settings-panel");
+    if (panel) panel.classList.add("hidden");
+  };
+
   // ── Grid init ──
 
   function init(data) {
     computeRanges(data);
+    loadThresholds();
+    loadHeatMode();
     totalRowCount = data.length;
 
     incompleteCount = 0;
@@ -562,6 +804,19 @@
     var gridDiv = document.getElementById("grid");
     var gridOptions = {
       theme: "legacy",
+      localeText: {
+        equals: "Rovná se", notEqual: "Nerovná se",
+        lessThan: "Menší než", lessThanOrEqual: "Menší nebo rovno",
+        greaterThan: "Větší než", greaterThanOrEqual: "Větší nebo rovno",
+        inRange: "V rozsahu", inRangeStart: "od", inRangeEnd: "do",
+        contains: "Obsahuje", notContains: "Neobsahuje",
+        startsWith: "Začíná na", endsWith: "Končí na",
+        blank: "Prázdné", notBlank: "Neprázdné",
+        filterOoo: "Filtrovat…", applyFilter: "Použít", resetFilter: "Vymazat",
+        clearFilter: "Vymazat", cancelFilter: "Zrušit",
+        andCondition: "A zároveň", orCondition: "Nebo",
+        noMatches: "Žádná shoda",
+      },
       columnDefs: COL_DEFS,
       rowData: data,
       rowHeight: 25,
@@ -571,22 +826,14 @@
         autoHeaderHeight: true,
         filterParams: { buttons: ["reset"] },
         tooltipComponent: ColTooltip,
-        // Accent-folded quick-filter text so the smart search box matches
-        // "skoda" against "Škoda" regardless of which column holds the hit
-        // (Model auta = značka/model/výbava, Výkon (kW), Objem motoru,
-        // Typ motoru cover the rest of #29's search fields).
-        getQuickFilterText: function (params) {
-          return foldAccents(params.value);
-        },
       },
-      includeHiddenColumnsInQuickFilter: true,
       tooltipShowDelay: 400,
       tooltipMouseTrack: true,
       animateRows: false,
       enableCellTextSelection: true,
-      // External filter (#19): independent of column filters/quick search, like
-      // the search box — toggled by the "Neúplné: N / M" button, not part of
-      // getFilterModel() so clearFilters()/the chips bar don't touch it.
+      // External filter (#19): independent of the column filters — toggled by
+      // the "Neúplné: N / M" button, not part of getFilterModel() so
+      // clearFilters()/the chips bar don't touch it.
       isExternalFilterPresent: function () { return incompleteOnly; },
       doesExternalFilterPass: function (node) {
         return !incompleteOnly || (node.data && node.data._missingCount > 0);
@@ -622,7 +869,6 @@
         // Migrate an old ?filters= link to the canonical #fragment form.
         if (legacyFilters) writeHash();
 
-        initSearchBox();
         updateIncompleteButton();
         updateRowCount();
         updateFilterChips();

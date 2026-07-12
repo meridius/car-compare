@@ -10,12 +10,18 @@
 
 <body>
     <header>
-        <h1>Převodovky</h1>
+        <a class="brand-home" href="index.html" title="Porovnání aut — domů" aria-label="Porovnání aut — domů">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18a8 8 0 1116 0"/><path d="M12 18l4-5"/><circle cx="12" cy="18" r="1.1"/></svg>
+        </a>
+        <nav class="nav-tabs">
+            <a class="nav-tab" href="index.html">Porovnání aut</a>
+            <a class="nav-tab" href="reference.html">Referenční modely</a>
+            <a class="nav-tab active" href="transmissions.html" aria-current="page">Převodovky</a>
+        </nav>
+        <div class="header-spacer"></div>
         <div class="controls">
-            <span id="row-count"></span>
-            <button id="btn-theme" onclick="toggleTheme()" title="Přepnout motiv">☾</button>
-            <button class="nav-link" onclick="location.href='index.html'">Porovnání aut</button>
-            <button class="nav-link" onclick="location.href='reference.html'">Referenční modely</button>
+            <span id="row-count" class="readout"></span>
+            <button id="btn-theme" class="icon-btn" onclick="toggleTheme()" title="Přepnout motiv">☾</button>
         </div>
     </header>
     <main class="transmissions-content">

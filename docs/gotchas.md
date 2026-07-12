@@ -463,6 +463,90 @@ filter type should fail loud, not emit opaque base64.
 
 ---
 
+## site — UI (redesign 2026-07)
+
+### heat-map colouring is a user-selectable palette × style, theme-aware
+
+`numericCellStyle` (both `site/app.js` and `site/reference.js`) no longer bakes a
+fixed red→green HSL. Colour = a **palette** (`redgreen` / `bluered` / `blueorange`
+/ `tealamber`; good→mid→bad diverging, `HEAT_PALETTES`) × a **style** (`fullcell`
+/ `databar` / `combo`; `HEAT_STYLES`), chosen in Nastavení barev and persisted to
+`localStorage["carCompareHeatMode"]` (**shared across index + reference** — it's a
+global appearance pref like the theme). Default is soft **red-green combo (bar + tint)**.
+
+- **Theme-aware:** the mid-tone and alphas depend on `isDarkTheme()`; `applyTheme`
+  calls `gridApi.refreshCells({force:true})` so cells re-tint on theme switch. The
+  old code hard-coded `hsl(h,80,35)` and forced `color:#fff`, so light theme got
+  dark slabs with unreadable text. Cells now inherit the theme foreground (no
+  forced colour); alphas are tuned so text stays legible over fill.
+- **All styles paint via the cell `background` only** (full-cell = `backgroundColor`
+  tint; databar / combo = a hard-stop `linear-gradient`) — **no `cellRenderer`**, so
+  column virtualisation stays fast. `pos` = value's magnitude in range (bar length);
+  `t` = badness 0…1 (colour). `greenHigh` (higher-is-better) flips `t`.
+- Colour-blind note: `redgreen` is kept only as an option/default-on-request;
+  `bluered`/`blueorange`/`tealamber` are the accessible palettes (they keep the
+  blue–yellow axis CVD preserves).
+
+### AG Grid ignores "\n" in headerName under wrapHeaderText — hyphenation does the wrapping
+
+With `wrapHeaderText:true` + `autoHeaderHeight:true`, AG width-wraps header text and
+**does not honour embedded `\n`** in `headerName` (the many `hdr:"Foo\nBar"` hints in
+COL_CONFIG are effectively decorative). Left to itself it broke words mid-syllable
+("Objem motor u"). Fix is CSS in `style.css` `.ag-header-cell-text`:
+`white-space:pre-wrap; overflow-wrap:break-word; hyphens:auto` + `lang="cs"` on
+`<html>` → long single words hyphenate at proper Czech points. A column too narrow
+for even the hyphenated word still breaks ugly — widen it (that's why "Počet válců"
+is `w:82`, not 70).
+
+### Stav is availability only — match-confidence colour lives on Spárováno
+
+The Stav cell used to be tinted (and carry a native `title`) by the row's
+`Spárováno` value — colour that meant something unrelated to the cell's "Ojeté"
+text, and redundant with the Spárováno column. Dropped: `stavRenderer` no longer
+sets a title, and Stav's cellStyle is plain. The red/amber tint + a real
+`tooltipValueGetter` (rendered by `ColTooltip`) live only on the **Spárováno**
+column, where colour and value agree.
+
+### header is a single-row toolbar; nav tabs are real <a> links
+
+`<header>` on all three pages: icon-only brand (`.brand-home` → index.html),
+`.nav-tabs` of real `<a>` links (middle/ctrl-click opens a new tab — the old
+`<button onclick="location.href">` couldn't), then page-specific controls and a
+`.menu-wrap` gear menu holding **Vymazat filtry + Reset sloupců + Nastavení barev
++ Přepnout motiv** (all rarely-used actions live there; the filter-chips bar's
+"Vymazat vše" keeps filter-clearing one click away while filters are active).
+`applyTheme` updates `#btn-theme .theme-glyph` (a span), NOT the button's
+textContent — overwriting textContent would wipe the "Přepnout motiv" label
+(index/reference); transmissions keeps a plain icon `#btn-theme` and still sets
+textContent. The `#btn-theme` sizing rule is scoped `#btn-theme.icon-btn` — an
+unscoped ID rule out-specifies `.menu-item` and renders the menu row oversized.
+The reference page's smart-search bar (#29) was **removed** (user request) — the
+Model auta floating filter covers the lookup; quick-filter plumbing is gone.
+
+### Archiv is a toggle backed by a grid external filter
+
+The old one-shot "Načíst archiv" button is now an `.archive-toggle` switch.
+`onArchiveToggle(true)` lazy-fetches `cars-archived.parquet` once (`loadArchive`)
+then `archiveVisible` drives `isExternalFilterPresent`/`doesExternalFilterPass`
+(hides `Stav=="Odstraněno"` when off). `totalRows` stays the live count;
+`archivedLoaded` is tracked separately so `updateRowCount` shows the right universe.
+
+### Nastavení barev is a right-side drawer; built-in filters are localised
+
+`#settings-panel` is a `position:fixed` right drawer (`.settings-drawer`), not the
+old push-down panel that displaced the grid; it closes on Escape **and on any click
+outside it** (the opening click comes from `.menu-wrap`, which is excluded). Each
+numeric column gets a **dual min/max range slider whose track is the column's
+good→bad gradient** (two overlaid native ranges, `pointer-events` on thumbs only)
+kept two-way-synced with the number inputs — a thumb parked at the data edge
+clears its input back to "auto". Everything applies live (debounced
+`saveThresholds`, no Uložit button). AG's built-in number/text filters are Czech via
+`gridOptions.localeText` (the custom SetFilter was already Czech). Floating-filter
+inputs are transparent with the fill on `.ag-input-wrapper` — filling the input
+paints bands above/below the 24px box (the input spans the full 47px cell).
+`verify_ui.py` takes `--theme dark|light` and has `color-drawer` / `tools-menu` /
+`heat-combo` scenarios; screenshots are `<page>-<scenario>-<theme>.png`.
+
 ## core — normalize
 
 ### normalisation order matters
