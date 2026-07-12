@@ -386,8 +386,19 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
     var self = this;
 
+    // ⟲ reset header (matches the colour-sidebar icon), always visible in the popup.
+    var head = document.createElement("div");
+    head.className = "range-head";
+    var reset = document.createElement("button");
+    reset.type = "button"; reset.className = "th-reset";
+    reset.title = "Vymazat rozsah"; reset.setAttribute("aria-label", "Vymazat rozsah " + field);
+    reset.textContent = "⟲";
+    reset.addEventListener("click", function () { commitRange(field, null, null); });
+    head.appendChild(reset);
+    this.gui.appendChild(head);
+
     if (range.min != null && range.max != null && range.max > range.min) {
-      var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
+      var step = range.step || 1;
       this.step = step;
       var slider = document.createElement("div");
       slider.className = "th-slider";
@@ -413,8 +424,10 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
     var pair = document.createElement("div");
     pair.className = "th-pair";
-    var minInput = mkNumInput("od"); minInput.className = "th-min";
-    var maxInput = mkNumInput("do"); maxInput.className = "th-max";
+    // Empty by default (= no filter); placeholder shows the data min/max.
+    var minInput = mkNumInput(range.min != null ? fmtRangeNum(field, range.min) : "od");
+    var maxInput = mkNumInput(range.max != null ? fmtRangeNum(field, range.max) : "do");
+    minInput.className = "th-min"; maxInput.className = "th-max";
     this.minInput = minInput; this.maxInput = maxInput;
     minInput.addEventListener("input", function () { self._edit(parseNum(minInput.value), undefined); });
     maxInput.addEventListener("input", function () { self._edit(undefined, parseNum(maxInput.value)); });
@@ -422,12 +435,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     maxInput.addEventListener("change", function () { maxInput.value = fmtRangeNum(field, rangeOf(field).max); });
     pair.appendChild(minInput); pair.appendChild(maxInput);
     this.gui.appendChild(pair);
-
-    var reset = document.createElement("button");
-    reset.type = "button"; reset.className = "range-reset";
-    reset.textContent = "Vymazat rozsah";
-    reset.addEventListener("click", function () { commitRange(field, null, null); });
-    this.gui.appendChild(reset);
 
     this.renderState();
   };
@@ -975,8 +982,9 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       labelWrap.appendChild(reset);
       row.appendChild(labelWrap);
 
-      var minInput = mkNumInput("min"); minInput.className = "th-min";
-      var maxInput = mkNumInput("max"); maxInput.className = "th-max";
+      var minInput = mkNumInput(range.min != null ? fmtRangeNum(field, range.min) : "min");
+      var maxInput = mkNumInput(range.max != null ? fmtRangeNum(field, range.max) : "max");
+      minInput.className = "th-min"; maxInput.className = "th-max";
       minInput.value = fmtRangeNum(field, r.min);
       maxInput.value = fmtRangeNum(field, r.max);
       minInput.addEventListener("input", function () { commitRange(field, parseNum(minInput.value), rangeOf(field).max); });
@@ -991,7 +999,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         var slider = document.createElement("div");
         slider.className = "th-slider";
         slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
-        var step = parseFloat(((range.max - range.min) / 200).toPrecision(2)) || 1;
+        var step = range.step || 1;
         var rMin = document.createElement("input");
         var rMax = document.createElement("input");
         [rMin, rMax].forEach(function (rr) {
@@ -1230,20 +1238,43 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     }
   };
 
+  // Forced slider precision (decimals) for columns where the data precision is
+  // not the desired step — overrides the auto-detected value in computeRanges.
+  var STEP_DECIMALS = {
+    "Spotřeba (l/100 km)": 0,
+    "Hlučnost (dB)": 0,
+    "Kapacita baterie (kWh)": 0,
+    "Výkon (kW)": 0,
+    "Objem motoru": 1,
+  };
+
+  // Decimal places a value carries, float-noise-tolerant, capped at 3.
+  function _decimals(n) {
+    if (!isFinite(n) || n === Math.round(n)) return 0;
+    var s = n.toFixed(3).replace(/0+$/, "");
+    var i = s.indexOf(".");
+    return i < 0 ? 0 : s.length - i - 1;
+  }
+
   function computeRanges(data) {
     colRanges = {};
     var fields = Object.keys(NUMERIC_COLS);
     for (var i = 0; i < fields.length; i++) {
       var field = fields[i];
-      var min = Infinity, max = -Infinity;
+      var min = Infinity, max = -Infinity, dec = 0;
       for (var j = 0; j < data.length; j++) {
         var v = data[j][field];
         if (v != null && typeof v === "number" && isFinite(v)) {
           if (v < min) min = v;
           if (v > max) max = v;
+          var d = _decimals(v);
+          if (d > dec) dec = d;
         }
       }
-      if (min !== Infinity) colRanges[field] = { min: min, max: max };
+      // Slider step = the data's own precision (integer cols step by 1,
+      // one-decimal cols by 0.1, …), unless STEP_DECIMALS forces it.
+      if (STEP_DECIMALS[field] != null) dec = STEP_DECIMALS[field];
+      if (min !== Infinity) colRanges[field] = { min: min, max: max, step: Math.pow(10, -dec) };
     }
   }
 

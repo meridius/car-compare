@@ -488,18 +488,7 @@ a:hover { text-decoration: underline; }
     color: var(--clr-text);
     font-size: 0.8rem;
 }
-/* Reset buttons: ghost "clear this range" — popup (full width) + sidebar (icon). */
-.range-reset {
-    align-self: stretch;
-    padding: 4px 8px;
-    border: 1px solid var(--clr-border);
-    border-radius: 4px;
-    background: transparent;
-    color: var(--clr-text-muted);
-    font-size: 0.75rem;
-    cursor: pointer;
-}
-.range-reset:hover { background: var(--clr-bg); color: var(--clr-text); }
+/* Reset buttons: ghost "clear this range" — icon (⟲) in popup header + sidebar. */
 .th-reset {
     margin-left: auto;
     width: 20px; height: 20px;
@@ -518,6 +507,9 @@ a:hover { text-decoration: underline; }
 .threshold-row:hover .th-reset,
 .threshold-row.overridden .th-reset { opacity: 1; }
 .th-reset:hover { border-color: var(--clr-border); color: var(--clr-accent); }
+/* Popup ⟲ reset lives in a right-aligned header and is always visible. */
+.range-head { display: flex; justify-content: flex-end; margin-bottom: -6px; }
+.range-filter .th-reset { opacity: 1; }
 
 /* ── Active filter chips ── */
 .filter-chips-bar {

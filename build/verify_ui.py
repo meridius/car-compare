@@ -103,7 +103,7 @@ def scenario_range_filter_ref(page):
     """Reference page: open the Výkon (kW) column filter — the custom RangeFilter
     dual slider + od/do boxes + reset, coupled to the colour-drawer slider."""
     page.wait_for_selector(".ag-row", timeout=15000)
-    page.evaluate("window.__gridApi.showColumnFilter('Kapacita baterie (kWh)')")
+    page.evaluate("window.__gridApi.showColumnFilter('Výkon (kW)')")
     page.wait_for_selector(".range-filter .th-slider", timeout=5000)
     page.wait_for_timeout(200)
     return ".range-filter"
