@@ -81,6 +81,8 @@ Every feature is **test-driven / test-verified** — `./bin/test.sh` must pass, 
 
 **Authoritative model matching** (ICE) → `scrapers/core/matching.py`
 
+**Diagnose one unpaired/uncertain ICE listing** → `build/diagnose_unpaired.py` (`pick` worst listings / `explain --link` per-field score breakdown / `candidate --link` derive+simulate a reference row / `apply` append it range-validated). Needs real state (`./bin/bootstrap-data.sh`).
+
 **Concurrency knobs** → `DETAIL_CONCURRENCY` in `scrapers/sources/energycars.py`; `fetch_all_details(session, urls, concurrency=20)` in `scrapers/core/http.py` (sauto)
 
 ## Canonical Schema
