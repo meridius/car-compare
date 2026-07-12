@@ -230,6 +230,95 @@ def scenario_archive(page):
     return None
 
 
+def scenario_date_filter(page):
+    """agDateColumnFilter on the ISO-string "Odstraněno dne" column (index only).
+    Removal dates live only on Odstraněno rows, so load the archive first, then
+    prove the string→Date comparator end-to-end: a far-past `after` shows exactly
+    the dated rows (blank live rows fall out via the -1 return), a far-future
+    `after` shows none. Then open the popup (browser date picker) for the shot."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    has_archive = page.evaluate("(function(){var b=document.getElementById('btn-archive');"
+                                "return b && b.style.display !== 'none';})()")
+    if has_archive:
+        page.evaluate("window.loadArchive()")
+        page.wait_for_function(
+            "document.getElementById('btn-archive').textContent.indexOf('načten') >= 0",
+            timeout=20000)
+        page.wait_for_timeout(300)
+        dated = page.evaluate(
+            "(function(){var n=0;window.__gridApi.forEachNode(function(x){"
+            "if(x.data && x.data['Odstraněno dne']) n++;});return n;})()")
+        if dated:
+            page.evaluate("window.__gridApi.setFilterModel({'Odstraněno dne':"
+                          "{filterType:'date',type:'greaterThan',dateFrom:'2000-01-01 00:00:00',dateTo:null}});")
+            page.wait_for_timeout(400)
+            past = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+            if past != dated:
+                raise AssertionError("date after far-past: %d shown, expected %d dated rows" % (past, dated))
+            page.evaluate("window.__gridApi.setFilterModel({'Odstraněno dne':"
+                          "{filterType:'date',type:'greaterThan',dateFrom:'2999-01-01 00:00:00',dateTo:null}});")
+            page.wait_for_timeout(400)
+            future = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+            if future != 0:
+                raise AssertionError("date after far-future: %d shown, expected 0" % future)
+
+            # inRange must be INCLUSIVE: a single-day range [X, X] shows the rows
+            # dated X (AG's default exclusive bounds would show 0 — the reported bug).
+            probe = page.evaluate(
+                "(function(){var m={},best=null,bn=0;window.__gridApi.forEachNode(function(x){"
+                "var d=x.data&&x.data['Odstraněno dne'];if(d){m[d]=(m[d]||0)+1;if(m[d]>bn){bn=m[d];best=d;}}});"
+                "return {day:best,n:bn};})()")
+            day, n = probe["day"], probe["n"]
+            page.evaluate("(d)=>window.__gridApi.setFilterModel({'Odstraněno dne':"
+                          "{filterType:'date',type:'inRange',dateFrom:d+' 00:00:00',dateTo:d+' 00:00:00'}})", day)
+            page.wait_for_timeout(400)
+            got = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+            if got != n:
+                raise AssertionError("inRange [%s,%s] shown %d, expected %d (inclusive bounds)" % (day, day, got, n))
+            page.evaluate("window.__gridApi.setFilterModel(null)")
+            page.wait_for_timeout(200)
+
+        # Applied-filter chip shows the DATE (not a bare ">"/undefined), and the
+        # URL fragment carries no redundant time component.
+        page.evaluate("window.__gridApi.setFilterModel({'Odstraněno dne':"
+                      "{filterType:'date',type:'greaterThan',dateFrom:'2026-07-05 00:00:00',dateTo:null}});")
+        page.wait_for_timeout(300)
+        chip = page.inner_text("#filter-chips-bar") if page.query_selector("#filter-chips-bar .filter-chip") else ""
+        if "undefined" in chip:
+            raise AssertionError("filter chip shows 'undefined': %r" % chip)
+        if "2026-07-05" not in chip:
+            raise AssertionError("filter chip missing the filtered date: %r" % chip)
+        h = page.evaluate("location.hash")
+        if "00:00:00" in h or "00%3A00" in h:
+            raise AssertionError("URL fragment carries redundant time: %s" % h)
+        page.evaluate("window.__gridApi.setFilterModel(null)")
+        page.wait_for_timeout(150)
+
+    # Masked entry field: digits only, dashes auto-inserted, drives the filter.
+    page.evaluate("window.__gridApi.showColumnFilter('Odstraněno dne')")
+    page.wait_for_selector(".ag-filter-wrapper", timeout=5000)
+    inp = page.query_selector(".ag-filter-wrapper .ag-filter-body input")
+    if inp:
+        inp.click()
+        page.keyboard.type("2026a07b05")  # letters must be dropped, dashes auto-added
+        val = inp.input_value()
+        if val != "2026-07-05":
+            raise AssertionError("masked input did not format digits→yyyy-mm-dd: %r" % val)
+        page.wait_for_timeout(300)
+        df = page.evaluate("(function(){var m=window.__gridApi.getFilterModel()['Odstraněno dne'];"
+                           "return m && m.dateFrom;})()")
+        if not df or not str(df).startswith("2026-07-05"):
+            raise AssertionError("masked input did not apply the filter: dateFrom=%r" % df)
+        # clear via the "Vymazat" reset button → filter cleared, rows return, popup
+        # stays open with an empty field for the screenshot
+        page.click(".ag-filter-wrapper button")
+        page.wait_for_timeout(200)
+        if page.evaluate("window.__gridApi.getFilterModel()['Odstraněno dne']"):
+            raise AssertionError("reset button did not clear the date filter")
+    page.wait_for_timeout(200)
+    return ".ag-filter"
+
+
 def scenario_filter_chips(page):
     """Apply a set filter + a number filter via the grid API (equivalent to a
     user picking values in the filter popups), then confirm the active-filter
@@ -368,11 +457,20 @@ def _codec_battery(page):
         {"Cena (Kč)": {"filterType": "number", "operator": "OR", "conditions": [
             {"filterType": "number", "type": "lessThan", "filter": 50000},
             {"filterType": "number", "type": "greaterThan", "filter": 700000}]}},
+        {"Odstraněno dne": {"filterType": "date", "type": "greaterThan", "dateFrom": "2026-07-01 00:00:00", "dateTo": None}},
+        {"Odstraněno dne": {"filterType": "date", "type": "inRange", "dateFrom": "2026-06-01 00:00:00", "dateTo": "2026-07-11 00:00:00"}},
+        {"Odstraněno dne": {"filterType": "date", "type": "notBlank"}},
     ]
     for i, case in enumerate(filter_cases):
         back = page.evaluate("(m)=>window.UrlState.decFilters(window.UrlState.encFilters(m))", case)
         if back != case:
             raise AssertionError(f"filter round-trip {i} mismatch: in={json.dumps(case,ensure_ascii=False)} out={json.dumps(back,ensure_ascii=False)}")
+
+    # date filters must not leak the midnight time into the URL (stripped on
+    # encode, restored on decode — the round-trip above still holds)
+    enc_date = page.evaluate("(m)=>window.UrlState.encFilters(m)", filter_cases[8])
+    if "00:00:00" in enc_date or "00%3A00" in enc_date:
+        raise AssertionError(f"date filter encoded with redundant time: {enc_date}")
 
     for case in [{"Cena (Kč)": {"min": 12345}}, {"Rok výroby": {"max": 2020}},
                  {"Cena (Kč)": {"min": 100000, "max": 750000}, "Výkon (kW)": {"min": 90}}]:
@@ -585,6 +683,7 @@ SCENARIOS = {
     "overview-matching": scenario_overview_matching,
     "data-filters": scenario_data_filters,
     "archive": scenario_archive,
+    "date-filter": scenario_date_filter,
     "filter-chips": scenario_filter_chips,
     "pairing-gap": scenario_pairing_gap,
     "missing-specs": scenario_missing_specs,

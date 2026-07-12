@@ -477,8 +477,21 @@ to `#f=` and strips `?filters`/`?cols`. Old shared links keep working and silent
 upgrade. (Old `?cols=` links never actually existed — that write always threw on the
 `btoa` bug — so only filters are migrated.) There is intentionally **no** forward
 `#f=b64:` fallback: the codec is total over the grid's filter universe
-(text/number/set/combined), so a fallback would catch nothing; an unknown future
+(text/number/date/set/combined), so a fallback would catch nothing; an unknown future
 filter type should fail loud, not emit opaque base64.
+
+### date filters ride a `D`-prefixed op body (added with "Odstraněno dne")
+
+`agDateColumnFilter` models (`{filterType:"date", type, dateFrom, dateTo}`) encode
+via `encSimpleCond`/`decSimpleCond` under the `D` kind char (distinct from text `t`,
+number `n`), op map `DATE_OP` (equals/notEqual/greaterThan/lessThan/inRange/blank/
+notBlank — no `…OrEqual`, AG's date filter lacks them). `dateFrom`/`dateTo` are
+`"YYYY-MM-DD HH:mm:ss"` strings, but the codec **stores only the day** (`dayOnly`) and
+restores ` 00:00:00` on decode (`restoreTime`) — date-only filters are always midnight,
+so the time is redundant noise in `#f=`. The raw `-` stays the `inRange` separator (same
+trick as number `inRange`). Combined AND/OR date conditions work through the same `k`
+path. Round-trip + no-time-in-URL pinned in `verify_ui.py` `_codec_battery` (greaterThan
+/ inRange / notBlank cases).
 
 ---
 
@@ -572,6 +585,54 @@ textContent. The `#btn-theme` sizing rule is scoped `#btn-theme.icon-btn` — an
 unscoped ID rule out-specifies `.menu-item` and renders the menu row oversized.
 The reference page's smart-search bar (#29) was **removed** (user request) — the
 Model auta floating filter covers the lookup; quick-filter plumbing is gone.
+
+### "Odstraněno dne" is an agDateColumnFilter over ISO strings — needs a comparator
+
+The payload is stringly (dates are `"YYYY-MM-DD"`), so the date column can't use
+AG's native Date comparison. `DATE_FILTER_PARAMS` (`site/app.js`) gives
+`agDateColumnFilter` a `comparator` that parses the cell string into a **local-midnight**
+`Date` via `new Date(+y, +m-1, +d)` — **not** `new Date("2026-07-11")`, which parses
+as UTC midnight and shifts a day in negative-offset zones, breaking equality. Blank
+cells return -1 (sort before any date) so an after/range filter excludes the live
+rows (only Odstraněno rows carry a date — load the archive to see matches).
+`buildColumnDefs` passes any `cfg.filterParams` straight through (previously only
+`cfg.groups` did).
+
+**`inRangeInclusive: true` is required.** AG's `inRange` defaults to *exclusive*
+bounds (`inRangeInclusive: false` → strict `<`/`>`). With day-granular dates a range
+like `[08-07, 09-07]` then matches **nothing** — both endpoints excluded and no value
+lies strictly between two adjacent days. Inclusive is what "between these dates" means.
+
+**Deliberately NOT `browserDatePicker: true`.** AG defaults `browserDatePicker` to
+**true whenever the browser supports `<input type=date>`** — so it must be set to
+`false` *explicitly* (omitting it is not enough). The native `<input type=date>` renders
+in the *browser's* locale (dd.mm.yyyy / mm/dd/yyyy — never the ISO yyyy-mm-dd the cells
+show) and its "Clear" button is untranslatable browser chrome (stays English on an
+en-locale browser). AG's own date **text input** defaults to the `yyyy-mm-dd` format —
+consistent with the cell display — and its only clear control is the AG "Vymazat" reset
+button (localised). Cost: no calendar popup, the user types the date. The date filter's
+option dropdown relabels lessThan/greaterThan as **`before`/`after`** (its own locale
+keys, distinct from the number filter's) — so `localeText` needs `before`/`after`
+(`Před`/`Po`) *in addition to* lessThan/greaterThan, or those two options leak English.
+
+**Digit-mask on the entry field.** AG's date text input accepts any text; a
+**capture-phase** `document` `input` listener (`app.js`, scoped to `.ag-date-filter`
+inputs) strips non-digits and auto-inserts the two dashes, running *before* AG's own
+target-phase handler reads the value so AG only ever parses a clean yyyy-mm-dd. This is
+NOT a custom `dateComponent`: a `colDef.dateComponent` class-ref (the documented API) is
+silently ignored by AG 33.1.1's built-in date filter — it kept rendering its default
+input — so the delegated listener is the working path. It survives popup re-creation.
+
+**Filter chip / codec read dateFrom/dateTo, not filter/filterTo.** Date models carry the
+value in `dateFrom`/`dateTo` ("YYYY-MM-DD HH:mm:ss"); `filter-chips.js` had a `date`
+branch added (reading `dateFrom`, `slice(0,10)` for day-only) — without it the chip
+showed a bare operator + `undefined`. The URL codec strips the midnight time on encode
+(`dayOnly`) and restores it on decode (`restoreTime`) so `#f=` stays compact
+(`Dg2026-07-05`, not `Dg2026-07-05 00%3A00%3A00`).
+Pinned live by `verify_ui.py` `date-filter` scenario + the codec battery. This is
+the only non-numeric column with a bespoke filter — `Rok výroby` is a bounded number
+and stays in the numeric `RangeFilter`/heat-threshold family (deliberately no date
+picker, no slider on a removal date — a date has no good→bad colour axis).
 
 ### Archiv is a toggle backed by a grid external filter
 

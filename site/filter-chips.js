@@ -28,9 +28,19 @@
     return vals.slice(0, 3).join(", ") + " +" + (vals.length - 3);
   }
 
+  // Date models carry the value in dateFrom/dateTo (not filter/filterTo), as
+  // "YYYY-MM-DD HH:mm:ss" — show the day only. Reading .filter here gave "undefined".
+  function dayOnly(v) { return v == null ? "" : String(v).slice(0, 10); }
+
   function summarizeCondition(cond) {
     if (!cond) return "";
     if (cond.filterType === "set") return summarizeSet(cond);
+    if (cond.filterType === "date") {
+      if (cond.type === "blank" || cond.type === "notBlank") return CONDITION_LABELS[cond.type] || cond.type;
+      if (cond.type === "inRange") return "od " + dayOnly(cond.dateFrom) + " do " + dayOnly(cond.dateTo);
+      var opd = CONDITION_LABELS[cond.type] || cond.type || "";
+      return (opd + " " + dayOnly(cond.dateFrom)).trim();
+    }
     if (cond.type === "inRange") {
       return "od " + cond.filter + " do " + cond.filterTo;
     }

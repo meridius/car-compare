@@ -513,6 +513,57 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { label: "Nedostupné", values: ["Zamluvené", "Prodané", "Odstraněno"] },
   ];
 
+  // Date columns hold ISO "YYYY-MM-DD" strings (stringly payload — see gotchas).
+  // agDateColumnFilter needs a comparator to compare those against the entry Date.
+  // Parse the parts manually into a LOCAL-midnight Date: new Date("2026-07-11")
+  // would parse as UTC midnight and shift a day in negative-offset zones, breaking
+  // equality. Blank cells sort before any date (returned -1) → excluded by after/range.
+  //
+  // browserDatePicker: false is REQUIRED, not just omittable — AG defaults it to
+  // true whenever the browser supports <input type=date>, and that native input
+  // renders in the browser's locale (dd.mm.yyyy / mm/dd/yyyy — never the ISO the
+  // cells show) with an untranslatable "Clear" chrome button. AG's own text input
+  // defaults to the yyyy-mm-dd format, matching the cells exactly, and its only
+  // clear control is the Czech "Vymazat" reset button below.
+  // Digit-mask the date filter's entry field(s): AG's own agDateColumnFilter text
+  // input (browserDatePicker off) already shows the yyyy-mm-dd placeholder we want,
+  // but accepts any text. This capture-phase listener strips non-digits and
+  // auto-inserts the two dashes as the user types, BEFORE AG's own input handler
+  // (target phase) reads the value — so AG only ever parses a clean yyyy-mm-dd.
+  // Scoped to `.ag-date-filter` inputs (only the "Odstraněno dne" column has one);
+  // delegated on document so it survives the filter popup being re-created.
+  function maskDateEntry(el) {
+    var digits = el.value.replace(/\D/g, "").slice(0, 8);
+    var out = digits.slice(0, 4);
+    if (digits.length > 4) out += "-" + digits.slice(4, 6);
+    if (digits.length > 6) out += "-" + digits.slice(6, 8);
+    return out;
+  }
+  document.addEventListener("input", function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== "INPUT" || !el.closest || !el.closest(".ag-date-filter")) return;
+    var masked = maskDateEntry(el);
+    if (el.value !== masked) el.value = masked;
+  }, true);
+
+  var DATE_FILTER_PARAMS = {
+    browserDatePicker: false,
+    buttons: ["reset"],
+    // AG's inRange defaults to EXCLUSIVE bounds (inRangeInclusive:false → strict
+    // </>). With day-granular dates that makes a range like [08-07, 09-07] match
+    // nothing — both endpoints excluded, nothing strictly between. Inclusive is
+    // what a user means by "between these two dates".
+    inRangeInclusive: true,
+    comparator: function (filterDate, cellValue) {
+      if (!cellValue) return -1;
+      var p = String(cellValue).split("-");
+      if (p.length !== 3) return -1;
+      var cell = new Date(+p[0], +p[1] - 1, +p[2]);
+      var d = cell.getTime() - filterDate.getTime();
+      return d < 0 ? -1 : d > 0 ? 1 : 0;
+    },
+  };
+
   var COL_CONFIG = [
     { field: "Stav", filter: "agSetColumnFilter", w: 110, pinned: "left", stav: true, groups: STAV_GROUPS, tip: "Dostupnost inzerátu: Dostupný / Zamluvené / Chystá se / Prodané / Odstraněno" },
     { field: "Značka", filter: "agSetColumnFilter", w: 110, pinned: "left", align: "left" },
@@ -521,7 +572,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     // dne", which predates it here) so it renders immediately after the pinned
     // Značka/Model pair, with nothing in between — the "right after Model" spot.
     { field: "Verze", filter: "agSetColumnFilter", w: 110, align: "left" },
-    { field: "Odstraněno dne", filter: "agTextColumnFilter", w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
+    { field: "Odstraněno dne", filter: "agDateColumnFilter", filterParams: DATE_FILTER_PARAMS, w: 100, hdr: "Odstraněno\ndne", tip: "Datum, kdy inzerát zmizel ze zdroje. Odstraněné řádky starší 60 dnů se z živých dat vyřazují — plná historie zůstává v měsíčních snapshot release." },
     { field: "Typ", filter: "agSetColumnFilter", w: 80 },
     { field: "Palivo", filter: "agSetColumnFilter", w: 100 },
     { field: "Cena (Kč)", filter: "agNumberColumnFilter", w: 120, num: true, hi: false, align: "right", tip: "Barva buňky: zelená = nižší cena, červená = vyšší." },
@@ -735,7 +786,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         field: cfg.field,
         headerName: cfg.hdr || makeHeaderName(cfg.field),
         filter: cfg.num ? RangeFilter : (cfg.filter === "agSetColumnFilter" ? SetFilter : cfg.filter),
-        filterParams: cfg.groups ? { groups: cfg.groups } : undefined,
+        filterParams: cfg.filterParams || (cfg.groups ? { groups: cfg.groups } : undefined),
         width: cfg.w,
       };
 
@@ -1294,6 +1345,8 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         equals: "Rovná se", notEqual: "Nerovná se",
         lessThan: "Menší než", lessThanOrEqual: "Menší nebo rovno",
         greaterThan: "Větší než", greaterThanOrEqual: "Větší nebo rovno",
+        // Date filters relabel lessThan/greaterThan as before/after (own keys).
+        before: "Před", after: "Po",
         inRange: "V rozsahu", inRangeStart: "od", inRangeEnd: "do",
         contains: "Obsahuje", notContains: "Neobsahuje",
         startsWith: "Začíná na", endsWith: "Končí na",

@@ -30,8 +30,15 @@
   // op-code ⇆ AG Grid filter `type` (1 char each, kept distinct across text/number)
   var TXT_OP = { contains: "c", notContains: "C", equals: "e", notEqual: "E", startsWith: "s", endsWith: "d", blank: "b", notBlank: "B" };
   var NUM_OP = { equals: "e", notEqual: "E", greaterThan: "g", greaterThanOrEqual: "G", lessThan: "l", lessThanOrEqual: "L", inRange: "r", blank: "b", notBlank: "B" };
+  // agDateColumnFilter ops (no greaterThanOrEqual/lessThanOrEqual by default).
+  var DATE_OP = { equals: "e", notEqual: "E", greaterThan: "g", lessThan: "l", inRange: "r", blank: "b", notBlank: "B" };
   function invert(m) { var o = {}; for (var k in m) o[m[k]] = k; return o; }
-  var TXT_OP_REV = invert(TXT_OP), NUM_OP_REV = invert(NUM_OP);
+  var TXT_OP_REV = invert(TXT_OP), NUM_OP_REV = invert(NUM_OP), DATE_OP_REV = invert(DATE_OP);
+
+  // AG date models carry "YYYY-MM-DD HH:mm:ss"; date-only filters are always
+  // midnight, so drop the redundant time in the URL and restore it on decode.
+  function dayOnly(v) { return v == null ? "" : String(v).slice(0, 10); }
+  function restoreTime(v) { return /^\d{4}-\d{2}-\d{2}$/.test(v) ? v + " 00:00:00" : v; }
 
   function encSimpleCond(c) {
     if (c.filterType === "number") {
@@ -40,6 +47,15 @@
       body += c.filter != null ? enc(c.filter) : "";
       if (c.type === "inRange") body += "-" + (c.filterTo != null ? enc(c.filterTo) : "");
       return body;
+    }
+    if (c.filterType === "date") {
+      // dateFrom/dateTo are "YYYY-MM-DD HH:mm:ss" strings; enc() escapes the space
+      // and colons, so raw "-" stays the inRange separator (mirrors number inRange).
+      var d = "D" + (DATE_OP[c.type] || "e");
+      if (c.type === "blank" || c.type === "notBlank") return d;
+      d += c.dateFrom != null ? enc(dayOnly(c.dateFrom)) : "";
+      if (c.type === "inRange") d += "-" + (c.dateTo != null ? enc(dayOnly(c.dateTo)) : "");
+      return d;
     }
     var t = "t" + (TXT_OP[c.type] || "c");
     if (c.type === "blank" || c.type === "notBlank") return t;
@@ -60,6 +76,22 @@
         cond.filterTo = b === "" ? null : parseFloat(dec(b));
       } else {
         cond.filter = rest === "" ? null : parseFloat(dec(rest));
+      }
+      return cond;
+    }
+    if (kind === "D") {
+      op = DATE_OP_REV[body[1]] || "equals";
+      cond = { filterType: "date", type: op };
+      if (op === "blank" || op === "notBlank") return cond;
+      if (op === "inRange") {
+        var di = rest.indexOf("-"); // '-' escaped inside values → raw '-' is the range sep
+        var a = di < 0 ? rest : rest.slice(0, di);
+        var b = di < 0 ? "" : rest.slice(di + 1);
+        cond.dateFrom = a === "" ? null : restoreTime(dec(a));
+        cond.dateTo = b === "" ? null : restoreTime(dec(b));
+      } else {
+        cond.dateFrom = rest === "" ? null : restoreTime(dec(rest));
+        cond.dateTo = null;
       }
       return cond;
     }
