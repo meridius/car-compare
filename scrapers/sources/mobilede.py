@@ -81,6 +81,77 @@ _CATEGORY_MAP = {
 
 _NUM_RE = re.compile(r'\d[\d.]*')
 
+# "Andere" (German "Other") is mobile.de's junk model bucket for cars its
+# taxonomy doesn't index — like sauto's "Ostatní". The real name hides in
+# subTitle (known make) or shortTitle (make itself "Andere"). Never emit an
+# "X Andere" reference row — see docs/gotchas.md → mobile.de → "Andere".
+_ANDERE = "Andere"
+
+# Known rebadges the generic first-token heuristic would get wrong.
+_ANDERE_RECOVERY = [
+    # Elaris Beo is the rebadged Skywell ET5 — dealers list the donor name.
+    (lambda make, text: make == "Elaris"
+     and re.search(r"\b(?:skywell|et5)\b", text, re.IGNORECASE),
+     "Elaris Beo"),
+]
+
+# subTitle/shortTitle openers that are never a model name (fuel / body /
+# German marketing filler seen in live probes).
+_ANDERE_JUNK_TOKENS = {
+    "andere", "other", "elektro", "electric", "benzin", "diesel", "hybrid",
+    "bev", "phev", "suv", "van", "kombi", "limousine", "coupe", "neu", "nur",
+    "top", "original", "automatik", "aus", "der", "die", "das", "mit",
+    "inkl", "ab",
+}
+_ANDERE_TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9.'’\-]*$")
+# bare 1-2 digit numbers, decimals and years are engine/spec tokens
+_ANDERE_NUMERIC_RE = re.compile(r"^(?:\d{1,2}|\d+[.,]\d+|(?:19|20)\d\d)$")
+
+
+def _andere_token_ok(tok):
+    return (len(tok) >= 2
+            and bool(_ANDERE_TOKEN_RE.match(tok))
+            and not _ANDERE_NUMERIC_RE.match(tok)
+            and tok.lower() not in _ANDERE_JUNK_TOKENS)
+
+
+def _recover_andere_model(make, model, short_title, sub):
+    """Real "Make Model" behind mobile.de's Andere bucket, or ("", sub).
+
+    Returns (recovered_name, sub_rest); sub_rest has the consumed model token
+    stripped so downstream extraction/Extra don't duplicate it. Unrecoverable
+    or non-Andere rows return ("", sub) unchanged — mirror of sauto's
+    _recover_ostatni_model, with a generic title-token fallback on top of the
+    curated list because Andere spans ~20 open-ended clusters.
+    """
+    if _ANDERE not in (make, model):
+        return "", sub
+    for predicate, name in _ANDERE_RECOVERY:
+        if predicate(make, f"{short_title} {sub}"):
+            return name, sub
+    if make == _ANDERE:
+        # real "Make Model" leads the shortTitle after the "Andere " prefix
+        text = re.split(r"[/*|,(+]", short_title or "", 1)[0].strip()
+        toks = text.split()
+        if toks and toks[0] == _ANDERE:
+            toks = toks[1:]
+        if len(toks) >= 2 and all(_andere_token_ok(t) for t in toks[:2]):
+            # "CITROEN" → "Citroen" so BRAND_MAP can restore diacritics;
+            # short all-caps brands (BMW, GWM, JAC) stay untouched
+            return " ".join(t.title() if t.isalpha() and t.isupper()
+                            and len(t) > 3 else t for t in toks[:2]), sub
+        return "", sub
+    # known make, model "Andere": subTitle opens with the real model token
+    text = re.split(r"[/*|,(+]", sub or "", 1)[0].strip()
+    toks = text.split()
+    if not toks or not _andere_token_ok(toks[0]):
+        return "", sub
+    tok = toks[0]
+    if tok.isalpha() and tok.isupper() and len(tok) > 2:
+        tok = tok.title()  # "PIO" → "Pio"; "JS8"/"ZS" stay as-is
+    rest = re.sub(re.escape(toks[0]), "", sub, count=1).strip(" -/")
+    return f"{make} {tok}", rest
+
 
 def _parse_number(text):
     """First integer in a German attr string: '29.000 km' -> 29000, '110 kW (150 PS)' -> 110."""
@@ -123,8 +194,10 @@ def _build_row(item, rate):
 
     make = (item.get("make") or {}).get("localized", "")
     model = (item.get("model") or {}).get("localized", "")
-    model_base = normalize_model(f"{make} {model}".strip())
     sub = item.get("subTitle") or ""
+    recovered, sub = _recover_andere_model(
+        make, model, item.get("shortTitle") or "", sub)
+    model_base = normalize_model(recovered or f"{make} {model}".strip())
     title_text = f"{item.get('shortTitle') or ''} {sub}".strip()
     body = _CATEGORY_MAP.get(attr.get("c", ""), "") or extract_body_type(title_text)
     # Country goes to its own "Země" column now; Extra keeps only the city.

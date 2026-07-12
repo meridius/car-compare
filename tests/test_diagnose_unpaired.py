@@ -15,6 +15,7 @@ from diagnose_unpaired import (
     derive_candidate,
     simulate_candidate,
     merge_research,
+    is_junk_bucket,
     _format_csv_row,
     REF_COLUMNS,
 )
@@ -128,6 +129,54 @@ class DeriveCandidateTest(unittest.TestCase):
         cand = derive_candidate(cluster, brand="Hyundai", model_base="Santa Fe")
         self.assertEqual(cand["Typ motoru"], "")
 
+    def test_anchor_subclusters_mixed_engine_family(self):
+        """A family cluster mixes variants (Touran 1.5 TSI + 2.0 TDI); with
+        an anchor the candidate must describe the diagnosed listing's
+        variant, not a cross-variant mongrel."""
+        cluster = pd.DataFrame(
+            [state_row(vol="1.5", etype="TSI", fuel="Benzín",
+                       link=f"https://example.com/tsi{i}") for i in range(4)]
+            + [state_row(vol="2.0", etype="TDI", fuel="Nafta",
+                         link=f"https://example.com/tdi{i}") for i in range(2)])
+        cand = derive_candidate(cluster, brand="Hyundai", model_base="Santa Fe",
+                                anchor={"engine_vol": "2.0",
+                                        "engine_type": "TDI"})
+        self.assertEqual(cand["Objem motoru"], "2.0")
+        self.assertEqual(cand["Typ motoru"], "TDI")
+        self.assertEqual(cand["Palivo"], "Nafta")
+        self.assertEqual(cand["Jednoznačná varianta vozu"],
+                         "Hyundai Santa Fe 2.0 TDI")
+
+    def test_anchor_fills_engine_when_cluster_has_no_consensus(self):
+        cluster = pd.DataFrame([
+            state_row(vol="", etype="", link="https://example.com/1"),
+            state_row(vol="", etype="", link="https://example.com/2"),
+        ])
+        cand = derive_candidate(cluster, brand="Hyundai", model_base="Santa Fe",
+                                anchor={"engine_vol": "2.0",
+                                        "engine_type": "TDI"})
+        self.assertEqual(cand["Objem motoru"], "2.0")
+        self.assertEqual(cand["Typ motoru"], "TDI")
+
+    def test_fabricated_hybrid_minority_blanked(self):
+        """mobile.de fabricated-hybrid gotcha: a minority of mislabeled
+        PHEV rows must not stamp the whole candidate hybrid — blanks are a
+        real 'not a hybrid' vote."""
+        cluster = pd.DataFrame(
+            [state_row(link=f"https://example.com/{i}") for i in range(5)]
+            + [state_row(hybrid="PHEV", link=f"https://example.com/p{i}")
+               for i in range(2)])
+        cand = derive_candidate(cluster, brand="Hyundai", model_base="Santa Fe")
+        self.assertEqual(cand["Hybrid typ"], "")
+        self.assertNotIn("PHEV", cand["Jednoznačná varianta vozu"])
+
+    def test_genuine_hybrid_majority_kept(self):
+        cluster = pd.DataFrame(
+            [state_row(hybrid="HEV", vol="1.6", etype="T-GDI", fuel="Benzín",
+                       link=f"https://example.com/{i}") for i in range(4)])
+        cand = derive_candidate(cluster, brand="Hyundai", model_base="Santa Fe")
+        self.assertEqual(cand["Hybrid typ"], "HEV")
+
 
 class SimulateTest(unittest.TestCase):
     def test_new_row_flips_cluster_to_ano(self):
@@ -164,6 +213,21 @@ class MergeResearchTest(unittest.TestCase):
         self.assertEqual(row[REF_COLUMNS.index("Spotřeba (l/100 km)")], "6,9")
         self.assertEqual(row[REF_COLUMNS.index("Hlučnost (dB)")], "67.1")
         self.assertEqual(len(row), len(REF_COLUMNS))
+
+
+class JunkBucketTest(unittest.TestCase):
+    """Marketplace junk buckets (Andere/Ostatní) must never become reference
+    rows — candidate/apply refuse them (docs/gotchas.md → mobile.de → Andere)."""
+
+    def test_junk_buckets_rejected(self):
+        self.assertTrue(is_junk_bucket({"Značka": "JAC", "Model": "Andere"}))
+        self.assertTrue(is_junk_bucket({"Značka": "Andere", "Model": "Andere"}))
+        self.assertTrue(is_junk_bucket({"Značka": "Kia", "Model": "Ostatní"}))
+        self.assertTrue(is_junk_bucket({"Značka": "Kia", "Model": "andere 1.5"}))
+
+    def test_real_models_pass(self):
+        self.assertFalse(is_junk_bucket({"Značka": "Hyundai", "Model": "Santa Fe"}))
+        self.assertFalse(is_junk_bucket({"Značka": "Škoda", "Model": "Octavia"}))
 
 
 if __name__ == "__main__":

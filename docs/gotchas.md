@@ -269,15 +269,34 @@ already in the rolling `data` release**, no fetch. Mechanics: `scrape` is gated
 scrape succeeded *or* was skipped (`always() && result != 'failure'/'cancelled'`) and
 only pulls the `state-*` artifacts when scrape actually ran.
 
-### "Andere" is mobile.de's junk model bucket (like sauto's "Ostatní")
+### "Andere" is mobile.de's junk model bucket — recovered from subTitle/shortTitle
 
 mobile.de returns `Andere` (German "Other") as the model for cars its taxonomy
-doesn't index — the scraped name becomes e.g. "JAC Andere", "ORA Andere", even
-"Andere Andere" (~117 EV listings across ~20 clusters, 2026-07). These are NOT
-missing reference models: never add an "X Andere" reference row (it would
-prefix-match every future unindexed car of that brand regardless of what it is).
-The real fix is adapter-side recovery from other attrs, mirroring sauto's
-`_recover_ostatni_model()` — TODO, not yet implemented for mobile.de.
+doesn't index — the scraped name would become e.g. "JAC Andere", "ORA Andere",
+even "Andere Andere" (~390 state rows across ~20 clusters, 2026-07). These are
+NOT missing reference models: never add an "X Andere" reference row (it would
+base-match every future unindexed car of that brand regardless of what it is) —
+`build/diagnose_unpaired.py` `candidate`/`apply` hard-refuse such candidates
+(`is_junk_bucket`), so the `ai-match-one.sh` loop can't waste an AI research
+call on one. The name is recovered adapter-side by `_recover_andere_model()`
+(mobilede.py), mirroring sauto's `_recover_ostatni_model()`, from two shapes
+probed live 2026-07-12 (48/53 recovered):
+
+- **known make, model "Andere"** → the real model is the *leading token* of
+  `subTitle` ("Tarraco *LED*…" → Seat Tarraco; "Crossland 1.2 …" → Opel
+  Crossland; "Cee'd SW Gold" → Kia Ceed via normalize_model).
+- **make "Andere"** ("Andere Andere") → the real "Make Model" leads
+  `shortTitle` after the "Andere " prefix ("Andere Ford Puma 1.0 …" →
+  Ford Puma; all-caps brands > 3 chars are title-cased so BRAND_MAP can
+  restore diacritics: "CITROEN C3" → Citroën C3).
+
+Junk openers (Elektro/Benzin/German filler — `_ANDERE_JUNK_TOKENS`), decimals,
+1-2-digit numbers, years and single-char tokens are rejected → the row keeps
+"Make Andere" (conservative, matches as `Ne`). A curated `_ANDERE_RECOVERY`
+list (like sauto's) overrides rebadges the heuristic can't know: Elaris Beo is
+the rebadged Skywell ET5 and dealers list the donor name. Rows already sitting
+in state heal on the next scrape (merge: new data wins by link); removed rows
+keep the junk name forever (merge carries forward, see merge gotcha).
 
 ### German "Hybrid" listings fabricate PHEV/HEV variants that never existed
 
@@ -756,6 +775,29 @@ an EV nameplate has one body). `join_electric_reference` carries it and
 **overwrites** (reference wins, unlike the fillna-only spec cols) on prefix
 match. `site/app.js` `bodyGroups` folds Liftback/Sportback into Hatchback to
 match. Invariants pinned in `tests/test_data_integrity.py::BodyTypeConsistencyTest`.
+
+### diagnose_unpaired candidate is anchored to the diagnosed listing
+
+`derive_candidate` majority-votes over the whole (brand, model_base) cluster —
+but a family cluster like (VW, Touran) mixes variants (1.5 TSI + 2.0 TDI), and
+an unanchored vote once derived "VW Touran TDI PHEV": engine volume blanked
+(no 0.6 consensus across variants) and `Hybrid typ` stamped PHEV by a
+*minority* of fabricated-hybrid mislabels, because `_mode_with_consensus`
+ignores blanks. Two fixes: `cmd_candidate` passes the diagnosed listing as
+`anchor` (vote runs only over engine-compatible rows; engine fields fall back
+to the anchor), and `Hybrid typ` uses `_mode_incl_blanks` (a blank is a real
+"not a hybrid" vote). Pinned in `tests/test_diagnose_unpaired.py`.
+
+### ai-match-one research runs the nested `claude -p` from a temp dir
+
+The research step's `claude -p` used to run inside the repo → the nested
+session loaded this project's CLAUDE.md + the user's session hooks and once
+spent its final message commenting on `git status` instead of returning the
+JSON. And the old `claude | python` pipeline sat in front of `tail`, so the
+parse failure exited 0 and looked like success. `cmd_research` now `cd`s to a
+`mktemp -d` (no repo context), hardens the prompt ("FINAL message must be
+nothing but the JSON"), retries once on unparsable output and fails loud with
+the raw-response path.
 
 ### grow-reference reads the payload — which no longer carries "Model auta"
 

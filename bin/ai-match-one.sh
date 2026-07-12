@@ -48,10 +48,17 @@ cmd_research() {  # [AI] — the single Opus call of the loop
   local cand="$OUTDIR/cand-$s.json" out="$OUTDIR/research-$s.json"
   [[ -f "$cand" ]] || { echo "chybí $cand — spusť nejdřív diagnose" >&2; exit 1; }
 
-  local prompt
+  # Embed only the candidate object — the wrapper's cluster_links can be
+  # thousands of URLs and once blew execve's argument-size limit.
+  local cand_row prompt
+  cand_row=$(python3 -c "
+import json
+d = json.load(open('$cand', encoding='utf-8'))
+print(json.dumps(d.get('candidate', d), ensure_ascii=False, indent=1))")
+
   prompt="Research the real EU-market car (model year 2021+) behind this candidate reference row derived from Czech/German marketplace listings:
 
-$(cat "$cand")
+$cand_row
 
 1. Confirm this factory configuration really ships in the EU 2021+ (exists true/false). Watch for scraper-fabricated hybrid variants that never existed.
 2. Fill display specs for the most common EU variant (note which) from official manufacturer material / ADAC / auto-data.net / Wikipedia:
@@ -59,28 +66,53 @@ $(cat "$cand")
 3. Self-verify consumption and trunk against a SECOND independent source; on >15-20% conflict return \"\" for that field. Never invent — \"\" when not found.
 
 Return ONLY this JSON object, numbers as dot-decimal strings, no prose:
-{\"exists\": true, \"variant_note\": \"\", \"generace\": \"\", \"seats\": \"\", \"consumption_l100km\": \"\", \"trunk_l\": \"\", \"noise_db\": \"\", \"cd\": \"\", \"cd_source\": \"\", \"confidence\": \"high|medium|low\", \"sources\": []}"
+{\"exists\": true, \"variant_note\": \"\", \"generace\": \"\", \"seats\": \"\", \"consumption_l100km\": \"\", \"trunk_l\": \"\", \"noise_db\": \"\", \"cd\": \"\", \"cd_source\": \"\", \"confidence\": \"high|medium|low\", \"sources\": []}
+
+IMPORTANT: your FINAL message must be nothing but that JSON object — no prose,
+no commentary, no remarks about files or the working directory."
 
   if [[ "${AI_DRY:-}" == "1" ]]; then
     echo "$prompt"
     return
   fi
 
-  # [AI] Opus + web tools; output is the JSON contract diagnose_unpaired.py apply expects
-  claude -p "$prompt" \
-    --model opus \
-    --permission-mode auto \
-    --allowedTools "WebSearch,WebFetch" \
-    | python3 -c "
+  # [AI] Opus + web tools; output is the JSON contract diagnose_unpaired.py
+  # apply expects. Runs from a neutral temp dir so the nested claude doesn't
+  # load this repo's CLAUDE.md/hooks and pollute its final message (a run that
+  # saw the repo replied about git status instead of the JSON, and the old
+  # `claude | python` pipeline masked the parse failure behind tail's exit 0).
+  # One retry on unparsable output, then fail loud.
+  local abs_out tmpdir raw attempt
+  abs_out="$PWD/$out"
+  tmpdir=$(mktemp -d)
+  raw="$tmpdir/raw.txt"
+  for attempt in 1 2; do
+    (cd "$tmpdir" && claude -p "$prompt" \
+      --model opus \
+      --permission-mode auto \
+      --allowedTools "WebSearch,WebFetch") > "$raw" || true
+    if python3 - "$raw" "$abs_out" <<'PY'
 import json, sys
-raw = sys.stdin.read()
+raw = open(sys.argv[1], encoding="utf-8").read()
 start, end = raw.find('{'), raw.rfind('}')
-if start < 0 or end < 0:
-    sys.exit('žádný JSON v odpovědi:\n' + raw)
-data = json.loads(raw[start:end + 1])
-json.dump(data, open('$out', 'w', encoding='utf-8'), ensure_ascii=False, indent=2)
-print('výzkum zapsán: $out (confidence: ' + str(data.get('confidence')) + ')')
-"
+if start < 0 or end <= start:
+    sys.exit(1)
+try:
+    data = json.loads(raw[start:end + 1])
+except ValueError:
+    sys.exit(1)
+json.dump(data, open(sys.argv[2], "w", encoding="utf-8"),
+          ensure_ascii=False, indent=2)
+print("výzkum zapsán: %s (confidence: %s)" % (sys.argv[2], data.get("confidence")))
+PY
+    then
+      rm -rf "$tmpdir"
+      return 0
+    fi
+    echo "pokus $attempt: odpověď bez parsovatelného JSON, zkouším znovu" >&2
+  done
+  echo "výzkum selhal — žádný JSON v odpovědi (surová odpověď: $raw)" >&2
+  return 1
 }
 
 cmd_apply() {  # no AI

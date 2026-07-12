@@ -173,6 +173,128 @@ class BuildRowTest(unittest.TestCase):
         self.assertEqual(row["Výkon (kW)"], 0)
 
 
+class AndereRecoveryTest(unittest.TestCase):
+    """mobile.de "Andere" junk-model bucket → real name recovered from
+    subTitle / shortTitle (fixtures captured from live probes 2026-07-12).
+    Never emit an "X Andere" reference row — see docs/gotchas.md."""
+
+    def rec(self, make, model, short, sub):
+        return mobilede._recover_andere_model(make, model, short, sub)[0]
+
+    def test_known_make_model_from_subtitle_first_token(self):
+        self.assertEqual(
+            self.rec("JAC", "Andere", "JAC Andere",
+                     "JS8 PRO UNFALL NUR 157 KM TÜV 11.2028 7 SITZE"),
+            "JAC JS8")
+        self.assertEqual(
+            self.rec("Seat", "Andere", "Seat Andere",
+                     "Tarraco *LED*Virtual*Erstbesitz"),
+            "Seat Tarraco")
+        self.assertEqual(
+            self.rec("Opel", "Andere", "Opel Andere",
+                     "Crossland 1.2 Edition s&s 83cv"),
+            "Opel Crossland")
+        self.assertEqual(
+            self.rec("Smart", "Andere", "Smart Andere", "ForTwo Coupé Passion"),
+            "Smart ForTwo")
+
+    def test_all_caps_model_token_titlecased(self):
+        self.assertEqual(
+            self.rec("Elaris", "Andere", "Elaris Andere", "PIO Other BEV"),
+            "Elaris Pio")
+
+    def test_make_andere_recovered_from_short_title(self):
+        self.assertEqual(
+            self.rec("Andere", "Andere",
+                     "Andere BMW iX xdrive40 Edition Signature", ""),
+            "BMW iX")
+        self.assertEqual(
+            self.rec("Andere", "Andere",
+                     "Andere Elaris Beo / Vollelektrisch / sofort Verfügbar", ""),
+            "Elaris Beo")
+
+    def test_make_andere_all_caps_brand_titlecased(self):
+        # "CITROEN" must fold to "Citroen" so BRAND_MAP can restore "Citroën";
+        # short all-caps brands (BMW, GWM) stay untouched.
+        self.assertEqual(
+            self.rec("Andere", "Andere",
+                     "Andere CITROEN C3 PureTech 83 S&S You", ""),
+            "Citroen C3")
+        self.assertEqual(
+            self.rec("Andere", "Andere", "Andere BMW iX xdrive40", ""),
+            "BMW iX")
+
+    def test_plus_separated_subtitle(self):
+        self.assertEqual(
+            self.rec("Elaris", "Andere", "Elaris Andere",
+                     "Pio+AS-Reifen+Garantie+Guter Zustand+RFK+Ladekab"),
+            "Elaris Pio")
+
+    def test_curated_elaris_skywell_alias(self):
+        # Elaris Beo is the rebadged Skywell ET5 — dealers list the donor name.
+        self.assertEqual(
+            self.rec("Elaris", "Andere", "Elaris Andere",
+                     "Skywell ET5/72KW Batterie/ nur 3.950KM/GARANTIE"),
+            "Elaris Beo")
+
+    def test_junk_or_empty_subtitle_unrecoverable(self):
+        self.assertEqual(
+            self.rec("Microcar", "Andere", "Microcar Andere",
+                     "Elektro 25km/h ab 15 Jahren/ ab 99€ Monatlich"),
+            "")
+        self.assertEqual(
+            self.rec("BAW", "Andere", "BAW Andere",
+                     "Aus dem BAW , der neue FAW T 77 Pro"),
+            "")
+        self.assertEqual(self.rec("GWM", "Andere", "GWM Andere", ""), "")
+        # decimals / bare short numbers are engine tokens, not model names
+        self.assertEqual(
+            self.rec("Kia", "Andere", "Kia Andere", "1.6 CRDi Vision"), "")
+        # single-char opener is too ambiguous to be a model name
+        self.assertEqual(
+            self.rec("DFSK", "Andere", "DFSK Andere",
+                     "C 35 * Klimaanlage  - 11.000KM *"),
+            "")
+
+    def test_recovered_token_stripped_from_subtitle(self):
+        name, rest = mobilede._recover_andere_model(
+            "Seat", "Andere", "Seat Andere", "Tarraco *LED*Virtual*")
+        self.assertEqual(name, "Seat Tarraco")
+        self.assertNotIn("Tarraco", rest)
+        self.assertIn("LED", rest)
+
+    def test_non_andere_untouched(self):
+        name, rest = mobilede._recover_andere_model(
+            "Dacia", "Spring", "Dacia Spring", "Comfort Plus")
+        self.assertEqual(name, "")
+        self.assertEqual(rest, "Comfort Plus")
+
+    def test_build_row_recovers_ev_andere(self):
+        item = {**EV_ITEM,
+                "make": {"id": "1", "localized": "Elaris"},
+                "model": {"id": "2", "localized": "Andere"},
+                "shortTitle": "Elaris Andere", "subTitle": "PIO Other BEV"}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Model auta"], "Elaris Pio")
+
+    def test_build_row_recovery_feeds_normalize(self):
+        # "Cee'd" recovered from subTitle must still hit MODEL_CLEANUP_PATTERNS
+        item = {**ICE_ITEM,
+                "make": {"id": "1", "localized": "Kia"},
+                "model": {"id": "2", "localized": "Andere"},
+                "shortTitle": "Kia Andere", "subTitle": "Cee'd SW Gold"}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Model auta"], "Kia Ceed")
+
+    def test_build_row_unrecoverable_keeps_andere(self):
+        item = {**EV_ITEM,
+                "make": {"id": "1", "localized": "GWM"},
+                "model": {"id": "2", "localized": "Andere"},
+                "shortTitle": "GWM Andere", "subTitle": ""}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Model auta"], "GWM Andere")
+
+
 class FetchBandedTest(unittest.TestCase):
     """Price-band splitter: split while >= RESULT_CAP, fetch when under."""
 

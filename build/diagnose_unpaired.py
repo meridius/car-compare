@@ -17,6 +17,7 @@ normalize + parse + classify path build_data.rematch_combustion uses.
 import argparse
 import json
 import os
+import re
 import sys
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -49,6 +50,18 @@ REF_COLUMNS = [
 # A field must reach this share of the cluster's non-blank values to be
 # trusted in the candidate row; below it the extraction is noise → blank.
 CONSENSUS_MIN = 0.6
+
+# Marketplace junk-model buckets (mobile.de "Andere", sauto "Ostatní") must
+# never become reference rows — such a row would base-match every future
+# unindexed car of that brand. The fix is adapter-side name recovery, not a
+# reference entry. See docs/gotchas.md → mobile.de → "Andere".
+_JUNK_BUCKET_RE = re.compile(r"\b(?:Andere|Ostatní)\b", re.IGNORECASE)
+
+
+def is_junk_bucket(cand):
+    """True when the candidate names a junk bucket instead of a real model."""
+    return bool(_JUNK_BUCKET_RE.search(
+        f"{cand.get('Značka', '')} {cand.get('Model', '')}"))
 
 
 def _cell(row, col):
@@ -133,7 +146,22 @@ def _mode_with_consensus(values):
     return ""
 
 
-def derive_candidate(cluster, brand, model_base, auth_list=None):
+def _mode_incl_blanks(values):
+    """Like _mode_with_consensus, but blanks count against the winner — used
+    for Hybrid typ, where an absent flag is a real 'not a hybrid' vote and a
+    minority of fabricated-hybrid mislabels (see mobile.de gotcha) must not
+    stamp the whole candidate."""
+    vals = list(values)
+    nonblank = [v for v in vals if v]
+    if not nonblank:
+        return ""
+    top = pd.Series(nonblank).value_counts()
+    if top.iloc[0] / len(vals) >= CONSENSUS_MIN:
+        return top.index[0]
+    return ""
+
+
+def derive_candidate(cluster, brand, model_base, auth_list=None, anchor=None):
     """Derive one structured ice_specs.csv candidate row from a listing cluster.
 
     Matching feature columns come from majority vote over the cluster; display
@@ -143,21 +171,42 @@ def derive_candidate(cluster, brand, model_base, auth_list=None):
     existing candidates' model_base (mode) — the parsed listing base can carry
     junk tokens inherited from the scrape-time best-guess rewrite of
     "Model auta" (e.g. "Santa Fe Hybrid" on a diesel row).
+
+    anchor (the diagnosed listing's scraped features) narrows the vote to
+    rows engine-compatible with that listing: a family cluster like
+    (VW, Touran) mixes 1.5 TSI and 2.0 TDI variants, and a cross-variant
+    majority vote derives a mongrel row for a car that never existed. Engine
+    fields fall back to the anchor when the (sub)cluster has no consensus.
     """
     if auth_list:
         fam = find_candidates({"brand": brand, "model_base": model_base}, auth_list)
         if fam:
             model_base = pd.Series([a["model_base"] for a in fam]).mode()[0]
+    anchor = anchor or {}
+    _ENGINE_KEYS = (("Objem motoru", "engine_vol"), ("Typ motoru", "engine_type"))
+    if anchor:
+        def _compatible(r):
+            for col, key in _ENGINE_KEYS:
+                want = (anchor.get(key) or "").lower()
+                have = _cell(r, col).lower()
+                if want and have and have != want:
+                    return False
+            return True
+        keep = [i for i, r in cluster.iterrows() if _compatible(r)]
+        if keep:
+            cluster = cluster.loc[keep]
     feats = {
         "Karoserie": _mode_with_consensus(
             _canonicalize_body(_cell(r, "Karoserie")) for _, r in cluster.iterrows()),
         "Objem motoru": _mode_with_consensus(
-            _cell(r, "Objem motoru") for _, r in cluster.iterrows()),
+            _cell(r, "Objem motoru") for _, r in cluster.iterrows())
+        or anchor.get("engine_vol", ""),
         "Typ motoru": _mode_with_consensus(
-            _cell(r, "Typ motoru") for _, r in cluster.iterrows()),
+            _cell(r, "Typ motoru") for _, r in cluster.iterrows())
+        or anchor.get("engine_type", ""),
         "Palivo": _mode_with_consensus(
             _cell(r, "Palivo") for _, r in cluster.iterrows()),
-        "Hybrid typ": _mode_with_consensus(
+        "Hybrid typ": _mode_incl_blanks(
             _cell(r, "Hybrid typ") for _, r in cluster.iterrows()),
     }
     name_parts = [brand, model_base, feats["Objem motoru"], feats["Typ motoru"],
@@ -284,7 +333,12 @@ def cmd_candidate(args):
     scraped = row_to_scraped(row)
     cluster = _cluster_for(ice, scraped, auth_list)
     print(f"cluster ({scraped['brand']}, {scraped['model_base']}): {len(cluster)} ne-Ano řádků")
-    cand = derive_candidate(cluster, scraped["brand"], scraped["model_base"], auth_list)
+    cand = derive_candidate(cluster, scraped["brand"], scraped["model_base"],
+                            auth_list, anchor=scraped)
+    if is_junk_bucket(cand):
+        sys.exit("junk-model bucket (Andere/Ostatní) — referenční řádek nikdy "
+                 "nepřidávat; oprava patří do adapteru (recovery jména), viz "
+                 "docs/gotchas.md → mobile.de → Andere")
     before, after = simulate_candidate(cluster, auth_list, cand)
     print(f"kandidátní řádek: {json.dumps(cand, ensure_ascii=False, indent=2)}")
     print(f"simulace: {before} → {after}")
@@ -359,6 +413,9 @@ def cmd_apply(args):
             sys.exit("research says exists=false — neaplikuji (viz mobile.de "
                      "fabricated-hybrids gotcha)")
         cand = merge_research(cand, research)
+    if is_junk_bucket(cand):
+        sys.exit("junk-model bucket (Andere/Ostatní) — referenční řádek nikdy "
+                 "nepřidávat, viz docs/gotchas.md → mobile.de → Andere")
     existing = {a["entry"] for a in load_authoritative_list(AUTH_CSV)}
     pk = cand["Jednoznačná varianta vozu"]
     if pk in existing:
