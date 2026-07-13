@@ -6,6 +6,17 @@
   var COL_STATE_KEY = "refCompareColState";
   var THRESHOLD_KEY = "refCompareThresholds";   // isolated: reference has its own numeric columns
   var HEATMODE_KEY = "carCompareHeatMode";       // shared with index (global appearance pref)
+  var PRICE_VIEW_KEY = "refPriceView";           // "compact" | "boxplot" | "histogram"
+
+  // "Cena na trhu" column: the price band of a reference model's paired listings,
+  // rendered three ways (user toggle). Axis is SHARED with build_data.py
+  // (PRICE_HIST_MIN/MAX/BINS) so the histogram counts map onto the same ruler every
+  // row uses — cross-row comparison is the whole point. Each view has ONE uniform
+  // row height (set via setGridOption on toggle), so all grid rows stay equal-height.
+  var PRICE_AXIS_MIN = 100000, PRICE_AXIS_MAX = 800000, PRICE_HIST_BINS = 14;
+  var PRICE_ROW_HEIGHTS = { compact: 25, boxplot: 44, histogram: 58 };
+  var priceView = "compact";
+  var maxNabidek = 1;   // busiest reference model — scales the Nabídek count bar
 
   function applyTheme(theme) {
     document.documentElement.setAttribute("data-theme", theme);
@@ -534,7 +545,17 @@
       tooltipValueGetter: missingTooltipValueGetter,
       headerTooltip: "Počet chybějících klíčových údajů (najeďte myší na ikonu pro seznam)",
     },
-    { field: "Model auta", filter: "agTextColumnFilter", width: 280 },
+    { field: "Model auta", filter: "agTextColumnFilter", width: 260 },
+    {
+      field: "Nabídek", headerName: "Počet nabídek", filter: RangeFilter, width: 140, headerClass: "ag-header-cell-center",
+      cellClass: "rc-count-cell", cellRenderer: nabidekRenderer,
+      headerTooltip: "Počet inzerátů, které se aktuálně párují s tímto referenčním modelem (spárováno Ano / Nejisté). Klik na buňku otevře tyto inzeráty v tabulce.",
+    },
+    {
+      field: "Cena medián", headerName: "Cena na trhu", filter: RangeFilter, width: 340,
+      cellClass: "rc-price-cell", cellRenderer: priceCellRenderer,
+      headerTooltip: "Cenové rozpětí spárovaných inzerátů (tis. Kč) na společné ose 100–800.\nPohled přepneš v liště: Kompaktní / Box-plot / Histogram. Filtr a řazení jsou dle mediánu ceny.\nKlik na buňku → detail s histogramem a odkazy na nejlevnější/nejdražší inzerát.",
+    },
     { field: "Verze", filter: SetFilter, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "Verze/výbava dle referenčního záznamu. Prázdné, pokud pro tento model není určena." },
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
@@ -674,6 +695,11 @@
     "Výkon (kW)": 0,
     "Objem motoru": 1,
   };
+  // Absolute slider step (overrides the data-precision step). Prices are whole Kč, but
+  // a 1-Kč step on a ~750 000 range is meaningless — step by thousands, no decimals.
+  var STEP_VALUES = {
+    "Cena medián": 1000,
+  };
 
   // Decimal places a value carries, float-noise-tolerant, capped at 3.
   function _decimals(n) {
@@ -685,7 +711,9 @@
 
   function computeRanges(data) {
     colRanges = {};
-    var fields = Object.keys(NUMERIC_COLS);
+    // NUMERIC_COLS drives heat + drawer; RANGE_EXTRA (Nabídek, Cena medián) only needs
+    // a colRanges entry so its column-filter RangeFilter works (no heat, no drawer row).
+    var fields = Object.keys(NUMERIC_COLS).concat(RANGE_EXTRA);
     for (var i = 0; i < fields.length; i++) {
       var field = fields[i];
       var min = Infinity, max = -Infinity, dec = 0;
@@ -704,7 +732,8 @@
       // Slider step = the data's own precision (integer cols step by 1, etc.),
       // unless STEP_DECIMALS forces it.
       if (STEP_DECIMALS[field] != null) dec = STEP_DECIMALS[field];
-      if (min !== Infinity) colRanges[field] = { min: min, max: max, step: Math.pow(10, -dec) };
+      var step = STEP_VALUES[field] != null ? STEP_VALUES[field] : Math.pow(10, -dec);
+      if (min !== Infinity) colRanges[field] = { min: min, max: max, step: step };
     }
   }
 
@@ -824,6 +853,220 @@
     if (params.colDef && params.colDef.field === "Cd") return String(Math.round(n * 100));
     return n.toLocaleString("cs-CZ");
   }
+
+  // ── "Spárované vozy & rozpětí cen": Nabídek count + the three-view price cell ──
+  // Not heat-styled (price is not a good→bad axis), so these live outside NUMERIC_COLS
+  // and paint via custom cellRenderers. RANGE_EXTRA gives them a colRanges entry so the
+  // column-filter RangeFilter still works (filter by count / by median price).
+  var RANGE_EXTRA = ["Nabídek", "Cena medián"];
+
+  function pricePct(v) {
+    if (v == null) return 0;
+    return Math.max(0, Math.min(100, (v - PRICE_AXIS_MIN) / (PRICE_AXIS_MAX - PRICE_AXIS_MIN) * 100));
+  }
+  function fmtTis(v) {  // Kč → integer thousands ("603")
+    if (v == null || isNaN(v)) return "";
+    return Math.round(Number(v) / 1000).toLocaleString("cs-CZ");
+  }
+  function fmtKc(v) {
+    if (v == null || isNaN(v)) return "";
+    return Math.round(Number(v)).toLocaleString("cs-CZ") + " Kč";
+  }
+  // The popup embeds a model name into markup and scraped listing URLs into href;
+  // both are build-time data, but escape defensively (XSS): text → entity-escape,
+  // href → allow only http(s) and neutralise a quote break-out.
+  function escHtml(s) {
+    return String(s == null ? "" : s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function safeHref(u) {
+    u = String(u == null ? "" : u);
+    return /^https?:\/\//i.test(u) ? u.replace(/"/g, "%22") : "";
+  }
+
+  // Build an index.html URL filtered to this reference model's listings, using the
+  // index grid's own columns (Značka + Model, both mirror the payload split, plus the
+  // ICE engine cols). Reproduces the pairing closely; not variant-exact for ICE bodies
+  // that share an engine. EV matches by nameplate (Model contains). Encoded with the
+  // shared url-state codec so it decodes on index.html exactly like a shared link.
+  function indexFilterModel(d) {
+    var znacka = d["Značka"], model = d["Model"];
+    if (!znacka) return null;
+    var m = { "Značka": { filterType: "set", values: [znacka] } };
+    if (d["Typ"] === "Spalovací") {
+      if (model) m["Model"] = { filterType: "text", type: "equals", filter: model };
+      if (d["Objem motoru"] != null) m["Objem motoru"] = { filterType: "number", type: "equals", filter: d["Objem motoru"] };
+      if (d["Typ motoru"]) m["Typ motoru"] = { filterType: "set", values: [d["Typ motoru"]] };
+    } else if (model) {
+      m["Model"] = { filterType: "text", type: "contains", filter: model };
+    }
+    return m;
+  }
+  function indexUrlForRef(d) {
+    var m = indexFilterModel(d);
+    if (!m || !window.UrlState) return "index.html";
+    var f = window.UrlState.encFilters(m);
+    return f ? "index.html#f=" + f : "index.html";
+  }
+  function openIndexForRef(d) {
+    if (d && d["Nabídek"]) window.open(indexUrlForRef(d), "_blank", "noopener");
+  }
+
+  function nabidekRenderer(params) {
+    var n = params.value || 0;
+    var el = document.createElement("div");
+    el.className = "rc-count";
+    if (!n) { el.innerHTML = '<span class="rc-count-n rc-muted">0</span>'; return el; }
+    var w = Math.max(3, Math.min(100, n / maxNabidek * 100));
+    // Bar left, count hard-right — so a 4-digit count ("3 870") never overflows the
+    // cell's left edge (it did when the number led and the bar followed).
+    el.innerHTML =
+      '<span class="rc-count-bar"><span style="width:' + w.toFixed(1) + '%"></span></span>' +
+      '<span class="rc-count-n">' + n.toLocaleString("cs-CZ") + '</span>';
+    return el;
+  }
+
+  // A ">" cap when a model's max exceeds the shared axis (rare luxury outliers —
+  // 99.96% of listings are ≤750k). The bar clamps to the edge but the true value
+  // still shows in the label / popup, so the clamp is never a silent lie.
+  function overflowMark(hi) {
+    return hi > PRICE_AXIS_MAX ? '<span class="rc-of" title="Maximum přesahuje osu (viz štítek)">›</span>' : '';
+  }
+  function compactPriceHTML(lo, med, hi) {
+    var l = pricePct(lo), r = pricePct(hi), m = pricePct(med);
+    return '<div class="rc-rng-text"><span class="rc-ends">' + fmtTis(lo) + '</span> – ' +
+      '<span class="rc-med">' + fmtTis(med) + '</span> – <span class="rc-ends">' + fmtTis(hi) + '</span></div>' +
+      '<div class="rc-spark"><span class="rc-spark-fill" style="left:' + l + '%;width:' + (r - l) + '%"></span>' +
+      '<span class="rc-spark-m" style="left:' + m + '%"></span>' + overflowMark(hi) + '</div>';
+  }
+  function boxplotPriceHTML(lo, q1, med, q3, hi) {
+    var l = pricePct(lo), r = pricePct(hi), a = pricePct(q1), b = pricePct(q3), m = pricePct(med);
+    return '<div class="rc-band"><div class="rc-band-track"></div>' +
+      '<div class="rc-whisker" style="left:' + l + '%;width:' + (r - l) + '%"></div>' +
+      '<div class="rc-cap" style="left:' + l + '%"></div><div class="rc-cap" style="left:' + r + '%"></div>' +
+      '<div class="rc-box" style="left:' + a + '%;width:' + (b - a) + '%"></div>' +
+      '<div class="rc-median" style="left:' + m + '%"></div>' + overflowMark(hi) + '</div>' +
+      '<div class="rc-band-labels"><span>' + fmtTis(lo) + '</span><span class="rc-med">' + fmtTis(med) +
+      '</span><span>' + fmtTis(hi) + '</span></div>';
+  }
+  function barsHTML(hist, med) {
+    hist = hist || [];
+    var hm = 1;
+    for (var i = 0; i < hist.length; i++) if (hist[i] > hm) hm = hist[i];
+    var bars = "";
+    for (var j = 0; j < hist.length; j++) {
+      if (!hist[j]) bars += '<span class="rc-bar rc-bar-empty"></span>';
+      else bars += '<span class="rc-bar" style="height:' + Math.max(8, hist[j] / hm * 100).toFixed(0) + '%"></span>';
+    }
+    return '<div class="rc-bars">' + bars + '<span class="rc-hist-med" style="left:' + pricePct(med) + '%"></span></div>';
+  }
+  function histogramPriceHTML(hist, lo, med, hi) {
+    return '<div class="rc-hist">' + barsHTML(hist, med) + overflowMark(hi) + '</div>' +
+      '<div class="rc-band-labels"><span>' + fmtTis(lo) + '</span><span class="rc-med">' + fmtTis(med) +
+      '</span><span>' + fmtTis(hi) + '</span></div>';
+  }
+
+  function priceCellRenderer(params) {
+    var d = params.data || {};
+    var el = document.createElement("div");
+    el.className = "rc-price rc-price-" + priceView;
+    if (!d["Nabídek"]) { el.innerHTML = '<span class="rc-muted">—</span>'; return el; }
+    var lo = d["Cena min"], q1 = d["Cena p25"], med = d["Cena medián"], q3 = d["Cena p75"], hi = d["Cena max"];
+    if (priceView === "boxplot") el.innerHTML = boxplotPriceHTML(lo, q1, med, q3, hi);
+    else if (priceView === "histogram") el.innerHTML = histogramPriceHTML(d["Cena histogram"], lo, med, hi);
+    else el.innerHTML = compactPriceHTML(lo, med, hi);
+    el.title = "Klikněte pro detail cen";
+    return el;
+  }
+
+  // View toggle — one uniform rowHeight per mode keeps every grid row equal-height.
+  function loadPriceView() {
+    try { var v = localStorage.getItem(PRICE_VIEW_KEY); if (PRICE_ROW_HEIGHTS[v]) priceView = v; } catch (_) {}
+  }
+  function updatePriceViewButtons() {
+    var wrap = document.getElementById("price-view-toggle");
+    if (!wrap) return;
+    var btns = wrap.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) btns[i].classList.toggle("on", btns[i].dataset.view === priceView);
+  }
+  window.setPriceView = function (v) {
+    if (!PRICE_ROW_HEIGHTS[v]) return;
+    priceView = v;
+    try { localStorage.setItem(PRICE_VIEW_KEY, v); } catch (_) {}
+    updatePriceViewButtons();
+    if (gridApi) {
+      gridApi.setGridOption("rowHeight", PRICE_ROW_HEIGHTS[v]);
+      gridApi.resetRowHeights();  // re-apply the single height to ALL rows
+      gridApi.refreshCells({ force: true, columns: ["Cena medián"] });
+    }
+  };
+
+  // ── Price detail popup (click a "Cena na trhu" cell) ──
+  function openPricePopup(d, ev) {
+    var pop = document.getElementById("price-popup");
+    if (!pop || !d || !d["Nabídek"]) return;
+    var lo = d["Cena min"], med = d["Cena medián"], hi = d["Cena max"], n = d["Nabídek"];
+    var hist = d["Cena histogram"] || [];
+    var hm = 1;
+    for (var i = 0; i < hist.length; i++) if (hist[i] > hm) hm = hist[i];
+    var bars = "";
+    for (var j = 0; j < hist.length; j++) {
+      bars += hist[j]
+        ? '<span class="pp-bar" style="height:' + Math.max(6, hist[j] / hm * 100).toFixed(0) + '%" title="' + (hist[j]).toLocaleString("cs-CZ") + '"></span>'
+        : '<span class="pp-bar pp-bar-empty"></span>';
+    }
+    var idxUrl = indexUrlForRef(d);
+    var links = '<a class="pp-link" href="' + idxUrl + '" target="_blank" rel="noopener">' +
+      '<span class="pp-lbl">Zobrazit v tabulce</span><span class="pp-val">' + n.toLocaleString("cs-CZ") + ' inzerátů →</span></a>';
+    pop.innerHTML =
+      '<div class="pp-head"><span class="pp-model">' + escHtml(d["Model auta"]) + '</span>' +
+      '<button class="pp-close" id="pp-close" title="Zavřít" aria-label="Zavřít">&times;</button></div>' +
+      '<div class="pp-body">' +
+      '<div class="pp-stats">' +
+      '<div class="pp-stat"><div class="pp-v">' + fmtTis(lo) + '<span class="pp-u">tis</span></div><div class="pp-l">od</div></div>' +
+      '<div class="pp-stat pp-hl"><div class="pp-v">' + fmtTis(med) + '<span class="pp-u">tis</span></div><div class="pp-l">medián</div></div>' +
+      '<div class="pp-stat"><div class="pp-v">' + fmtTis(hi) + '<span class="pp-u">tis</span></div><div class="pp-l">do</div></div>' +
+      '</div>' +
+      '<h4 class="pp-h4">Rozdělení cen <span class="pp-sub">tis. Kč · osa 100–800, medián ' + fmtTis(med) + '</span></h4>' +
+      '<div class="pp-chart">' +
+      '<div class="pp-yaxis"><span>' + hm.toLocaleString("cs-CZ") + '</span><span>0</span></div>' +
+      '<div class="pp-plot">' +
+      '<div class="pp-hist">' + bars + '<span class="pp-hist-med" style="left:' + pricePct(med) + '%"></span>' + overflowMark(hi) + '</div>' +
+      '<div class="pp-axis"><span>' + fmtTis(PRICE_AXIS_MIN) + '</span><span>' + fmtTis(PRICE_AXIS_MAX) + '</span></div>' +
+      '</div></div>' +
+      '<div class="pp-links">' + links + '</div>' +
+      '</div>';
+    var closeBtn = document.getElementById("pp-close");
+    if (closeBtn) closeBtn.addEventListener("click", function (e) { e.stopPropagation(); closePricePopup(); });
+    pop.classList.remove("hidden");
+    // Position near the click, clamped to the viewport.
+    var pw = 320, ph = pop.offsetHeight || 320;
+    var x = ev ? ev.clientX : window.innerWidth / 2;
+    var y = ev ? ev.clientY : 120;
+    var left = Math.min(Math.max(8, x + 12), window.innerWidth - pw - 8);
+    var top = Math.min(Math.max(8, y + 12), window.innerHeight - ph - 8);
+    pop.style.left = left + "px";
+    pop.style.top = top + "px";
+  }
+  function closePricePopup() {
+    var pop = document.getElementById("price-popup");
+    if (pop) pop.classList.add("hidden");
+  }
+  function _findRow(model) {
+    var found = null;
+    if (gridApi) gridApi.forEachNode(function (node) { if (!found && node.data && node.data["Model auta"] === model) found = node.data; });
+    return found;
+  }
+  // Test hooks for build/verify_ui.py.
+  window.__openPricePopup = function (model) {
+    var found = _findRow(model);
+    if (found) { openPricePopup(found, null); return true; }
+    return false;
+  };
+  window.__indexUrlForRef = function (model) {
+    var found = _findRow(model);
+    return found ? indexUrlForRef(found) : null;
+  };
 
   // ── Colour settings: threshold system + heat-mode drawer (mirrors app.js) ──
   function loadThresholds() {
@@ -1021,9 +1264,11 @@
     if (!c(".menu-wrap")) closeToolsMenu();
     // Drawer closes on any click outside it (opening click comes from .menu-wrap).
     if (!c("#settings-panel") && !c(".menu-wrap")) window.closeColorSettings();
+    // Price popup closes on any click outside it and outside the cell that opened it.
+    if (!c("#price-popup") && !c(".rc-price-cell") && !c(".rc-count-cell")) closePricePopup();
   });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { closeToolsMenu(); window.closeColorSettings(); }
+    if (e.key === "Escape") { closeToolsMenu(); window.closeColorSettings(); closePricePopup(); }
   });
 
   window.openColorSettings = function () {
@@ -1045,14 +1290,17 @@
     computeRanges(data);
     loadThresholds();
     loadHeatMode();
+    loadPriceView();
     totalRowCount = data.length;
 
     incompleteCount = 0;
+    maxNabidek = 1;
     for (var r = 0; r < data.length; r++) {
       var missing = computeMissingSpecs(data[r]);
       data[r]._missing = missing;
       data[r]._missingCount = missing.length;
       if (missing.length) incompleteCount++;
+      if (data[r]["Nabídek"] > maxNabidek) maxNabidek = data[r]["Nabídek"];
     }
 
     for (var i = 0; i < COL_DEFS.length; i++) {
@@ -1086,7 +1334,7 @@
       },
       columnDefs: COL_DEFS,
       rowData: data,
-      rowHeight: 25,
+      rowHeight: PRICE_ROW_HEIGHTS[priceView],
       defaultColDef: {
         floatingFilter: true,
         wrapHeaderText: true,
@@ -1117,6 +1365,13 @@
       onColumnPinned: persistColState,
       onColumnVisible: persistColState,
       onColumnResized: onColResized,
+      onCellClicked: function (e) {
+        var f = e.colDef && e.colDef.field;
+        if (!e.data || !e.data["Nabídek"]) return;
+        // Count cell → open the paired listings in the index table; price cell → price popup.
+        if (f === "Nabídek") openIndexForRef(e.data);
+        else if (f === "Cena medián") openPricePopup(e.data, e.event);
+      },
       onGridReady: function (params) {
         gridApi = params.api;
         window.__gridApi = params.api;
@@ -1140,6 +1395,7 @@
         if (legacyFilters) writeHash();
 
         updateIncompleteButton();
+        updatePriceViewButtons();
         updateRowCount();
         updateFilterChips();
       },

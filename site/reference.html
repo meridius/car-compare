@@ -23,6 +23,17 @@
         <div class="header-spacer"></div>
         <div class="controls">
             <span id="row-count" class="readout"></span>
+            <span class="header-sep"></span>
+            <div id="price-view-toggle" class="rc-seg" role="group" aria-label="Pohled na ceny na trhu">
+                <span class="rc-seg-label">Ceny</span>
+                <button data-view="compact" onclick="setPriceView('compact')"
+                    title="Kompaktní: rozpětí textem + proužek">Kompaktní</button>
+                <button data-view="boxplot" onclick="setPriceView('boxplot')"
+                    title="Box-plot: min – kvartily – medián – max na společné ose">Box-plot</button>
+                <button data-view="histogram" onclick="setPriceView('histogram')"
+                    title="Histogram rozdělení cen v řádku">Histogram</button>
+            </div>
+            <span class="header-sep"></span>
             <button id="btn-incomplete" class="btn-incomplete" onclick="toggleIncomplete()"
                 title="Zobrazit jen modely s chybějícími klíčovými údaji">Neúplné: – / –</button>
             <span class="header-sep"></span>
@@ -75,6 +86,7 @@
     </div>
     <div id="filter-chips-bar" class="filter-chips-bar hidden"></div>
     <div id="grid" class="ag-theme-alpine-dark"></div>
+    <div id="price-popup" class="price-popup hidden" role="dialog" aria-label="Detail cen"></div>
     <script src="https://cdn.jsdelivr.net/npm/ag-grid-community@33.1.1/dist/ag-grid-community.min.js"></script>
     <script src="url-state.js"></script>
     <script src="filter-chips.js"></script>

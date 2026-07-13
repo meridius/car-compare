@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import json
 import os
 import re
@@ -694,6 +695,95 @@ def build_ev_listing_specs(df, elec_ref):
     }
 
 
+# ── Per-reference price aggregates (task: "spárované vozy + rozpětí cen") ──
+# For every reference row: how many listings currently pair with it (Nabídek) and
+# their price distribution — min / p25 / median / p75 / max + a fixed-axis histogram
+# for the reference page's "Cena na trhu" column (compact / box-plot / histogram
+# views). Bucketing mirrors the spec aggregators above (ICE: exact "Model auta" ==
+# auth entry; EV: longest-prefix). The histogram axis is SHARED with the JS renderer
+# (site/reference.js PRICE_AXIS_*), so a listing at any price lands in a comparable
+# bin across rows; counts always sum to Nabídek because prices are clipped into range.
+PRICE_HIST_MIN = 100000   # Kč — MIN_PRICE_KC floor (nothing real is cheaper)
+PRICE_HIST_MAX = 800000   # Kč — a touch above the 750k CZ ceiling for cross-border rows
+PRICE_HIST_BINS = 14      # 50 000 Kč per bin
+
+
+def _price_aggregate(prices, links):
+    """Price stats + fixed-axis histogram over a set of matched listings.
+
+    ``prices``/``links`` are parallel iterables (Kč, listing URL). Returns None when
+    no listing carries a usable price. The histogram clips to
+    [PRICE_HIST_MIN, PRICE_HIST_MAX] so its counts always sum to ``Nabídek``."""
+    pairs = []
+    for price, link in zip(prices, links):
+        try:
+            v = float(price)
+        except (TypeError, ValueError):
+            continue
+        if not (v > 0):  # skips 0, negative, and NaN (NaN > 0 is False)
+            continue
+        clean_link = "" if link is None or (isinstance(link, float) and link != link) else str(link)
+        pairs.append((v, clean_link))
+    if not pairs:
+        return None
+    pairs.sort(key=lambda t: t[0])
+    arr = np.array([p for p, _ in pairs], dtype=float)
+    edges = np.linspace(PRICE_HIST_MIN, PRICE_HIST_MAX, PRICE_HIST_BINS + 1)
+    hist, _ = np.histogram(np.clip(arr, PRICE_HIST_MIN, PRICE_HIST_MAX), bins=edges)
+    return {
+        "Nabídek": int(len(pairs)),
+        "Cena min": float(arr.min()),
+        "Cena p25": float(np.percentile(arr, 25)),
+        "Cena medián": float(np.median(arr)),
+        "Cena p75": float(np.percentile(arr, 75)),
+        "Cena max": float(arr.max()),
+        "Cena histogram": [int(x) for x in hist],
+        "Odkaz nejlevnější": pairs[0][1],
+        "Odkaz nejdražší": pairs[-1][1],
+    }
+
+
+def _blank_price_fields():
+    return {
+        "Nabídek": 0, "Cena min": None, "Cena p25": None, "Cena medián": None,
+        "Cena p75": None, "Cena max": None, "Cena histogram": [],
+        "Odkaz nejlevnější": "", "Odkaz nejdražší": "",
+    }
+
+
+def build_ice_price_aggs(df):
+    """Map exact combustion 'Model auta' (auth string) → price aggregate."""
+    ice = df[df["Typ"] == "Spalovací"]
+    out = {}
+    for model, grp in ice.groupby("Model auta"):
+        agg = _price_aggregate(grp["Cena (Kč)"], grp["Odkaz na auto"])
+        if agg is not None:
+            out[model] = agg
+    return out
+
+
+def build_ev_price_aggs(df, elec_ref):
+    """Map electric reference 'Model auta' → price aggregate (longest-prefix bucket,
+    same bucketing as build_ev_listing_specs / join_electric_reference)."""
+    ev = df[df["Typ"] == "Elektrické"]
+    ref_models = elec_ref["Model auta"].tolist()
+    ref_models_exact = _sorted_ref_pairs(ref_models, lambda s: s)
+    ref_models_folded = _sorted_ref_pairs(ref_models, _fold_accents)
+    buckets = {}
+    for _, row in ev.iterrows():
+        rm = _match_electric_ref(str(row.get("Model auta", "")), ref_models_exact, ref_models_folded)
+        if rm is not None:
+            b = buckets.setdefault(rm, {"prices": [], "links": []})
+            b["prices"].append(row.get("Cena (Kč)"))
+            b["links"].append(row.get("Odkaz na auto"))
+    out = {}
+    for rm, b in buckets.items():
+        agg = _price_aggregate(b["prices"], b["links"])
+        if agg is not None:
+            out[rm] = agg
+    return out
+
+
 def build_reference_json(comb_ref, elec_ref, df):
     """Build combined reference data JSON for the reference page."""
     records = []
@@ -702,6 +792,8 @@ def build_reference_json(comb_ref, elec_ref, df):
     auth_by_entry = {r["entry"]: r for r in comb_utils.load_authoritative_list(ice_path)}
     ice_specs = build_ice_listing_specs(df)
     ev_specs = build_ev_listing_specs(df, elec_ref)
+    ice_price = build_ice_price_aggs(df)
+    ev_price = build_ev_price_aggs(df, elec_ref)
 
     for _, row in comb_ref.iterrows():
         model = row.get("Jednoznačná varianta vozu", "")
@@ -730,6 +822,13 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Přidáno": row.get("Přidáno", ""),
             "Upraveno": row.get("Upraveno", ""),
         }
+        # Značka + Model mirror the payload split (split_brand_model + engine strip on
+        # ICE) so the reference page can build an index-page filter that matches the
+        # index grid's own columns (see reference.js indexFilterModel).
+        _zn, _md = split_brand_model(model)
+        rec["Značka"] = _zn
+        rec["Model"] = strip_ice_engine_tokens(_md)
+        rec.update(ice_price.get(model) or _blank_price_fields())
         records.append(rec)
 
     for _, row in elec_ref.iterrows():
@@ -756,6 +855,10 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Přidáno": row.get("Přidáno", ""),
             "Upraveno": row.get("Upraveno", ""),
         }
+        _zn, _md = split_brand_model(model)
+        rec["Značka"] = _zn
+        rec["Model"] = _md  # EV Model is not engine-stripped (mirrors payload)
+        rec.update(ev_price.get(model) or _blank_price_fields())
         records.append(rec)
 
     for rec in records:

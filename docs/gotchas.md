@@ -1017,6 +1017,72 @@ EV body type comes from `vehicle_body_cb` (sauto) or `extract_body_type()` (auto
 - **Palivo** — ICE: listing mode → fallback `derive_fuel()` (deterministic, 100% coverage). EV: constant "Elektro".
 - **EV** engine columns (Objem motoru / Typ motoru / Hybrid typ) are always blank (N/A).
 
+### paired-cars count + price aggregates (Nabídek / Cena na trhu)
+
+`build_reference_json()` also attaches, per reference row, how many listings pair
+with it and their price distribution (`build_ice_price_aggs` / `build_ev_price_aggs`
+→ `_price_aggregate`). Fields: `Nabídek` (int count), `Cena min/p25/medián/p75/max`
+(Kč), `Cena histogram` (14 ints), `Odkaz nejlevnější/nejdražší` (listing URLs).
+
+- **Bucketing mirrors the spec aggregators**: ICE groups on exact `Model auta` == auth
+  entry (so **Ano + Nejisté** listings both count — matching writes the entry string to
+  both), EV by longest-prefix. Unmatched (`Ne`) names are `_format_unmatched` strings
+  that don't equal an entry, so they don't leak in.
+- **The histogram axis is SHARED with the JS renderer** — `PRICE_HIST_MIN/MAX/BINS`
+  (100 000 / 800 000 / 14) in `build_data.py` == `PRICE_AXIS_MIN/MAX` +
+  `PRICE_HIST_BINS` in `site/reference.js`. Prices are **clipped** into the axis, so
+  `sum(histogram) == Nabídek` always (pinned by `ReferencePriceAggregatesTest`). Change
+  the axis in **both** places or the bars misalign / the sum invariant breaks.
+- **Why 100–800k, not the true max (~3.36M)?** 99.96 % of listings are ≤ 750k (the CZ
+  hard filter); only ~63 exceed it (autodraft/energycars dealer exotics, no price
+  filter). A data-driven axis to 3.36M would crush every normal car into the left 22 %.
+  So the axis is fixed at a robust bound and outliers **clip** to the edge with a `›`
+  overflow cap (`overflowMark`, shown when `Cena max > PRICE_AXIS_MAX`) — the true value
+  still prints in the row label + popup stat tiles, so the clamp is never a silent lie.
+- Unpaired reference rows get `Nabídek = 0`, `None` stats, `[]` histogram, `""` links
+  (`_blank_price_fields`) — the cell renders "—".
+- Each row also carries **`Značka` + `Model`** (payload split: `split_brand_model` +
+  ICE engine strip) so `reference.js` can build an index-page filter matching the index
+  grid's own columns — see the three-view gotcha below.
+
+### reference "Cena na trhu" is a three-view cell with a uniform per-view row height
+
+`site/reference.js` renders the price column three ways, switched by the header
+segmented toggle (`setPriceView`, persisted to `localStorage["refPriceView"]`,
+default `compact`): **compact** (od–medián–do text + sparkline), **boxplot**
+(min/quartile/median/max box on the shared axis), **histogram** (inline 14-bin
+distribution). Non-obvious bits:
+
+- **One `rowHeight` per view** (`PRICE_ROW_HEIGHTS` = 25/44/58) set via
+  `setGridOption("rowHeight", …)` + `resetRowHeights()` — a single value, so **every
+  grid row is equal-height** in each mode (the requirement). Histogram is the tallest,
+  so it's opt-in, not the default.
+- **`Nabídek` + `Cena medián` are NOT in `NUMERIC_COLS`** (price is not a good→bad heat
+  axis) — they're in `RANGE_EXTRA`, which only earns them a `colRanges` entry so their
+  column-filter `RangeFilter` works (filter by count / median price). They render via
+  custom `cellRenderer`s, not the heat `cellStyle`. The `Cena na trhu` column's `field`
+  is `Cena medián` so sort/filter act on the median.
+- **Two different click targets**: the **count** cell (`Nabídek`) opens the paired
+  listings in the **index table** (`openIndexForRef` → `index.html#f=…` in a new tab);
+  the **price** cell (`Cena medián`) opens `openPricePopup` (a `position:fixed`
+  `#price-popup` card: stat tiles + bigger histogram with a median line + Y-axis + a
+  close ×). The popup's header count and a "Zobrazit v tabulce" row link to the **same**
+  index-filtered URL; cheapest/dearest still deep-link to the scraped listing.
+- **Index-filter URL** (`indexFilterModel`/`indexUrlForRef`): encodes a filter model
+  with the shared `url-state` codec (`window.UrlState.encFilters`) over the index grid's
+  columns — `Značka` (set) + `Model` (ICE: `equals`, EV: `contains`) + ICE `Objem motoru`
+  + `Typ motoru`. **Not variant-exact** for ICE bodies that share an engine (index has no
+  "Model auta" column to key on), but reproduces the pairing closely (Octavia 2.0 TDI ref
+  → 3169 paired ≈ 3070 index rows). Exposed for verify_ui via `window.__indexUrlForRef`.
+- The popup builds `innerHTML` from a model name + scraped URLs, so it escapes text
+  (`escHtml`) and allows only `http(s)` hrefs (`safeHref`) — defensive XSS guard. The
+  index URL is codec output (percent-encoded), safe in an `href`.
+- **`Cena medián` filter slider steps by 1000** (`STEP_VALUES` override in
+  `computeRanges`) — a 1-Kč step on a ~750k range is meaningless. `Nabídek` steps by 1.
+- Bar/box fills use dedicated theme vars (`--rc-track/-fill/-edge/-bar/-bar-top`) in
+  `style.css`, tuned for both themes. Pinned by verify_ui `price-compact` /
+  `price-boxplot` / `price-histogram` / `price-popup` (both `--theme`).
+
 ### PHEV consumption blanked
 
 Plug-in hybrids' combined consumption is the official WLTP **weighted** figure

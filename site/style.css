@@ -22,6 +22,11 @@ body {
     --clr-accent-contrast: #1a1205;
     --clr-accent-soft: rgba(224, 135, 46, 0.16);
     --clr-accent-border: rgba(224, 135, 46, 0.45);
+    --rc-track: #233247;
+    --rc-fill: rgba(224, 135, 46, 0.30);
+    --rc-edge: rgba(224, 135, 46, 0.85);
+    --rc-bar: rgba(224, 135, 46, 0.34);
+    --rc-bar-top: rgba(224, 135, 46, 0.9);
     --clr-hover: #1e3a5f;
     --clr-link: #60a5fa;
     --clr-selected: #1e3a5f;
@@ -40,6 +45,11 @@ body {
     --clr-accent-contrast: #ffffff;
     --clr-accent-soft: rgba(180, 97, 28, 0.12);
     --clr-accent-border: rgba(180, 97, 28, 0.4);
+    --rc-track: #e7edf4;
+    --rc-fill: rgba(180, 97, 28, 0.22);
+    --rc-edge: rgba(180, 97, 28, 0.8);
+    --rc-bar: rgba(180, 97, 28, 0.24);
+    --rc-bar-top: rgba(180, 97, 28, 0.85);
     --clr-hover: #fdf0e3;
     --clr-link: #2563eb;
     --clr-selected: #fdecd7;
@@ -1123,4 +1133,253 @@ a:hover { text-decoration: underline; }
         flex-wrap: wrap;
         gap: 8px;
     }
+}
+
+/* ── Reference: paired-cars count + "Cena na trhu" three-view cell + popup ── */
+
+/* View toggle (header segmented control) */
+.rc-seg {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    background: var(--clr-surface-alt);
+    padding: 2px;
+}
+.rc-seg-label {
+    font-size: 0.66rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--clr-text-muted);
+    padding: 0 6px 0 4px;
+}
+.rc-seg button {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    line-height: 1.2;
+}
+.rc-seg button:hover { color: var(--clr-text); }
+.rc-seg button.on {
+    background: var(--clr-accent);
+    color: var(--clr-accent-contrast);
+}
+.rc-seg button:focus-visible { outline: 2px solid var(--clr-accent); outline-offset: 1px; }
+
+/* Nabídek: count + proportional bar */
+.rc-count-cell { cursor: pointer; }
+.rc-count {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    height: 100%;
+}
+.rc-count-n { font-weight: 700; font-variant-numeric: tabular-nums; }
+.rc-count-n.rc-muted { color: var(--clr-text-muted); font-weight: 400; }
+.rc-count-bar {
+    position: relative;
+    width: 52px;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--rc-track);
+    overflow: hidden;
+    flex: 0 0 auto;
+}
+.rc-count-bar > span {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: 3px;
+    background: linear-gradient(90deg, var(--clr-accent-border), var(--clr-accent));
+}
+
+/* Price cell shared */
+.rc-price-cell { cursor: pointer; }
+.rc-price {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    line-height: 1.15;
+}
+.rc-muted { color: var(--clr-text-muted); }
+.rc-band-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.62rem;
+    color: var(--clr-text-muted);
+    font-variant-numeric: tabular-nums;
+    margin-top: 1px;
+}
+.rc-band-labels .rc-med { color: var(--clr-accent); font-weight: 700; }
+
+/* Compact: text + sparkline */
+.rc-rng-text { font-size: 0.8rem; font-variant-numeric: tabular-nums; }
+.rc-rng-text .rc-med { color: var(--clr-accent); font-weight: 700; }
+.rc-rng-text .rc-ends { color: var(--clr-text-muted); }
+.rc-spark {
+    position: relative;
+    height: 6px;
+    width: 100%;
+    max-width: 220px;
+    margin-top: 4px;
+    background: var(--rc-track);
+    border-radius: 3px;
+}
+.rc-spark-fill {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: var(--rc-fill);
+    border-radius: 3px;
+    border-left: 1px solid var(--rc-edge);
+    border-right: 1px solid var(--rc-edge);
+}
+.rc-spark-m {
+    position: absolute;
+    top: -2px;
+    width: 2px;
+    height: 10px;
+    background: var(--clr-accent);
+    border-radius: 1px;
+}
+
+/* Box-plot */
+.rc-band { position: relative; height: 20px; width: 100%; }
+.rc-band-track { position: absolute; left: 0; right: 0; top: 8px; height: 4px; border-radius: 2px; background: var(--rc-track); }
+.rc-whisker { position: absolute; top: 9px; height: 2px; background: var(--clr-text-muted); opacity: 0.6; border-radius: 1px; }
+.rc-cap { position: absolute; top: 4px; width: 2px; height: 12px; background: var(--clr-text-muted); opacity: 0.55; border-radius: 1px; }
+.rc-box { position: absolute; top: 3px; height: 14px; border-radius: 3px; background: var(--rc-fill); border: 1px solid var(--rc-edge); }
+.rc-median { position: absolute; top: 1px; width: 3px; height: 18px; border-radius: 2px; background: var(--clr-accent); box-shadow: 0 0 0 1px var(--clr-bg); }
+
+/* Histogram (inline) */
+.rc-hist { position: relative; width: 100%; }
+.rc-bars { position: relative; display: flex; align-items: flex-end; gap: 1px; height: 34px; }
+.rc-bar { flex: 1; background: var(--rc-bar); border-top: 1.5px solid var(--rc-bar-top); border-radius: 1px 1px 0 0; min-height: 1px; }
+.rc-bar-empty { background: transparent; border-top: none; }
+.rc-hist-med { position: absolute; top: -2px; bottom: 0; width: 2px; background: var(--clr-accent); border-radius: 1px; box-shadow: 0 0 0 1px var(--clr-bg); }
+
+/* AG's numeric right-align/padding would fight the custom cells — reset it. */
+.ag-theme-alpine-dark .ag-cell.rc-price-cell,
+.ag-theme-alpine .ag-cell.rc-price-cell,
+.ag-theme-alpine-dark .ag-cell.rc-count-cell,
+.ag-theme-alpine .ag-cell.rc-count-cell { padding-top: 3px; padding-bottom: 3px; }
+
+/* Price detail popup (click a count / price cell) */
+.price-popup {
+    position: fixed;
+    z-index: 1200;
+    width: 320px;
+    background: var(--clr-surface);
+    border: 1px solid var(--clr-border);
+    border-radius: 12px;
+    box-shadow: 0 16px 44px rgba(0, 0, 0, 0.45);
+    overflow: hidden;
+    font-size: 0.86rem;
+}
+.price-popup.hidden { display: none; }
+.pp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 15px;
+    background: var(--clr-surface-alt);
+    border-bottom: 1px solid var(--clr-border);
+}
+.pp-model { font-weight: 700; }
+.pp-n { font-size: 0.76rem; color: var(--clr-text-muted); white-space: nowrap; }
+.pp-body { padding: 13px 15px 15px; }
+.pp-stats { display: flex; gap: 8px; margin-bottom: 12px; }
+.pp-stat {
+    flex: 1;
+    background: var(--clr-surface-alt);
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    padding: 7px 6px;
+    text-align: center;
+}
+.pp-v { font-size: 1rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.pp-v .pp-u { font-size: 0.58rem; color: var(--clr-text-muted); font-weight: 600; margin-left: 2px; }
+.pp-l { font-size: 0.58rem; text-transform: uppercase; letter-spacing: 0.07em; color: var(--clr-text-muted); margin-top: 1px; }
+.pp-stat.pp-hl .pp-v { color: var(--clr-accent); }
+.pp-h4 { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--clr-text-muted); font-weight: 700; margin: 0 0 6px; }
+.pp-h4 .pp-sub { text-transform: none; letter-spacing: 0; font-weight: 400; }
+.pp-hist { display: flex; align-items: flex-end; gap: 3px; height: 62px; }
+.pp-bar { flex: 1; background: var(--rc-bar); border-top: 2px solid var(--rc-bar-top); border-radius: 2px 2px 0 0; min-height: 1px; }
+.pp-bar-empty { background: transparent; border-top: none; }
+.pp-axis { display: flex; justify-content: space-between; font-size: 0.62rem; color: var(--clr-text-muted); font-variant-numeric: tabular-nums; border-top: 1px solid var(--clr-border); padding-top: 4px; margin-top: 2px; }
+.pp-links { margin-top: 13px; display: flex; flex-direction: column; gap: 7px; }
+.pp-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    padding: 7px 10px;
+    border: 1px solid var(--clr-border);
+    border-radius: 7px;
+    background: var(--clr-surface-alt);
+    text-decoration: none;
+    color: var(--clr-text);
+}
+.pp-link:hover { border-color: var(--clr-accent-border); }
+.pp-link .pp-lbl { color: var(--clr-text-muted); }
+.pp-link .pp-val { font-weight: 700; color: var(--clr-accent); font-variant-numeric: tabular-nums; }
+
+/* Overflow cap: model max exceeds the shared price axis (rare exotics). The bar
+   clamps to the edge; this ">" says "extends beyond" (true value is in the label). */
+.rc-of {
+    position: absolute;
+    right: -1px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--clr-accent);
+    font-weight: 800;
+    font-size: 0.8rem;
+    line-height: 1;
+    pointer-events: none;
+}
+
+/* Popup: close button, Y-axis, median line */
+.pp-close {
+    appearance: none;
+    border: none;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 1.25rem;
+    line-height: 1;
+    padding: 0 2px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.pp-close:hover { color: var(--clr-text); background: var(--clr-hover); }
+.pp-chart { display: flex; gap: 6px; align-items: stretch; }
+.pp-yaxis {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-end;
+    height: 62px;
+    font-size: 0.58rem;
+    color: var(--clr-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+.pp-plot { flex: 1; min-width: 0; }
+.pp-hist { position: relative; }
+.pp-hist-med {
+    position: absolute;
+    top: -2px;
+    bottom: 0;
+    width: 2px;
+    background: var(--clr-accent);
+    border-radius: 1px;
+    box-shadow: 0 0 0 1px var(--clr-surface);
 }

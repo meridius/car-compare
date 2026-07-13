@@ -99,6 +99,77 @@ class ListingDateColumnsTest(unittest.TestCase):
         self.assertEqual(bad, [], f"{len(bad)} listings have Přidáno after Upraveno")
 
 
+class ReferencePriceAggregatesTest(unittest.TestCase):
+    """Per-reference "spárované vozy & rozpětí cen" aggregate (build_data
+    build_*_price_aggs → reference.json): count, price stats, fixed-axis histogram
+    and cheapest/dearest links must be internally consistent and feed the
+    reference page's "Nabídek" / "Cena na trhu" columns."""
+
+    HIST_BINS = 14  # mirrors build_data.PRICE_HIST_BINS
+
+    @classmethod
+    def setUpClass(cls):
+        with open(REFERENCE_JSON, encoding="utf-8") as f:
+            cls.rows = json.load(f)
+        cls.assertTrue(cls.rows, "reference.json is empty")
+        cls.priced = [r for r in cls.rows if r.get("Nabídek")]
+
+    def test_every_row_has_count_and_histogram_fields(self):
+        for key in ("Nabídek", "Cena histogram"):
+            missing = [r.get("Model auta") for r in self.rows if key not in r]
+            self.assertEqual(missing, [], f"{len(missing)} rows missing '{key}'")
+        bad = [r.get("Model auta") for r in self.rows
+               if not isinstance(r["Nabídek"], int) or r["Nabídek"] < 0]
+        self.assertEqual(bad, [], f"{len(bad)} rows have a non-int/negative Nabídek")
+
+    def test_some_rows_are_paired(self):
+        # Total wiring break (0 populated) is the real failure this guards against;
+        # a seed-only build still pairs plenty, real state pairs ~579/622.
+        self.assertGreater(len(self.priced), 50,
+                           f"only {len(self.priced)} reference rows have any paired listings")
+
+    def test_histogram_sums_to_count(self):
+        offenders = []
+        for r in self.priced:
+            h = r["Cena histogram"]
+            if not isinstance(h, list) or len(h) != self.HIST_BINS or sum(h) != r["Nabídek"]:
+                offenders.append((r.get("Model auta"), len(h) if isinstance(h, list) else None,
+                                  sum(h) if isinstance(h, list) else None, r["Nabídek"]))
+        self.assertEqual(offenders, [], f"{len(offenders)} rows: histogram len!=14 or sum!=Nabídek "
+                         f"(e.g. {offenders[0] if offenders else ''})")
+
+    def test_price_stats_monotonic(self):
+        offenders = []
+        for r in self.priced:
+            seq = [r.get("Cena min"), r.get("Cena p25"), r.get("Cena medián"),
+                   r.get("Cena p75"), r.get("Cena max")]
+            if any(v is None for v in seq) or any(seq[i] > seq[i + 1] for i in range(len(seq) - 1)):
+                offenders.append((r.get("Model auta"), seq))
+        self.assertEqual(offenders, [], f"{len(offenders)} rows: price stats not min≤p25≤med≤p75≤max "
+                         f"(e.g. {offenders[0] if offenders else ''})")
+
+    def test_paired_rows_have_links(self):
+        offenders = [r.get("Model auta") for r in self.priced
+                     if not str(r.get("Odkaz nejlevnější") or "").startswith("http")
+                     or not str(r.get("Odkaz nejdražší") or "").startswith("http")]
+        self.assertEqual(offenders, [], f"{len(offenders)} paired rows missing cheapest/dearest links")
+
+    def test_rows_have_brand_model_for_index_link(self):
+        # Značka + Model feed reference.js indexFilterModel (jump to the index table
+        # filtered to a reference model's listings). Every row needs a brand.
+        offenders = [r.get("Model auta") for r in self.rows if not str(r.get("Značka") or "").strip()]
+        self.assertEqual(offenders, [], f"{len(offenders)} rows missing Značka (breaks index link)")
+
+    def test_unpaired_rows_are_blank(self):
+        offenders = []
+        for r in self.rows:
+            if r.get("Nabídek"):
+                continue
+            if r.get("Cena medián") is not None or (r.get("Cena histogram") or []):
+                offenders.append(r.get("Model auta"))
+        self.assertEqual(offenders, [], f"{len(offenders)} unpaired rows carry price stats/histogram")
+
+
 class DataIntegrityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

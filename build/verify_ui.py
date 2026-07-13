@@ -762,8 +762,59 @@ def scenario_threshold_filter_clear(page):
     return None
 
 
+def _set_price_view(page, view):
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("(v) => window.setPriceView(v)", view)
+    page.wait_for_timeout(300)
+
+
+def scenario_price_compact(page):
+    """Reference 'Cena na trhu' column in the default Kompaktní view — text
+    od–medián–do + sparkline, plus the Nabídek count column with its bar."""
+    _set_price_view(page, "compact")
+    page.wait_for_selector(".rc-spark", timeout=5000)
+    return None
+
+
+def scenario_price_boxplot(page):
+    """Reference 'Cena na trhu' in Box-plot view — per-row min/quartile/median/max
+    box on the shared 100–800 tis Kč axis (taller uniform rows)."""
+    _set_price_view(page, "boxplot")
+    page.wait_for_selector(".rc-band", timeout=5000)
+    return None
+
+
+def scenario_price_histogram(page):
+    """Reference 'Cena na trhu' in Histogram view — inline per-row price distribution
+    (14 bins, shared axis, median tick); tallest uniform row height."""
+    _set_price_view(page, "histogram")
+    page.wait_for_selector(".rc-bars", timeout=5000)
+    return None
+
+
+def scenario_price_popup(page):
+    """Click-detail popup for a paired reference model — big histogram + od/medián/do
+    stats + cheapest/dearest listing links. Opened via the test hook."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    ok = page.evaluate("() => window.__openPricePopup('Škoda Octavia 2.0 TDI')")
+    if not ok:
+        # Fall back to the busiest model if that exact entry isn't in this build.
+        page.evaluate(
+            "() => { let best=null; window.__gridApi.forEachNode(n=>{"
+            "  if(n.data && n.data['Nabídek'] && (!best || n.data['Nabídek']>best['Nabídek'])) best=n.data;});"
+            "  if(best) window.__openPricePopup(best['Model auta']); }"
+        )
+    page.wait_for_selector("#price-popup:not(.hidden)", timeout=5000)
+    page.wait_for_timeout(200)
+    return "#price-popup"
+
+
 SCENARIOS = {
     "grid": scenario_grid,
+    "price-compact": scenario_price_compact,
+    "price-boxplot": scenario_price_boxplot,
+    "price-histogram": scenario_price_histogram,
+    "price-popup": scenario_price_popup,
     "threshold-filter-clear": scenario_threshold_filter_clear,
     "color-drawer": scenario_color_drawer,
     "heat-combo": scenario_heat_combo,
