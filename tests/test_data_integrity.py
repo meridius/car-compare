@@ -552,9 +552,19 @@ class BodyTypeConsistencyTest(unittest.TestCase):
 
     def test_body_coverage_not_regressed(self):
         """Reference-pairing + fold + vote + derive must keep body near-fully
-        populated (blanks were 3/24k at build time)."""
-        blank = sum(1 for c in self.cars if not c.get("Karoserie"))
-        self.assertLessEqual(blank, 50, f"{blank} rows have a blank Karoserie")
+        populated for rows that *can* have a body. The mobile.de "Andere" junk
+        bucket is excluded: it is the unindexed-model catch-all (gotcha: never add
+        an "X Andere" reference row) — its members have no derivable passenger body
+        and their count grows unbounded with the DE-ICE feed, so counting them here
+        would only track how much junk mobile.de returned, not a body regression.
+        With them excluded the ceiling stays tight enough to catch a real
+        derive/fold/vote regression (the remaining blanks are a handful of
+        commercial vans with no body in the reference)."""
+        blank = sum(
+            1 for c in self.cars
+            if not c.get("Karoserie") and str(c.get("Model") or "") != "Andere"
+        )
+        self.assertLessEqual(blank, 20, f"{blank} non-junk rows have a blank Karoserie")
 
 
 if __name__ == "__main__":

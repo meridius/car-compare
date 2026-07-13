@@ -869,6 +869,19 @@ an EV nameplate has one body). `join_electric_reference` carries it and
 match. `site/app.js` `bodyGroups` folds Liftback/Sportback into Hatchback to
 match. Invariants pinned in `tests/test_data_integrity.py::BodyTypeConsistencyTest`.
 
+**`test_body_coverage_not_regressed` excludes the "Andere" junk bucket.** The
+coverage assertion counts blank `Karoserie` only over rows whose `Model != "Andere"`.
+The mobile.de "Andere" catch-all (Peugeot/Kia/Dacia/Hyundai Andere, ~152 rows on
+real state) has no derivable passenger body and grows unbounded with the DE-ICE feed,
+so a fixed blank ceiling that counted it just tracked how much junk mobile.de
+returned — it went red on prod state (157 > 50) with nothing actually wrong. Excluding
+Andere, the remaining blanks are a handful of commercial vans with no reference body
+(Iveco Andere, Nissan Interstar, Peugeot Boxer, and EV vans Maxus eDeliver 9 / Fiat
+Scudo / Merc eSprinter) — 5 on real state, ceiling 20. Still catches a real
+derive/fold/vote regression: a genuine model going blank isn't "Andere", so it's
+counted. **This test only exercises meaningfully on real full state** (`bin/bootstrap-data.sh`);
+a seed-only build lacks the DE-ICE rows.
+
 ### diagnose_unpaired candidate is anchored to the diagnosed listing
 
 `derive_candidate` majority-votes over the whole (brand, model_base) cluster —
