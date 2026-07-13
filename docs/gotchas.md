@@ -962,6 +962,25 @@ ignores blanks. Two fixes: `cmd_candidate` passes the diagnosed listing as
 to the anchor), and `Hybrid typ` uses `_mode_incl_blanks` (a blank is a real
 "not a hybrid" vote). Pinned in `tests/test_diagnose_unpaired.py`.
 
+### candidate `simulace` overstates gains when the voted body is wrong
+
+`simulate_candidate` scores the cluster against the candidate row *as derived* —
+including the majority-voted `Karoserie`. That vote runs over the listings' own
+noisy bodies (mobile.de pre-Limousine-fix state rows still carry a wrong
+"Sedan/limuzína"; SmallCar-tagged crossovers carry "Hatchback"), so a candidate
+inherits the *wrong* body, matches it (+3), and simulates hundreds of Ano
+conversions. Correcting the body before `apply` (Kona/Duster/Focus… are SUVs and
+hatchbacks, not sedans — the researcher notes flagged this) turns those +3s into
+−2 mismatches and the real-state gain collapses (batch 2026-07-13: simulated
+~+1300 Ano, actual +94). Keep the reference truthful anyway: body one-sided
+(listing blank) scores 0, so the gains materialize as mobile.de state heals
+(`Limousine → ""` on each scrape refreshes live rows). Removed rows keep stale
+bodies forever, and SmallCar→Hatchback mislabels don't heal — those clusters stay
+Nejisté until the per-listing body noise is addressed. Corollary: also fix the
+researcher-flagged hybrid fabrications before apply ("Arteon 1.4 TSI HEV" is
+really the eHybrid PHEV; "Kona 1.6 GDI" ships only as HEV) — `exists:true` with a
+contradicting `variant_note` still needs a human read.
+
 ### ai-match-one research runs the nested `claude -p` from a temp dir
 
 The research step's `claude -p` used to run inside the repo → the nested
