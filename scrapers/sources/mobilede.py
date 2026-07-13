@@ -74,7 +74,12 @@ _TRANSMISSION_MAP = {
     "Schaltgetriebe": "Manuální",
 }
 _CATEGORY_MAP = {
-    "OffRoad": "SUV", "EstateCar": "Kombi", "Limousine": "Sedan/limuzína",
+    # "Limousine" is mobile.de's ambiguous catch-all — German dealers tag
+    # hatchbacks (and even EVs) with it, not just sedans — so it maps to blank,
+    # like "OtherCar". _build_row then falls through to extract_body_type(title)
+    # (recovers a real token like Sportback/Combi if present) and downstream
+    # reference/majority-vote/derive_body fill the rest. See docs/gotchas.md.
+    "OffRoad": "SUV", "EstateCar": "Kombi", "Limousine": "",
     "SmallCar": "Hatchback", "Van": "VAN", "SportsCar": "Kupé",
     "Cabrio": "Kabriolet", "OtherCar": "",
 }

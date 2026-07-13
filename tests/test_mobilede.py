@@ -89,7 +89,35 @@ HYBRID_ITEM = {
 }
 
 
+# mobile.de returns "Limousine" (attr.c) for hatchbacks and EVs too, not just
+# sedans — an ambiguous, frequently-wrong body. It must map to blank so the
+# reference / majority-vote / derive_body downstream fills it (see design doc).
+LIMOUSINE_ITEM = {
+    "id": 458546443,
+    "url": "https://suchen.mobile.de/auto-inserat/bmw-118i-sport-line-krakow/458546443.html",
+    "shortTitle": "BMW 118", "subTitle": "118i Sport Line 1/2022",
+    "make": {"id": "3500", "localized": "BMW"}, "model": {"id": "1", "localized": "118"},
+    "price": {"grs": {"amount": 18000.0, "currency": "EUR"}, "type": "FIXED"},
+    "attr": {"cn": "PL", "loc": "Kraków", "fr": "01/2022", "pw": "100 kW (136 PS)",
+             "ft": "Benzin", "ml": "42.000 km", "cc": "1.499 cm³",
+             "tr": "Automatik", "door": "4/5", "sc": "5", "c": "Limousine"},
+}
+
+
 class BuildRowTest(unittest.TestCase):
+    def test_limousine_category_maps_to_blank(self):
+        # "Limousine" is ambiguous on mobile.de (sedan/hatch/EV) — blank it so
+        # downstream reference/majority-vote fills the body, not a wrong "Sedan".
+        row = mobilede._build_row(LIMOUSINE_ITEM, 25.0)
+        self.assertEqual(row["Karoserie"], "")
+
+    def test_limousine_title_body_token_still_recovered(self):
+        # blank map falls through to extract_body_type — a real token in the
+        # title (Sportback/Combi/…) is still recovered, only "Limousine" is dropped.
+        item = {**LIMOUSINE_ITEM, "subTitle": "Sportback 118i Sport Line 1/2022"}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Karoserie"], "Sportback")
+
     def test_ev_row(self):
         row = mobilede._build_row(EV_ITEM, 25.0)
         self.assertEqual(row["Typ"], "Elektrické")

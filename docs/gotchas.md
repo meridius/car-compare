@@ -219,8 +219,27 @@ makes the Akamai block below matter. Hybrids arrive as
 `_parse_number()` takes the first integer and strips dot thousands-separators.
 Make names lose their diacritics ("Skoda", "Citroen") — BRAND_MAP restores them,
 otherwise ICE matching finds no brand candidates. Category `attr.c` uses mobile.de's
-own body taxonomy (OffRoad→SUV, EstateCar→Kombi, Limousine→Sedan/limuzína, …) — note
-German "Limousine" lumps sedans with some hatchbacks.
+own body taxonomy (OffRoad→SUV, EstateCar→Kombi, SmallCar→Hatchback, …).
+
+### `attr.c` "Limousine" → blank, not "Sedan/limuzína" (it's a catch-all)
+
+German dealers tag hatchbacks — and even EVs (BMW i3, BYD ATTO 2, Cupra Born,
+Audi Q4 e-tron Sportback all arrived tagged "Limousine") — under `attr.c`
+"Limousine", not just sedans. Mapping it to a confident "Sedan/limuzína" fed a
+wrong body into (a) the `matching.py` body score (weight 3 — hatchback listings
+got penalised against the correct hatchback reference) and (b) cluster body votes
+/ `diagnose_unpaired` candidate rows (Ford Focus + Audi A3 candidates had to be
+hand-blanked before `apply`). `_CATEGORY_MAP["Limousine"] = ""` therefore blanks
+it, exactly like `"OtherCar"`: `_build_row` falls through to
+`extract_body_type(title)` (which recovers a real token — Sportback/Combi/SUV —
+when the German title carries one; `BODY_KEYWORDS` has no Sedan/Limousine token so
+it never re-derives sedan), and the reference-body / majority-vote / `derive_body`
+chain in `build_data` fills the rest. Cost (accepted): true unmatched sedans lose
+their explicit tag and fall to `derive_body` — net accuracy still rises because
+most "Limousine" rows were mis-tagged, and matched sedans get the body from the
+reference regardless. The fix is source-local; `matching.py` stays source-agnostic.
+Pinned in `tests/test_mobilede.py` (`test_limousine_category_maps_to_blank`,
+`test_limousine_title_body_token_still_recovered`).
 
 ### Akamai Bot Manager — low concurrency + patient backoff, no rate headers
 

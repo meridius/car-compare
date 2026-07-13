@@ -83,7 +83,7 @@ converted price must be ≤ 750 000 Kč exactly.
 | Filtr pevných částic | `extract_particle_filter(subTitle)` |
 | Kola | blank |
 | Náhon 4x4 | `extract_awd(shortTitle + subTitle)` |
-| Karoserie | `attr.c` map: OffRoad→SUV, EstateCar→Kombi, Limousine→Sedan/limuzína, SmallCar→Hatchback, Van→VAN, SportsCar→Kupé, Cabrio→Kabriolet, OtherCar→"" ; blank → `extract_body_type` fallback |
+| Karoserie | `attr.c` map: OffRoad→SUV, EstateCar→Kombi, SmallCar→Hatchback, Van→VAN, SportsCar→Kupé, Cabrio→Kabriolet, Limousine→"" (ambiguous catch-all, blanked 2026-07-13 — see gotchas), OtherCar→"" ; blank → `extract_body_type` fallback |
 | Výbava | `extract_trim(subTitle)` |
 | Záruka | "Ano" if `attr.gi` (Garantie) present, else `extract_warranty(subTitle)` |
 | Tepelné čerpadlo | blank (not exposed by mobile.de; EV heat-pump requirement can't be enforced here) |
