@@ -34,7 +34,7 @@ Model cleanup patterns (regex fixups) belong in `core/normalize.py` `MODEL_CLEAN
 
 ## Column Order
 
-The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/schema.py`. Never reorder silently. Adapters emit exactly these 26 columns (use `blank_row()` for the ones they don't fill).
+The final DataFrame column list must match `CANONICAL_COLS` in `scrapers/core/schema.py`. Never reorder silently. Adapters emit exactly these 30 columns (use `blank_row()` for the ones they don't fill).
 
 ## Running Scrapers
 

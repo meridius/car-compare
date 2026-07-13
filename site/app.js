@@ -595,6 +595,8 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Extra", filter: "agTextColumnFilter", w: 200 },
     { field: "Země", filter: "agSetColumnFilter", w: 100, tip: "Země prodejce. Inzeráty z mobile.de mohou být z Česka, Slovenska, Německa, Rakouska nebo Polska; ostatní zdroje jsou z Česka." },
     { field: "Zdroj", filter: "agSetColumnFilter", w: 100 },
+    { field: "Přidáno", filter: "agDateColumnFilter", filterParams: DATE_FILTER_PARAMS, w: 100, hdr: "Přidáno", tip: "Datum, kdy byl inzerát poprvé zachycen scraperem. Prázdné = inzerát existoval před zavedením sledování." },
+    { field: "Upraveno", filter: "agDateColumnFilter", filterParams: DATE_FILTER_PARAMS, w: 100, hdr: "Upraveno", tip: "Datum poslední změny údajů od prodejce (cena, nájezd, výbava…). Cena se počítá s 1% tolerancí kvůli dennímu kurzu EUR→Kč. Prázdné = od zavedení sledování beze změny." },
   ];
 
   var NUMERIC_COLS = {};

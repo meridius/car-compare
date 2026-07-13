@@ -10,7 +10,7 @@ CANONICAL_COLS = [
     "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
     "Kola", "Náhon 4x4", "Karoserie", "Verze", "Záruka", "Tepelné čerpadlo",
     "Spárováno", "Skóre shody", "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj",
-    "Odkaz na auto",
+    "Odkaz na auto", "Přidáno", "Upraveno",
 ]
 
 # Boolean columns that should be normalized to proper case: "Ano" or "Ne".

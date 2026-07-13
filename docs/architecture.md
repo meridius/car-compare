@@ -7,7 +7,7 @@ One fuel-agnostic scraper suite (`scrapers/`) collects Czech car listings and wr
 ```text
 scrapers/
   core/
-    schema.py     CANONICAL_COLS (26), TYP_EV/TYP_ICE, blank_row()
+    schema.py     CANONICAL_COLS (30), TYP_EV/TYP_ICE, blank_row()
     normalize.py  BRAND_MAP, MODEL_CLEANUP_PATTERNS, normalize_model()
     fields.py     ICE field extraction (engine vol/type, hybrid, body, trim, DCT, GPF, AWD, clean_extra)
     matching.py   load_authoritative_list(), match_to_authoritative() — ICE auth matching
@@ -48,12 +48,13 @@ Each adapter exposes `SOURCE_NAME`, `SOURCE_SLUG`, `FUELS`, and an async `scrape
 ## Data Flow
 
 ```text
-source.scrape()  → canonical rows (27-col dicts)
+source.scrape()  → canonical rows (30-col dicts)
 pipeline.run_source():
    DataFrame(rows, columns=CANONICAL_COLS)
    → drop_duplicates(subset="Odkaz na auto")
    → match_to_authoritative() on ICE rows only (EV untouched)
-   → merge_with_previous()  (stamp vanished listings "Odstraněno" + "Odstraněno dne",
+   → merge_with_previous()  (stamp vanished listings "Odstraněno" + "Odstraněno dne";
+                             stamp listing lifecycle dates "Přidáno"/"Upraveno";
                              drop removed rows older than 60 days)
    → storage.write_state() → data/scrapes/<slug>.parquet
 build/build_data.py:
@@ -92,14 +93,15 @@ always wins. See gotchas for `merge_with_previous` behaviour.
 
 ## Column Schema
 
-One canonical 26-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
+One canonical 30-column schema (`scrapers/core/schema.py` → `CANONICAL_COLS`):
 
 ```text
 Typ, Model auta, Cena (Kč), Nájezd (km), Rok výroby,
-Palivo, Objem motoru, Typ motoru, Hybrid typ, Výkon (kW),
+Palivo, Objem motoru, Typ motoru, Počet válců, Hybrid typ, Výkon (kW),
 Převodovka, Dvouspojková převodovka, Filtr pevných částic,
 Kola, Náhon 4x4, Karoserie, Verze, Záruka, Tepelné čerpadlo,
-Spárováno, Skóre shody, Extra, Stav, Země, Zdroj, Odkaz na auto
+Spárováno, Skóre shody, Extra, Stav, Odstraněno dne, Země, Zdroj, Odkaz na auto,
+Přidáno, Upraveno
 ```
 
 `Země` (country of the seller) is the only column that varies by country: the three

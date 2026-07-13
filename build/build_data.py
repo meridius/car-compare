@@ -1147,13 +1147,19 @@ def main():
     if "Hybrid typ" in df.columns and "Spotřeba (l/100 km)" in df.columns:
         df.loc[df["Hybrid typ"].astype(str).str.upper() == "PHEV", "Spotřeba (l/100 km)"] = None
 
+    # Lifecycle dates ride through from state; a seed-only build (merge not run)
+    # lacks them, so ensure the payload schema is stable (blank when unknown).
+    for col in ("Přidáno", "Upraveno"):
+        if col not in df.columns:
+            df[col] = ""
+
     ordered_cols = [
         "Typ", "Model auta", "Verze", "Cena (Kč)", "Nájezd (km)", "Rok výroby", "Výkon (kW)",
         "Palivo", "Objem motoru", "Typ motoru", "Počet válců", "Hybrid typ",
         "Převodovka", "Dvouspojková převodovka", "Filtr pevných částic",
         "Kola", "Náhon 4x4", "Karoserie", "Záruka", "Spárováno",
         "Skóre shody", "Tepelné čerpadlo",
-        "Extra", "Stav", "Odstraněno dne", "Země", "Zdroj", "Odkaz na auto",
+        "Extra", "Stav", "Odstraněno dne", "Přidáno", "Upraveno", "Země", "Zdroj", "Odkaz na auto",
         "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
         "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
         "Cd", "Cd zdroj", "Tepelné čerpadlo možné",

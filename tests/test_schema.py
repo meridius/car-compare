@@ -5,8 +5,8 @@ from scrapers.core.schema import CANONICAL_COLS, blank_row
 
 
 class SchemaTest(unittest.TestCase):
-    def test_28_columns(self):
-        self.assertEqual(len(CANONICAL_COLS), 28)
+    def test_30_columns(self):
+        self.assertEqual(len(CANONICAL_COLS), 30)
 
     def test_odstraneno_dne_sits_right_after_stav(self):
         self.assertIn("Odstraněno dne", CANONICAL_COLS)
@@ -37,6 +37,17 @@ class SchemaTest(unittest.TestCase):
         row = blank_row()
         self.assertEqual(set(row), set(CANONICAL_COLS))
         self.assertTrue(all(v == "" for v in row.values()))
+
+    def test_lifecycle_date_columns_present_and_trailing(self):
+        for col in ("Přidáno", "Upraveno"):
+            self.assertIn(col, CANONICAL_COLS)
+        # They are the final two columns, in this order (mirrors the reference CSVs).
+        self.assertEqual(CANONICAL_COLS[-2:], ["Přidáno", "Upraveno"])
+
+    def test_blank_row_seeds_lifecycle_dates(self):
+        row = blank_row()
+        self.assertEqual(row["Přidáno"], "")
+        self.assertEqual(row["Upraveno"], "")
 
 
 if __name__ == "__main__":

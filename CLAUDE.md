@@ -89,19 +89,24 @@ Every feature is **test-driven / test-verified** — `./bin/test.sh` must pass, 
 
 ## Canonical Schema
 
-One canonical 27-column schema for every source, defined in `scrapers/core/schema.py` (`CANONICAL_COLS`). Adapters fill the columns they have; the rest stay blank (`blank_row()`).
+One canonical 30-column schema for every source, defined in `scrapers/core/schema.py` (`CANONICAL_COLS`). Adapters fill the columns they have; the rest stay blank (`blank_row()`).
 
 ```text
 Typ | Model auta | Cena (Kč) | Nájezd (km) | Rok výroby
 Palivo | Objem motoru | Typ motoru | Hybrid typ | Výkon (kW)
 Převodovka | Dvouspojková převodovka | Filtr pevných částic
 Kola | Náhon 4x4 | Karoserie | Verze | Záruka | Tepelné čerpadlo
-Spárováno | Skóre shody | Extra | Stav | Odstraněno dne | Země | Zdroj | Odkaz na auto
+Spárováno | Skóre shody | Extra | Stav | Odstraněno dne | Země | Zdroj | Odkaz na auto | Přidáno | Upraveno
 ```
 
 `Odstraněno dne` = ISO date a listing was first seen missing; removed rows older
 than 60 days are dropped from live state (full history survives in the monthly
 snapshot releases).
+
+`Přidáno` / `Upraveno` (listings) = merge-stamped lifecycle dates — first seen /
+seller-content last changed (1% price tolerance for FX jitter); blank for state
+that predates the feature. Reference-row equivalents are git-derived
+(`build/backfill_ref_dates.py`); listing ones are stamped in `merge_with_previous`.
 
 `Typ` values: `Elektrické` · `Spalovací`.
 `Země` (country of the seller): `Česko` for the CZ-only sources (sauto/autodraft/energycars); mobile.de carries `Česko` · `Slovensko` · `Německo` · `Rakousko` · `Polsko`. Blank CZ-source rows are backfilled to `Česko` in `build_data.py`.

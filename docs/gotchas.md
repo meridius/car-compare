@@ -835,6 +835,33 @@ Previously `merge_with_previous()` did `df.set_index("Odkaz na auto").loc[link]`
 
 **Still recommended:** run parity / regression checks on FRESH scrapes (delete `scrapers/data/scrapes/*.csv` first). Not because of the (now-fixed) link bug, but because merge carries forward each removed row's last authoritative "Model auta" — a changed reference list won't re-match already-removed rows.
 
+### listing lifecycle dates (Přidáno / Upraveno) are merge-stamped, not git-derived
+
+Unlike the reference CSVs (git-tracked → `build/backfill_ref_dates.py`), scraped
+listings are not in git, so `merge_with_previous()` stamps their lifecycle dates
+from the new-vs-previous comparison:
+
+- **genuinely new link** → `Přidáno = Upraveno = today` (also the `prev is None`
+  path: a brand-new source's first scrape stamps every row today).
+- **link in both scrapes** → carry `Přidáno` forward; bump `Upraveno` to today
+  only when **seller content** changed (`_seller_content_changed`).
+- **removed link** → carry both unchanged (removal is `Odstraněno dne`, not an edit).
+- **existing state that predates the feature** (columns absent) → blank, filling
+  forward (there is no honest date to backfill ~150k rows).
+
+"Seller content" = a sha1 over `CANONICAL_COLS` minus `_DATE_HASH_EXCLUDE`
+(`Přidáno`/`Upraveno`/`Odstraněno dne`/`Stav`/`Spárováno`/`Skóre shody`/`Model auta`/
+`Odkaz na auto`/`Cena (Kč)`). The match-verdict trio (`Spárováno`/`Skóre shody`/
+`Model auta`) is excluded on purpose: a **reference-list edit re-matches rows and
+rewrites those columns but must not bump `Upraveno`**. Price is compared separately
+with a **1% relative tolerance** (`_PRICE_REL_TOL`) because mobile.de's Kč is
+EUR×CNB-daily-fixing and drifts sub-percent day to day — a real price move still
+bumps, FX jitter doesn't. `build_data.main()` guard-creates the two columns blank
+on a seed-only build (merge not run) so the payload schema is stable. Shown as
+`agDateColumnFilter` grid columns like `Odstraněno dne`. Pinned by
+`tests/test_merge.py::LifecycleDateTest` and
+`tests/test_data_integrity.py::ListingDateColumnsTest`.
+
 ---
 
 ## build — reference enrichment

@@ -72,6 +72,33 @@ class ReferenceDateColumnsTest(unittest.TestCase):
         self.assertEqual(bad, [], f"{len(bad)} rows have Přidáno after Upraveno")
 
 
+class ListingDateColumnsTest(unittest.TestCase):
+    """The listing payload carries Přidáno/Upraveno (may be blank per row, unlike
+    the reference), and where both are set Přidáno must not be after Upraveno."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.rows = _records(CARS_PARQUET)
+        cls.assertTrue(cls.rows, "cars.parquet is empty")
+
+    def test_both_date_columns_present(self):
+        sample = self.rows[0]
+        self.assertIn("Přidáno", sample)
+        self.assertIn("Upraveno", sample)
+
+    def test_set_dates_are_iso(self):
+        for col in ("Přidáno", "Upraveno"):
+            bad = [r for r in self.rows
+                   if r.get(col) and not _ISO_DATE_RE.match(str(r[col]))]
+            self.assertEqual(bad, [], f"{len(bad)} rows have non-ISO {col}")
+
+    def test_pridano_not_after_upraveno(self):
+        bad = [r for r in self.rows
+               if r.get("Přidáno") and r.get("Upraveno")
+               and str(r["Přidáno"]) > str(r["Upraveno"])]
+        self.assertEqual(bad, [], f"{len(bad)} listings have Přidáno after Upraveno")
+
+
 class DataIntegrityTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
