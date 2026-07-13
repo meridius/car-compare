@@ -926,3 +926,38 @@ Cd was findable. ~42% of rows are estimates — paywalled/blocked spec databases
 zdroj` shows on the reference page so estimates are never mistaken for measured data.
 `Cd` is numeric (lower = better); `Cd zdroj` is **not** carried into the main
 `cars.json` grid (reference page only).
+
+### reference date columns (Přidáno / Upraveno) are git-derived + writer-stamped
+
+Both reference CSVs carry two trailing ISO `yyyy-mm-dd` columns, shown as the last
+two (date-filtered) columns of the reference grid: **`Přidáno`** = when a row (by PK:
+`Jednoznačná varianta vozu` for ICE, `Model auta` for EV) first appeared in git
+history; **`Upraveno`** = when its content last changed. Two moving parts:
+
+- **`build/backfill_ref_dates.py`** seeds/reconciles both columns from git history.
+  It walks `git log --follow` (crosses the electric/combustion → unified rename; PK
+  is stable back to `0e39b01`) and hashes each row's content at every commit. Two
+  non-obvious bits: (1) **`--follow` is incompatible with `--reverse`** — git
+  collapses the log to a *single* commit, so it reads newest→oldest and reverses in
+  Python; (2) the content hash **excludes the two date columns**, so re-running is
+  **idempotent** (a row's own Upraveno never bumps itself, and a pre-migration blob
+  without the cols hashes identically). The working tree is folded in as a final
+  "today" snapshot, so uncommitted new/changed rows reconcile to today. It rewrites
+  via `csv` (QUOTE_MINIMAL) and is verified to touch **only** the two new columns —
+  the existing cells stay byte-identical (no pandas float/NaN reformatting). Run
+  `python build/backfill_ref_dates.py` (or `--check` to fail if a run would change
+  anything) after committing manual CSV edits so the git-derived dates catch up.
+- **Write paths stamp today.** `diagnose_unpaired.py` `apply` and
+  `reference_gap.append_rows` both set `Přidáno = Upraveno = date.today()` on the
+  rows they add (append_rows only when the header carries the cols and the value is
+  blank — never hand-fill them). These are the committed write paths the
+  `grow-reference` / `ai-match-one.sh` loops drive, so they're covered transitively.
+- **Caveat:** the 2026-07-11 spec-normalization commit rewrote nearly every row, so
+  most `Upraveno` collapse to that date — truthful (the rows *were* restructured
+  then), and edits since stand out with later dates. `Přidáno` stays well spread
+  (2026-05-24 → today).
+- `build_reference_json` copies both into `reference.json`; they are **not** carried
+  into the main `cars.json` grid (reference page only). Pinned by
+  `tests/test_backfill_ref_dates.py`, `test_diagnose_unpaired.ApplyStampsDatesTest`,
+  `test_reference_gap` (append stamping), and
+  `test_data_integrity.ReferenceDateColumnsTest` (valid ISO + Přidáno ≤ Upraveno).

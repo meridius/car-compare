@@ -98,6 +98,10 @@ skips duplicates, and appends to `ice_specs.csv`. Then `python3 build/build_data
 and re-run `gen_ice_candidates.py` to confirm the **real** delta matches the
 simulation; `./bin/test.sh` green.
 
+`append_rows` auto-stamps `Přidáno` + `Upraveno` = today on each new row — never
+hand-fill those columns. `build/backfill_ref_dates.py` reconciles them against git
+history on later runs (see docs/gotchas.md → build → reference date columns).
+
 ---
 
 ## Research contract (single Opus pass, self-verifying)

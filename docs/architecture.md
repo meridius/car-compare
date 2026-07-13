@@ -29,11 +29,15 @@ scrapers/
     reference/
       ice_specs.csv   ICE reference — structured cols (Značka,Model,Verze,Generace,
                       Karoserie,Počet míst,Objem motoru,Typ motoru,Palivo,Hybrid typ,
-                      Spotřeba,Objem kufru,Hlučnost,Cd,Cd zdroj); PK = Jednoznačná
-                      varianta vozu (clean, paren-free); exact join on "Model auta"
+                      Spotřeba,Objem kufru,Hlučnost,Cd,Cd zdroj,Přidáno,Upraveno);
+                      PK = Jednoznačná varianta vozu (clean, paren-free); exact
+                      join on "Model auta"
       ev_specs.csv    EV reference (comma-delim; Model auta,Karoserie,…,Cd,Cd zdroj,
-                      Tepelné čerpadlo možné); prefix-match join. Karoserie is the
-                      curated per-nameplate body driven onto matched EV rows.
+                      Tepelné čerpadlo možné,Přidáno,Upraveno); prefix-match join.
+                      Karoserie is the curated per-nameplate body driven onto
+                      matched EV rows.
+                      (Přidáno/Upraveno = git-derived row lifecycle dates —
+                      build/backfill_ref_dates.py; see gotchas.)
 
 bin/run_all.sh    dep check (once) + fan out `python -m scrapers.run --source NAME` per source in parallel
 build/build_data.py  concat states + per-fuel reference enrichment → site/data/cars.parquet (+ cars-meta.json)

@@ -727,6 +727,8 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Hlučnost (dB)": row.get("Hlučnost (dB)", None),
             "Cd": parse_czech_decimal(row.get("Cd", "")),
             "Cd zdroj": row.get("Cd zdroj", ""),
+            "Přidáno": row.get("Přidáno", ""),
+            "Upraveno": row.get("Upraveno", ""),
         }
         records.append(rec)
 
@@ -751,6 +753,8 @@ def build_reference_json(comb_ref, elec_ref, df):
             "Cd": parse_czech_decimal(row.get("Cd", "")),
             "Cd zdroj": row.get("Cd zdroj", ""),
             "Tepelné čerpadlo možné": row.get("Tepelné čerpadlo možné (ano/ne)", ""),
+            "Přidáno": row.get("Přidáno", ""),
+            "Upraveno": row.get("Upraveno", ""),
         }
         records.append(rec)
 

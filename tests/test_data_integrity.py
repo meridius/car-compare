@@ -22,7 +22,11 @@ from build.build_data import strip_ice_engine_tokens  # noqa: E402
 
 CARS_PARQUET = os.path.join(ROOT, "site", "data", "cars.parquet")
 CARS_META = os.path.join(ROOT, "site", "data", "cars-meta.json")
+REFERENCE_JSON = os.path.join(ROOT, "site", "data", "reference.json")
 ICE_SPECS_CSV = os.path.join(ROOT, "scrapers", "data", "reference", "ice_specs.csv")
+
+import re as _re
+_ISO_DATE_RE = _re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def setUpModule():
@@ -45,6 +49,27 @@ def _name(car):
     """Diagnostic display name for a payload row (task #3: the payload no
     longer carries 'Model auta' — it's split into 'Značka' + 'Model')."""
     return f"{car.get('Značka') or ''} {car.get('Model') or ''}".strip()
+
+
+class ReferenceDateColumnsTest(unittest.TestCase):
+    """Every reference.json row must carry valid yyyy-mm-dd Přidáno + Upraveno,
+    and Přidáno must never be after Upraveno."""
+
+    @classmethod
+    def setUpClass(cls):
+        with open(REFERENCE_JSON, encoding="utf-8") as f:
+            cls.rows = json.load(f)
+        cls.assertTrue(cls.rows, "reference.json is empty")
+
+    def test_both_date_cols_present_and_iso(self):
+        for col in ("Přidáno", "Upraveno"):
+            bad = [r for r in self.rows if not _ISO_DATE_RE.match(str(r.get(col) or ""))]
+            self.assertEqual(bad, [], f"{len(bad)} rows have non-ISO {col} "
+                             f"(e.g. {bad[0].get('Model auta') if bad else ''})")
+
+    def test_pridano_not_after_upraveno(self):
+        bad = [r for r in self.rows if str(r.get("Přidáno")) > str(r.get("Upraveno"))]
+        self.assertEqual(bad, [], f"{len(bad)} rows have Přidáno after Upraveno")
 
 
 class DataIntegrityTest(unittest.TestCase):

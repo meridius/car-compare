@@ -496,6 +496,41 @@
     updateRowCount();
   };
 
+  // Date columns (Přidáno/Upraveno) hold ISO "YYYY-MM-DD" strings, so
+  // agDateColumnFilter needs a comparator to compare them against its Date entry.
+  // Mirror of site/app.js "Odstraněno dne" — see gotchas → site → date filters.
+  // Parse into a LOCAL-midnight Date (new Date("2026-07-11") is UTC midnight and
+  // shifts a day in negative-offset zones, breaking equality). browserDatePicker
+  // must be false EXPLICITLY (AG defaults it true where <input type=date> exists),
+  // else the native picker renders in the browser locale, not the ISO the cells show.
+  function maskDateEntry(el) {
+    var digits = el.value.replace(/\D/g, "").slice(0, 8);
+    var out = digits.slice(0, 4);
+    if (digits.length > 4) out += "-" + digits.slice(4, 6);
+    if (digits.length > 6) out += "-" + digits.slice(6, 8);
+    return out;
+  }
+  document.addEventListener("input", function (e) {
+    var el = e.target;
+    if (!el || el.tagName !== "INPUT" || !el.closest || !el.closest(".ag-date-filter")) return;
+    var masked = maskDateEntry(el);
+    if (el.value !== masked) el.value = masked;
+  }, true);
+
+  var DATE_FILTER_PARAMS = {
+    browserDatePicker: false,
+    buttons: ["reset"],
+    inRangeInclusive: true,  // "between these dates" — AG defaults to exclusive bounds
+    comparator: function (filterDate, cellValue) {
+      if (!cellValue) return -1;
+      var p = String(cellValue).split("-");
+      if (p.length !== 3) return -1;
+      var cell = new Date(+p[0], +p[1] - 1, +p[2]);
+      var d = cell.getTime() - filterDate.getTime();
+      return d < 0 ? -1 : d > 0 ? 1 : 0;
+    },
+  };
+
   // Shared columns follow the main grid's order (site/app.js COL_CONFIG) for
   // easier visual scanning between the two pages; reference-only columns
   // (Tepelné čerpadlo možné) go after, keeping their prior relative order.
@@ -526,6 +561,8 @@
     { field: "Dojezd WLTP (km)", filter: RangeFilter, width: 120, type: "numericColumn", headerTooltip: "WLTP – standardizovaný laboratorní test (cyklus 0–131 km/h, teplota 23 °C). Výsledky bývají optimistické; reálný dojezd o 10–30 % nižší.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
     { field: "Dojezd EV-database (km)", filter: RangeFilter, width: 140, type: "numericColumn", headerTooltip: "Reálný dojezd dle ev-database.com – realističtější než WLTP.\nBarva buňky: zelená = delší dojezd, červená = kratší." },
     { field: "Tepelné čerpadlo možné", filter: SetFilter, width: 130, headerClass: "ag-header-cell-center", headerTooltip: "Lze doobjednat tepelné čerpadlo jako příplatek." },
+    { field: "Přidáno", filter: "agDateColumnFilter", filterParams: DATE_FILTER_PARAMS, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "Datum, kdy byl tento referenční řádek poprvé přidán (dle git historie)." },
+    { field: "Upraveno", filter: "agDateColumnFilter", filterParams: DATE_FILTER_PARAMS, width: 110, headerClass: "ag-header-cell-center", headerTooltip: "Datum poslední změny obsahu tohoto referenčního řádku (dle git historie)." },
   ];
 
   // Single-line header names for the filter-chips bar.
@@ -1046,6 +1083,7 @@
         equals: "Rovná se", notEqual: "Nerovná se",
         lessThan: "Menší než", lessThanOrEqual: "Menší nebo rovno",
         greaterThan: "Větší než", greaterThanOrEqual: "Větší nebo rovno",
+        before: "Před", after: "Po",  // agDateColumnFilter relabels lessThan/greaterThan
         inRange: "V rozsahu", inRangeStart: "od", inRangeEnd: "do",
         contains: "Obsahuje", notContains: "Neobsahuje",
         startsWith: "Začíná na", endsWith: "Končí na",

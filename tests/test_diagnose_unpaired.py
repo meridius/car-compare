@@ -230,5 +230,46 @@ class JunkBucketTest(unittest.TestCase):
         self.assertFalse(is_junk_bucket({"Značka": "Škoda", "Model": "Octavia"}))
 
 
+class ApplyStampsDatesTest(unittest.TestCase):
+    """A newly applied reference row must carry Přidáno + Upraveno = today."""
+
+    def test_ref_columns_end_with_date_cols(self):
+        self.assertEqual(REF_COLUMNS[-2:], ["Přidáno", "Upraveno"])
+
+    def test_apply_writes_today_in_both_date_cols(self):
+        import argparse
+        import csv
+        import datetime
+        import json
+        import tempfile
+        import diagnose_unpaired as du
+
+        cand = {
+            "Jednoznačná varianta vozu": "Testovací Vůz 9.9 XYZ",
+            "Značka": "Testovací", "Model": "Vůz",
+        }
+        today = datetime.date.today().isoformat()
+        with tempfile.TemporaryDirectory() as d:
+            csv_path = os.path.join(d, "ice_specs.csv")
+            with open(csv_path, "w", encoding="utf-8", newline="") as f:
+                csv.writer(f).writerow(REF_COLUMNS)
+            cand_path = os.path.join(d, "cand.json")
+            with open(cand_path, "w", encoding="utf-8") as f:
+                json.dump(cand, f)
+
+            orig = du.AUTH_CSV
+            du.AUTH_CSV = csv_path
+            try:
+                du.cmd_apply(argparse.Namespace(
+                    candidate=cand_path, research=None, dry_run=False))
+            finally:
+                du.AUTH_CSV = orig
+
+            with open(csv_path, encoding="utf-8") as f:
+                rows = list(csv.DictReader(f))
+        self.assertEqual(rows[-1]["Přidáno"], today)
+        self.assertEqual(rows[-1]["Upraveno"], today)
+
+
 if __name__ == "__main__":
     unittest.main()

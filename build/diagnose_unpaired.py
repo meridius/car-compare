@@ -19,6 +19,7 @@ import json
 import os
 import re
 import sys
+from datetime import date
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
@@ -44,7 +45,7 @@ REF_COLUMNS = [
     "Jednoznačná varianta vozu", "Značka", "Model", "Verze", "Generace",
     "Karoserie", "Počet míst", "Objem motoru", "Typ motoru", "Palivo",
     "Hybrid typ", "Spotřeba (l/100 km)", "Objem kufru (l)", "Hlučnost (dB)",
-    "Cd", "Cd zdroj",
+    "Cd", "Cd zdroj", "Přidáno", "Upraveno",
 ]
 
 # A field must reach this share of the cluster's non-blank values to be
@@ -420,6 +421,11 @@ def cmd_apply(args):
     pk = cand["Jednoznačná varianta vozu"]
     if pk in existing:
         sys.exit(f"duplikát, neaplikuji: {pk}")
+    # Stamp lifecycle dates: a fresh reference row is added and updated today.
+    # backfill_ref_dates.py reconciles these against git history on later runs.
+    today = date.today().isoformat()
+    cand["Přidáno"] = today
+    cand["Upraveno"] = today
     print(json.dumps(cand, ensure_ascii=False, indent=2))
     if args.dry_run:
         print("(dry-run — nic nezapsáno)")

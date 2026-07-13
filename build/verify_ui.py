@@ -319,6 +319,49 @@ def scenario_date_filter(page):
     return ".ag-filter"
 
 
+def scenario_date_filter_ref(page):
+    """agDateColumnFilter on the reference page's ISO-string "Přidáno" column.
+    Every reference row carries a date (unlike Odstraněno dne), so a far-past
+    `after` shows all rows and a far-future `after` shows none — proving the
+    string→local-midnight comparator end-to-end. Then scroll the column into
+    view and open the popup for the screenshot."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    total = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    page.evaluate("window.__gridApi.setFilterModel({'Přidáno':"
+                  "{filterType:'date',type:'greaterThan',dateFrom:'2000-01-01 00:00:00',dateTo:null}});")
+    page.wait_for_timeout(400)
+    past = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if past != total:
+        raise AssertionError("Přidáno after far-past: %d shown, expected %d" % (past, total))
+    page.evaluate("window.__gridApi.setFilterModel({'Přidáno':"
+                  "{filterType:'date',type:'greaterThan',dateFrom:'2999-01-01 00:00:00',dateTo:null}});")
+    page.wait_for_timeout(400)
+    future = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if future != 0:
+        raise AssertionError("Přidáno after far-future: %d shown, expected 0" % future)
+
+    # inRange must be INCLUSIVE — a single-day range [X,X] shows the rows dated X.
+    probe = page.evaluate(
+        "(function(){var m={},best=null,bn=0;window.__gridApi.forEachNode(function(x){"
+        "var d=x.data&&x.data['Přidáno'];if(d){m[d]=(m[d]||0)+1;if(m[d]>bn){bn=m[d];best=d;}}});"
+        "return {day:best,n:bn};})()")
+    day, n = probe["day"], probe["n"]
+    page.evaluate("(d)=>window.__gridApi.setFilterModel({'Přidáno':"
+                  "{filterType:'date',type:'inRange',dateFrom:d+' 00:00:00',dateTo:d+' 00:00:00'}})", day)
+    page.wait_for_timeout(400)
+    got = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if got != n:
+        raise AssertionError("inRange [%s,%s] shown %d, expected %d (inclusive bounds)" % (day, day, got, n))
+    page.evaluate("window.__gridApi.setFilterModel(null)")
+    page.wait_for_timeout(200)
+
+    page.evaluate("window.__gridApi.ensureColumnVisible('Přidáno')")
+    page.evaluate("window.__gridApi.showColumnFilter('Přidáno')")
+    page.wait_for_selector(".ag-filter-wrapper", timeout=5000)
+    page.wait_for_timeout(300)
+    return ".ag-root-wrapper"
+
+
 def scenario_filter_chips(page):
     """Apply a set filter + a number filter via the grid API (equivalent to a
     user picking values in the filter popups), then confirm the active-filter
@@ -684,6 +727,7 @@ SCENARIOS = {
     "data-filters": scenario_data_filters,
     "archive": scenario_archive,
     "date-filter": scenario_date_filter,
+    "date-filter-ref": scenario_date_filter_ref,
     "filter-chips": scenario_filter_chips,
     "pairing-gap": scenario_pairing_gap,
     "missing-specs": scenario_missing_specs,

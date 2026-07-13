@@ -226,6 +226,22 @@ class TestAppendAndCount(unittest.TestCase):
             self.assertIn('"22,5"', text)   # comma decimal quoted
             self.assertIn("0.31", text)     # Cd dot, unquoted
 
+    def test_append_stamps_today_in_date_cols(self):
+        import datetime
+        today = datetime.date.today().isoformat()
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "ev.csv")
+            with open(p, "w", newline="", encoding="utf-8") as f:
+                f.write(",".join(rg.ev_columns()) + "\n")
+            row = {c: "" for c in rg.ev_columns()}
+            row["Model auta"] = "Renault Twingo"
+            rg.append_rows("ev", [row], path=p)
+            import csv as _csv
+            with open(p, encoding="utf-8") as f:
+                rows = list(_csv.DictReader(f))
+        self.assertEqual(rows[-1]["Přidáno"], today)
+        self.assertEqual(rows[-1]["Upraveno"], today)
+
     def test_count_unpaired(self):
         with tempfile.TemporaryDirectory() as d:
             import pandas as pd

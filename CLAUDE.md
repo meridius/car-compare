@@ -81,6 +81,8 @@ Every feature is **test-driven / test-verified** — `./bin/test.sh` must pass, 
 
 **Authoritative model matching** (ICE) → `scrapers/core/matching.py`
 
+**Reference row lifecycle dates** (`Přidáno`/`Upraveno`) → `build/backfill_ref_dates.py` (git-derived; `--check` in CI); write paths auto-stamp today
+
 **Diagnose one unpaired/uncertain ICE listing** → `build/diagnose_unpaired.py` (`pick` worst listings / `explain --link` per-field score breakdown / `candidate --link` derive+simulate a reference row / `apply` append it range-validated). Needs real state (`./bin/bootstrap-data.sh`).
 
 **Concurrency knobs** → `DETAIL_CONCURRENCY` in `scrapers/sources/energycars.py`; `fetch_all_details(session, urls, concurrency=20)` in `scrapers/core/http.py` (sauto)
@@ -130,6 +132,8 @@ Reference data (per fuel, joined by `Typ`):
 - `scrapers/data/reference/ev_specs.csv` — prefix-match join (EV); comma-delimited (decimal cells quoted).
 
 Both carry `Cd` (drag coefficient) + `Cd zdroj` flag (`reálné` measured / `odhad` body-shape estimate). To add a reference model, add a row with its structured columns — don't bake specs into the name.
+
+Both also carry two trailing ISO `yyyy-mm-dd` columns — `Přidáno` (row first added) + `Upraveno` (row last changed) — git-derived by `build/backfill_ref_dates.py` and auto-stamped by the write paths (`diagnose_unpaired apply`, `reference_gap.append_rows`). Never hand-fill them. See gotchas → build → reference date columns.
 
 ### Verifying UI changes
 

@@ -10,6 +10,7 @@ import os
 import re
 import sys
 import unicodedata
+from datetime import date
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, BASE_DIR)
@@ -288,7 +289,14 @@ def append_rows(fuel, rows, path=None):
         if needs_nl:
             f.write("\n")
         w = csv.writer(f, quoting=csv.QUOTE_MINIMAL)
+        today = date.today().isoformat()
         for r in rows:
+            r = dict(r)
+            # Stamp lifecycle dates on new rows (blank → today); backfill_ref_dates.py
+            # reconciles them against git history on later runs.
+            for col in ("Přidáno", "Upraveno"):
+                if col in header and not str(r.get(col, "")).strip():
+                    r[col] = today
             w.writerow([_fmt_cell(c, r.get(c, "")) for c in header])
     return len(rows)
 
