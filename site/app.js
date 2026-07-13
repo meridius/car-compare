@@ -357,18 +357,6 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     row.classList.toggle("overridden", r.min != null || r.max != null);
   }
 
-  // Activate grid filters for every column that already has a saved threshold/range
-  // (restored from localStorage or #t=), so colouring-only state also filters.
-  function activateRangeFilters() {
-    if (!gridApi) return;
-    Object.keys(userThresholds).forEach(function (field) {
-      if (NUMERIC_COLS[field] === undefined) return;
-      var m = rangeModel(field);
-      if (m) gridApi.setColumnFilterModel(field, m);
-    });
-    gridApi.onFilterChanged();
-  }
-
   function RangeFilter() {}
 
   RangeFilter.prototype.init = function (params) {
@@ -1402,14 +1390,15 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         }
 
         // Filters: URL fragment (#f=) → legacy ?filters= → localStorage.
+        // The filter store (#f= / carCompareFilters) is the sole source of truth
+        // for which columns filter. Colour thresholds (#t= / carCompareThresholds)
+        // only tint — a threshold with no matching filter entry is colour-only and
+        // must NOT be re-armed as a filter on load (that resurrected filters the
+        // user had cleared via the chip ×). Both are kept in sync at edit time by
+        // commitRange(); clearing the filter leaves the colour threshold alone.
         var urlFilters = hash.f ? U.decFilters(hash.f) : legacyFilters;
         var filters = urlFilters || loadFiltersFromStorage();
         if (filters) setFilterModel(filters);
-
-        // Colour thresholds and range filters are one coupled state: a threshold
-        // restored from localStorage / #t= (colour-only, no #f= entry) must also
-        // switch its column filter on.
-        activateRangeFilters();
 
         // Migrate an old ?filters= link (or stray #t=) to the canonical fragment.
         if (legacyFilters || hash.t) writeHash();

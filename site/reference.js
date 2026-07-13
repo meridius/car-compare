@@ -283,15 +283,6 @@
     row.classList.toggle("overridden", r.min != null || r.max != null);
   }
 
-  function activateRangeFilters() {
-    if (!gridApi) return;
-    Object.keys(userThresholds).forEach(function (field) {
-      var m = rangeModel(field);
-      if (m) gridApi.setColumnFilterModel(field, m);
-    });
-    gridApi.onFilterChanged();
-  }
-
   function RangeFilter() {}
 
   RangeFilter.prototype.init = function (params) {
@@ -1138,13 +1129,12 @@
         if (colState) applyColState(colState);
 
         // Filters: URL fragment (#f=) → legacy ?filters= → localStorage.
+        // The filter store is the sole source of truth for which columns filter;
+        // colour thresholds only tint. A colour-only threshold must NOT be re-armed
+        // as a filter on load (that resurrected filters cleared via the chip ×).
         var urlFilters = hash.f ? U.decFilters(hash.f) : legacyFilters;
         var filters = urlFilters || loadFiltersFromStorage();
         if (filters) gridApi.setFilterModel(filters);
-
-        // A colour threshold restored from localStorage must also switch its coupled
-        // range filter on (shared state).
-        activateRangeFilters();
 
         // Migrate an old ?filters= link to the canonical #fragment form.
         if (legacyFilters) writeHash();

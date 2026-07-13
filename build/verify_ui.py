@@ -706,8 +706,54 @@ def scenario_tools_menu(page):
     return "#tools-menu"
 
 
+def scenario_threshold_filter_clear(page):
+    """Regression: a colour-only threshold (set in Nastavení barev, no active row
+    filter) must NOT resurrect as a filter after reload. The threshold↔filter
+    coupling stores filtering in the filter store (#f= / carCompareFilters) and
+    colour in the threshold store (#t= / carCompareThresholds); load-time
+    re-derivation of a filter from every threshold (the deleted activateRangeFilters)
+    used to bring back filters the user had cleared via the chip ×.
+
+    Repro (per TASKS.md, verified 2026-07-13): colour threshold in localStorage +
+    empty filter store + bare reload → grid must show the FULL, unfiltered row set,
+    while the colour threshold survives (it is an appearance pref)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    full = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if not full or full < 10:
+        raise AssertionError(f"unexpected baseline row count: {full}")
+
+    # Seed exactly the task's repro state: a colour-only threshold, no filter model.
+    page.evaluate(
+        "(function(){"
+        "  localStorage.setItem('carCompareThresholds',"
+        "    JSON.stringify({'Cena (Kč)':{min:100000,max:300000}}));"
+        "  localStorage.removeItem('carCompareFilters');"
+        "})()"
+    )
+
+    # Bare reload — no #f= / #t= fragment, no ?filters= query.
+    base = page.url.split("#")[0].split("?")[0]
+    page.goto(base, wait_until="load", timeout=30000)
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.wait_for_timeout(300)
+
+    fm = page.evaluate("window.__gridApi.getFilterModel() || {}")
+    if "Cena (Kč)" in fm:
+        raise AssertionError(f"colour-only threshold resurrected as a filter on reload: {fm}")
+    after = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if after != full:
+        raise AssertionError(f"grid filtered after bare reload: {after} != full {full}")
+
+    # The colour threshold itself must persist (it still tints the column).
+    th = page.evaluate("localStorage.getItem('carCompareThresholds')") or ""
+    if "100000" not in th:
+        raise AssertionError("colour threshold lost on reload (should persist for tinting)")
+    return None
+
+
 SCENARIOS = {
     "grid": scenario_grid,
+    "threshold-filter-clear": scenario_threshold_filter_clear,
     "color-drawer": scenario_color_drawer,
     "heat-combo": scenario_heat_combo,
     "tools-menu": scenario_tools_menu,

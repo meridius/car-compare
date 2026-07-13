@@ -510,10 +510,22 @@ routes through `commitRange(field,min,max)`, which mirrors state into the other 
 (skipping the focused control) and debounces (220 ms) the expensive recolour +
 `setColumnFilterModel` + `onFilterChanged` off the 150k-row hot path. `setModel`
 writes shared state but does **not** call `commitRange` (AG drives the filter pass),
-so there's no loop. On load, `activateRangeFilters()` switches the filter on for any
-threshold restored colour-only from localStorage/`#t=`. The filter emits the
-standard AG number `inRange` model (null bound = open), so the URL codec
-(`url-state.js`), filter chips and persistence work unchanged.
+so there's no loop. The filter emits the standard AG number `inRange` model (null
+bound = open), so the URL codec (`url-state.js`), filter chips and persistence work
+unchanged.
+
+**The two stores split by concern — filtering vs colouring — and clearing a filter
+keeps the colour.** The filter store (`#f=` / `carCompareFilters`) is the *sole*
+source of truth for which columns filter; the threshold store (`#t=` /
+`carCompareThresholds`) only tints. On load the filter is restored from the filter
+store alone — a colour-only threshold (one the user cleared the filter for via the
+chip ×) is **never** re-armed as a filter. There used to be an `activateRangeFilters()`
+that re-derived a filter from *every* threshold on load, which resurrected filters the
+user had cleared (the threshold survives a chip × because chip removal only touches the
+filter model, not `userThresholds`) — deleted 2026-07-13. `commitRange` still couples
+the two at *edit* time (dragging either slider sets both colour and filter), so setting
+a range still filters; only clearing is asymmetric, and safe: colour may live without a
+filter (harmless tint), while a filter always renders a chip so it is never hidden.
 
 - **`fmtRangeNum`, not `fmtNum`** — `app.js` already has a 1-arg `fmtNum(n)` for the
   overview tables. The range formatter is 2-arg (`field, v`, cs-CZ thousands
