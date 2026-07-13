@@ -241,6 +241,47 @@ class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
                 self.assertGreaterEqual(int(out.iloc[0]["Skóre shody"]), M.STRONG_FLOOR)
 
 
+class MercedesClassPrefixTest(unittest.TestCase):
+    """Mercedes 'Třídy X' family collision (TASKS.md): the model base for every
+    Mercedes A/B-class listing is 'Třídy A' / 'Třídy B', which share the generic
+    first word 'Třídy'. _model_base_match's first-word heuristic then made every
+    'Třídy B' listing a candidate of every 'Třídy A' reference (and vice versa),
+    pulling the wrong class into scoring. Fix: strip the leading class word so the
+    base is the bare class letter ('A' / 'B'), consistent with the already-bare
+    'C' / 'E' / 'GLA' reference models."""
+
+    _REF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "scrapers", "data", "reference", "ice_specs.csv")
+
+    def test_clean_model_strips_class_prefix(self):
+        self.assertEqual(M._clean_model_for_matching("Třídy B"), "B")
+        self.assertEqual(M._clean_model_for_matching("Třídy A 180"), "A")
+        # unrelated multi-token bases are untouched
+        self.assertEqual(M._clean_model_for_matching("Santa Fe"), "Santa Fe")
+
+    def test_load_authoritative_strips_class_prefix(self):
+        al = M.load_authoritative_list(self._REF)
+        merc = [a for a in al if a["brand"] == "Mercedes-Benz"
+                and a["entry"].startswith("Mercedes-Benz Třídy")]
+        self.assertTrue(merc, "expected Mercedes Třídy reference rows")
+        bases = {a["model_base"] for a in merc}
+        self.assertTrue(bases <= {"A", "B"},
+                        f"class prefix not stripped: {bases}")
+
+    def test_class_b_listing_does_not_match_class_a_reference(self):
+        import pandas as pd
+        from scrapers.core.schema import blank_row, CANONICAL_COLS
+
+        al = M.load_authoritative_list(self._REF)
+        r = blank_row(); r.update({"Model auta": "Mercedes-Benz Třídy B 200",
+                                    "Objem motoru": "1.3"})
+        df = pd.DataFrame([r], columns=CANONICAL_COLS)
+        out = M.match_to_authoritative(df, al)
+        model = out.iloc[0]["Model auta"]
+        self.assertNotIn("Třídy A", model,
+                         f"class-B listing leaked into class-A reference: {model}")
+
+
 class ReferenceCSVSchemaTest(unittest.TestCase):
     """Reference-versioning plumbing: the auth-side reference CSVs carry the
     'Verze' column (ICE renamed from 'Výbava'; EV newly added) so version data

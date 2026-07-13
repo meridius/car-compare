@@ -82,7 +82,7 @@ def load_authoritative_list(csv_path) -> list[dict]:
             records.append({
                 "entry": entry,
                 "brand": col(row, "Značka"),
-                "model_base": col(row, "Model"),
+                "model_base": _strip_class_prefix(col(row, "Model")),
                 "body": _canonicalize_body(col(row, "Karoserie")),
                 # Unfolded reference body — the display value the dashboard shows
                 # for matched rows (build_data.apply_reference_body_specs). "body"
@@ -108,11 +108,22 @@ _ENGINE_IN_MODEL_RE = re.compile(
     re.IGNORECASE,
 )
 _NUM_SUFFIX_RE = re.compile(r'\s+\d{2,3}$')
+# Leading class word for models named by class letter: Czech "Třídy"/"Třída"
+# (Mercedes A/B/C/E) and the German "Klasse". Stripping it leaves the bare class
+# letter as the model base, so "Třídy A" and "Třídy B" no longer collide on the
+# shared first word "Třídy" in _model_base_match. Applied to both the scraped side
+# (_clean_model_for_matching) and the reference side (load_authoritative_list) so
+# both reduce to the same bare token.
+_CLASS_PREFIX_RE = re.compile(r'^\s*(?:t[řr][íi]d[ay]|klasse)\s+', re.IGNORECASE)
+
+
+def _strip_class_prefix(base: str) -> str:
+    return _CLASS_PREFIX_RE.sub('', base).strip()
 
 
 def _clean_model_for_matching(model_remainder: str) -> str:
     """Strip generation numbers, trim keywords, engine specs from model remainder for base matching."""
-    text = model_remainder
+    text = _strip_class_prefix(model_remainder)
     text = re.sub(r'\b[Řř]ada\s+', '', text)
     text = re.sub(r'\brad\s+', '', text, flags=re.IGNORECASE)
     for kw in _AUTH_BODY_KEYWORDS:

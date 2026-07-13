@@ -730,6 +730,26 @@ Cars not matching any reference entry are reformatted as "Brand Model EngVol Eng
 
 `_model_base_match()` compares the first word of scraped vs reference model base. This handles cases where scraped has extra suffixes ("Golf 8 Variant" → first word "Golf" matches reference "Golf"). Can produce false positives for single-letter model names but the scoring step disambiguates.
 
+### class-named models must strip the leading class word ("Třídy X")
+
+Mercedes A/B-class listings and reference rows are named by class letter: the
+model base is "Třídy A" / "Třídy B" (Czech "Class A/B"). The first-word heuristic
+above then keys on the *shared* generic word "Třídy", so every "Třídy B" listing
+became a candidate of every "Třídy A" reference (and vice versa) — ~930 B-class
+mobile.de listings were confidently mislabeled as A, and `diagnose_unpaired`
+derived the mongrel "Mercedes-Benz Třídy A 1.9 PHEV" for a B 220 d car by voting
+across the polluted (Mercedes, Třídy) cluster. Fix (`matching.py`
+`_strip_class_prefix` / `_CLASS_PREFIX_RE`): strip a leading "Třídy"/"Třída"/
+"Klasse" so the base is the bare class letter ("A" / "B"), consistent with the
+reference's already-bare "C" / "E" / "GLA" models. Applied on **both** the
+scraped side (`_clean_model_for_matching`) and the reference side
+(`load_authoritative_list` `model_base`) so both reduce to the same token — bare
+"A" ≠ bare "B", so the classes stop colliding while still matching within class.
+After the fix the (Mercedes, Třídy) listings partition exactly by real class
+(2206 A / 1270 B, zero cross-class leakage). The residual B-class Nejisté are the
+thin single "Třídy B 180" reference entry (and the fabricated-PHEV problem), not
+the collision. Pinned by `tests/test_matching.py::MercedesClassPrefixTest`.
+
 ### tri-state confidence: Ano / Nejisté / Ne (not binary)
 
 `classify_match()` (pure, unit-tested in `tests/test_matching.py`) returns a `state` plus a numeric score; `match_to_authoritative()` writes both to `Spárováno` and the `Skóre shody` column:
