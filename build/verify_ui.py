@@ -587,11 +587,22 @@ def scenario_url_state(page):
     # reset the layout so it doesn't bleed into the threshold reloads below
     page.evaluate("window.resetColOrder()")
 
-    # live threshold → #t=, restored on reload
+    # live threshold → #t=, restored on reload. Drive the REAL colour-drawer path:
+    # open the drawer (renders #threshold-inputs), set a min box and dispatch its
+    # `input` event so commitRange() runs. NB: window.saveThresholds() no longer
+    # parses the DOM (state flows through commitRange since the coupling refactor),
+    # so setting a box value + calling it is a no-op — hence the input event.
     page.evaluate("window.__gridApi.setFilterModel(null)")
-    page.evaluate("(function(){var r=document.querySelector('#threshold-inputs .threshold-row');"
-                  "r.querySelector('.th-min').value='55555';window.saveThresholds();})()")
-    page.wait_for_timeout(200)
+    page.evaluate("window.openColorSettings()")
+    page.wait_for_selector("#threshold-inputs .threshold-row .th-min", timeout=5000)
+    page.evaluate(
+        "(function(){"
+        "  var mn = document.querySelector('#threshold-inputs .threshold-row .th-min');"
+        "  mn.value = '55555';"
+        "  mn.dispatchEvent(new Event('input', {bubbles:true}));"
+        "})()"
+    )
+    page.wait_for_timeout(500)  # commitRange debounces persist + writeHash by 220 ms
     u3 = page.url
     if "t=" not in u3.split("#")[-1]:
         raise AssertionError(f"live threshold: no t= in fragment: {u3}")
