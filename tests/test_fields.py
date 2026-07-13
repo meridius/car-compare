@@ -252,5 +252,61 @@ class ParseEvEditionTest(unittest.TestCase):
         self.assertEqual(F.parse_ev_edition(None), "")
 
 
+class ExtractHybridTypeTest(unittest.TestCase):
+    """Word-boundary hybrid classifier (rewrite 2026-07-13).
+
+    The old substring matcher stamped PHEV on any text containing "iv"
+    (Privacy/Drive/Active), fabricating ~15.5k PHEV rows on mobile.de, and
+    missed real tokens (GTE, Plug-In, eHybrid, Mild-Hybrid). See gotchas →
+    mobile.de → German "Hybrid" listings fabricate PHEV/HEV.
+    """
+
+    # --- no more substring false positives (the load-bearing fix) ---
+    def test_iv_substring_no_longer_fabricates_phev(self):
+        for noise in ("Avant 35 Navi PDC Privacy", "A6 Drive Business",
+                      "Active Tourer", "Arrive", "Positive"):
+            self.assertEqual(F.extract_hybrid_type(noise), "",
+                             f"{noise!r} must not classify as any hybrid")
+
+    def test_tokenless_text_is_blank(self):
+        # a hybrid-fueled listing whose subtitle carries no hybrid word at all
+        self.assertEqual(F.extract_hybrid_type("118i Sport Line 1/2022"), "")
+        self.assertEqual(F.extract_hybrid_type(""), "")
+
+    # --- PHEV tokens (word-bounded) ---
+    def test_phev_tokens(self):
+        for t in ("330e Plug-In", "Passat GTE", "C 300 e eHybrid",
+                  "A3 40 TFSI e-Hybrid", "DS7 E-Tense", "Superb iV 1.4",
+                  "Tucson 1.6 T-GDi PHEV Plug-in"):
+            self.assertEqual(F.extract_hybrid_type(t), "PHEV", t)
+
+    def test_iv_word_bounded_still_matches_skoda_badge(self):
+        self.assertEqual(F.extract_hybrid_type("Škoda Octavia iV"), "PHEV")
+
+    def test_roman_numeral_iv_is_not_phev(self):
+        # standalone Roman "IV" (generation) must not read as the Škoda "iV" badge
+        self.assertEqual(F.extract_hybrid_type("Golf IV GTI"), "")
+
+    # --- MHEV tokens (win over the bare "hybrid" → HEV fallback) ---
+    def test_mhev_tokens(self):
+        for t in ("D200 L 100Km Mild-Hybrid", "1.5 mild hybrid",
+                  "2.0 TDI 48V", "Tucson 1.6 T-GDi HEV 48V Hybrid 4x4",
+                  "Clio E-Tech mHEV", "EQ Boost 200"):
+            self.assertEqual(F.extract_hybrid_type(t), "MHEV", t)
+
+    # --- HEV tokens + bare "Hybrid" fallback ---
+    def test_hev_tokens(self):
+        for t in ("RAV4 Hybrid AWD", "Corolla full hybrid", "Yaris e-CVT",
+                  "Duster HYBRID 140 Journey", "Niro Self-Charging"):
+            self.assertEqual(F.extract_hybrid_type(t), "HEV", t)
+
+    # --- priority: PHEV/MHEV beat the generic "Hybrid" word in the same text ---
+    def test_priority_phev_over_bare_hybrid(self):
+        self.assertEqual(F.extract_hybrid_type("Plug-in Hybrid 225e"), "PHEV")
+
+    def test_priority_mhev_over_bare_hybrid(self):
+        self.assertEqual(F.extract_hybrid_type("Mild Hybrid 48V Hybrid"), "MHEV")
+
+
 if __name__ == "__main__":
     unittest.main()

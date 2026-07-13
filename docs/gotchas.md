@@ -210,7 +210,8 @@ is the full allowed universe; repeated params are OR). `_build_row` re-checks
 vs ~1.3k for CZ+SK+AT+PL, the bulk of the dataset). That request volume is what
 makes the Akamai block below matter. Hybrids arrive as
 `ft="Hybrid (Benzin/Elektro)"` / `"Hybrid (Diesel/Elektro)"` → Palivo Benzín/Nafta +
-`Hybrid typ` from `extract_hybrid_type(subTitle)`, defaulting to HEV.
+`Hybrid typ` from `extract_hybrid_type(subTitle)`, **blank when the subtitle carries
+no explicit hybrid token** (subtype unknown — see the fabricated-hybrids gotcha below).
 
 ### German display strings everywhere
 
@@ -317,20 +318,41 @@ the rebadged Skywell ET5 and dealers list the donor name. Rows already sitting
 in state heal on the next scrape (merge: new data wins by link); removed rows
 keep the junk name forever (merge carries forward, see merge gotcha).
 
-### German "Hybrid" listings fabricate PHEV/HEV variants that never existed
+### German "Hybrid" listings fabricated PHEV/HEV variants — FIXED 2026-07-13
 
-mobile.de delivers mild hybrids under the same `ft="Hybrid (Benzin/Elektro)"`
-umbrella as full/plug-in hybrids, and `_build_row` → `extract_hybrid_type(subTitle)`
-then stamps `Hybrid typ` HEV (default) or PHEV (on plug-in-ish tokens) — so the
-state contains hundreds of e.g. "BMW 118 PHEV" rows although no 1-series PHEV was
-ever built (BMW's PHEV line starts at 225xe/230e). Consequence for reference
-growth: data-generated ICE rows with `Hybrid typ` set were web-checked, and rows
-whose hybrid variant does not exist (23 of the first 47 researched) were dropped —
-simulation showed dropping them *raises* confident matches (+989 Ano) because the
-mislabeled listings still pair with the non-hybrid row (one-sided hybrid penalty
-is only −1) while a fake PHEV sibling row ties everything into Nejisté. Genuine
-PHEVs (330e, DS7 E-Tense, …) keep their own rows. Adapter-level MHEV detection is
-the proper upstream fix — TODO.
+mobile.de delivers mild/full/plug-in hybrids under one `ft="Hybrid (Benzin/Elektro)"`
+umbrella, so the subtitle text is the only subtype signal. The **root cause** was
+`extract_hybrid_type()` (core/fields.py) doing naive **substring** matching: the
+PHEV token `"iV"` (Škoda badge) matched inside **Priv**acy / Dr**iv**e / Act**iv**e
+→ ~15.5k rows stamped a fabricated PHEV (Audi Avant 35 TDIs etc.), while real PHEV
+tokens (`GTE`, `Plug-In`, `eHybrid`) and the MHEV token `Mild-Hybrid` were missed
+and fell through to a blanket **HEV default** in `_build_row`. So the state held
+hundreds of e.g. "BMW 118 PHEV" rows although no 1-series PHEV was ever built.
+
+Fixed in two places:
+- **`_HYBRID_PATTERNS` / `extract_hybrid_type` (core/fields.py)** — ordered,
+  **word-bounded** regexes, priority **PHEV → MHEV → HEV**. Word boundaries kill
+  the `iV`-in-`Privacy` fabrication (and `\biV\b` is **case-sensitive** so Roman
+  "IV" generations don't read as the Škoda badge); expanded vocab catches GTE /
+  Plug-In / eHybrid / E-Tense / EQ Power (PHEV) and Mild-Hybrid / 48V / mHEV /
+  EQ Boost (MHEV). Ambiguous bare badges (Renault "E-Tech" = full OR mild OR EV)
+  are deliberately **absent** — they classify only via an explicit full/mild
+  qualifier. Source-agnostic (sauto/autodraft benefit too).
+- **`_build_row` (mobilede.py)** — dropped the `if not hybrid: hybrid = "HEV"`
+  fallback (and the now-dead `_HYBRID_FTS`). A tokenless hybrid → `Hybrid typ`
+  **blank** (subtype unknown; `Palivo` still Benzín/Nafta). Blank is the
+  zero-fabrication choice: the row is a plain hybrid-fueled ICE and pairs cleanly
+  with the non-hybrid reference row (one-sided hybrid penalty is only −1), instead
+  of a fabricated PHEV/HEV sibling tying the cluster into Nejisté.
+
+Pinned by `tests/test_fields.py::ExtractHybridTypeTest` (truth table incl. the
+substring-noise cases) + `tests/test_mobilede.py` (`test_tokenless_hybrid_gets_blank_type`,
+`test_diesel_hybrid_tokenless_blank`, updated `test_hybrid_row` → MHEV on "48V").
+**Existing state heals only on the next real mobile.de scrape** (adapter runs at
+scrape time; merge: new data wins by link) — removed rows keep the old label
+forever (merge carries forward). The earlier reference-growth mitigation still
+stands: genuine PHEVs (330e, DS7 E-Tense, …) keep their own rows, fabricated ones
+were never added (`diagnose_unpaired` research `exists:false` guard).
 
 ### country → the shared "Země" column, not Extra
 

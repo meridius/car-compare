@@ -60,7 +60,6 @@ _COUNTRY_MAP = {
     "AT": "Rakousko", "PL": "Polsko",
 }
 
-_HYBRID_FTS = {"Hybrid (Benzin/Elektro)", "Hybrid (Diesel/Elektro)"}
 _FUEL_MAP = {
     "Benzin": "Benzín",
     "Diesel": "Nafta",
@@ -241,9 +240,11 @@ def _build_row(item, rate):
     volume = f"{cc / 1000:.1f}" if cc else ""
     volume = sanitize_engine_volume(volume, f"{model_base} {sub}")
     gearbox = _TRANSMISSION_MAP.get(attr.get("tr", ""), "")
+    # Hybrid subtype comes only from an explicit token in the subtitle. When
+    # none is present we leave it blank rather than default HEV — ft=Hybrid says
+    # the car is *a* hybrid, not which kind, and a wrong HEV default fabricated
+    # full-hybrid variants (see docs/gotchas.md → German "Hybrid" fabricate).
     hybrid = extract_hybrid_type(sub)
-    if not hybrid and ft in _HYBRID_FTS:
-        hybrid = "HEV"
     extracted = {
         "Objem motoru": volume,
         "Typ motoru": extract_engine_type(sub),

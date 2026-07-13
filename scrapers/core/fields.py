@@ -14,18 +14,34 @@ ENGINE_TYPE_KEYWORDS = [
     "Turbo",
 ]
 
-HYBRID_KEYWORDS = [
-    ("e-Hybrid", "PHEV"),
-    ("E-HYBRID", "PHEV"),
-    ("iV", "PHEV"),
-    ("E-Tech full hybrid", "HEV"),
-    ("full hybrid", "HEV"),
-    ("e-TEC", "MHEV"),
-    ("MHEV", "MHEV"),
-    ("mHEV", "MHEV"),
-    ("mild hybrid", "MHEV"),
-    ("e-CVT", "HEV"),
-    ("Hybrid", "HEV"),
+# Hybrid classification patterns, checked in order — first match wins.
+# Word-bounded regexes (NOT bare substrings): the old `keyword in text.lower()`
+# matched "iv" inside "Privacy"/"Drive"/"Active", fabricating ~15.5k PHEV rows
+# on mobile.de. Order encodes priority — a specific subtype (PHEV/MHEV) must
+# beat the generic "hybrid"→HEV fallback when both appear in one string. Bare
+# ambiguous badges (Renault "E-Tech" is full OR mild OR EV) are deliberately
+# absent — they classify only via an explicit full/mild qualifier, else "".
+_HYBRID_PATTERNS = [
+    # PHEV — plug-in
+    (re.compile(r"plug[\s-]?in", re.I), "PHEV"),
+    (re.compile(r"\be[\s-]?hybrid\b", re.I), "PHEV"),
+    (re.compile(r"e[\s-]?tense", re.I), "PHEV"),          # DS E-Tense
+    (re.compile(r"\bPHEV\b", re.I), "PHEV"),
+    (re.compile(r"\bGTE\b", re.I), "PHEV"),               # VW plug-in badge
+    (re.compile(r"EQ[\s-]?Power", re.I), "PHEV"),         # Mercedes plug-in
+    (re.compile(r"\biV\b"), "PHEV"),  # Škoda badge — case-SENSITIVE, not Roman "IV"
+    # MHEV — mild / 48V
+    (re.compile(r"mild[\s-]?hybrid", re.I), "MHEV"),
+    (re.compile(r"\bmild\b", re.I), "MHEV"),
+    (re.compile(r"\bMHEV\b", re.I), "MHEV"),
+    (re.compile(r"\b48\s?V\b", re.I), "MHEV"),
+    (re.compile(r"EQ[\s-]?Boost", re.I), "MHEV"),         # Mercedes 48V badge
+    # HEV — full / self-charging / generic hybrid word
+    (re.compile(r"full[\s-]?hybrid", re.I), "HEV"),
+    (re.compile(r"e[\s-]?CVT", re.I), "HEV"),
+    (re.compile(r"self[\s-]?charging", re.I), "HEV"),
+    (re.compile(r"\bHEV\b", re.I), "HEV"),
+    (re.compile(r"\bhybrid\b", re.I), "HEV"),
 ]
 
 BODY_KEYWORDS = [
@@ -272,10 +288,18 @@ def strip_engine_from_model(model: str, engine_vol: str, engine_type: str) -> st
 
 
 def extract_hybrid_type(text: str) -> str:
-    """Classify hybrid: MHEV, HEV, PHEV, or empty."""
-    text_lower = text.lower()
-    for keyword, classification in HYBRID_KEYWORDS:
-        if keyword.lower() in text_lower:
+    """Classify hybrid: MHEV, HEV, PHEV, or empty.
+
+    Ordered, word-bounded regex match (see `_HYBRID_PATTERNS`): PHEV/MHEV tokens
+    beat the generic "hybrid"→HEV fallback, and no bare substring ("iv" inside
+    "Privacy") ever matches. Returns "" when the text carries no hybrid token at
+    all — the subtype is unknown, not assumed (mobile.de's `ft=Hybrid` says a
+    car is *a* hybrid, never which kind).
+    """
+    if not isinstance(text, str):
+        return ""
+    for pattern, classification in _HYBRID_PATTERNS:
+        if pattern.search(text):
             return classification
     return ""
 

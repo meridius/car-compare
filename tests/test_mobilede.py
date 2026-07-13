@@ -155,9 +155,29 @@ class BuildRowTest(unittest.TestCase):
         row = mobilede._build_row(HYBRID_ITEM, 25.0)
         self.assertEqual(row["Typ"], "Spalovací")
         self.assertEqual(row["Palivo"], "Benzín")
-        self.assertEqual(row["Hybrid typ"], "HEV")
+        # subtitle carries "48V" → 48V mild-hybrid architecture (MHEV), which
+        # wins over the loose dealer "HEV"/"Hybrid" wording in the same string.
+        self.assertEqual(row["Hybrid typ"], "MHEV")
         self.assertEqual(row["Náhon 4x4"], "Ano")
         self.assertEqual(row["Záruka"], "Ano")
+
+    def test_tokenless_hybrid_gets_blank_type(self):
+        # Hybrid fuel type but NO hybrid token in the subtitle: we can't tell
+        # MHEV/HEV/PHEV apart, so Hybrid typ stays blank (was a wrong HEV
+        # default that fabricated full-hybrid variants). Palivo still reflects
+        # the hybrid's combustion side. See gotchas → German "Hybrid" fabricate.
+        item = {**HYBRID_ITEM, "subTitle": "200 d Progressive Automatik 1/2022"}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Palivo"], "Benzín")
+        self.assertEqual(row["Hybrid typ"], "")
+
+    def test_diesel_hybrid_tokenless_blank(self):
+        item = {**HYBRID_ITEM,
+                "attr": {**HYBRID_ITEM["attr"], "ft": "Hybrid (Diesel/Elektro)"},
+                "subTitle": "220 d 4MATIC AMG Line 1/2022"}
+        row = mobilede._build_row(item, 25.0)
+        self.assertEqual(row["Palivo"], "Nafta")
+        self.assertEqual(row["Hybrid typ"], "")
 
     def test_country_mapped_from_cn(self):
         de = {**ICE_ITEM, "attr": {**ICE_ITEM["attr"], "cn": "DE", "loc": "Köln"}}
