@@ -829,6 +829,38 @@ Before this change the matcher stamped `Ano` on the single highest-scoring candi
 
 `merge_with_previous()` skips previous-CSV rows with an empty `Odkaz na auto`. Without this, rows that somehow lost their URL would accumulate as undedupeable copies on every run — this was the root cause of ~8k CSV growth per 4 days.
 
+### merge is O(n²) — a local full scrape vs a large stale previous state hangs
+
+`merge_with_previous()` loops every previous-state row and does
+`df[df["Odkaz na auto"] == link]` (a full linear scan of the *new* frame) per
+iteration. On CI this is cheap: the previous state is the same-day release, so the
+removed set is tiny. But a **local** full mobile.de scrape merged against a
+stale/mismatched bootstrap state (~148k previous × ~130k new) is ~19 billion string
+compares — it ran **>60 min pegged at one core with no output** (2026-07-14) before
+being killed, long after the network fetch (~20 min, clean) finished. Two takeaways:
+- To refresh one source's state locally, **move its previous `<slug>.parquet` aside
+  first** (`mv … tmp/`) so merge takes the `prev is None` fast path and writes the
+  fresh rows directly — you lose the removed/archive rows (fine for a local
+  analysis/reference-growth build; canonical state is the release).
+- The real fix (not yet done) is to index the new frame by link once
+  (`groupby`/`dict`) instead of re-scanning per previous row — O(n) not O(n²).
+- Run `python -u -m scrapers.run` (unbuffered) for local scrapes; stdout is
+  block-buffered to a file otherwise, so "Hotovo"/errors don't appear until exit.
+
+### mobile.de is NOT Akamai-blocked from a residential IP
+
+The Akamai gotcha above is about **datacenter** IPs (CI/Azure runners). Probed
+2026-07-14 from a residential WSL box: a full scrape (129 986 ICE + 17 638 EV,
+thousands of `/api/s/` requests at `CONCURRENCY=3`) returned **zero 403s**. So to
+refresh state with the current adapter (e.g. to heal the fabricated-hybrid labels
+after the 2026-07-13 fix — which only heal on a real scrape), **scrape locally**;
+don't wait on CI, which is the environment that gets blocked. This is also the
+fastest way to make a reference-growth batch avoid wasted `exists=false` research
+calls: on healed state the worst-matched clusters are genuine missing variants, not
+fabricated PHEV/HEV (batch 2026-07-14: 58/76 applied = 76 %, vs the stale-state
+batch's 17/39 = 44 %; ne-Ano 22 420 → 16 244, and the corrected bodies match cleanly
+so gains materialize instead of being suppressed by stale "Sedan" penalties).
+
 ### Odkaz clobber on rows present in both scrapes — FIXED (#11)
 
 Previously `merge_with_previous()` did `df.set_index("Odkaz na auto").loc[link]`, which dropped the index column and left the merged row with `Odkaz na auto` = NaN; those empty-link rows were then skipped on the next run, causing churn. Fixed in `core/merge.py` by selecting with a boolean mask (`df[df["Odkaz na auto"] == link].iloc[0]`), which keeps the link column.

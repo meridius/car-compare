@@ -655,14 +655,23 @@ class BodyTypeConsistencyTest(unittest.TestCase):
         an "X Andere" reference row) — its members have no derivable passenger body
         and their count grows unbounded with the DE-ICE feed, so counting them here
         would only track how much junk mobile.de returned, not a body regression.
-        With them excluded the ceiling stays tight enough to catch a real
-        derive/fold/vote regression (the remaining blanks are a handful of
-        commercial vans with no body in the reference)."""
+        With them excluded the ceiling still catches a real derive/fold/vote
+        regression: a mainstream model going blank adds hundreds/thousands of rows
+        (e.g. every Octavia), blowing past the ceiling. The remaining blanks are a
+        long tail of niche imports (low-volume Chinese EVs — Dayun/JAC/DongFeng/
+        Bestune — 1-3 listings each) and commercial vans (Iveco Daily, Peugeot
+        Boxer, Nissan Interstar, Maxus/Merc e-vans) with no reference row and no
+        derivable passenger body. That tail grew when the build ran against genuinely
+        fresh full DE state (~36 on 2026-07-14) vs the older bootstrap state the
+        original ceiling (20) was set on — mainstream nameplates the feed surfaced
+        (BMW M135, Jaguar XE, Volvo S90, BYD Atto, …) were added to
+        `_BODY_NAME_RULES`/`_BODY_MODEL_MAP` in build_data, leaving only the
+        genuinely-underivable tail. Ceiling is padded above that for feed churn."""
         blank = sum(
             1 for c in self.cars
             if not c.get("Karoserie") and str(c.get("Model") or "") != "Andere"
         )
-        self.assertLessEqual(blank, 20, f"{blank} non-junk rows have a blank Karoserie")
+        self.assertLessEqual(blank, 45, f"{blank} non-junk rows have a blank Karoserie")
 
 
 if __name__ == "__main__":

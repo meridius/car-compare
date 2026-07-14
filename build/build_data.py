@@ -118,7 +118,17 @@ _BODY_MODEL_MAP = [
     ("bmw i3", "Hatchback"), ("cupra born", "Hatchback"), ("fiat 500", "Hatchback"),
     ("honda e", "Hatchback"), ("mini cooper", "Hatchback"), ("corsa", "Hatchback"),
     ("zoe", "Hatchback"), ("id.3", "Hatchback"),
-    ("v90", "Kombi"), ("proceed", "Kombi"),
+    ("v90", "Kombi"), ("proceed", "Kombi"), ("levorg", "Kombi"),
+    # single-nameplate bodies for unmatched imports the DE feed surfaces
+    # (no reference row; Limousine→blank leaves them with no body hint)
+    # derive_body runs AFTER canonicalize_body_vocab, so emit already-canonical
+    # labels here — the liftback family (Prius, 6-GT) folds to Hatchback.
+    ("m135", "Hatchback"), ("mini one", "Hatchback"), ("mazda 2", "Hatchback"),
+    ("prius", "Hatchback"), ("gran turismo", "Hatchback"),
+    ("jaguar xe", "Sedan"), ("s90", "Sedan"), ("lexus is", "Sedan"),
+    ("ghibli", "Sedan"), ("vectra", "Sedan"), ("wrx", "Sedan"),
+    ("ford puma", "SUV"),
+    ("atto", "SUV"), ("born", "Hatchback"),
 ]
 
 
