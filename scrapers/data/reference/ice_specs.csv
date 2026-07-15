@@ -505,3 +505,50 @@ Opel Insignia 2.0 CDTi,Opel,Insignia,,"Gen 2 (B, facelift 2020)",Hatchback,5,2.0
 Ford Fiesta 1.0,Ford,Fiesta,,Gen 8,Hatchback,5,1.0,,Benzín,,"5,2",292,,0.33,odhad,2026-07-14,2026-07-14
 Peugeot 5008 1.2 MHEV,Peugeot,5008,,Gen 3,SUV,7,1.2,,Benzín,MHEV,"5,8",,,0.28,odhad,2026-07-14,2026-07-14
 Cupra Leon 2.0 TSI,Cupra,Leon,,Gen 1,Hatchback,5,2.0,TSI,Benzín,,"7,1",380,,0.29,reálné,2026-07-14,2026-07-14
+Opel Vivaro 2.2,Opel,Vivaro,,Gen 3,Kombi,9,2.2,,Nafta,,"7,1",,,0.35,odhad,2026-07-15,2026-07-15
+BMW 530 3.0 TSI,BMW,530,,Gen 7 (G30/G31),Kombi,5,3.0,TSI,Nafta,,"5,4",570,69,0.28,reálné,2026-07-15,2026-07-15
+Kia Ceed 1.5 T-GDI,Kia,Ceed,,Gen 3,,5,1.5,T-GDI,Benzín,,"6,3",395,66,0.31,odhad,2026-07-15,2026-07-15
+Peugeot 5008 1.2 HEV,Peugeot,5008,,Gen 3,SUV,7,1.2,,Benzín,HEV,"5,8",,67,0.30,odhad,2026-07-15,2026-07-15
+Jaecoo 7 1.6 T-GDI,Jaecoo,7,,Gen 1,Hatchback,5,1.6,T-GDI,Benzín,,"8,0",500,,0.281,reálné,2026-07-15,2026-07-15
+Lexus LBX 1.5,Lexus,LBX,,Gen 1,Hatchback,5,1.5,,Benzín,,"4,5",402,,0.34,reálné,2026-07-15,2026-07-15
+Nissan Juke 1.6,Nissan,Juke,,Gen 2,Hatchback,5,1.6,,Benzín,,"5,0",354,,0.35,odhad,2026-07-15,2026-07-15
+Omoda C5 1.6 TGDI,Omoda,C5,,Gen 1,Hatchback,5,1.6,TGDI,Benzín,,"7,5",360,,0.281,reálné,2026-07-15,2026-07-15
+Peugeot 408 1.2 HEV,Peugeot,408,,Gen 1,Hatchback,5,1.2,,Benzín,HEV,"5,1",536,66,0.28,reálné,2026-07-15,2026-07-15
+Renault Talisman 1.3 TCe,Renault,Talisman,,Gen 1,Kombi,5,1.3,TCe,Benzín,,"5,6",572,,0.30,odhad,2026-07-15,2026-07-15
+Seat Tarraco 2.0 TSI,Seat,Tarraco,,Gen 1,Kombi,5,2.0,TSI,Benzín,,"9,1",760,,0.35,odhad,2026-07-15,2026-07-15
+KGM Korando 1.5 T-GDI,KGM,Korando,,Gen 4,Kombi,5,1.5,T-GDI,Benzín,,"7,5",551,,0.35,odhad,2026-07-15,2026-07-15
+KGM Tivoli 1.5 T-GDI,KGM,Tivoli,,Gen 1,SUV,5,1.5,T-GDI,Benzín,,"6,9",423,,0.36,odhad,2026-07-15,2026-07-15
+KGM Torres 1.5 T-GDI,KGM,Torres,,Gen 1,SUV,5,1.5,T-GDI,Benzín,,"7,9",703,,0.34,odhad,2026-07-15,2026-07-15
+Subaru XV 2.0,Subaru,XV,,Gen 2,SUV,5,2.0,,Benzín,,"6,5",340,,0.35,odhad,2026-07-15,2026-07-15
+Toyota C-HR 1.8 HEV,Toyota,C-HR,,Gen 1,Hatchback,5,1.8,,Benzín,HEV,"5,0",377,67,0.34,odhad,2026-07-15,2026-07-15
+Toyota C-HR 2.0 HEV,Toyota,C-HR,,Gen 1,,5,2.0,,Benzín,HEV,"5,3",358,,0.32,reálné,2026-07-15,2026-07-15
+VW Passat 1.5 TSI,VW,Passat,,Gen 8,Kombi,5,1.5,TSI,Benzín,,"6,4",650,,0.31,reálné,2026-07-15,2026-07-15
+VW Polo 1.5 TSI,VW,Polo,,Gen 6,Hatchback,5,1.5,TSI,Benzín,,"5,1",351,,0.32,odhad,2026-07-15,2026-07-15
+VW Sharan 1.4 TSI,VW,Sharan,,Gen 2,MPV,7,1.4,TSI,Benzín,,"6,8",809,,0.32,odhad,2026-07-15,2026-07-15
+Dacia Bigster 1.2 TCe MHEV,Dacia,Bigster,,Gen 1,SUV,5,1.2,TCe,Benzín,MHEV,"5,5",667,,0.33,odhad,2026-07-15,2026-07-15
+Subaru Forester 2.0,Subaru,Forester,,Gen 5,Kombi,5,2.0,,Benzín,,"8,1",509,,0.37,odhad,2026-07-15,2026-07-15
+Alfa Romeo Junior 1.2 MHEV,Alfa Romeo,Junior,,Gen 1,Hatchback,5,1.2,,Benzín,MHEV,"4,9",415,,0.30,odhad,2026-07-15,2026-07-15
+Audi A1 1.5 TFSI,Audi,A1,,Gen 2,,5,1.5,TFSI,Benzín,,"5,6",335,,0.31,reálné,2026-07-15,2026-07-15
+Audi A1 2.0 TSI,Audi,A1,,Gen 2 (Type GB),Sportback,5,2.0,TSI,Benzín,,"5,5",335,,0.32,reálné,2026-07-15,2026-07-15
+Audi A3 2.0 TFSI,Audi,A3,,Gen 4 (8Y),Sportback,5,2.0,TFSI,Benzín,,"7,2",325,,0.28,reálné,2026-07-15,2026-07-15
+Audi A3 1.5 TSI,Audi,A3,,Gen 4,Sportback,5,1.5,TSI,Benzín,,"5,8",380,,0.30,reálné,2026-07-15,2026-07-15
+Audi A5 3.0 TDI,Audi,A5,,Gen 2,Sportback,5,3.0,TDI,Nafta,,"5,9",480,,0.26,reálné,2026-07-15,2026-07-15
+Audi A6 Avant 2.0,Audi,A6,,Gen 5 (C8),Kombi,5,2.0,,Nafta,,"5,4",565,,0.28,reálné,2026-07-15,2026-07-15
+Audi Q3 1.5 TSI,Audi,Q3,,Gen 2,MPV,5,1.5,TSI,Benzín,,"6,5",530,,0.32,reálné,2026-07-15,2026-07-15
+BMW 330 3.0 TSI,BMW,330,,Gen 7,Kombi,5,3.0,TSI,Nafta,,"5,8",500,,0.28,reálné,2026-07-15,2026-07-15
+Citroën C5 2.0 BlueHDi,Citroën,C5,,Gen 1,SUV,5,2.0,BlueHDi,,,"4,9",580,,0.34,odhad,2026-07-15,2026-07-15
+Cupra Leon 1.5 eTSI,Cupra,Leon,,Gen 1,Kombi,5,1.5,eTSI,Benzín,,"5,5",620,,0.30,odhad,2026-07-15,2026-07-15
+Dacia Duster 1.2 MHEV,Dacia,Duster,,Gen 3,Kombi,5,1.2,,Benzín,MHEV,"5,5",517,,0.35,odhad,2026-07-15,2026-07-15
+DFSK Fengon 1.5 T-GDI,DFSK,Fengon,,Gen 1,SUV,5,1.5,T-GDI,Benzín,,"9,9",379,,0.35,odhad,2026-07-15,2026-07-15
+DS Automobiles DS7 (Crossback) 1.6 PureTech,DS,Automobiles DS7 (Crossback),,Gen 1,SUV,5,1.6,PureTech,Benzín,,"7,0",555,,0.33,odhad,2026-07-15,2026-07-15
+Fiat 600 1.2 HEV,Fiat,600,,Gen 1,Hatchback,5,1.2,,Benzín,HEV,"4,8",385,,0.31,odhad,2026-07-15,2026-07-15
+Ford S-MAX 2.5,Ford,S-MAX,,Gen 2,Kombi,7,2.5,,Benzín,,"6,5",700,,0.33,odhad,2026-07-15,2026-07-15
+Ford S-MAX 2.0 TSI,Ford,S-MAX,,Gen 2,SUV,7,2.0,TSI,Nafta,,"5,6",700,68,0.31,odhad,2026-07-15,2026-07-15
+Ford S-MAX 2.0 dCi,Ford,S-MAX,,Gen 2,SUV,7,2.0,dCi,Nafta,,"6,0",700,,0.32,odhad,2026-07-15,2026-07-15
+Genesis G70 2.2 CRDi,Genesis,G70,,Gen 1,Kombi,5,2.2,CRDi,Nafta,,"6,8",465,,0.28,reálné,2026-07-15,2026-07-15
+Honda Civic 1.5,Honda,Civic,,Gen 10,,5,1.5,,Benzín,,"6,1",478,,0.30,odhad,2026-07-15,2026-07-15
+Lexus UX 2.0,Lexus,UX,,Gen 1,Hatchback,5,2.0,,Benzín,,"4,5",,,0.33,reálné,2026-07-15,2026-07-15
+Mazda 3 2.0 SKYACTIV-G,Mazda,3,,Gen 4,Fastback,5,2.0,SKYACTIV-G,Benzín,,"5,5",351,,0.30,reálné,2026-07-15,2026-07-15
+Mercedes-Benz CLA 1.3 TSI,Mercedes-Benz,CLA,,Gen 2 (C118/X118),Kombi,5,1.3,TSI,Benzín,,"6,2",505,,0.26,reálné,2026-07-15,2026-07-15
+MG MG3 1.5 HEV,MG,MG3,,Gen 3,SUV,5,1.5,,Benzín,HEV,"4,4",293,,0.30,odhad,2026-07-15,2026-07-15
+MG ZS 1.5 HEV,MG,ZS,,Gen 3,Kombi,5,1.5,,Benzín,HEV,"5,0",443,,0.35,odhad,2026-07-15,2026-07-15
