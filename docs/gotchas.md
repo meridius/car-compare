@@ -1013,6 +1013,33 @@ researcher-flagged hybrid fabrications before apply ("Arteon 1.4 TSI HEV" is
 really the eHybrid PHEV; "Kona 1.6 GDI" ships only as HEV) — `exists:true` with a
 contradicting `variant_note` still needs a human read.
 
+### a reference-growth batch can be NET NEGATIVE — audit per-row before merging
+
+Applying researched candidate rows can *worsen* matching even when every row is a
+real car that passed the `exists` guard: a new row that shares (brand, model_base)
+with an existing entry and scores equal for some listings creates a **tie**, demoting
+previously-confident Ano rows to Nejisté (`classify_match` margin rule). Batch 4
+(2026-07-15) applied 64 researched rows and moved ne-Ano 16 244 → **16 450** (+206
+worse) before auditing. Two mechanisms:
+
+- **near-dup siblings vs existing entries** — "Mercedes-Benz C 2.0" alone demoted
+  888 listings (ties against the existing C-class entries); "Škoda Octavia 1.5 TSI"
+  −206 (ties vs "Škoda Octavia Combi Style 1.5 TSI" family), etc.
+- **near-dup siblings within the batch** — spelling variants of one variant
+  ("KGM Tivoli 1.5 T-GDI" / "1.5 TGDI" / "1.5 Turbo") tie *each other* for
+  type-blank listings, so isolated gains (+154) collapse jointly.
+
+Isolated per-row effect ≠ joint effect. The working recipe (see batch 4): after
+serial apply, diff-classify the full state against ref-without-batch vs ref-with-batch
+(one state load, both auth lists), compute each row's isolated net on its
+(brand, model_base) subset, drop isolated-negative rows + within-batch spelling dups,
+then re-verify jointly. Batch 4: 64 → 47 rows, ne-Ano 16 244 → 14 225 (−2019).
+Corollary of the payload single-body invariant (`test_matched_ice_entry_has_single_body`):
+a new row whose (Značka, Model, Verze, Objem, Typ motoru) payload key collides with an
+existing entry of a *different* body must carry the body token in its PK
+("Audi A6 **Avant** 2.0", "Seat Leon **Hatchback** 2.0") — the payload splits Model
+from the PK string, so that's what keeps the keys distinct.
+
 ### ai-match-one research runs the nested `claude -p` from a temp dir
 
 The research step's `claude -p` used to run inside the repo → the nested
