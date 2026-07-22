@@ -269,6 +269,139 @@ class AddTransmissionTypeColumnTest(unittest.TestCase):
         self.assertNotIn("Typ převodovky", out.columns)
 
 
+class ServiceCostTest(unittest.TestCase):
+    """service_cost() (task #23): calibrated annual workshop-cost estimate,
+    base(9000) × fuel × brand-tier × segment × engine, rounded to 500 Kč and
+    clamped to [3000, 60000]. Pure — truth table pins every factor."""
+
+    def _sc(self, typ, palivo, hybrid, znacka, karoserie, objem):
+        return B.service_cost(typ, palivo, hybrid, znacka, karoserie, objem)[0]
+
+    # Expected values pin the constants CALIBRATED 2026-07-22 against 20 real
+    # models (ADAC Werkstattkosten → CZ + Czech garage data). base=12000.
+    def test_petrol_mainstream_compact_is_base(self):
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "VW", "Hatchback", "1.5"), "12000")
+
+    def test_diesel_factor(self):
+        # 12000 × 1.10 = 13200 → 13000
+        self.assertEqual(self._sc("Spalovací", "Nafta", "", "Škoda", "Kombi", "2.0"), "13000")
+
+    def test_premium_brand_tier(self):
+        # 12000 × 1.25 = 15000
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "BMW", "Sedan", "2.0"), "15000")
+
+    def test_ev_is_cheap_even_when_premium(self):
+        # 12000 × 0.35 × 1.25 = 5250 → 5000
+        self.assertEqual(self._sc("Elektrické", "Elektro", "", "Tesla", "Sedan", ""), "5000")
+
+    def test_ev_suv_mainstream(self):
+        # 12000 × 0.35 × 1.10 = 4620 → 4500
+        self.assertEqual(self._sc("Elektrické", "Elektro", "", "Škoda", "SUV", ""), "4500")
+
+    def test_budget_brand_suv(self):
+        # 12000 × 0.90 × 1.10 = 11880 → 12000
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "Dacia", "SUV", "1.3"), "12000")
+
+    def test_phev_hybrid_factor(self):
+        # 12000 × 1.10 × 1.25 = 16500
+        self.assertEqual(self._sc("Spalovací", "Benzín", "PHEV", "BMW", "Sedan", "2.0"), "16500")
+
+    def test_hybrid_typ_wins_over_palivo(self):
+        # MHEV multiplier (1.05) is used, not the underlying diesel (1.10)
+        # 12000 × 1.05 × 1.25 = 15750 → 16000
+        self.assertEqual(self._sc("Spalovací", "Nafta", "MHEV", "Audi", "Kombi", "2.0"), "16000")
+
+    def test_large_engine_and_suv(self):
+        # 12000 × 1.10 (SUV) × 1.10 (>2.0) = 14520 → 14500
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "VW", "SUV", "3.0"), "14500")
+
+    def test_small_engine(self):
+        # 12000 × 0.95 = 11400 → 11500
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "Škoda", "Hatchback", "1.0"), "11500")
+
+    def test_lpg_substring_match(self):
+        # 12000 × 1.05 = 12600 → 12500
+        self.assertEqual(self._sc("Spalovací", "LPG + Benzín", "", "Škoda", "Sedan", "1.6"), "12500")
+
+    def test_ev_overrides_missing_palivo(self):
+        # 12000 × 0.35 × 0.90 = 3780 → 4000
+        self.assertEqual(self._sc("Elektrické", "", "", "Dacia", "Hatchback", ""), "4000")
+
+    def test_blank_when_no_fuel_signal(self):
+        val, clamped = B.service_cost("Spalovací", "", "", "VW", "Sedan", "2.0")
+        self.assertEqual(val, "")
+        self.assertFalse(clamped)
+
+    def test_garbage_engine_volume_does_not_explode(self):
+        # sauto's 14.9 l garbage: engine factor is binned (>2.0 → 1.10), so it
+        # only nudges one bin (12000·1.10 = 13200 → 13000), never blows up.
+        self.assertEqual(self._sc("Spalovací", "Benzín", "", "VW", "Sedan", "14.9"), "13000")
+
+    def test_round_and_clamp_low(self):
+        self.assertEqual(B._round_and_clamp_service(2000), (3000, True))
+
+    def test_round_and_clamp_high(self):
+        self.assertEqual(B._round_and_clamp_service(70000), (60000, True))
+
+    def test_round_and_clamp_within_bounds(self):
+        self.assertEqual(B._round_and_clamp_service(9000), (9000, False))
+
+    def test_clamp_boundaries_not_flagged(self):
+        self.assertEqual(B._round_and_clamp_service(3000), (3000, False))
+        self.assertEqual(B._round_and_clamp_service(60000), (60000, False))
+
+
+class AddServiceCostColumnTest(unittest.TestCase):
+    """add_service_cost_column() inserts 'Servis (Kč/rok)' right after
+    'Spolehlivost' and covers every EV + ICE row that has a fuel signal."""
+
+    def test_inserted_after_spolehlivost(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Spolehlivost": "4", "Značka": "VW",
+             "Palivo": "Benzín", "Hybrid typ": "", "Karoserie": "Hatchback",
+             "Objem motoru": "1.5"},
+        ])
+        out = B.add_service_cost_column(df)
+        self.assertEqual(
+            list(out.columns).index("Servis (Kč/rok)"),
+            list(out.columns).index("Spolehlivost") + 1,
+        )
+        self.assertEqual(list(out["Servis (Kč/rok)"]), ["12000"])
+
+    def test_covers_ev_ice_and_blanks_when_no_fuel(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Značka": "Škoda", "Palivo": "Nafta",
+             "Hybrid typ": "", "Karoserie": "Kombi", "Objem motoru": "2.0"},
+            {"Typ": "Elektrické", "Značka": "Tesla", "Palivo": "Elektro",
+             "Hybrid typ": "", "Karoserie": "Sedan", "Objem motoru": ""},
+            {"Typ": "Spalovací", "Značka": "VW", "Palivo": "",
+             "Hybrid typ": "", "Karoserie": "Sedan", "Objem motoru": ""},
+        ])
+        out = B.add_service_cost_column(df)
+        self.assertEqual(list(out["Servis (Kč/rok)"]), ["13000", "5000", ""])
+
+    def test_znacka_derived_from_model_auta_when_no_znacka_column(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Model auta": "BMW 320i 2.0 TSI",
+             "Palivo": "Benzín", "Hybrid typ": "", "Karoserie": "Sedan",
+             "Objem motoru": "2.0"},
+        ])
+        out = B.add_service_cost_column(df)
+        self.assertEqual(list(out["Servis (Kč/rok)"]), ["15000"])
+
+    def test_noop_without_typ(self):
+        df = pd.DataFrame([{"Model auta": "x"}])
+        out = B.add_service_cost_column(df)
+        self.assertNotIn("Servis (Kč/rok)", out.columns)
+
+    def test_count_clamped_listings_zero_on_normal_data(self):
+        df = pd.DataFrame([
+            {"Typ": "Spalovací", "Značka": "VW", "Palivo": "Benzín",
+             "Hybrid typ": "", "Karoserie": "Hatchback", "Objem motoru": "1.5"},
+        ])
+        self.assertEqual(B.count_service_clamped_listings(df), 0)
+
+
 class PayloadWriterTest(unittest.TestCase):
     """Pins the split payload contract (decision 001, option C).
 

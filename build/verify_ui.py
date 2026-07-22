@@ -167,6 +167,32 @@ def scenario_transmission_type_col(page):
     return None
 
 
+def scenario_service_cost_col(page):
+    """Scroll the estimated 'Servis (Kč/rok)' column (#23) into view — it sits
+    right of the default grid viewport (after 'Spolehlivost')."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.__gridApi.ensureColumnVisible('Servis (Kč/rok)');")
+    page.wait_for_timeout(400)
+    return None
+
+
+def scenario_service_cost(page):
+    """Open the dataset overview and scroll the 'Servisní náklady (odhad)' card
+    (#23) into view — methodology, factor table, clamp counts, source links."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-overlay", timeout=10000)
+    page.wait_for_timeout(300)
+    page.evaluate(
+        "var h=[].slice.call(document.querySelectorAll('#summary-overlay h3'))"
+        ".find(function(e){return (e.textContent||'').trim()==="
+        "'Servisní náklady (odhad)';});"
+        "if(h){h.scrollIntoView({block:'start'});}"
+    )
+    page.wait_for_timeout(200)
+    return "#summary-overlay"
+
+
 def scenario_overview_matching(page):
     """Open the dataset overview and scroll the 'Párování s referenčními modely'
     card into view, so the tri-state matching table (Spárováno / Nejisté /
@@ -833,6 +859,8 @@ SCENARIOS = {
     "transmission-type-col": scenario_transmission_type_col,
     "overview-matching": scenario_overview_matching,
     "data-filters": scenario_data_filters,
+    "service-cost": scenario_service_cost,
+    "service-cost-col": scenario_service_cost_col,
     "archive": scenario_archive,
     "date-filter": scenario_date_filter,
     "date-filter-ref": scenario_date_filter_ref,

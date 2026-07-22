@@ -838,6 +838,9 @@ def build_reference_json(comb_ref, elec_ref, df):
         _zn, _md = split_brand_model(model)
         rec["Značka"] = _zn
         rec["Model"] = strip_ice_engine_tokens(_md)
+        _sv, _sv_clamped = service_cost("Spalovací", palivo, hybrid, _zn, karoserie, vol)
+        rec["Servis (Kč/rok)"] = int(_sv) if _sv else None
+        rec["Servis mimo rozsah"] = _sv_clamped
         rec.update(ice_price.get(model) or _blank_price_fields())
         records.append(rec)
 
@@ -868,6 +871,10 @@ def build_reference_json(comb_ref, elec_ref, df):
         _zn, _md = split_brand_model(model)
         rec["Značka"] = _zn
         rec["Model"] = _md  # EV Model is not engine-stripped (mirrors payload)
+        _sv, _sv_clamped = service_cost(
+            "Elektrické", "Elektro", "", _zn, rec["Karoserie"], None)
+        rec["Servis (Kč/rok)"] = int(_sv) if _sv else None
+        rec["Servis mimo rozsah"] = _sv_clamped
         rec.update(ev_price.get(model) or _blank_price_fields())
         records.append(rec)
 
@@ -1108,9 +1115,230 @@ def add_reliability_column(df):
     return df
 
 
+# --- Service cost estimate (task #23, payload + reference display column) ----
+# "Servis (Kč/rok)" = estimated AVERAGE ANNUAL workshop cost over a 5-year
+# ownership window: scheduled servicing (oil/filters/fluids/inspections) + routine
+# wear-and-tear repairs (brakes, belts/chains service, minor parts). Excludes
+# tyres, fuel/energy, insurance, road tax and depreciation — matches ADAC
+# "Werkstattkosten" / BOVAG "onderhoud" semantics.
+#
+# There is NO free per-model Czech service-cost source, so this is a transparent
+# calibrated MODEL, not a measured value — every figure is an estimate ("odhad",
+# stated in the UI, never a separate per-row flag). The constants were CALIBRATED
+# (2026-07-22) against real published figures for 20 models spanning the
+# fuel × tier × segment grid — primarily ADAC Autokatalog "Werkstattkosten"
+# (Wartung + Reparatur, German market → normalised ~×0.5 for Czech labour) with
+# Czech garage cross-checks and BOVAG-RAI fuel-level averages. Best fit landed at
+# MAPE ≈ 21 %, near-zero mean bias (see the calibration note in
+# docs/superpowers/specs/2026-07-22-service-cost-column-design.md):
+#   * base — mainstream petrol compact ≈ 12 000 Kč/rok (CZ full servis+repairs)
+#   * fuel ratios — BOVAG-RAI 2024 + ADAC (EV ≈ 0.35× ICE; diesel/hybrid ≈ petrol)
+#   * brand tiers — ADAC Werkstattkosten ordering (premium ≈ 1.25× mainstream,
+#     the real premium is far smaller than intuition — a BMW X3 ≈ a VW Golf)
+# Residual per-model scatter is irreducible: ADAC per-model data carries real
+# model-specific noise (same-class cars differ ~2×) that a 4-factor formula cannot
+# and should not chase.
+#
+# The multiplier product is bounded to ≈[0.32, 2.33] under the CZ hard filters
+# (no exotica at ≤750k Kč) → raw ≈ [3 800, 28 000] Kč, so the
+# [SERVICE_MIN_KC, SERVICE_MAX_KC] clamp is a defensive net that does not fire on
+# current data. Any row that DID clamp is surfaced (overview count + reference-page
+# badge), never silently — mirroring the reference price-histogram `›` overflow mark.
+SERVICE_BASE_PETROL = 12000  # Kč/rok — mainstream petrol compact anchor (calibrated)
+
+# fuel/powertrain multiplier (relative to petrol = 1.00)
+SERVICE_FUEL_FACTOR = {
+    "benzin": 1.00, "nafta": 1.10, "lpg": 1.05, "cng": 1.05,
+    "mhev": 1.05, "hev": 1.00, "phev": 1.10, "bev": 0.35,
+}
+
+# brand → tier multiplier (parts + labour premium); unknown brand → mainstream 1.00
+SERVICE_BRAND_TIER = {
+    # budget (0.90)
+    "dacia": 0.90, "mg": 0.90,
+    # premium (1.25) — the real premium over mainstream is modest (ADAC data)
+    "bmw": 1.25, "mercedes-benz": 1.25, "audi": 1.25, "volvo": 1.25,
+    "lexus": 1.25, "land rover": 1.25, "jaguar": 1.25, "alfa romeo": 1.25,
+    "cupra": 1.25, "ds": 1.25, "ds automobiles": 1.25, "mini": 1.25,
+    "tesla": 1.25, "genesis": 1.25, "polestar": 1.25,
+    # luxury (1.75) — rare under the ≤750k Kč CZ price filter
+    "porsche": 1.75, "maserati": 1.75, "bentley": 1.75, "ferrari": 1.75,
+    "lamborghini": 1.75, "aston martin": 1.75, "rolls-royce": 1.75,
+}
+
+SERVICE_MIN_KC = 3000
+SERVICE_MAX_KC = 60000
+
+
+def _service_fuel_factor(typ, palivo, hybrid_typ):
+    """Powertrain multiplier. EV wins on Typ; then hybrid subtype; then the
+    liquid fuel. Returns None when no fuel signal is present → the row gets a
+    blank service cost (never a fabricated number)."""
+    if str(typ).strip() == "Elektrické":
+        return SERVICE_FUEL_FACTOR["bev"]
+    h = str(hybrid_typ).strip().lower()
+    if h in ("phev", "hev", "mhev"):
+        return SERVICE_FUEL_FACTOR[h]
+    p = str(palivo).strip().lower()
+    if "nafta" in p:
+        return SERVICE_FUEL_FACTOR["nafta"]
+    if "lpg" in p:
+        return SERVICE_FUEL_FACTOR["lpg"]
+    if "cng" in p:
+        return SERVICE_FUEL_FACTOR["cng"]
+    if "benz" in p:
+        return SERVICE_FUEL_FACTOR["benzin"]
+    return None
+
+
+def _service_tier_factor(znacka):
+    return SERVICE_BRAND_TIER.get(str(znacka).strip().lower(), 1.00)
+
+
+def _service_segment_factor(karoserie):
+    return 1.10 if str(karoserie).strip().lower() == "suv" else 1.00
+
+
+def _service_engine_factor(typ, objem_motoru):
+    """Displacement premium (ICE only). EV / missing volume → 1.00 (binned, so a
+    garbage volume can never explode the magnitude)."""
+    if str(typ).strip() == "Elektrické":
+        return 1.00
+    try:
+        vol = float(objem_motoru)
+    except (TypeError, ValueError):
+        return 1.00
+    if vol != vol:  # NaN
+        return 1.00
+    if vol <= 1.2:
+        return 0.95
+    if vol <= 2.0:
+        return 1.00
+    return 1.10
+
+
+def _round_and_clamp_service(raw):
+    """Round to the nearest 500 Kč, then clamp into [MIN, MAX]. Returns
+    (value:int, clamped:bool) — clamped is True iff the rounded raw fell outside
+    the plausibility window (a drift / data-quality signal)."""
+    rounded = int(round(raw / 500.0)) * 500
+    clamped = rounded < SERVICE_MIN_KC or rounded > SERVICE_MAX_KC
+    value = max(SERVICE_MIN_KC, min(SERVICE_MAX_KC, rounded))
+    return value, clamped
+
+
+def service_cost(typ, palivo, hybrid_typ, znacka, karoserie, objem_motoru):
+    """Pure estimator (task #23). Returns (value:str, clamped:bool): the rounded,
+    clamped Kč/rok figure as a string, or ("", False) when there's no fuel signal
+    to reason about. Applies to both ICE and EV."""
+    fuel = _service_fuel_factor(typ, palivo, hybrid_typ)
+    if fuel is None:
+        return "", False
+    raw = (SERVICE_BASE_PETROL * fuel
+           * _service_tier_factor(znacka)
+           * _service_segment_factor(karoserie)
+           * _service_engine_factor(typ, objem_motoru))
+    value, clamped = _round_and_clamp_service(raw)
+    return str(value), clamped
+
+
+def _service_znacka_series(df):
+    """Brand series for service costing: the payload split 'Značka' when present
+    (post add_brand_model_columns), else parsed from 'Model auta'."""
+    if "Značka" in df.columns:
+        return df["Značka"]
+    if "Model auta" in df.columns:
+        return df["Model auta"].map(lambda m: split_brand_model(m)[0])
+    return pd.Series("", index=df.index)
+
+
+def add_service_cost_column(df):
+    """Insert the payload-only 'Servis (Kč/rok)' column (task #23) right after
+    'Spolehlivost', computed per row from its own Typ/Palivo/Hybrid typ/brand/
+    Karoserie/Objem motoru. Full coverage for EV + ICE. Not part of
+    CANONICAL_COLS — a build-time display column, same treatment as 'Spolehlivost'."""
+    df = df.copy()
+    if "Typ" not in df.columns:
+        return df
+    znacka = _service_znacka_series(df)
+
+    def col(name):
+        return df[name] if name in df.columns else pd.Series("", index=df.index)
+
+    values = [
+        service_cost(t, p, h, z, k, o)[0]
+        for t, p, h, z, k, o in zip(
+            df["Typ"], col("Palivo"), col("Hybrid typ"), znacka,
+            col("Karoserie"), col("Objem motoru"))
+    ]
+    pos_col = "Spolehlivost" if "Spolehlivost" in df.columns else "Typ"
+    pos = list(df.columns).index(pos_col) + 1
+    df.insert(pos, "Servis (Kč/rok)", values)
+    return df
+
+
+def count_service_clamped_listings(df):
+    """How many listings had their service-cost estimate hit the clamp (a drift /
+    data-quality count surfaced in the dataset overview). 0 on current data."""
+    if "Typ" not in df.columns:
+        return 0
+    znacka = _service_znacka_series(df)
+
+    def col(name):
+        return df[name] if name in df.columns else pd.Series("", index=df.index)
+
+    return sum(
+        1
+        for t, p, h, z, k, o in zip(
+            df["Typ"], col("Palivo"), col("Hybrid typ"), znacka,
+            col("Karoserie"), col("Objem motoru"))
+        if service_cost(t, p, h, z, k, o)[1]
+    )
+
+
+# Static methodology block for the dashboard "Přehled datasetu" overview. The two
+# clamp counts are filled in dynamically in main().
+SERVICE_COST_META = {
+    "unit": "Kč/rok",
+    "note": (
+        "Odhadované průměrné roční náklady na servis a údržbu (dílna) za 5 let "
+        "vlastnictví: pravidelný servis (olej, filtry, kapaliny, prohlídky) + běžné "
+        "opotřebení (brzdy, rozvody, drobné díly). Nezahrnuje pneumatiky, palivo/"
+        "energii, pojištění, silniční daň ani ztrátu hodnoty. Volný zdroj servisních "
+        "nákladů na konkrétní model pro ČR neexistuje, proto jde o kalibrovaný odhad "
+        "(vždy „odhad“), ne měřenou hodnotu. Koeficienty jsou kalibrované na reálné "
+        "údaje 20 modelů (ADAC Werkstattkosten přepočtené na ČR + české servisy); "
+        "u konkrétního modelu se skutečnost může lišit."
+    ),
+    "formula": "základ × palivo × značka × karoserie × objem motoru",
+    "base": SERVICE_BASE_PETROL,
+    "factors": {
+        "palivo": {"Benzín": 1.00, "Nafta": 1.10, "LPG/CNG": 1.05,
+                   "MHEV": 1.05, "HEV": 1.00, "PHEV": 1.10, "Elektro": 0.35},
+        "značka": {"běžná": 1.00, "úsporná (Dacia, MG)": 0.90,
+                   "prémiová (BMW, Mercedes, Audi, Volvo, Tesla…)": 1.25,
+                   "luxusní (Porsche, Maserati…)": 1.75},
+        "karoserie": {"SUV": 1.10, "ostatní": 1.00},
+        "objem motoru": {"≤ 1.2 l": 0.95, "≤ 2.0 l": 1.00, "> 2.0 l": 1.10},
+    },
+    "clampMin": SERVICE_MIN_KC,
+    "clampMax": SERVICE_MAX_KC,
+    "sources": [
+        {"name": "ADAC Autokosten (Werkstattkosten, řazení podle značky/segmentu)",
+         "url": "https://www.adac.de/rund-ums-fahrzeug/"},
+        {"name": "ADAC Pannenstatistik (Gelbe Engel / „Yellow Angels“, poruchovost)",
+         "url": "https://www.adac.de/rund-ums-fahrzeug/unfall-schaden-panne/adac-pannenstatistik-2026/"},
+        {"name": "BOVAG-RAI Aftersales Monitor 2024 (poměry podle paliva)",
+         "url": "https://mijn.bovag.nl/actueel/nieuws/aftersales-monitor-2024-minder-onderhoudsmomenten-hogere-kosten"},
+        {"name": "Servisní náklady vozu v ČR (driveto.cz — základní kotva ~Octavia)",
+         "url": "https://www.driveto.cz/blogs/clanky/kolik-stoji-servis-auta-rocne"},
+    ],
+}
+
+
 PAYLOAD_NUMERIC_COLS = [
     "Cena (Kč)", "Nájezd (km)", "Výkon (kW)", "Rok výroby", "Objem motoru",
-    "Počet válců", "Spolehlivost",
+    "Počet válců", "Spolehlivost", "Servis (Kč/rok)",
     "Objem kufru (l)", "Hlučnost (dB)", "Spotřeba (l/100 km)",
     "Kapacita baterie (kWh)", "Dojezd WLTP (km)", "Dojezd EV-database (km)",
     "Skóre shody", "Cd",
@@ -1150,10 +1378,14 @@ def write_payload(df, metadata, out_dir):
     Task #26: also derives the payload-only 'Typ převodovky' column from
     'Typ' + 'Převodovka' + 'Dvouspojková převodovka' (see
     add_transmission_type_column) — no new canonical column.
+
+    Task #23: also derives the payload-only 'Servis (Kč/rok)' estimate (see
+    add_service_cost_column) — likewise not part of the canonical schema.
     """
     os.makedirs(out_dir, exist_ok=True)
     df = add_brand_model_columns(df)
     df = add_reliability_column(df)
+    df = add_service_cost_column(df)
     df = add_transmission_type_column(df)
     removed = df["Stav"].astype(str) == "Odstraněno" if "Stav" in df.columns else pd.Series(False, index=df.index)
 
@@ -1292,6 +1524,11 @@ def main():
 
     # Metadata describes the always-loaded live payload; the archive is separate
     # and lazy-loaded, so its rows are surfaced only by archivedCars.
+    # Reference JSON is built before the metadata so the per-reference-row
+    # service-cost clamp flags can feed the overview count (task #23).
+    print("Building reference JSON...")
+    ref_records = build_reference_json(comb_ref, elec_ref, df)
+
     metadata = {
         "buildDate": build_date,
         "trigger": trigger,
@@ -1307,6 +1544,13 @@ def main():
         # surfaced in the dashboard "Přehled dat" overview so users see the
         # selection criteria that shaped the dataset.
         "filters": SOURCE_FILTERS,
+        # Estimated annual service cost (task #23): static methodology +
+        # the two clamp counts (drift / data-quality signal; 0 on current data).
+        "serviceCost": {
+            **SERVICE_COST_META,
+            "clampedListings": count_service_clamped_listings(df_live),
+            "clampedRefs": sum(1 for r in ref_records if r.get("Servis mimo rozsah")),
+        },
     }
     live_count = len(df_live)
 
@@ -1315,9 +1559,6 @@ def main():
 
     print(f"\nDone: {live_count} live + {archived_count} archived cars → {live_path}")
     print(f"Final columns ({len(final_cols)}): {final_cols}")
-
-    print("Building reference JSON...")
-    build_reference_json(comb_ref, elec_ref, df)
 
     print("Updating scrape history...")
     update_scrape_history(metadata)

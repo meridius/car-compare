@@ -1164,6 +1164,39 @@ zdroj` shows on the reference page so estimates are never mistaken for measured 
 `Cd` is numeric (lower = better); `Cd zdroj` is **not** carried into the main
 `cars.json` grid (reference page only).
 
+### "Servis (Kč/rok)" is a calibrated ESTIMATE, computed at build (not in the CSVs)
+
+Task #23. `service_cost()` / `add_service_cost_column()` (`build/build_data.py`)
+derive an estimated **average annual workshop cost over 5 years** (scheduled
+servicing + wear repairs; excludes tyres/fuel/insurance/depreciation) for **every**
+EV + ICE row from that row's own columns — `base(12000) × fuel × brand-tier ×
+segment × engine`. Same payload-derived-display-column treatment as
+`Spolehlivost` (not in `CANONICAL_COLS`; added inside `write_payload` after
+`add_reliability_column`; in `PAYLOAD_NUMERIC_COLS` → float64). `build_reference_json`
+computes the same per reference row. No free per-model CZ source exists, so this
+is a **model, never a measured value** — the "odhad" is stated in the header
+tooltip + the "Servisní náklady (odhad)" overview card, **not** a per-row `zdroj`
+column (which would be a constant). Constants were **calibrated (2026-07-22)**
+against real published figures for 20 models (ADAC Werkstattkosten → CZ + Czech
+garage data + BOVAG-RAI fuel ratios) — best fit MAPE ≈ 21 %, near-zero bias (see
+the "Calibration" section in the spec). Key learning: the real premium-over-
+mainstream gap is only ~1.25× (a BMW X3 ≈ a VW Golf), far below intuition; EVs are
+~0.35× ICE. Residual per-model scatter is irreducible (ADAC data is ~2× noisy
+within a class) — don't chase it; it stays an estimate.
+
+Two non-obvious bits:
+- **The `[3000, 60000]` clamp is mathematically inert.** The multiplier product is
+  bounded to ≈`[0.32, 2.33]` under the CZ price filters (no exotica at ≤750k Kč),
+  so raw ∈ ≈`[3800, 28000]` — the clamp never fires on current data (`clampedListings`
+  / `clampedRefs` = 0). It's a **drift / data-quality detector**: `service_cost`
+  returns a `clamped` flag, reference rows carry `"Servis mimo rozsah"`, and the
+  counts feed the overview + a reference-page ⚠ badge (`servisRenderer`). Never a
+  silent clip — mirrors the price-histogram `›` overflow mark.
+- **`main()` builds reference.json BEFORE the metadata** (reordered) so the
+  per-ref-row clamp flags can feed `metadata.serviceCost.clampedRefs`. `test_meta_sidecar_keys`
+  pins the `serviceCost` block; formula truth table in
+  `tests/test_build_data.py::ServiceCostTest`.
+
 ### reference date columns (Přidáno / Upraveno) are git-derived + writer-stamped
 
 Both reference CSVs carry two trailing ISO `yyyy-mm-dd` columns, shown as the last

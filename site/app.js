@@ -572,6 +572,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     { field: "Objem motoru", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Zdvihový objem spalovacího motoru v litrech.\nBarva buňky: zelená = větší objem, červená = menší." },
     { field: "Počet válců", filter: "agNumberColumnFilter", w: 82, num: true, hi: true, hdr: "Počet\nválců", tip: "Počet válců spalovacího motoru. Zatím dostupné jen u části inzerátů (Sauto.cz).\nBarva buňky: zelená = více válců, červená = méně." },
     { field: "Spolehlivost", filter: "agNumberColumnFilter", w: 80, num: true, hi: true, tip: "Hrubý odhad dle pravidla: více válců a větší objem = vyšší spolehlivost. Není to empirická spolehlivost.\nPočet válců chybí u většiny inzerátů — odhad je pak jen z objemu motoru. Jen pro spalovací motory.\nBarva buňky: zelená = vyšší, červená = nižší." },
+    { field: "Servis (Kč/rok)", filter: "agNumberColumnFilter", w: 90, num: true, hi: false, hdr: "Servis\n(Kč/rok)", tip: "Odhadované průměrné roční náklady na servis a údržbu (dílna) za 5 let: pravidelný servis + běžné opotřebení (brzdy, rozvody, kapaliny). Bez pneumatik, paliva, pojištění a ztráty hodnoty.\nVzorec: základ 12000 × palivo × značka × karoserie × objem. Kalibrovaný odhad (vždy „odhad“) na reálné údaje (ADAC/ČR) — volný zdroj na model pro ČR neexistuje. Podrobnosti a zdroje v Přehledu datasetu.\nBarva buňky: zelená = levnější servis, červená = dražší." },
     { field: "Typ motoru", filter: "agSetColumnFilter", w: 90 },
     { field: "Hybrid typ", filter: "agSetColumnFilter", w: 90, tip: "MHEV = mild hybrid (rekuperace, bez čistě EV jízdy), HEV = plný hybrid (krátkodobě EV jízda), PHEV = plug-in hybrid (nabíjecí ze zásuvky)." },
     { field: "Karoserie", filter: "agSetColumnFilter", w: 100 },
@@ -1524,6 +1525,12 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
       if (appMetadata.filters && appMetadata.filters.length) {
         body.appendChild(makeFiltersCard(appMetadata.filters));
       }
+
+      // Service-cost methodology (task #23): how "Servis (Kč/rok)" is estimated,
+      // its sources, and the out-of-range clamp counts.
+      if (appMetadata.serviceCost) {
+        body.appendChild(makeServiceCostCard(appMetadata.serviceCost));
+      }
     } else {
       var noData = makeCard("");
       var p = document.createElement("p");
@@ -1768,6 +1775,72 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         block.appendChild(bulletList(ice));
       }
       card.appendChild(block);
+    }
+    return card;
+  }
+
+  // "Servisní náklady (odhad)" — methodology + sources + clamp counts for the
+  // estimated "Servis (Kč/rok)" column, carried in cars-meta.json.serviceCost
+  // (source of truth: build_data.SERVICE_COST_META). Task #23.
+  function makeServiceCostCard(sc) {
+    var card = makeCard("Servisní náklady (odhad)");
+
+    var intro = document.createElement("p");
+    intro.className = "filters-intro";
+    intro.textContent = sc.note || "";
+    card.appendChild(intro);
+
+    var formula = document.createElement("p");
+    formula.className = "filters-note";
+    formula.textContent = "Vzorec: " + (sc.formula || "") + " — základ "
+      + fmtNum(sc.base) + " Kč/rok.";
+    card.appendChild(formula);
+
+    // Factor groups (palivo / značka / karoserie / objem motoru)
+    var factors = sc.factors || {};
+    Object.keys(factors).forEach(function (group) {
+      var lbl = document.createElement("p");
+      lbl.className = "filters-sublabel";
+      lbl.textContent = group + ":";
+      card.appendChild(lbl);
+      var ul = document.createElement("ul");
+      ul.className = "filters-list";
+      var vals = factors[group];
+      Object.keys(vals).forEach(function (k) {
+        var li = document.createElement("li");
+        li.textContent = k + " × " + vals[k].toFixed(2);
+        ul.appendChild(li);
+      });
+      card.appendChild(ul);
+    });
+
+    // Out-of-range clamp counts (drift / data-quality signal)
+    var clamp = document.createElement("p");
+    clamp.className = "filters-note";
+    clamp.textContent = "Mimo věrohodný rozsah (" + fmtNum(sc.clampMin) + "–"
+      + fmtNum(sc.clampMax) + " Kč/rok): " + fmtNum(sc.clampedListings || 0)
+      + " inzerátů, " + fmtNum(sc.clampedRefs || 0) + " referenčních modelů.";
+    card.appendChild(clamp);
+
+    // Source links
+    if (sc.sources && sc.sources.length) {
+      var srcLbl = document.createElement("p");
+      srcLbl.className = "filters-sublabel";
+      srcLbl.textContent = "Zdroje:";
+      card.appendChild(srcLbl);
+      var sul = document.createElement("ul");
+      sul.className = "filters-list";
+      for (var i = 0; i < sc.sources.length; i++) {
+        var li = document.createElement("li");
+        var a = document.createElement("a");
+        a.href = sc.sources[i].url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = sc.sources[i].name;
+        li.appendChild(a);
+        sul.appendChild(li);
+      }
+      card.appendChild(sul);
     }
     return card;
   }

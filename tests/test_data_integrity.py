@@ -454,6 +454,40 @@ class ColumnFormatIntegrityTest(unittest.TestCase):
                          f"{len(offenders)} combustion rows with a known engine volume "
                          f"but no Spolehlivost score (e.g. {_name(offenders[0]) if offenders else ''})")
 
+    # -- Servis (Kč/rok) (#23) ------------------------------------------------
+
+    def test_service_cost_in_plausible_range_when_present(self):
+        """Every non-blank estimate sits inside the [3000, 60000] clamp window."""
+        offenders = [c for c in self.cars
+                     if isinstance(c.get("Servis (Kč/rok)"), (int, float))
+                     and not (3000 <= c["Servis (Kč/rok)"] <= 60000)]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows with out-of-range Servis "
+                         f"(e.g. {offenders[0].get('Servis (Kč/rok)') if offenders else ''} "
+                         f"{_name(offenders[0]) if offenders else ''})")
+
+    def test_service_cost_present_when_fuel_known(self):
+        """A row with a fuel signal (any ICE with Palivo, or any EV) must get an
+        estimate — the column should never silently disappear."""
+        offenders = [c for c in self.cars
+                     if (c.get("Typ") == "Elektrické"
+                         or (c.get("Typ") == "Spalovací" and str(c.get("Palivo") or "").strip()))
+                     and not isinstance(c.get("Servis (Kč/rok)"), (int, float))]
+        self.assertEqual(offenders, [],
+                         f"{len(offenders)} rows with a known fuel but no Servis estimate "
+                         f"(e.g. {_name(offenders[0]) if offenders else ''})")
+
+    def test_ev_service_cost_cheaper_than_ice_on_average(self):
+        """Fuel-factor sanity: EVs are ~0.45× ICE in the model, so the EV mean
+        must land below the ICE mean."""
+        ice_vals = [c["Servis (Kč/rok)"] for c in self.ice
+                    if isinstance(c.get("Servis (Kč/rok)"), (int, float))]
+        ev_vals = [c["Servis (Kč/rok)"] for c in self.ev
+                   if isinstance(c.get("Servis (Kč/rok)"), (int, float))]
+        if ice_vals and ev_vals:
+            self.assertLess(sum(ev_vals) / len(ev_vals), sum(ice_vals) / len(ice_vals),
+                            "EV mean service cost should be below ICE mean")
+
     # -- Enum columns --------------------------------------------------------
 
     def test_typ_enum(self):
@@ -579,11 +613,20 @@ class PayloadContractTest(unittest.TestCase):
         self.assertEqual(
             set(meta),
             {"buildDate", "trigger", "sources", "matching", "referenceData",
-             "totalCars", "archivedCars", "filters"},
+             "totalCars", "archivedCars", "filters", "serviceCost"},
         )
         self.assertGreater(meta["totalCars"], 0)
         # filters carries the per-source hard-filter criteria for the dashboard
         self.assertTrue(any(s["source"] == "Sauto.cz" for s in meta["filters"]))
+        # serviceCost (#23): methodology + the two clamp counts (drift signal)
+        sc = meta["serviceCost"]
+        self.assertEqual(sc["unit"], "Kč/rok")
+        self.assertIn("factors", sc)
+        self.assertTrue(sc["sources"])
+        self.assertIsInstance(sc["clampedListings"], int)
+        self.assertIsInstance(sc["clampedRefs"], int)
+        self.assertGreaterEqual(sc["clampedListings"], 0)
+        self.assertGreaterEqual(sc["clampedRefs"], 0)
 
     def test_live_payload_has_no_removed_rows(self):
         """cars.parquet is the always-loaded live set — removed listings belong

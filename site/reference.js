@@ -560,6 +560,7 @@
     { field: "Typ", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Palivo", filter: SetFilter, width: 100, headerClass: "ag-header-cell-center" },
     { field: "Spotřeba (l/100 km)", filter: RangeFilter, width: 120, type: "numericColumn", headerTooltip: "Průměrná spotřeba dle WLTP. V praxi bývá o 10–20 % vyšší.\nU plug-in hybridů (PHEV) je prázdná: oficiální WLTP hodnota (~1 l/100 km) předpokládá nabitou baterii a je zavádějící.\nBarva buňky: zelená = nižší spotřeba, červená = vyšší." },
+    { field: "Servis (Kč/rok)", filter: RangeFilter, width: 120, type: "numericColumn", headerName: "Servis (Kč/rok)", cellRenderer: servisRenderer, headerTooltip: "Odhadované průměrné roční náklady na servis a údržbu (dílna) za 5 let: pravidelný servis + běžné opotřebení (brzdy, rozvody, kapaliny). Bez pneumatik, paliva, pojištění a ztráty hodnoty.\nVzorec: základ 12000 × palivo × značka × karoserie × objem. Kalibrovaný odhad (vždy „odhad“) na reálné údaje (ADAC/ČR) — podrobnosti a zdroje v Přehledu datasetu na hlavní stránce.\n⚠ = mimo věrohodný rozsah 3000–60000 Kč/rok.\nBarva buňky: zelená = levnější servis, červená = dražší." },
     { field: "Objem kufru (l)", filter: RangeFilter, width: 110, type: "numericColumn", headerTooltip: "Barva buňky: zelená = větší kufr, červená = menší." },
     { field: "Výkon (kW)", filter: RangeFilter, width: 100, type: "numericColumn", headerTooltip: "Barva buňky: zelená = vyšší výkon, červená = nižší." },
     { field: "Objem motoru", filter: RangeFilter, width: 110, type: "numericColumn", headerTooltip: "Zdvihový objem spalovacího motoru v litrech." },
@@ -595,6 +596,7 @@
     "Dojezd WLTP (km)": true,
     "Dojezd EV-database (km)": true,
     "Cd": false,
+    "Servis (Kč/rok)": false,
   };
 
   // ── Heat-map colouring: user-selectable palette × style, theme-aware (mirrors
@@ -852,6 +854,20 @@
     if (isNaN(n)) return params.value;
     if (params.colDef && params.colDef.field === "Cd") return String(Math.round(n * 100));
     return n.toLocaleString("cs-CZ");
+  }
+
+  // "Servis (Kč/rok)" cell (task #23): the estimated number, plus a ⚠ badge when
+  // the row's estimate hit the plausibility clamp (row["Servis mimo rozsah"]) —
+  // like the missing-spec ⚠, so out-of-range models are never a silent value.
+  function servisRenderer(params) {
+    if (params.value == null || params.value === "") return "—";
+    var n = Number(params.value);
+    if (isNaN(n)) return "—";
+    var txt = n.toLocaleString("cs-CZ");
+    if (params.data && params.data["Servis mimo rozsah"]) {
+      return txt + ' <span class="missing-badge" title="Mimo věrohodný rozsah 3000–60000 Kč/rok">⚠</span>';
+    }
+    return txt;
   }
 
   // ── "Spárované vozy & rozpětí cen": Nabídek count + the three-view price cell ──
