@@ -147,6 +147,51 @@ def _extract_body_from_model(model: str) -> str:
     return ""
 
 
+# Lever A — listing-side trim recovery. Many Nejisté are trim-only sibling ties
+# (e.g. Škoda Octavia Combi vs Combi Style vs Combi Selection): body+engine match
+# every sibling equally and the listing's Verze column is blank, so nothing breaks
+# the tie. The disambiguating token usually IS in the listing text (name remainder
+# or Extra) — sauto emits abbreviated codes ("COM STY", "SEL"), mobile.de spells
+# them out. Recovering it lets the scored trim (+2/−1) promote the right sibling.
+#
+# Only the trims the REFERENCE actually carries are emitted — an emitted trim with
+# no reference counterpart can never help (one-sided trim isn't scored) and only
+# risks noise; grow this map in lockstep with the reference's Verze vocabulary.
+# Emission requires EXACTLY ONE match: empty or ambiguous text stays blank, so a
+# tie remains an honest Nejisté rather than flipping to a wrong-sibling Ano.
+# Each entry: (case-insensitive full words, case-sensitive UPPERCASE abbreviations).
+# Full words match any casing (mobile.de titles are mixed-case); abbreviations are
+# matched case-sensitively so sauto's ALLCAPS codes ("STY"/"SEL") don't false-hit a
+# lowercase substring.
+_LISTING_TRIM_VOCAB: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
+    "Style": (("Style",), ("STY",)),
+    "Selection": (("Selection",), ("SEL",)),
+    "Elegance": (("Elegance",), ()),
+    "Life": (("Life",), ()),
+    "Comfortline": (("Comfortline",), ()),
+}
+
+
+def _build_trim_re(words: tuple[str, ...], abbrevs: tuple[str, ...]) -> re.Pattern:
+    parts = [r'(?i:' + re.escape(w) + r')' for w in words] + [re.escape(a) for a in abbrevs]
+    return re.compile(r'\b(?:' + '|'.join(parts) + r')\b')
+
+
+_LISTING_TRIM_RES = {
+    canon: _build_trim_re(words, abbrevs)
+    for canon, (words, abbrevs) in _LISTING_TRIM_VOCAB.items()
+}
+
+
+def _trim_from_text(text: str) -> str:
+    """Recover a reference-known trim from listing free text. Returns the canonical
+    trim only when exactly one is found; "" for none or ambiguous (multiple)."""
+    if not text:
+        return ""
+    found = {canon for canon, rx in _LISTING_TRIM_RES.items() if rx.search(text)}
+    return found.pop() if len(found) == 1 else ""
+
+
 def _model_base_match(scraped_base: str, auth_base: str) -> bool:
     """Check if scraped model base matches auth model base."""
     if not scraped_base or not auth_base:
@@ -312,6 +357,14 @@ def match_to_authoritative(df, auth_list: list[dict]):
         engine_type = str(df.at[idx, "Typ motoru"]) if pd.notna(df.at[idx, "Typ motoru"]) else ""
         cleaned_base = _clean_model_for_matching(remainder)
 
+        trim = str(df.at[idx, "Verze"]) if "Verze" in df.columns and pd.notna(df.at[idx, "Verze"]) else ""
+        if not trim.strip():
+            # Lever A: recover a reference-known trim from the listing's own text
+            # (name remainder + Extra) to break trim-only sibling ties. Only fires
+            # when the text yields exactly one known trim (see _trim_from_text).
+            extra = str(df.at[idx, "Extra"]) if "Extra" in df.columns and pd.notna(df.at[idx, "Extra"]) else ""
+            trim = _trim_from_text(remainder + " " + extra)
+
         scraped = {
             "brand": brand,
             "model_base": cleaned_base,
@@ -320,7 +373,7 @@ def match_to_authoritative(df, auth_list: list[dict]):
             "engine_type": engine_type,
             "hybrid": str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else "",
             "fuel": str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else "",
-            "trim": str(df.at[idx, "Verze"]) if "Verze" in df.columns and pd.notna(df.at[idx, "Verze"]) else "",
+            "trim": trim,
         }
 
         res = classify_match(scraped, auth_list)

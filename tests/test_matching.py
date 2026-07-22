@@ -91,6 +91,37 @@ class ClassifyMatchTest(unittest.TestCase):
         self.assertEqual(res["entry"], "Škoda Octavia Combi Style 1.5 TSI")
 
 
+class TrimFromTextTest(unittest.TestCase):
+    """Lever A: derive a listing's trim from free text (name remainder + Extra)
+    when the Verze column is blank, so trim-only sibling ties resolve. Only the
+    trims the reference actually carries are emitted, and only when the text
+    yields EXACTLY ONE — an ambiguous/empty text stays blank (→ honest Nejisté),
+    never a false-confidence flip to the wrong sibling."""
+
+    def test_full_word_trim(self):
+        self.assertEqual(M._trim_from_text("Octavia Combi Selection 1.5 TSI"), "Selection")
+
+    def test_sauto_abbreviation(self):
+        # sauto Extra codes: "OCTAVIA COM STY TS 110 M6F" → Style, "... SEL ..." → Selection
+        self.assertEqual(M._trim_from_text("OCTAVIA COM STY TS 110 M6F"), "Style")
+        self.assertEqual(M._trim_from_text("OCTAVIA COM SEL TD 110 A7F"), "Selection")
+
+    def test_no_token_is_blank(self):
+        self.assertEqual(M._trim_from_text("Octavia Combi 1.5 TSI Business"), "")
+
+    def test_ambiguous_two_trims_is_blank(self):
+        # two distinct trims → can't disambiguate → blank (stay Nejisté)
+        self.assertEqual(M._trim_from_text("Octavia Style and Selection pack"), "")
+
+    def test_unknown_trim_not_in_reference_is_blank(self):
+        # Titanium/Trend have no reference sibling to match → emitting them can't
+        # help and risks noise, so they are not in the emitted vocab.
+        self.assertEqual(M._trim_from_text("Ford Puma Titanium"), "")
+
+    def test_word_boundary_no_false_substring(self):
+        self.assertEqual(M._trim_from_text("Lifestyle edition"), "")  # not "Life"
+
+
 class LoadAuthoritativeListTest(unittest.TestCase):
     """The reference CSV now carries structured feature columns; the loader must
     read them directly instead of regex-parsing the display name."""
