@@ -813,6 +813,38 @@ the collision. Pinned by `tests/test_matching.py::MercedesClassPrefixTest`.
 
 Before this change the matcher stamped `Ano` on the single highest-scoring candidate regardless of score (`max()` with no floor/margin guard), so ~25% of "matches" were coin-flips or contradictions hidden behind a 99.8% match rate. Thresholds are module constants in `core/matching.py`; after tuning, run `./bin/test.sh` — the data-integrity test asserts the distribution stays honest (no `Ano` row scores ≤ 0; uncertainty is surfaced). EV is not scored (prefix join), so EV `Spárováno` is only Ano/Ne and `Skóre shody` is blank.
 
+### tie-resolvers run at classify_match level, NOT as `_score_match` tweaks (Levers B + A2)
+
+Two Nejisté ties are broken by dedicated **resolvers inside `classify_match`**
+(after the confidence check, only when NOT confident), never by adding points in
+`_score_match`:
+- **Lever B** `_collapse_trim_only` — a trim-only tie with a trimless base → the base.
+- **Lever A2** `_resolve_body_tie` — a body-only tie (siblings differ by canonical
+  body; the listing's `Karoserie` is blank so every sibling scores the body field
+  one-sided and they tie) → the sibling whose canon body equals the body recovered
+  from the listing text (`_body_from_text`, gated to **exactly one** token like the
+  A1 trim recovery — ambiguous/absent → honest Nejisté). Recovered body rides a
+  separate `scraped["body_raw"]` key and feeds **only** the resolver; it never
+  touches the primary ±3 canon score, so the display-body invariant is untouched.
+
+Why not the "+1 in `_score_match`" the task literally proposed: a global +1 boosts a
+candidate whenever its canon body matches, which can boost a **runner-up** and shrink
+a confident winner's margin → **demote a correct Ano** (or flip it). A classify_match
+resolver is monotonic — it only runs on already-Nejisté rows, so it can only promote
+Nejisté→Ano, never demote (pinned by
+`SubBodyTieTest.test_recovered_body_does_not_demote_confident_ano`).
+
+Non-obvious data fact behind A2: the reference has **no same-canon sub-body splits**
+(no "Coupé" vs "Gran Coupé" both folding to Kupé as separate rows). Every body-tie is
+a *different-canon* tie (Hatchback/Kombi/Sedan) where the listing simply didn't state
+its body. So A2's yield is bounded by how many listings carry an *unambiguous* body
+word in name+Extra: measured **203 of 1557** live-ICE body-ties flip (Nejisté→Ano,
+0 demotions) on full state — Liftback/Gran Coupé/Sportback/VAN/Combi listings; the
+other ~1350 are genuinely body-silent → **honest Nejisté** (do not chase them). The
+strict exactly-one gate is why 203, not the ~580 a looser "any recoverable token"
+probe suggests — the extra ~380 carry two body words and would risk a wrong-sibling
+flip. Pinned by `tests/test_matching.py` `BodyFromTextTest` + `SubBodyTieTest`.
+
 ---
 
 ## core — merge_with_previous

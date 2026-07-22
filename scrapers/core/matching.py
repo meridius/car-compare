@@ -192,6 +192,35 @@ def _trim_from_text(text: str) -> str:
     return found.pop() if len(found) == 1 else ""
 
 
+# Lever A2 — listing-side body recovery. Many Nejisté are body-only sibling ties
+# (Škoda Octavia Combi vs Hatchback vs Sedan): the listing's Karoserie is blank, so
+# every sibling scores the body field one-sided and they tie at the same score. The
+# body word is usually present in the listing text (name remainder or Extra) —
+# recovering it (gated to exactly one, like the trim recovery in A1) lets the tie
+# resolve to the matching sibling. Tokens fold through _canonicalize_body so a
+# recovered token maps to the same canonical label the reference carries. Short/
+# risky tokens (bare "SW", "Van") are omitted to avoid false substring hits.
+_LISTING_BODY_TOKENS = (
+    "Hatchback", "Liftback", "Fastback", "Sportback",
+    "Sedan", "Kombi", "Combi", "Variant", "Avant", "Touring",
+    "Shooting Brake", "Sports Tourer", "Coupé", "Coupe", "Kupé",
+    "SUV", "MPV", "VAN",
+)
+_LISTING_BODY_RES = [
+    (re.compile(r'\b' + re.escape(t) + r'\b', re.IGNORECASE), _canonicalize_body(t))
+    for t in _LISTING_BODY_TOKENS
+]
+
+
+def _body_from_text(text: str) -> str:
+    """Recover a canonical body from listing free text. Returns the single canonical
+    body only when the text yields exactly one; "" for none or ambiguous (multiple)."""
+    if not text:
+        return ""
+    found = {canon for rx, canon in _LISTING_BODY_RES if rx.search(text)}
+    return found.pop() if len(found) == 1 else ""
+
+
 def _model_base_match(scraped_base: str, auth_base: str) -> bool:
     """Check if scraped model base matches auth model base."""
     if not scraped_base or not auth_base:
@@ -333,12 +362,36 @@ def _collapse_trim_only(tied: list[dict]) -> dict | None:
     return min(bases, key=lambda a: (len(a["entry"]), a["entry"]))
 
 
+def _resolve_body_tie(tied: list[dict], recovered_body: str) -> dict | None:
+    """Lever A2 — resolve a tie whose siblings differ by canonical body to the one
+    matching the body recovered from the listing text.
+
+    The tie arises because the listing's Karoserie is blank, so every body-differing
+    sibling scores the body field one-sided (0) and they tie. When the listing text
+    named exactly one body (recovered_body), pick the single tied sibling carrying it.
+
+    Returns that entry, or None to leave an honest Nejisté when: no body was recovered,
+    the tie is not a body split, or the recovered body matches zero or >1 siblings.
+    This is a pure tie-resolver (called only when classify_match is NOT confident), so
+    it can never demote a confident Ano.
+    """
+    if not recovered_body or len(tied) < 2:
+        return None
+    if len({a["body"] for a in tied}) < 2:
+        return None  # not a body split — some other kind of tie
+    matches = [a for a in tied if a["body"] == recovered_body]
+    if len(matches) != 1:
+        return None  # recovered body picks zero or several → can't disambiguate
+    return matches[0]
+
+
 def classify_match(scraped: dict, auth_list: list[dict]) -> dict:
     """Classify a scraped car against the auth list. Pure — no DataFrame, unit-testable.
 
     Returns {"state", "score", "margin", "entry"}:
       - state "Ano"     — confident: best score >= STRONG_FLOOR and clear margin,
-                          OR a trim-only tie collapsed to its trimless base (Lever B)
+                          OR a trim-only tie collapsed to its trimless base (Lever B),
+                          OR a body-only tie resolved by the listing's body token (Lever A2)
       - state "Nejisté" — candidate found but weak/ambiguous (thin data or tie)
       - state "Ne"      — no candidate at all (caller reformats the name)
     score/margin/entry are None when state == "Ne".
@@ -366,6 +419,12 @@ def classify_match(scraped: dict, auth_list: list[dict]) -> dict:
         if base is not None:
             return {"state": "Ano", "score": best_score, "margin": margin,
                     "entry": base["entry"]}
+        # Lever A2: a body-only tie resolves to the sibling matching the body token
+        # recovered from the listing text (exactly one → confident about the body).
+        picked = _resolve_body_tie(tied, scraped.get("body_raw", ""))
+        if picked is not None:
+            return {"state": "Ano", "score": best_score, "margin": margin,
+                    "entry": picked["entry"]}
 
     return {"state": "Nejisté", "score": best_score, "margin": margin, "entry": best["entry"]}
 
@@ -397,13 +456,15 @@ def match_to_authoritative(df, auth_list: list[dict]):
         engine_type = str(df.at[idx, "Typ motoru"]) if pd.notna(df.at[idx, "Typ motoru"]) else ""
         cleaned_base = _clean_model_for_matching(remainder)
 
+        extra = str(df.at[idx, "Extra"]) if "Extra" in df.columns and pd.notna(df.at[idx, "Extra"]) else ""
+        text = remainder + " " + extra
+
         trim = str(df.at[idx, "Verze"]) if "Verze" in df.columns and pd.notna(df.at[idx, "Verze"]) else ""
         if not trim.strip():
-            # Lever A: recover a reference-known trim from the listing's own text
+            # Lever A1: recover a reference-known trim from the listing's own text
             # (name remainder + Extra) to break trim-only sibling ties. Only fires
             # when the text yields exactly one known trim (see _trim_from_text).
-            extra = str(df.at[idx, "Extra"]) if "Extra" in df.columns and pd.notna(df.at[idx, "Extra"]) else ""
-            trim = _trim_from_text(remainder + " " + extra)
+            trim = _trim_from_text(text)
 
         scraped = {
             "brand": brand,
@@ -414,6 +475,10 @@ def match_to_authoritative(df, auth_list: list[dict]):
             "hybrid": str(df.at[idx, "Hybrid typ"]) if pd.notna(df.at[idx, "Hybrid typ"]) else "",
             "fuel": str(df.at[idx, "Palivo"]) if pd.notna(df.at[idx, "Palivo"]) else "",
             "trim": trim,
+            # Lever A2: body token recovered from the listing text, used only to break
+            # body-only sibling ties (see _resolve_body_tie); never feeds the primary
+            # body score, so the display-body invariant is untouched.
+            "body_raw": _body_from_text(text),
         }
 
         res = classify_match(scraped, auth_list)

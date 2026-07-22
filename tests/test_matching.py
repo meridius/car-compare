@@ -19,10 +19,10 @@ def auth(entry, brand, base, body="", vol="", etype="", hybrid="", fuel="", trim
             "trim": trim}
 
 
-def scraped(brand, base, body="", vol="", etype="", hybrid="", fuel="", trim=""):
+def scraped(brand, base, body="", vol="", etype="", hybrid="", fuel="", trim="", body_raw=""):
     return {"brand": brand, "model_base": base, "body": body,
             "engine_vol": vol, "engine_type": etype, "hybrid": hybrid, "fuel": fuel,
-            "trim": trim}
+            "trim": trim, "body_raw": body_raw}
 
 
 class ClassifyMatchTest(unittest.TestCase):
@@ -186,6 +186,89 @@ class TrimFromTextTest(unittest.TestCase):
         self.assertEqual(M._trim_from_text("Lifestyle edition"), "")  # not "Life"
 
 
+class BodyFromTextTest(unittest.TestCase):
+    """Lever A2: recover a body token from the listing's free text (name remainder
+    + Extra) when the Karoserie column is blank, so different-body sibling ties can
+    resolve. Only a canonical body the reference distinguishes is emitted, and only
+    when the text yields EXACTLY ONE — ambiguous/empty text stays blank (→ honest
+    Nejisté), never a wrong-sibling flip. Mirrors _trim_from_text (Lever A1)."""
+
+    def test_recovers_single_body(self):
+        self.assertEqual(M._body_from_text("Škoda Octavia Combi 1.5 TSI"), "Kombi")
+
+    def test_recovers_sedan(self):
+        self.assertEqual(M._body_from_text("BMW 320 Sedan 2.0"), "Sedan")
+
+    def test_coupe_folds_to_kupe(self):
+        self.assertEqual(M._body_from_text("Audi A5 Coupé 2.0 TDI"), "Kupé")
+
+    def test_no_body_token_is_blank(self):
+        self.assertEqual(M._body_from_text("Škoda Octavia 1.5 TSI"), "")
+
+    def test_two_distinct_bodies_is_blank(self):
+        # Combi (→Kombi) and Sedan → two canons → can't disambiguate → blank
+        self.assertEqual(M._body_from_text("Octavia Combi vs Sedan compare"), "")
+
+    def test_synonyms_of_one_canon_are_not_ambiguous(self):
+        # Combi and Kombi both fold to Kombi → still exactly one canon → not blank
+        self.assertEqual(M._body_from_text("Octavia Combi Kombi"), "Kombi")
+
+    def test_word_boundary_no_false_substring(self):
+        # "Caravan" must not trip the VAN token; empty result, not "MPV"
+        self.assertEqual(M._body_from_text("Volkswagen Caravan spec"), "")
+
+
+class SubBodyTieTest(unittest.TestCase):
+    """Lever A2: a tie among siblings that differ by canonical body (the listing's
+    Karoserie is blank, so every sibling scores the body field one-sided and they
+    tie) resolves to the sibling whose body matches the token recovered from the
+    listing text — but ONLY when exactly one tied sibling matches. Zero/ambiguous
+    recovery stays honest Nejisté, and a recovered body never demotes an already
+    confident Ano (the resolver runs only when NOT confident)."""
+
+    def _octavia_bodies(self):
+        # same brand/model/engine, differ only by canonical body
+        return [auth("Škoda Octavia Combi 1.5 TSI", "Škoda", "Octavia",
+                     body="Kombi", vol="1.5", etype="TSI"),
+                auth("Škoda Octavia Hatchback 1.5 TSI", "Škoda", "Octavia",
+                     body="Hatchback", vol="1.5", etype="TSI")]
+
+    def test_recovered_body_resolves_tie(self):
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="", vol="1.5", etype="TSI",
+                    body_raw="Kombi"), self._octavia_bodies())
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Combi 1.5 TSI")
+
+    def test_no_recovered_body_stays_nejiste(self):
+        # regression: without a recovered body the tie is still honest Nejisté
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="", vol="1.5", etype="TSI",
+                    body_raw=""), self._octavia_bodies())
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_recovered_body_matching_none_stays_nejiste(self):
+        # recovered "Sedan" matches neither Kombi nor Hatchback sibling → Nejisté
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="", vol="1.5", etype="TSI",
+                    body_raw="Sedan"), self._octavia_bodies())
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_recovered_body_does_not_demote_confident_ano(self):
+        # A confident Ano (winner clears floor + margin via engine type) must stay
+        # Ano even if a runner-up's body matches the recovered token — the resolver
+        # only acts on NOT-confident ties, so it can never demote.
+        al = [auth("Škoda Octavia Combi 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI"),          # winner: +2 vol +2 etype = 4
+              auth("Škoda Octavia Hatchback 2.0 TDI", "Škoda", "Octavia",
+                   body="Hatchback", vol="2.0", etype="TDI")]       # loser: vol/etype mismatch
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="", vol="1.5", etype="TSI",
+                    body_raw="Hatchback"), al)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Combi 1.5 TSI")
+
+
 class LoadAuthoritativeListTest(unittest.TestCase):
     """The reference CSV now carries structured feature columns; the loader must
     read them directly instead of regex-parsing the display name."""
@@ -303,6 +386,40 @@ class MatchToAuthoritativeDataFrameTest(unittest.TestCase):
         out = M.match_to_authoritative(df, al)
         self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
         self.assertEqual(out.iloc[0]["Model auta"], "Škoda Octavia Combi Style 1.5 TSI")
+
+    def test_body_recovered_from_text_resolves_body_tie(self):
+        """Lever A2 end-to-end: a blank-Karoserie listing whose name carries a body
+        token ('Combi') resolves the Kombi-vs-Hatchback tie to the matching entry."""
+        import pandas as pd
+        from scrapers.core.schema import blank_row, CANONICAL_COLS
+
+        al = [auth("Škoda Octavia Combi 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI"),
+              auth("Škoda Octavia Hatchback 1.5 TSI", "Škoda", "Octavia",
+                   body="Hatchback", vol="1.5", etype="TSI")]
+        r1 = blank_row(); r1.update({"Model auta": "Škoda Octavia Combi",
+                                     "Objem motoru": "1.5", "Typ motoru": "TSI"})
+        df = pd.DataFrame([r1], columns=CANONICAL_COLS)
+        out = M.match_to_authoritative(df, al)
+        self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
+        self.assertEqual(out.iloc[0]["Model auta"], "Škoda Octavia Combi 1.5 TSI")
+
+    def test_body_recovered_from_extra_resolves_body_tie(self):
+        """The body token may live in Extra, not the model name — still recovered."""
+        import pandas as pd
+        from scrapers.core.schema import blank_row, CANONICAL_COLS
+
+        al = [auth("Škoda Octavia Combi 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI"),
+              auth("Škoda Octavia Hatchback 1.5 TSI", "Škoda", "Octavia",
+                   body="Hatchback", vol="1.5", etype="TSI")]
+        r1 = blank_row(); r1.update({"Model auta": "Škoda Octavia",
+                                     "Objem motoru": "1.5", "Typ motoru": "TSI",
+                                     "Extra": "Combi 4x4 tažné"})
+        df = pd.DataFrame([r1], columns=CANONICAL_COLS)
+        out = M.match_to_authoritative(df, al)
+        self.assertEqual(out.iloc[0]["Spárováno"], "Ano")
+        self.assertEqual(out.iloc[0]["Model auta"], "Škoda Octavia Combi 1.5 TSI")
 
     def test_score_assignment_survives_strict_column_dtypes(self):
         """Regression: pandas 3.x makes a column's dtype strict, and the
