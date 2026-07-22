@@ -87,3 +87,4 @@ Dongfeng DongFeng 1.5
 JAECOO Jaecoo 1.5 HEV
 Mitsubishi Pick-up 2.3
 Volvo XC 2.0
+MINI John 2.0
