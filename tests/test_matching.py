@@ -91,6 +91,70 @@ class ClassifyMatchTest(unittest.TestCase):
         self.assertEqual(res["entry"], "Škoda Octavia Combi Style 1.5 TSI")
 
 
+class CollapseToBaseTest(unittest.TestCase):
+    """Lever B: a tie among siblings that differ ONLY by trim, where a trimless
+    base entry exists, collapses to that base as a confident Ano (the shared
+    body+engine+hybrid ARE certain; only the unstated trim isn't). Ties that
+    differ by body / hybrid-subtype, or that lack a trimless base, or that sit
+    below the score floor, stay honest Nejisté."""
+
+    def _octavia(self, *variants):
+        # variants: list of (entry, trim)
+        return [auth(e, "Škoda", "Octavia", body="Kombi", vol="1.5", etype="TSI", trim=t)
+                for e, t in variants]
+
+    def test_trim_only_tie_with_base_collapses_to_base(self):
+        al = self._octavia(
+            ("Škoda Octavia Combi 1.5 TSI", ""),
+            ("Škoda Octavia Combi Style 1.5 TSI", "Style"),
+            ("Škoda Octavia Combi Selection 1.5 TSI", "Selection"),
+        )
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="Kombi", vol="1.5", etype="TSI", trim=""), al)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Combi 1.5 TSI")
+
+    def test_trim_only_tie_without_base_stays_nejiste(self):
+        # only trimmed siblings exist — no honest base to fall to
+        al = self._octavia(
+            ("Škoda Octavia Combi Style 1.5 TSI", "Style"),
+            ("Škoda Octavia Combi Selection 1.5 TSI", "Selection"),
+        )
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="Kombi", vol="1.5", etype="TSI", trim=""), al)
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_body_tie_stays_nejiste(self):
+        # listing body blank → Combi vs Sedan both one-sided (tie), but they are
+        # genuinely different cars → must NOT collapse
+        al = [auth("Škoda Octavia Combi 1.5 TSI", "Škoda", "Octavia",
+                   body="Kombi", vol="1.5", etype="TSI"),
+              auth("Škoda Octavia Sedan 1.5 TSI", "Škoda", "Octavia",
+                   body="Sedan", vol="1.5", etype="TSI")]
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="", vol="1.5", etype="TSI"), al)
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_hybrid_subtype_tie_stays_nejiste(self):
+        # MHEV vs PHEV both one-sided (listing hybrid blank) → tie, different
+        # powertrains/prices → honest Nejisté, never collapsed
+        al = [auth("Hyundai Tucson 1.6 T-GDI MHEV", "Hyundai", "Tucson",
+                   body="SUV", vol="1.6", etype="T-GDI", hybrid="MHEV"),
+              auth("Hyundai Tucson 1.6 T-GDI PHEV", "Hyundai", "Tucson",
+                   body="SUV", vol="1.6", etype="T-GDI", hybrid="PHEV")]
+        res = M.classify_match(
+            scraped("Hyundai", "Tucson", body="SUV", vol="1.6", etype="T-GDI"), al)
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_thin_data_trim_tie_below_floor_not_collapsed(self):
+        # no discriminating field matches → best score 0 < floor → stay Nejisté,
+        # do not collapse thin data to a confident base
+        al = [auth("Škoda Octavia 1.5 TSI", "Škoda", "Octavia", trim=""),
+              auth("Škoda Octavia Style 1.5 TSI", "Škoda", "Octavia", trim="Style")]
+        res = M.classify_match(scraped("Škoda", "Octavia"), al)
+        self.assertEqual(res["state"], "Nejisté")
+
+
 class TrimFromTextTest(unittest.TestCase):
     """Lever A: derive a listing's trim from free text (name remainder + Extra)
     when the Verze column is blank, so trim-only sibling ties resolve. Only the

@@ -249,13 +249,20 @@ class DataIntegrityTest(unittest.TestCase):
 
     def test_match_rate_is_honest_not_vanity(self):
         """Guard against regression to the old over-confident matcher: uncertainty
-        must be surfaced, and the confident rate must be a realistic fraction."""
+        must be surfaced, and the confident rate must be a realistic fraction.
+
+        Ceiling raised 0.95 → 0.98 on 2026-07-22 when Levers A1 (listing-trim
+        recovery) + B (collapse trim-only ties to their trimless base) lifted the
+        honest Ano rate to ~95.2% (live ICE 6559 Nejisté still surfaced, 4.5%).
+        Both are principled and false-confidence-free (see matching.py) — the rate
+        rose because real trim-only ties resolved, not because uncertainty was
+        hidden. 0.98 still fails hard on a return to the ~99.8% vanity matcher."""
         n = len(self.ice)
         ano = sum(1 for c in self.ice if c.get("Spárováno") == "Ano")
         nej = sum(1 for c in self.ice if c.get("Spárováno") == "Nejisté")
         self.assertGreaterEqual(nej, 1, "no Nejisté rows — uncertainty not surfaced")
-        self.assertLess(ano / n, 0.95,
-                        f"Ano rate {ano/n:.1%} >= 95% looks like the old vanity matcher")
+        self.assertLess(ano / n, 0.98,
+                        f"Ano rate {ano/n:.1%} >= 98% looks like the old vanity matcher")
         self.assertGreater(ano / n, 0.30, f"Ano rate {ano/n:.1%} suspiciously low")
 
 

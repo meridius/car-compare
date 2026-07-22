@@ -302,11 +302,43 @@ def find_candidates(scraped: dict, auth_list: list[dict]) -> list[dict]:
     ]
 
 
+def _collapse_trim_only(tied: list[dict]) -> dict | None:
+    """Lever B — resolve a tie that differs ONLY by trim to the trimless base.
+
+    When the top-tied candidates share every scored field EXCEPT trim (same
+    canonical body, engine vol/type, hybrid, fuel), they are the same car at a
+    finer trim granularity the listing didn't state. The shared attributes are
+    certain, so if a trimless BASE entry exists among the tied set we can
+    confidently return it (display the base car, drop the unknown trim) instead
+    of flagging the whole cluster uncertain.
+
+    Returns the base auth entry, or None to leave the tie as an honest Nejisté:
+      - candidates differ by body/hybrid/engine (genuinely different cars), or
+      - no trimless base exists (only trimmed siblings — can't honestly pick one).
+    """
+    if len(tied) < 2:
+        return None
+    non_trim_keys = {
+        (_canonicalize_body(a["body"]), a["engine_vol"], a["engine_type"],
+         a["hybrid"], a["fuel"])
+        for a in tied
+    }
+    if len(non_trim_keys) != 1:
+        return None  # they differ by something other than trim → honest ambiguity
+    if len({a.get("trim", "") for a in tied}) < 2:
+        return None  # not actually a trim split
+    bases = [a for a in tied if not a.get("trim", "").strip()]
+    if not bases:
+        return None  # only trimmed siblings — no honest base to fall to
+    return min(bases, key=lambda a: (len(a["entry"]), a["entry"]))
+
+
 def classify_match(scraped: dict, auth_list: list[dict]) -> dict:
     """Classify a scraped car against the auth list. Pure — no DataFrame, unit-testable.
 
     Returns {"state", "score", "margin", "entry"}:
-      - state "Ano"     — confident: best score >= STRONG_FLOOR and clear margin
+      - state "Ano"     — confident: best score >= STRONG_FLOOR and clear margin,
+                          OR a trim-only tie collapsed to its trimless base (Lever B)
       - state "Nejisté" — candidate found but weak/ambiguous (thin data or tie)
       - state "Ne"      — no candidate at all (caller reformats the name)
     score/margin/entry are None when state == "Ne".
@@ -322,12 +354,20 @@ def classify_match(scraped: dict, auth_list: list[dict]) -> dict:
     best_score, best = scored[0]
     margin = (best_score - scored[1][0]) if len(scored) > 1 else None
     confident = best_score >= STRONG_FLOOR and (margin is None or margin >= MARGIN_REQ)
-    return {
-        "state": "Ano" if confident else "Nejisté",
-        "score": best_score,
-        "margin": margin,
-        "entry": best["entry"],
-    }
+    if confident:
+        return {"state": "Ano", "score": best_score, "margin": margin, "entry": best["entry"]}
+
+    # Lever B: a tie among trim-only siblings (all else equal) with a trimless
+    # base collapses to that base — confident about the car, agnostic on trim.
+    # Requires the score floor so thin-data ties (score 0) are never collapsed.
+    if best_score >= STRONG_FLOOR:
+        tied = [a for s, a in scored if best_score - s < MARGIN_REQ]
+        base = _collapse_trim_only(tied)
+        if base is not None:
+            return {"state": "Ano", "score": best_score, "margin": margin,
+                    "entry": base["entry"]}
+
+    return {"state": "Nejisté", "score": best_score, "margin": margin, "entry": best["entry"]}
 
 
 def match_to_authoritative(df, auth_list: list[dict]):
