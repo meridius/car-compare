@@ -519,9 +519,14 @@
     if (el.value !== masked) el.value = masked;
   }, true);
 
+  // Same cap as the index grid (site/app.js) — AG defaults combined AND/OR
+  // conditions to 2; five is the practical limit we allow.
+  var MAX_FILTER_CONDITIONS = 5;
+
   var DATE_FILTER_PARAMS = {
     browserDatePicker: false,
     buttons: ["reset"],
+    maxNumConditions: MAX_FILTER_CONDITIONS,
     inRangeInclusive: true,  // "between these dates" — AG defaults to exclusive bounds
     comparator: function (filterDate, cellValue) {
       if (!cellValue) return -1;
@@ -1355,7 +1360,7 @@
         floatingFilter: true,
         wrapHeaderText: true,
         autoHeaderHeight: true,
-        filterParams: { buttons: ["reset"] },
+        filterParams: { buttons: ["reset"], maxNumConditions: MAX_FILTER_CONDITIONS },
         tooltipComponent: ColTooltip,
       },
       tooltipShowDelay: 400,

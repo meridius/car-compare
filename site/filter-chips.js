@@ -42,6 +42,9 @@
       return (opd + " " + dayOnly(cond.dateFrom)).trim();
     }
     if (cond.type === "inRange") {
+      // The RangeFilter emits an open bound as null ("od 100 do null" otherwise).
+      if (cond.filter == null) return "do " + cond.filterTo;
+      if (cond.filterTo == null) return "od " + cond.filter;
       return "od " + cond.filter + " do " + cond.filterTo;
     }
     if (cond.type === "blank" || cond.type === "notBlank") {
@@ -59,6 +62,20 @@
       return model.conditions.map(summarizeCondition).join(joiner);
     }
     return summarizeCondition(model);
+  }
+
+  // Open the column-filter popup for `field` — the same popup the column-header
+  // filter icon opens. A hidden column has no header to anchor the popup to, so
+  // unhide it first; a scrolled-away one is scrolled into view.
+  function openColumnFilter(gridApi, field) {
+    try {
+      var col = gridApi.getColumn ? gridApi.getColumn(field) : null;
+      if (col && col.isVisible && !col.isVisible() && gridApi.setColumnsVisible) {
+        gridApi.setColumnsVisible([field], true);
+      }
+      if (gridApi.ensureColumnVisible) gridApi.ensureColumnVisible(field);
+      if (gridApi.showColumnFilter) gridApi.showColumnFilter(field);
+    } catch (_) { /* a chip click must never break the page */ }
   }
 
   // opts: { gridApi, barEl, headerNames: {field: label}, onClearAll: fn }
@@ -86,9 +103,17 @@
       chip.className = "filter-chip";
       chip.title = headerName + ": " + summary;
 
-      var label = document.createElement("span");
+      // The label is a button: clicking a chip opens that column's filter popup
+      // (edit in place) — the [×] next to it still removes the filter outright.
+      // No title on it, so hovering shows the chip's full "Header: summary".
+      var label = document.createElement("button");
+      label.type = "button";
       label.className = "filter-chip-label";
       label.textContent = headerName + ": " + summary;
+      label.setAttribute("aria-label", "Upravit filtr „" + headerName + "“");
+      label.addEventListener("click", function () {
+        openColumnFilter(gridApi, field);
+      });
       chip.appendChild(label);
 
       var closeBtn = document.createElement("button");

@@ -521,6 +521,15 @@ a:hover { text-decoration: underline; }
 .range-head { display: flex; justify-content: flex-end; margin-bottom: -6px; }
 .range-filter .th-reset { opacity: 1; }
 
+/* AG Grid joins every condition of a column filter with ONE operator, but it
+   renders a radio pair per join: the 2nd..Nth are `.ag-disabled` copies that only
+   mirror the first, so clicking them does nothing (and clicking the first flips
+   them all). With maxNumConditions raised to 5 that's up to four dead controls —
+   hide them; the single enabled pair governs the whole filter. */
+.ag-filter-condition-operator.ag-disabled {
+    display: none;
+}
+
 /* ── Active filter chips ── */
 .filter-chips-bar {
     display: flex;
@@ -547,10 +556,34 @@ a:hover { text-decoration: underline; }
     color: var(--clr-text);
 }
 
+/* Clickable: opens the column's filter popup. Button reset — it must still read
+   as chip text, not as a nested button. */
 .filter-chip-label {
+    max-width: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.filter-chip:hover {
+    border-color: var(--clr-accent-border);
+}
+
+.filter-chip-label:hover {
+    text-decoration: underline;
+}
+
+.filter-chip-label:focus-visible {
+    outline: 2px solid var(--clr-accent);
+    outline-offset: 2px;
+    border-radius: 3px;
 }
 
 .filter-chip-close {

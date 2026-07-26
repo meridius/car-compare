@@ -687,6 +687,49 @@ the only non-numeric column with a bespoke filter — `Rok výroby` is a bounded
 and stays in the numeric `RangeFilter`/heat-threshold family (deliberately no date
 picker, no slider on a removal date — a date has no good→bad colour axis).
 
+### filter chips are clickable — and the AND/OR cap is 5, set in TWO places
+
+A chip's **label is a `<button>`**: clicking it calls `gridApi.showColumnFilter(field)`
+(`openColumnFilter` in `site/filter-chips.js`) — the same popup the header filter icon
+opens, so a chip is an *edit* affordance, not just a remove one; the `[×]` still
+removes the filter outright. Two non-obvious bits: a popup **can't anchor to a hidden
+column's header**, so the chip un-hides the column first (`setColumnsVisible`) and
+`ensureColumnVisible`s it; and the label deliberately carries **no `title`** (only an
+`aria-label`) so hovering still shows the chip's own full "Header: summary" tooltip
+rather than the innermost element's.
+
+**One operator per column filter — the 2nd..Nth AND/OR radio pairs are dead and are
+hidden by CSS.** AG joins *all* conditions of a column with a single operator, but it
+renders a radio pair per join: only the first is live, the rest carry `.ag-disabled`
+and mirror it (clicking one does nothing; clicking the first flips them all). With the
+cap raised to 5 that's up to four dead controls, which reads as "A zároveň is broken".
+`.ag-filter-condition-operator.ag-disabled { display: none }` (`site/style.css`) hides
+them, leaving exactly one live pair that governs every condition. Mixed per-join
+operators ("A AND B OR C") are **not** expressible in AG Community — don't try to build
+it out of this UI. Pinned by the operator assertions in verify_ui `multi-condition`.
+Related trap: AND on one column means *the same cell* satisfies both conditions
+("Model obsahuje Golf **a** obsahuje Variant" = "Golf Variant" cars, 31 rows) — the
+usual cross-column AND is what separate column filters already do.
+
+Not user-reachable but real: the custom numeric `RangeFilter` **silently drops** a
+combined AND/OR model (`setFilterModel({'Cena (Kč)': {operator:'AND', conditions:[…]}})`
+→ model `{}`, no filtering). Its popup has no AND/OR radios, so only a hand-written URL
+can get there.
+
+The combined AND/OR condition cap is `MAX_FILTER_CONDITIONS = 5` (AG defaults to **2**;
+there is no "unlimited" — the option takes a number). It must be repeated in
+**`defaultColDef.filterParams` *and* `DATE_FILTER_PARAMS`** in both `site/app.js` and
+`site/reference.js`: AG merges `defaultColDef` into a colDef **per property**, so a
+colDef's own `filterParams` object *replaces* the default one wholesale (that's why
+`DATE_FILTER_PARAMS` already repeated `buttons: ["reset"]`). Only the built-in
+text/number/date filters honour it — the custom `RangeFilter`/`SetFilter` comps have no
+conditions. Applying a 4-condition model at the default cap is **silently truncated to
+2** by AG (that's the red state `verify_ui.py --scenario multi-condition` catches). The
+URL codec needed no change: the `k` body joins conditions with `|`, unbounded.
+Chip summary for an open range bound prints "od X" / "do Y" (never the raw `null` the
+RangeFilter emits). Pinned by verify_ui `chip-click` + `multi-condition` (both pages,
+both themes) and the `null`/`undefined` assertion in `filter-chips`.
+
 ### Archiv is a toggle backed by a grid external filter
 
 The old one-shot "Načíst archiv" button is now an `.archive-toggle` switch.

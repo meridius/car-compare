@@ -403,7 +403,126 @@ def scenario_filter_chips(page):
     )
     page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
     page.wait_for_timeout(200)
+    # An open range bound is null in the model — the chip must not print it raw.
+    txt = page.inner_text("#filter-chips-bar")
+    for junk in ("null", "undefined"):
+        if junk in txt:
+            raise AssertionError("chip text leaks %r: %r" % (junk, txt))
     return "#filter-chips-bar"
+
+
+def scenario_chip_click(page):
+    """Clicking a filter chip's label must open that column's filter popup — the
+    same popup the column-header filter icon opens (the [×] still just removes the
+    filter). Also covers the hidden-column case: a popup can't anchor to a header
+    that isn't rendered, so the chip unhides the column first.
+    Uses "Typ" (present on both index and reference grids)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate(
+        "window.__gridApi.setFilterModel({"
+        "  'Typ': { filterType: 'set', values: ['Elektrické'] }"
+        "});"
+    )
+    page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
+
+    # Hidden column: the chip must bring it back before opening the popup.
+    page.evaluate("window.__gridApi.setColumnsVisible(['Typ'], false)")
+    page.wait_for_timeout(150)
+    page.click("#filter-chips-bar .filter-chip .filter-chip-label")
+    page.wait_for_selector(".ag-popup .ag-filter", timeout=5000)
+    page.wait_for_timeout(300)
+
+    visible = page.evaluate("window.__gridApi.getColumn('Typ').isVisible()")
+    if not visible:
+        raise AssertionError("chip click did not unhide the hidden filtered column")
+    # The popup must be the *Typ* filter, not some other column's.
+    opened = page.evaluate(
+        "() => {"
+        "  var p = document.querySelector('.ag-popup .ag-filter');"
+        "  if (!p) return '';"
+        "  var w = p.closest('.ag-popup');"
+        "  var t = (w && w.textContent) || '';"
+        "  return t;"
+        "}"
+    )
+    if "Elektrické" not in opened:
+        raise AssertionError("opened popup does not look like the Typ set filter: %r" % opened[:120])
+    # Full viewport: the chips bar sits above the grid, outside .ag-root-wrapper.
+    return None
+
+
+def scenario_multi_condition(page):
+    """AG caps combined AND/OR filters at 2 conditions by default; we raise it to
+    MAX_FILTER_CONDITIONS (5) on every built-in filter (defaultColDef +
+    DATE_FILTER_PARAMS). Applying a 4-condition model must survive the round-trip
+    through the grid (at the default cap AG drops the extras), show up whole in the
+    chip, and round-trip through the URL codec."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = page.evaluate(
+        "() => ['Model','Model auta'].filter(function(f){return !!window.__gridApi.getColumn(f);})[0] || ''"
+    )
+    if not field:
+        raise AssertionError("no text-filter column found (expected Model / Model auta)")
+
+    words = ["Golf", "Octavia", "Ceed", "Kodiaq"]
+    model = {
+        field: {
+            "filterType": "text",
+            "operator": "OR",
+            "conditions": [{"filterType": "text", "type": "contains", "filter": w} for w in words],
+        }
+    }
+    page.evaluate("(m)=>window.__gridApi.setFilterModel(m)", model)
+    page.wait_for_selector("#filter-chips-bar .filter-chip", timeout=5000)
+    page.wait_for_timeout(200)
+
+    back = page.evaluate("()=>window.__gridApi.getFilterModel()")
+    conds = (back.get(field) or {}).get("conditions") or []
+    if len(conds) != len(words):
+        raise AssertionError(
+            "grid kept %d of %d conditions — maxNumConditions not raised (%r)"
+            % (len(conds), len(words), back.get(field))
+        )
+
+    chip = page.inner_text("#filter-chips-bar .filter-chip .filter-chip-label")
+    for w in words:
+        if w not in chip:
+            raise AssertionError("chip text is missing condition %r: %r" % (w, chip))
+
+    rt = page.evaluate("(m)=>window.UrlState.decFilters(window.UrlState.encFilters(m))", model)
+    if rt != model:
+        raise AssertionError("4-condition filter did not survive the URL codec: %r" % rt)
+
+    # Screenshot the popup itself: it must offer more than two condition slots.
+    page.evaluate("(f)=>window.__gridApi.ensureColumnVisible(f)", field)
+    page.evaluate("(f)=>window.__gridApi.showColumnFilter(f)", field)
+    page.wait_for_selector(".ag-popup .ag-filter", timeout=5000)
+    page.wait_for_timeout(300)
+    slots = page.evaluate(
+        "()=>document.querySelectorAll('.ag-popup .ag-filter .ag-filter-body-wrapper .ag-filter-condition, "
+        ".ag-popup .ag-filter .ag-filter-body').length"
+    )
+    if slots < 4:
+        raise AssertionError("filter popup rendered %d condition bodies, expected ≥ 4" % slots)
+
+    # AG joins all conditions with ONE operator but renders a radio pair per join;
+    # the 2nd..Nth are disabled mirrors of the first (clicking them does nothing).
+    # They must be hidden, leaving exactly one live AND/OR control.
+    ops = page.evaluate(
+        "()=>Array.prototype.map.call("
+        "  document.querySelectorAll('.ag-popup .ag-filter .ag-filter-condition-operator'),"
+        "  function(el){ var i = el.querySelector('input');"
+        "    return { shown: el.offsetParent !== null, disabled: !!(i && i.disabled) }; })"
+    )
+    shown = [o for o in ops if o["shown"]]
+    if any(o["disabled"] for o in shown):
+        raise AssertionError(
+            "a disabled (dead) AND/OR radio is visible — %d of %d operator controls shown"
+            % (len(shown), len(ops))
+        )
+    if len(shown) != 2:  # one pair = A zároveň + Nebo
+        raise AssertionError("expected exactly one live AND/OR pair, found %d shown controls" % len(shown))
+    return ".ag-root-wrapper"
 
 
 def scenario_pairing_gap(page):
@@ -865,6 +984,8 @@ SCENARIOS = {
     "date-filter": scenario_date_filter,
     "date-filter-ref": scenario_date_filter_ref,
     "filter-chips": scenario_filter_chips,
+    "chip-click": scenario_chip_click,
+    "multi-condition": scenario_multi_condition,
     "pairing-gap": scenario_pairing_gap,
     "missing-specs": scenario_missing_specs,
     "transmissions": scenario_transmissions,

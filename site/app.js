@@ -534,9 +534,15 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
     if (el.value !== masked) el.value = masked;
   }, true);
 
+  // AG's built-in text/number/date filters cap combined AND/OR conditions at 2 by
+  // default. Nothing about the data justifies two — five model-name "obsahuje"
+  // clauses is a normal ask. (AG has no "unlimited"; the cap must be a number.)
+  var MAX_FILTER_CONDITIONS = 5;
+
   var DATE_FILTER_PARAMS = {
     browserDatePicker: false,
     buttons: ["reset"],
+    maxNumConditions: MAX_FILTER_CONDITIONS,
     // AG's inRange defaults to EXCLUSIVE bounds (inRangeInclusive:false → strict
     // </>). With day-granular dates that makes a range like [08-07, 09-07] match
     // nothing — both endpoints excluded, nothing strictly between. Inclusive is
@@ -1356,7 +1362,7 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
         floatingFilter: true,
         wrapHeaderText: true,
         autoHeaderHeight: true,
-        filterParams: { buttons: ["reset"] },
+        filterParams: { buttons: ["reset"], maxNumConditions: MAX_FILTER_CONDITIONS },
         tooltipComponent: ColTooltip,
       },
       tooltipShowDelay: 400,
