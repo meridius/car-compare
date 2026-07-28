@@ -16,12 +16,19 @@ docs/superpowers/specs/2026-07-28-body-taxonomy-design.md:
 - **Display** (`CANONICAL`, 9 values, via `to_display`). The displayed body comes
   from the *matched reference row* (`build_data.apply_reference_body_specs`), not the
   noisy per-listing value, so it can afford to be precise: Liftback stays distinct
-  from Hatchback, Kabriolet from Kupé.
-- **Scoring** (`SCORING_FOLD`, via `to_scoring`). Folds the liftback family into
-  Hatchback and Shooting Brake into Kombi, because listings *cannot* distinguish
-  them — a mobile.de Octavia liftback arrives tagged `SmallCar` → Hatchback, and body
-  is the heaviest matching field (+3 / −2), so a false penalty there pushes a correct
-  match into `Nejisté`.
+  from Hatchback, Kabriolet from Kupé. Matching uses this vocabulary too.
+- **Scoring families** (`SCORING_FOLD`, via `to_scoring`). These do **not** rename
+  anything — they only say which display values are *related*, which
+  `matching._score_match` scores as NEUTRAL via `same_family`.
+
+Why a neutral zone and not a fold. Listings genuinely cannot tell Hatchback from
+Liftback (mobile.de tags every liftback `SmallCar` → Hatchback) and body is the
+heaviest matching field (+3 / −2), so the naive fix is to collapse the two labels
+for scoring. That was the first implementation and it **cost 3 490 Ano** on full
+state: collapsing also destroys a real signal, so a listing whose text says
+"Sportback" can no longer outrank the Hatchback sibling, same-engine siblings tie,
+and the cluster falls to `Nejisté`. Neutral gets both: no false −2 for the noisy
+source, and an exact match still discriminates.
 
 Sub-body detail is not lost: `matching.load_authoritative_list` keeps `body_raw` for
 display, and `_body_from_text` uses body tokens as a tie-resolver input (Lever A2).
@@ -29,6 +36,7 @@ display, and `_body_from_text` uses body tokens as a tie-resolver input (Lever A
 
 # Display vocabulary, in filter/docs order (broadest first). Adding a value here
 # means adding it to SCORING_FOLD too — pinned by tests/test_bodies.py.
+# Order is mirrored by site/app.js bodyGroups (the overview matrix).
 CANONICAL = ("SUV", "Kombi", "Hatchback", "Liftback", "Sedan", "MPV",
              "Kupé", "Kabriolet", "Pick-up")
 
@@ -74,9 +82,11 @@ for _canon, _syns in _DISPLAY_SYNONYMS.items():
 for _s in _NOT_A_BODY:
     DISPLAY_FOLD[_s.lower()] = ""
 
-# Display canon → scoring canon. Only the liftback family collapses; everything
-# else scores as itself. Kabriolet and Pick-up MUST appear (they had no scoring
-# group at all before, so a convertible scored −2 against every reference row).
+# Display canon → scoring FAMILY. Two display values sharing a family are scored
+# NEUTRAL by matching (see same_family) — nothing is renamed by this table. Only the
+# liftback family groups; everything else is its own family. Kabriolet and Pick-up
+# MUST appear (they had no scoring group at all before, so a convertible scored −2
+# against every reference row).
 SCORING_FOLD = {
     "SUV": "SUV",
     "Kombi": "Kombi",
@@ -101,6 +111,7 @@ _PLAUSIBLE_PAIRS = frozenset({
     frozenset({"Liftback", "Kombi"}),     # Octavia liftback + Combi
     frozenset({"Sedan", "Kombi"}),        # A4 + A4 Avant
     frozenset({"Sedan", "Liftback"}),     # A3 Limousine + A3 Sportback
+    frozenset({"Sedan", "Hatchback"}),    # Mazda 3 hatch + Fastback saloon; A-Class + Limousine
     frozenset({"Sedan", "Kupé"}),         # 4-series saloon + coupé
     frozenset({"Kupé", "Kabriolet"}),     # coupé + its convertible
     frozenset({"SUV", "Kupé"}),           # coupé-SUV (Arkana)
@@ -108,6 +119,22 @@ _PLAUSIBLE_PAIRS = frozenset({
     frozenset({"MPV", "Pick-up"}),        # van + pickup derivative
     frozenset({"SUV", "Pick-up"}),        # SUV + pickup on one platform
 })
+
+# Nameplates whose `Model` token legitimately covers SEVERAL DIFFERENT CARS, so the
+# body set is wide without any row being wrong. These are model-token collisions,
+# not ranges, which is why they get a named exception instead of widening
+# _PLAUSIBLE_PAIRS for everyone (a general {MPV, Sedan} rule would wave through a
+# genuine error like "Volvo S60 [MPV, Sedan]"). Each was web-verified 2026-07-29.
+_VERIFIED_MULTI_BODY = {
+    # BMW's numeric names span three unrelated 2-series bodies: Coupé (G42),
+    # Active Tourer (U06, an MPV) and Gran Coupé (F44, a saloon with a boot lid).
+    ("BMW", "218"): {"Kupé", "MPV", "Sedan"},
+    ("BMW", "220"): {"Kupé", "MPV", "Sedan"},
+    # "C5" covers the C5 X (liftback) and the C5 Aircross (SUV) — different cars.
+    ("Citroën", "C5"): {"Liftback", "SUV"},
+    # Generational: Espace Mk5 (to 2023) is an MPV, Mk6 (2023+) a 7-seat SUV.
+    ("Renault", "Espace"): {"MPV", "SUV"},
+}
 
 
 def to_display(body) -> str:
@@ -137,15 +164,41 @@ def to_scoring(body) -> str:
     return SCORING_FOLD.get(disp, disp)
 
 
-def pairs_are_plausible(body_set) -> bool:
+def same_family(a, b) -> bool:
+    """True when two bodies are *related but not identical* — they share a scoring
+    canon. Today that is exactly one pair: Hatchback ↔ Liftback. (Shooting Brake is
+    NOT a second case: it folds to Kombi already at display time, so the two are the
+    same value, not a family.)
+
+    This is what lets matching score a related body as NEUTRAL instead of folding
+    the two together. Folding was the first attempt and it was too blunt: it stops
+    the false −2 a mobile.de liftback (tagged `SmallCar` → Hatchback) takes against
+    a Liftback reference row, but it *also* destroys a real signal — a listing whose
+    text genuinely says "Sportback" could no longer prefer the Liftback row over the
+    Hatchback one, so same-engine siblings tied and the cluster fell to Nejisté.
+    """
+    da, db = to_display(a), to_display(b)
+    if not da or not db or da == db:
+        return False
+    return to_scoring(da) == to_scoring(db)
+
+
+def pairs_are_plausible(body_set, nameplate=None) -> bool:
     """True when every pair in `body_set` is a combination one nameplate can really
     offer. A set of 0 or 1 bodies is always plausible.
+
+    `nameplate` is an optional (Značka, Model) tuple; pass it so a verified
+    model-token collision (`_VERIFIED_MULTI_BODY`) is accepted without loosening the
+    rule for every other nameplate.
 
     Used as the Pass-3 reference-audit detector and kept as a standing invariant in
     tests/test_bodies.py so the review queue cannot silently regrow.
     """
     vals = sorted({b for b in body_set if b})
     if len(vals) < 2:
+        return True
+    allowed = _VERIFIED_MULTI_BODY.get(nameplate) if nameplate else None
+    if allowed is not None and set(vals) <= allowed:
         return True
     for i, a in enumerate(vals):
         for b in vals[i + 1:]:

@@ -46,7 +46,7 @@ SOURCE_FILTERS = [
             f"Výkon: {MIN_POWER_KW_ICE} kW a více",
             "Palivo: benzín, nafta, LPG+benzín, CNG+benzín",
             "Stav: nové, ojeté, předváděcí",
-            "Karoserie: CUV, kombi, SUV, hatchback, MPV",
+            "Karoserie: CUV, kombi, SUV, hatchback, liftback, sedan, MPV",
         ],
     },
     {

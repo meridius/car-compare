@@ -44,8 +44,14 @@ def _parse_brand(text: str) -> tuple[str, str]:
 
 
 def _canonicalize_body(body: str) -> str:
-    """Fold a body onto the scoring canon (core/bodies.SCORING_FOLD)."""
-    return bodies.to_scoring(body)
+    """Fold a body onto the canonical DISPLAY vocabulary (core/bodies.CANONICAL).
+
+    Deliberately the display fold, not the scoring fold: matching needs Liftback and
+    Hatchback to stay DISTINCT so a listing that names one can prefer it. The
+    can't-tell-them-apart case is handled by a neutral score in `_score_match`
+    (see `bodies.same_family`), not by collapsing the two labels here.
+    """
+    return bodies.to_display(body)
 
 
 def load_authoritative_list(csv_path) -> list[dict]:
@@ -230,6 +236,14 @@ def _score_match(scraped: dict, auth: dict) -> int:
     if sb and ab:
         if sb == ab:
             score += 3
+        elif bodies.same_family(sb, ab):
+            # Related bodies (Hatchback ↔ Liftback, Kombi ↔ Shooting Brake): the
+            # listing side genuinely cannot distinguish them — mobile.de tags every
+            # liftback `SmallCar` → Hatchback — so a mismatch here is far more
+            # likely to be source noise than a different car. Score NEUTRAL: no
+            # false −2 for the noisy source, and an exact +3 still lets a listing
+            # that DOES name its body outrank the sibling.
+            pass
         else:
             score -= 2
 

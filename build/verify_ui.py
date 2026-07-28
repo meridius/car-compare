@@ -215,6 +215,24 @@ def scenario_overview_matching(page):
     return "#summary-overlay"
 
 
+def scenario_overview_body(page):
+    """Open the dataset overview and scroll the 'Karoserie' matrix into view — the
+    per-body x drivetrain table fed by app.js bodyGroups, which must show the 9
+    canonical bodies of scrapers/core/bodies.py (Liftback and Kabriolet included,
+    NOT folded into Hatchback / Kupe)."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.toggleSummary()")
+    page.wait_for_selector("#summary-overlay", timeout=10000)
+    page.wait_for_timeout(300)
+    page.evaluate(
+        "var h=[].slice.call(document.querySelectorAll('#summary-overlay *'))"
+        ".find(function(e){return (e.textContent||'').trim()==='Karoserie \u00d7 Pohon';});"
+        "if(h){h.scrollIntoView({block:'center'});}"
+    )
+    page.wait_for_timeout(250)
+    return "#summary-overlay"
+
+
 def scenario_data_filters(page):
     """Open the dataset overview and scroll the 'Kritéria výběru dat' card into
     view — the per-source hard filters (mileage, price, year, …) fed from
@@ -1665,6 +1683,7 @@ SCENARIOS = {
     "sparovano": scenario_sparovano,
     "transmission-type-col": scenario_transmission_type_col,
     "overview-matching": scenario_overview_matching,
+    "overview-body": scenario_overview_body,
     "data-filters": scenario_data_filters,
     "service-cost": scenario_service_cost,
     "service-cost-col": scenario_service_cost_col,

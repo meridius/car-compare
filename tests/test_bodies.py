@@ -149,7 +149,7 @@ class PlausiblePairTest(unittest.TestCase):
         offenders = sorted(
             f"{zn} {mo}: {sorted(bs)}"
             for (zn, mo), bs in by_nameplate.items()
-            if not bodies.pairs_are_plausible(bs)
+            if not bodies.pairs_are_plausible(bs, nameplate=(zn, mo))
         )
         self.assertEqual(offenders, [], "implausible body sets:\n  " + "\n  ".join(offenders))
 
@@ -174,3 +174,25 @@ class PlausiblePairTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class VerifiedMultiBodyTest(unittest.TestCase):
+    """A named exception must stay narrow: it accepts only the bodies it was
+    verified for, and only for its own nameplate."""
+
+    def test_exception_applies_only_to_its_nameplate(self):
+        bmw = {"Kupé", "MPV", "Sedan"}
+        self.assertTrue(bodies.pairs_are_plausible(bmw, nameplate=("BMW", "218")))
+        self.assertFalse(bodies.pairs_are_plausible(bmw, nameplate=("Volvo", "S60")))
+        self.assertFalse(bodies.pairs_are_plausible(bmw))
+
+    def test_exception_does_not_accept_bodies_outside_its_set(self):
+        self.assertFalse(bodies.pairs_are_plausible(
+            {"Kupé", "MPV", "Sedan", "Pick-up"}, nameplate=("BMW", "218")))
+
+    def test_every_exception_is_actually_needed(self):
+        """Guards against the list outliving the data it excuses — if a nameplate's
+        bodies become plausible on their own, the exception should be deleted."""
+        for np_, allowed in bodies._VERIFIED_MULTI_BODY.items():
+            self.assertFalse(bodies.pairs_are_plausible(allowed),
+                             f"{np_} no longer needs an exception")

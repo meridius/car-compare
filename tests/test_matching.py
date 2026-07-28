@@ -313,14 +313,15 @@ class LoadAuthoritativeListTest(unittest.TestCase):
         self.assertEqual(r["trim"], "Style")
 
     def test_body_raw_is_unfolded(self):
-        # body_raw keeps the display value; body is scoring-folded. A Liftback
-        # reference row must expose body_raw="Liftback" (display) even though
-        # body="Hatchback" (scoring group).
+        # body_raw is the CSV string verbatim; body is the canonical DISPLAY value
+        # (core/bodies.to_display). Liftback stays DISTINCT from Hatchback — the
+        # can't-tell-apart case is a neutral score, not a fold (see same_family).
         path = self._write(self._HEADER +
-                           "Škoda Octavia Liftback 1.5 TSI,Škoda,Octavia,,,Liftback,,1.5,TSI,Benzín,,5.6,600,69,0.27\n")
+                           "Audi A3 Sportback 35 TFSI,Audi,A3,,,Sportback,,1.5,TFSI,Benzín,,5.6,380,69,0.28\n")
         r = M.load_authoritative_list(path)[0]
-        self.assertEqual(r["body_raw"], "Liftback")
-        self.assertEqual(r["body"], "Hatchback")  # scoring fold, unchanged
+        self.assertEqual(r["body_raw"], "Sportback")   # raw CSV spelling
+        self.assertEqual(r["body"], "Liftback")        # canonical display value
+        self.assertNotEqual(r["body"], "Hatchback")    # NOT scoring-folded
 
 
 class BodyCanonScoringFoldTest(unittest.TestCase):
@@ -548,7 +549,7 @@ class BodyAgnosticPKTest(unittest.TestCase):
                       if r["Značka"] == "Škoda" and r["Model"] == "Octavia"
                       and r["Objem motoru"] == "2.0" and r["Typ motoru"] == etype}
             self.assertIn("Kombi", bodies, f"Octavia 2.0 {etype}: no Kombi entry")
-            self.assertIn("Hatchback", bodies,
+            self.assertIn("Liftback", bodies,
                           f"Octavia 2.0 {etype}: no Liftback entry — liftback "
                           f"listings will be matched to (and displayed as) the Kombi")
 
@@ -595,3 +596,47 @@ class OctaviaBodySplitTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RelatedBodyNeutralScoreTest(unittest.TestCase):
+    """Hatchback ↔ Liftback score NEUTRAL, not -2 and not +3.
+
+    Folding them (the first attempt) stopped the false -2 that a mobile.de liftback
+    — tagged `SmallCar` -> Hatchback — takes against a Liftback reference row, but
+    it also destroyed a real signal: a listing whose text says "Sportback" could no
+    longer outrank the Hatchback sibling, so same-engine siblings tied and the whole
+    cluster fell to Nejisté. Neutral keeps both properties.
+    """
+
+    LIFT = auth("Škoda Octavia Liftback 2.0 TDI", "Škoda", "Octavia",
+                body="Liftback", vol="2.0", etype="TDI", fuel="Nafta")
+    KOMBI = auth("Škoda Octavia Combi 2.0 TDI", "Škoda", "Octavia",
+                 body="Kombi", vol="2.0", etype="TDI", fuel="Nafta")
+
+    def _scraped(self, body):
+        return scraped("Škoda", "Octavia", body=body, vol="2.0",
+                       etype="TDI", fuel="Nafta")
+
+    def test_noisy_hatchback_tag_is_not_penalised_against_liftback(self):
+        """The false -2 this whole change exists to remove."""
+        s = M._score_match(self._scraped("Hatchback"), self.LIFT)
+        exact = M._score_match(self._scraped("Liftback"), self.LIFT)
+        self.assertEqual(exact - s, 3, "related body must score 0, exact +3")
+
+    def test_related_still_beats_a_genuinely_different_body(self):
+        related = M._score_match(self._scraped("Hatchback"), self.LIFT)
+        different = M._score_match(self._scraped("Hatchback"), self.KOMBI)
+        self.assertGreater(related, different)
+
+    def test_naming_its_body_lets_a_listing_pick_the_right_sibling(self):
+        """Regression guard for the fold: under it both siblings scored the same."""
+        lift = M._score_match(self._scraped("Liftback"), self.LIFT)
+        komb = M._score_match(self._scraped("Liftback"), self.KOMBI)
+        self.assertGreater(lift, komb)
+
+    def test_unrelated_bodies_still_take_the_full_penalty(self):
+        suv = auth("X", "X", "X", body="SUV", vol="2.0",
+                   etype="TDI", fuel="Nafta")
+        self.assertEqual(
+            M._score_match(self._scraped("Liftback"), self.LIFT)
+            - M._score_match(self._scraped("Liftback"), suv), 5)

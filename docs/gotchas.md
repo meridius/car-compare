@@ -953,6 +953,113 @@ Cars can have two trim indicators (e.g. "Elegance" in model name + "R-Line" in e
 
 ## core — matching (ICE)
 
+### body taxonomy: ONE module, TWO vocabularies, and a NEUTRAL zone (not a fold)
+
+`scrapers/core/bodies.py` is the single source of truth for body labels — same
+pattern as `core/filters.py`. Before it, the fold lived in **six** places that
+disagreed (`build_data._DISPLAY_BODY_CANON`, `matching._BODY_GROUPS`,
+`fields.BODY_KEYWORDS`, `mobilede._CATEGORY_MAP`, a hard-coded `CANON` set in
+`test_data_integrity`, and `bodyGroups` in `site/app.js`). The disagreement was a
+live bug: `_BODY_GROUPS` kept Sportback/Fastback/Shooting Brake as separate
+*scoring* canons while the display table folded them into Hatchback/Kombi, so a
+listing tagged "Sportback" took a **−2** against a "Hatchback" reference row that
+rendered identically in the grid (2 113 sub-body-tagged mobile.de ICE rows, 80 a
+guaranteed false −2).
+
+The vocabulary is **9 display values** (`CANONICAL`): SUV, Kombi, Hatchback,
+**Liftback**, Sedan, MPV, Kupé, **Kabriolet**, **Pick-up**. Liftback/Kabriolet/
+Pick-up are new; Kabriolet used to fold to Kupé, which is simply false.
+
+**The non-obvious part is how the two vocabularies relate.** The first
+implementation folded the liftback family into Hatchback for scoring
+(`SCORING_FOLD`) on the reasoning that listings can't distinguish them — mobile.de
+tags every liftback `SmallCar` → Hatchback. That reasoning is right but the fold is
+the wrong mechanism, and it **cost 3 490 Ano** on full state: collapsing the labels
+also destroyed a real signal, so a listing whose text genuinely says "Sportback"
+could no longer outrank the Hatchback sibling, same-engine siblings tied, and whole
+clusters fell to Nejisté.
+
+The fix is a **neutral zone** in `_score_match`, keyed on `bodies.same_family` (today exactly one pair — Shooting Brake is not a second
+case, it folds to Kombi already at display time):
+
+```text
+exact body match                        -> +3
+same family (Hatchback <-> Liftback)    ->  0
+different family                        -> -2
+```
+
+So `auth["body"]` is now the canonical **display** value (Liftback stays distinct);
+`_canonicalize_body` is `bodies.to_display`, NOT `to_scoring`. `SCORING_FOLD` still
+exists, but only to *define the families* — nothing folds through it for scoring.
+Neutral keeps both properties at once: no false −2 for a noisy source, and an exact
+match still discriminates. Pinned by `RelatedBodyNeutralScoreTest`.
+
+### correcting reference bodies CREATES tie-generating duplicate rows — collapse them
+
+Counter-intuitive and measured: making the reference *more* correct made matching
+*worse* before it made it better. Fixing 124 bodies moved Ano **142 871 → 139 491
+(−3 380)**. The mechanism is the `classify_match` margin rule, same family of
+problem as the ref-growth batch gotcha below: two rows that were previously
+distinguishable *by their (wrong) bodies* become identical on every scored field
+once both are corrected, so they can only ever tie.
+
+Example: `Seat Ibiza Sedan 1.5` and `Seat Ibiza Hatchback 1.5` — research says no
+Ibiza saloon has existed since the Cordoba, so both become Hatchback, and every
+Ibiza listing now ties between two rows describing the same car. Same for
+`Fiat 500X Sedan/SUV 1.3`, `Peugeot 208 Sedan/Hatchback 1.2 HEV`,
+`BMW 118 Sedan/Hatchback 1.5`, `Mitsubishi Colt Sedan/Hatchback 1.6 HEV`, …
+
+**So a body audit MUST be followed by a collapse pass**: group the reference by the
+fields matching actually scores on (canon body, hybrid, engine vol/type, trim,
+fuel); where a group has >1 row, keep one and drop the rest. Collapsing the 13
+audit-created groups (15 rows) recovered **+4 053** Ano. Scope it to groups the
+audit touched — pre-existing scoring-identical groups (Mercedes GLB 5míst/7míst,
+Nissan X-Trail seat counts, Mercedes C 220d/300d, KGM Tivoli/Torres engine
+spellings) are Lever C, a separate decision about genuinely distinct variants.
+
+### nameplate body "conflict" is NOT an error signal — body is a variant dimension
+
+The obvious reference-audit detector (flag any nameplate with >1 body) is wrong:
+`VW Golf 2.0 TDI [Hatchback, Kombi]` is correct (Golf + Golf Variant), as is
+`Audi A4 2.0 TFSI [Kombi, Sedan]` (A4 + Avant). Measured: a pure vocabulary remap
+resolved **0 of the 53** same-key conflicts, because none of them were errors.
+
+The working detector is `bodies.pairs_are_plausible` — a whitelist of body *pairs*
+one nameplate can really span ({Hatchback,Kombi}, {Sedan,Kombi}, {Sedan,Liftback},
+{Sedan,Hatchback}, {Kupé,Kabriolet}, …). `{Hatchback, Liftback}` is deliberately
+**absent**: that is the same physical body labelled two ways, the exact error the
+pass exists to find (it catches Audi A1/A3, Mazda 3, Opel Insignia, Peugeot 408,
+Škoda Octavia).
+
+A few nameplates are wide without being wrong because the `Model` token covers
+several *different cars* — BMW "218"/"220" spans Coupé (G42) + Active Tourer (MPV)
++ Gran Coupé (a saloon), "Citroën C5" spans C5 X (liftback) and C5 Aircross (SUV),
+"Renault Espace" changed from MPV to SUV between generations. Those get a named
+`_VERIFIED_MULTI_BODY` exception rather than widening the pair whitelist for
+everyone (a general {MPV, Sedan} rule would wave through a real error like
+`Volvo S60 [MPV, Sedan]`).
+
+### body-name traps that cost real accuracy
+
+Verified 2026-07-29 while auditing 278 reference rows; a blanket rule gets each of
+these wrong:
+
+- **"Sportback" is not always Liftback.** On a low car (A1/A3/A5) it is; on an
+  **SUV** (Audi Q3/Q4/Q8 Sportback) it is a coupé-roofed **SUV**. A blanket
+  `Sportback → Liftback` remap mislabels the Q3.
+- **Mazda 3 "Fastback" is the 4-door SALOON** in UK/EU naming, not a liftback.
+- **BMW 2-series Gran Coupé is a Sedan** (separate boot lid); the **4-series** Gran
+  Coupé is a Liftback. Our reference called both `Kupé`.
+- **Mercedes CLA "Coupé" is a Sedan** — a 4-door with a boot lid; the marketing
+  word is not the body.
+- **Mitsubishi Grandis is now an SUV** — the 2025 car is a rebadged Renault
+  Symbioz crossover, not the 2003–11 seven-seat MPV.
+- **Fiat Grande Panda is a Hatchback**, not an SUV (137 mm clearance; the SUV look
+  is cladding).
+- **DS 4 is a Hatchback**, not an SUV, despite the raised marketing.
+- Czech/EU commercial vans (Trafic, Proace, Interstar, Iveco Daily) are `""` unless
+  the row is explicitly the passenger version (Verso/Combi/Tourneo → MPV).
+
 ### auth side reads structured columns; scraped side still parses names
 
 `ice_specs.csv` is column-structured, so `load_authoritative_list()` reads the

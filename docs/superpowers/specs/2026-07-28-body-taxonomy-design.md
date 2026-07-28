@@ -112,15 +112,21 @@ Deltas vs the 6 shipped today: **+Liftback**, **+Kabriolet**, **+Pick-up**.
   `OffRoad` with no way to extract them), but folding a Ranger into SUV is a
   factual error.
 
-**Scoring taxonomy — folded.** `SCORING_FOLD` collapses the liftback family into
-Hatchback and Shooting Brake into Kombi, because listings cannot distinguish
-them: a mobile.de Octavia liftback arrives tagged `SmallCar` → Hatchback, and a
-−2 there would push a correct match to `Nejisté`. `Kabriolet` and `Pick-up` get
-their **own** scoring groups (today `Kabriolet` has no group at all, so a
-convertible scores −2 against a `Kupé` reference row).
+**Scoring taxonomy — a neutral zone, NOT a fold.** *(Revised during implementation;
+the original spec called for a fold. See "Implementation outcome".)* `SCORING_FOLD`
+defines which display values are *related*; it renames nothing. `_score_match` then
+scores exact match **+3**, same family (Hatchback ↔ Liftback) **0**, different
+family **−2**. `Kabriolet` and `Pick-up` get their **own** families (today
+`Kabriolet` has no group at all, so a convertible scores −2 against a `Kupé` row).
 
-This split is the load-bearing decision of Phase A: **display precision comes
-from the reference, scoring tolerance comes from the listings' limits.**
+Folding was implemented first and measured **−3 490 Ano** on full state: it stops
+the false −2 a mobile.de liftback (tagged `SmallCar` → Hatchback) takes against a
+Liftback reference row, but it also destroys a real signal — a listing whose text
+says "Sportback" can no longer outrank the Hatchback sibling, so same-engine
+siblings tie and the cluster falls to `Nejisté`.
+
+This is the load-bearing decision of Phase A: **display precision comes from the
+reference; scoring tolerance is a neutral zone, not discarded labels.**
 
 ### Why 9 and not ~14
 
@@ -288,6 +294,51 @@ project's CSS custom props so it themes with the rest of the site.
 Known nits carried into B: the kupé roof arc is thin (needs a fatter C-pillar);
 Hatchback vs Kombi separate on length + window count only; SUV and MPV are the
 same silhouette family, differing by forward-cab windshield.
+
+## Implementation outcome (2026-07-29)
+
+Measured on full state (152 777 live rows), each step rebuilt and re-measured:
+
+| Step | Ano | Nejisté | Δ Ano |
+|---|---:|---:|---:|
+| pre-Phase-A (`main`) | 146 361 | 6 223 | — |
+| taxonomy, scoring **folded** | 142 871 | 9 713 | −3 490 |
+| + 124 body corrections | 139 491 | 13 090 | −3 380 |
+| + collapse 13 audit-created dup groups (15 rows) | 143 544 | 9 037 | **+4 053** |
+| + neutral zone replaces the fold | 143 486 | 9 095 | −58 |
+| + merge 11 blank-engine-type dup rows | **145 947** | **6 634** | **+2 461** |
+
+**Net: Ano −414, Nejisté +411 against pre-Phase-A** — essentially break-even on
+match confidence, while gaining: 9 correct display bodies instead of 6 (3 074
+listings now correctly read Liftback, 144 Pick-up, 1 Kabriolet), 124 corrected
+reference bodies, 29 junk/duplicate reference rows removed, blank bodies 45 → 10,
+and the 80 guaranteed-false −2s fixed. The residual −414 is the false confidence
+that wrong body labels had been manufacturing.
+
+Three findings worth more than the numbers:
+
+1. **A fold was the wrong mechanism** (−3 490). Collapsing Liftback into Hatchback
+   for scoring removes the false −2, but also removes a real signal. Replaced by the
+   neutral zone. Empirically the swap was a **wash (−58)** on current data — because
+   after the audit no nameplate has both a Hatchback and a Liftback row, so the
+   family case is rare — but it is the correct mechanism and stops the fold handing
+   out a false **+3** for body agreement that never existed.
+
+2. **Correcting the reference made matching worse before it made it better**
+   (−3 380, then +4 053 once collapsed). Two rows previously distinguishable *by
+   their wrong bodies* become identical on every scored field once both are
+   corrected, so they can only tie. A body audit is incomplete without a collapse
+   pass.
+
+3. **The largest residual loss was not the taxonomy at all** — it was
+   blank-`Typ motoru` duplicate rows (`Mazda 3 Hatchback 2.0 e-Skyactiv G` with a
+   blank type alongside `Mazda 3 2.0 SKYACTIV-G`), 1 309 Mazda 3 listings in one
+   cluster. A wrong body label had been doing the discrimination.
+
+Reference row count 791 → 762: 3 degenerate rows deleted (`BMW 2.0`,
+`GWM Haval 1.5`, `FAW Bestune 2.0`), 15 audit-created duplicates collapsed, 11
+blank-type duplicates merged. Blank bodies 45 → 10 (the honest unknowables:
+commercial panel vans and three genuinely ambiguous Citroën C5 rows).
 
 ## Out of scope for Phase A
 
