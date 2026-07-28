@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="cs"><head><meta charset="utf-8"><title>Karoserie — silhouettes v4</title>
+<style>
+:root{--bg:#14120f;--fg:#f2ece3;--muted:#9c9488;--car:#efe8dd;--glass:#14120f;--acc:#e8a33d;--card:#1e1b17;--line:#332e28;--gnd:#3a342c}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 system-ui,sans-serif;padding:28px}
+h1{font-size:20px;margin:0 0 4px}
+p.sub{color:var(--muted);margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px}
+.card svg{width:100%;height:auto;display:block}
+.nm{font-weight:700;font-size:16px;margin:6px 0 0}
+.en{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.def{margin:8px 0 0;font-size:13px}
+.abs{margin:8px 0 0;font-size:11.5px;color:var(--muted)}
+</style></head><body>
+<h1>Karoserie — silhouette návrh v4</h1>
+<p class="sub">9 hodnot. Tmavá linka vzadu = dělící spára otevírané části. Oranžový kroužek = rozlišovací znak.</p>
+<div class="grid" id="g"></div>
+<script>
+const W=300,H=112,GND=94;
+const LO ={fw:70,rw:206,cy:79,r:15,ar:19,sill:82};
+const SHORT={fw:66,rw:194,cy:79,r:15,ar:19,sill:82};
+const HI ={fw:72,rw:206,cy:76,r:18,ar:23,sill:79};
+
+function chassis(m,top){
+  return `M 16 ${m.sill} ${top} L ${m.rw+m.ar} ${m.sill} A ${m.ar} ${m.ar} 0 0 0 ${m.rw-m.ar} ${m.sill}`
+       + ` L ${m.fw+m.ar} ${m.sill} A ${m.ar} ${m.ar} 0 0 0 ${m.fw-m.ar} ${m.sill} Z`;
+}
+function wheels(m){return [m.fw,m.rw].map(cx=>`
+  <circle cx="${cx}" cy="${m.cy}" r="${m.r}" fill="var(--car)"/>
+  <circle cx="${cx}" cy="${m.cy}" r="${m.r*0.42}" fill="var(--glass)"/>`).join('')}
+
+const cars=[
+{n:"Sedan",en:"Saloon / sedan",m:LO,mark:[222,50],
+ def:"Tři objemy. Samostatné víko kufru — zadní sklo se neotevírá.",
+ abs:"sauto Sedan/limuzína · ref Sedan · BMW 2 Gran Coupé",
+ top:`L 16 68 C 16 59 23 54 38 52 L 84 48 L 112 28 L 176 28 L 202 52 L 246 54 L 252 66 L 250 82`,
+ glass:`M 92 46 L 114 32 L 174 32 L 196 48 Z`,
+ pillars:[[142,148,32,48]],
+ cut:`M 197 48 L 246 51`},
+
+{n:"Liftback",en:"Liftback / Sportback",m:LO,mark:[232,50],
+ def:"Sedanová linie střechy, ale zadní klapka se otevírá i se sklem.",
+ abs:"sauto Liftback · ref Liftback/Sportback · Octavia, A3/A5 Sportback, BMW 4 Gran Coupé",
+ top:`L 16 68 C 16 59 23 54 38 52 L 84 48 L 112 28 L 168 28 C 200 31 228 42 244 56 L 250 62 L 250 72 L 248 82`,
+ glass:`M 92 46 L 114 32 L 166 32 C 188 35 208 42 220 49 Z`,
+ pillars:[[142,148,32,46]],
+ cut:`M 167 30 C 197 33 224 44 240 57`},
+
+{n:"Hatchback",en:"Hatchback",m:SHORT,mark:[212,46],
+ def:"Krátký zadek, strmá klapka se sklem. Kufr končí hned za C-sloupkem.",
+ abs:"sauto Hatchback · mobile.de SmallCar · ref Hatchback",
+ top:`L 16 68 C 16 59 22 54 36 52 L 80 48 L 106 28 L 176 28 C 196 30 210 38 216 52 L 220 64 L 218 82`,
+ glass:`M 88 46 L 108 32 L 172 32 C 186 34 196 40 202 47 Z`,
+ pillars:[[136,142,32,47]],
+ cut:`M 177 30 C 195 32 207 40 213 53`},
+
+{n:"Kombi",en:"Estate / station wagon",m:LO,mark:[246,42],
+ def:"Střecha vodorovně až k zádi, svislá klapka. Prostor za D-sloupkem.",
+ abs:"Kombi · Combi · Variant · Avant · SW · Touring · Sports Tourer · Shooting Brake",
+ top:`L 16 68 C 16 59 23 54 38 52 L 84 48 L 112 28 L 240 28 L 248 31 L 252 54 L 252 72 L 250 82`,
+ glass:`M 92 46 L 114 32 L 238 32 L 242 46 Z`,
+ pillars:[[142,148,32,46],[190,196,32,46]],
+ cut:`M 235 29 L 248 54`},
+
+{n:"SUV",en:"SUV / crossover",m:HI,mark:[152,86],
+ def:"Zvýšená světlá výška, vysoká karoserie, dva objemy s klapkou.",
+ abs:"sauto SUV/CUV/Terénní · mobile.de OffRoad · ref SUV",
+ top:`L 16 62 C 16 52 23 46 38 44 L 84 40 L 110 18 L 234 18 L 244 22 L 248 48 L 248 68 L 246 79`,
+ glass:`M 92 38 L 112 22 L 232 22 L 238 38 Z`,
+ pillars:[[144,150,22,38],[190,196,22,38]],
+ cut:`M 230 20 L 244 48`,
+ extra:`<rect x="118" y="13" width="112" height="4" rx="2" fill="var(--car)"/>`},
+
+{n:"MPV",en:"MPV / minivan",m:HI,mark:[100,26],
+ def:"Jeden objem, vysoká střecha, ≥2 řady sedadel, variabilní interiér.",
+ abs:"sauto MPV/VAN · mobile.de Van · ref MPV/VAN",
+ top:`L 16 60 C 16 50 20 44 32 42 L 44 40 L 96 16 L 240 16 L 250 20 L 254 48 L 254 70 L 252 79`,
+ glass:`M 52 38 L 98 20 L 238 20 L 244 38 Z`,
+ pillars:[[132,138,20,38],[190,196,20,38]],
+ cut:`M 236 18 L 250 48`},
+
+{n:"Kupé",en:"Coupé",m:LO,mark:[150,30],
+ def:"Pevná nízká střecha, sportovní linie, jedno dlouhé boční okno.",
+ abs:"sauto Kupé · mobile.de SportsCar · ref Kupé/Grand Sport",
+ top:`L 16 68 C 16 58 22 52 36 50 L 92 45 L 126 27 L 162 26 C 196 30 226 44 242 59 L 249 66 L 247 82`,
+ glass:`M 100 43 L 130 31 L 158 30 C 182 33 204 40 218 48 Z`,
+ pillars:[],
+ cut:`M 224 47 L 243 58`},
+
+{n:"Kabriolet",en:"Convertible / roadster",m:LO,mark:[152,38],
+ def:"Skládací nebo odnímatelná střecha. Roadster i targa sem.",
+ abs:"sauto Kabriolet/Roadster · mobile.de Cabrio",
+ top:`L 16 68 C 16 58 22 52 36 50 L 92 45 L 116 32 L 122 46 L 188 48 L 200 42 C 222 46 236 52 244 61 L 249 67 L 247 82`,
+ glass:``, pillars:[], cut:`M 124 47 L 186 49`,
+ extra:`<path d="M 114 31 L 121 46" stroke="var(--car)" stroke-width="5" stroke-linecap="round" fill="none"/>`},
+
+{n:"Pick-up",en:"Pickup",m:HI,mark:[180,40],
+ def:"Otevřená korba za kabinou.",
+ abs:"sauto Pick-up",
+ top:`L 16 62 C 16 52 23 46 38 44 L 84 40 L 110 20 L 170 20 L 176 46 L 186 44 L 252 44 L 256 79`,
+ glass:`M 92 38 L 112 24 L 168 24 L 172 38 Z`,
+ pillars:[[134,140,24,38]],
+ cut:`M 179 45 L 179 60`},
+];
+
+document.getElementById('g').innerHTML=cars.map(c=>{const m=c.m;return `<div class="card">
+ <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${c.n}">
+  <line x1="6" y1="${GND}" x2="${W-6}" y2="${GND}" stroke="var(--gnd)" stroke-width="2"/>
+  <path d="${chassis(m,c.top)}" fill="var(--car)"/>
+  ${c.extra||''}
+  ${c.glass?`<path d="${c.glass}" fill="var(--glass)"/>`:''}
+  ${(c.pillars||[]).map(p=>`<rect x="${p[0]}" y="${p[2]}" width="${p[1]-p[0]}" height="${p[3]-p[2]}" fill="var(--car)"/>`).join('')}
+  ${c.cut?`<path d="${c.cut}" fill="none" stroke="var(--glass)" stroke-width="2.4" stroke-linecap="round"/>`:''}
+  ${wheels(m)}
+  <circle cx="${c.mark[0]}" cy="${c.mark[1]}" r="17" fill="none" stroke="var(--acc)" stroke-width="2.4"/>
+ </svg>
+ <div class="nm">${c.n}</div><div class="en">${c.en}</div>
+ <div class="def">${c.def}</div><div class="abs">${c.abs}</div></div>`}).join('');
+</script></body></html>
