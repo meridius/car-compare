@@ -7,7 +7,9 @@ Exit 0 = pass, 1 = fail. Read the PNGs afterwards to confirm visual correctness.
 
 Usage:
     python3 build/verify_ui.py [--page index|reference|transmissions] \\
-                               [--scenario grid|stav-filter|color-drawer|heat-combo|tools-menu|…] \\
+                               [--scenario grid|stav-filter|color-drawer|heat-combo|tools-menu|
+                                           hist-track|hist-modes|hist-zoom|blank-filter|
+                                           colour-only|theme-cards|…] \\
                                [--theme dark|light] [--port N]
 
 Defaults: --page index --scenario grid --theme dark --port 0 (OS-assigned free port).
@@ -89,23 +91,25 @@ def scenario_stav_filter(page):
 
 
 def scenario_cena_filter(page):
-    """Open the Cena (Kč) column filter — the custom RangeFilter renders a dual
-    min/max slider (track = the column's good→bad heat gradient) above od/do number
-    boxes, instead of AG's default two text inputs."""
+    """Open the Cena (Kč) column filter — the custom RangeFilter renders the
+    distribution track (canvas histogram + count axis + dual thumbs), od/do boxes,
+    the blank-cell switch and the colour-only checkbox."""
     page.wait_for_selector(".ag-row", timeout=15000)
     page.evaluate("window.__gridApi.showColumnFilter('Cena (Kč)')")
-    page.wait_for_selector(".range-filter .th-slider", timeout=5000)
-    page.wait_for_timeout(200)
+    page.wait_for_selector(".range-filter .ht-track canvas", timeout=5000)
+    page.wait_for_timeout(300)
     return ".range-filter"
 
 
 def scenario_range_filter_ref(page):
     """Reference page: open the Výkon (kW) column filter — the custom RangeFilter
-    dual slider + od/do boxes + reset, coupled to the colour-drawer slider."""
+    od/do boxes + reset + track. Accepts either track flavour so it spans the
+    reference page's migration to the canvas distribution track: `.th-slider` is the
+    old flat gradient slider, `.ht-track canvas` the histogram one (see hist-track)."""
     page.wait_for_selector(".ag-row", timeout=15000)
     page.evaluate("window.__gridApi.showColumnFilter('Výkon (kW)')")
-    page.wait_for_selector(".range-filter .th-slider", timeout=5000)
-    page.wait_for_timeout(200)
+    page.wait_for_selector(".range-filter .th-slider, .range-filter .ht-track canvas", timeout=5000)
+    page.wait_for_timeout(300)
     return ".range-filter"
 
 
@@ -732,29 +736,56 @@ def scenario_url_state(page):
     # reset the layout so it doesn't bleed into the threshold reloads below
     page.evaluate("window.resetColOrder()")
 
-    # live threshold → #t=, restored on reload. Drive the REAL colour-drawer path:
-    # open the drawer (renders #threshold-inputs), set a min box and dispatch its
-    # `input` event so commitRange() runs. NB: window.saveThresholds() no longer
-    # parses the DOM (state flows through commitRange since the coupling refactor),
-    # so setting a box value + calling it is a no-op — hence the input event.
+    # live threshold → #t=, restored on reload, and it still COLOURS after the
+    # reload. Drive the real editor: the per-column ranges left the Nastavení-barev
+    # drawer (they duplicated the column filter), so the od box now lives in the
+    # numeric column-filter popup. Dispatch its `input` event so commitRange() runs —
+    # window.saveThresholds() no longer parses the DOM, it only re-persists state.
+    #
+    # The threshold is set as COLOUR-ONLY ("Jen barvit, nefiltrovat"): the grid then
+    # keeps every row, so the same cells stay rendered and their heat backgrounds are
+    # directly comparable before / after / across the reload. Cell colour is a pure
+    # function of value + threshold, so that map is what proves #t= still tints —
+    # not merely that the page loaded.
     page.evaluate("window.__gridApi.setFilterModel(null)")
-    page.evaluate("window.openColorSettings()")
-    page.wait_for_selector("#threshold-inputs .threshold-row .th-min", timeout=5000)
+    page.wait_for_timeout(200)
+    th_field = _pick_field(page, _RANGE_FIELDS)
+    page.evaluate("(f)=>window.__gridApi.ensureColumnVisible(f)", th_field)
+    page.wait_for_timeout(250)
+    plain_bg = _cell_backgrounds(page, th_field)
+    _open_range_filter(page, th_field)
     page.evaluate(
-        "(function(){"
-        "  var mn = document.querySelector('#threshold-inputs .threshold-row .th-min');"
-        "  mn.value = '55555';"
-        "  mn.dispatchEvent(new Event('input', {bubbles:true}));"
-        "})()"
+        "()=>{var c=document.querySelector('.range-filter .rf-check input');"
+        " c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true}));}"
     )
-    page.wait_for_timeout(500)  # commitRange debounces persist + writeHash by 220 ms
+    page.evaluate(
+        "()=>{var mn=document.querySelector('.range-filter .th-min');"
+        " mn.value='55555'; mn.dispatchEvent(new Event('input',{bubbles:true}));}"
+    )
+    page.wait_for_timeout(600)  # commitRange debounces persist + writeHash by 220 ms
+    tinted_bg = _cell_backgrounds(page, th_field)
+    _, moved = _shared_diff(plain_bg, tinted_bg)
+    if not moved:
+        raise AssertionError("threshold did not change any cell's heat colour before the reload")
     u3 = page.url
     if "t=" not in u3.split("#")[-1]:
         raise AssertionError(f"live threshold: no t= in fragment: {u3}")
+
     page.goto(u3, wait_until="load", timeout=30000)
     page.wait_for_selector(".ag-row", timeout=15000)
     if "55555" not in (page.evaluate("localStorage.getItem('carCompareThresholds')") or ""):
         raise AssertionError("live reload: threshold not restored from #t=")
+    page.evaluate("(f)=>window.__gridApi.ensureColumnVisible(f)", th_field)
+    page.wait_for_timeout(300)
+    reloaded_bg = _cell_backgrounds(page, th_field)
+    keys, differ = _shared_diff(tinted_bg, reloaded_bg)
+    if len(keys) < 5:
+        raise AssertionError(f"only {len(keys)} comparable cells after the reload — cannot check the tint")
+    if differ:
+        raise AssertionError(
+            "the #t= threshold no longer colours the same way after the reload "
+            f"({len(differ)} of {len(keys)} cells differ, e.g. {differ[0]!r})"
+        )
 
     # legacy ?filters=<base64> link → applied + migrated to #
     page.evaluate("localStorage.clear()")
@@ -837,6 +868,14 @@ def scenario_color_drawer(page):
         raise AssertionError(
             f"palette click did not move .active onto the clicked chip (active idx={active_idx})"
         )
+    # Re-open before screenshotting: clicking a choice chip currently CLOSES the
+    # drawer (renderHeatModeChoices detaches the clicked node, so the document
+    # "click outside closes" listener sees a detached target — asserted, with the
+    # full diagnosis, in the theme-cards scenario). Without this the PNG is of an
+    # off-screen drawer, i.e. blank, while every assertion above still passes.
+    # The transform transition also needs a beat before the shot.
+    page.evaluate("window.openColorSettings()")
+    page.wait_for_timeout(400)
     return "#settings-panel"
 
 
@@ -907,6 +946,649 @@ def scenario_threshold_filter_clear(page):
     return None
 
 
+# ── Distribution track (site/hist-track.js) ───────────────────────────────────
+#
+# The numeric column filter's track is a <canvas> histogram of that column's own
+# values (bars + count gridlines + hovered-bin marker + out-of-range scrim), with
+# the Y labels as DOM spans in a 34 px gutter. Nothing about the bar geometry is in
+# the DOM, so these scenarios assert it through the module's pure helpers
+# (HistTrack.layout / .histogram) plus the canvas' own pixels — a screenshot alone
+# cannot tell a correct histogram from a wrong one.
+
+# Numeric column to drive the range-filter scenarios with, in preference order:
+# the index grid has "Cena (Kč)", the reference grid does not — "Výkon (kW)" is on
+# both. Keeps one scenario runnable against either page.
+_RANGE_FIELDS = ["Cena (Kč)", "Výkon (kW)", "Objem motoru"]
+# Columns that are blank on most rows — what the "Bez hodnoty" switch is for.
+_SPARSE_FIELDS = ["Kapacita baterie (kWh)", "Dojezd WLTP (km)"]
+
+
+def _pick_field(page, candidates):
+    field = page.evaluate(
+        "(fs)=>fs.filter(function(f){return !!window.__gridApi.getColumn(f);})[0] || ''",
+        candidates,
+    )
+    if not field:
+        raise AssertionError(f"none of {candidates!r} is a column on this page")
+    return field
+
+
+def _open_range_filter(page, field):
+    """Open a numeric column's RangeFilter popup and wait for its canvas track.
+    afterGuiAttached measures + paints on the next frame, so give it one."""
+    page.evaluate("(f)=>window.__gridApi.showColumnFilter(f)", field)
+    page.wait_for_selector(".range-filter", timeout=5000)
+    page.wait_for_selector(".range-filter .ht-track canvas", timeout=5000)
+    page.wait_for_timeout(350)
+
+
+def _col_domain(page):
+    """The open track's value domain + step — read off the two native range inputs,
+    which the RangeFilter seeds straight from colRanges[field]."""
+    return page.evaluate(
+        "()=>{var r=document.querySelector('.range-filter .ht-track input[type=range]');"
+        " return {min:+r.min, max:+r.max, step:+r.step};}"
+    )
+
+
+def _parse_cs_count(txt):
+    """cs-CZ count label → float: '12 tis.' → 12000, '1,5 mil.' → 1500000, '840' → 840.
+    toLocaleString groups with NBSP / narrow NBSP, so both are folded to a space."""
+    t = (txt or "").replace("\u00a0", " ").replace("\u202f", " ").strip()
+    mult = 1.0
+    for suffix, m in (("mil.", 1e6), ("tis.", 1e3)):
+        if t.endswith(suffix):
+            t = t[: -len(suffix)].strip()
+            mult = m
+            break
+    t = t.replace(" ", "").replace(",", ".")
+    return float(t) * mult
+
+
+def _ylabels(page):
+    return page.evaluate(
+        "()=>[].map.call(document.querySelectorAll('.range-filter .ht-ylabels span'),"
+        "function(s){return s.textContent||'';})"
+    )
+
+
+def _xlabels(page):
+    return page.evaluate(
+        "()=>[].map.call(document.querySelectorAll('.range-filter .ht-xaxis span'),"
+        "function(s){return s.textContent||'';})"
+    )
+
+
+def _canvas_png(page):
+    return page.evaluate("()=>document.querySelector('.range-filter .ht-track canvas').toDataURL()")
+
+
+def _canvas_ink(page):
+    """Non-transparent pixels on the open track's canvas. Gridlines + baseline alone
+    are ~1/3 of a painted track, so this distinguishes "bars are drawn" from "the
+    axis is drawn and the bars vanished" — which a screenshot-only check misses when
+    the scenario passes on everything else."""
+    return page.evaluate(
+        "()=>{var c=document.querySelector('.range-filter .ht-track canvas');"
+        " if(!c||!c.width) return 0;"
+        " var d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,n=0;"
+        " for(var i=3;i<d.length;i+=4) if(d[i]>8) n++; return n;}"
+    )
+
+
+def _set_range_boxes(page, lo, hi):
+    """Drive the od/do boxes the way a user types into them (commitRange debounces
+    the recolour + refilter by 220 ms, then AG runs the filter pass)."""
+    page.evaluate(
+        "(a)=>{var g=document.querySelector('.range-filter');"
+        " var mn=g.querySelector('.th-min'), mx=g.querySelector('.th-max');"
+        " mn.value=String(a[0]); mn.dispatchEvent(new Event('input',{bubbles:true}));"
+        " mx.value=String(a[1]); mx.dispatchEvent(new Event('input',{bubbles:true}));}",
+        [lo, hi],
+    )
+    page.wait_for_timeout(700)
+
+
+def _cell_backgrounds(page, field):
+    """{cell text: inline background} for the rendered cells of one column. The heat
+    tint is a pure function of the value + the column's colour range, so this map is
+    the observable proof that a threshold is (or is no longer) colouring."""
+    return page.evaluate(
+        "(f)=>{var o={};"
+        " document.querySelectorAll('.ag-cell[col-id=\"'+f+'\"]').forEach(function(c){"
+        "   var t=(c.textContent||'').trim();"
+        "   if(t) o[t]=c.style.background||c.style.backgroundColor||'';});"
+        " return o;}",
+        field,
+    )
+
+
+def _shared_diff(a, b):
+    keys = [k for k in a if k in b]
+    return keys, [k for k in keys if a[k] != b[k]]
+
+
+def scenario_hist_track(page):
+    """The numeric filter's track is a value histogram on a <canvas>.
+
+    Asserts what a screenshot cannot:
+      1. the canvas has a backing store and actual ink in it;
+      2. HistTrack.layout() geometry is sound at several widths — integer bar width
+         and bin count, `bins*(bar+GAP) - GAP <= innerW` (leftover pixels become
+         padding at the two EDGES, never fractional bar widths), maxBins honoured;
+      3. HistTrack.niceTicks(peak) is a valid COUNT axis at every peak: whole cars
+         (≥ 1, never a fraction), ≤ peak, strictly increasing, ≤ 3 of them, and no two
+         rendering to the same label;
+      4. the count axis draws at most 3 gridline labels, all parseable, strictly
+         increasing, and none above the peak bin count the data implies (a label
+         above the tallest bar reads as a broken axis);
+      5. every value falls inside a bin over the full domain (histogram total == n).
+    """
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = _pick_field(page, _RANGE_FIELDS)
+    _open_range_filter(page, field)
+
+    painted = page.evaluate(
+        "()=>{var c=document.querySelector('.range-filter .ht-track canvas');"
+        " if(!c||!c.width||!c.height) return {w:0,h:0,ink:0};"
+        " var d=c.getContext('2d').getImageData(0,0,c.width,c.height).data,n=0;"
+        " for(var i=3;i<d.length;i+=4) if(d[i]>8) n++;"
+        " return {w:c.width,h:c.height,ink:n};}"
+    )
+    if not painted["w"] or not painted["h"]:
+        raise AssertionError(f"the track canvas has no backing store: {painted}")
+    if painted["ink"] < 200:
+        raise AssertionError(f"track canvas is (nearly) blank — nothing was drawn: {painted}")
+
+    geom = page.evaluate(
+        "()=>{var out=[];[120,300,301,640].forEach(function(w){"
+        " [null,12,48].forEach(function(mb){var l=window.HistTrack.layout(w,mb);"
+        "   out.push({w:w,maxBins:mb,bar:l.bar,bins:l.bins});});});return out;}"
+    )
+    for g in geom:
+        if g["bar"] != int(g["bar"]) or g["bins"] != int(g["bins"]):
+            raise AssertionError(f"layout() returned fractional geometry: {g}")
+        if g["bar"] < 1 or g["bins"] < 2:
+            raise AssertionError(f"layout() degenerate: {g}")
+        span = g["bins"] * (g["bar"] + 1) - 1      # GAP == 1
+        if span > g["w"]:
+            raise AssertionError(f"layout() overflows the track ({span} px of {g['w']}): {g}")
+        if g["maxBins"] and g["bins"] > g["maxBins"]:
+            raise AssertionError(f"layout() ignored maxBins: {g}")
+
+    # The gridlines label a COUNT of cars, so they must be whole cars ≥ 1 — a peaked
+    # column filtered down to a handful of rows must not grow a "0" gridline (the
+    # labels are printed with 0 decimals, so a 0.25 tick reads "0", and two sub-1
+    # ticks read as two identical "0" lines).
+    ticks = page.evaluate(
+        "()=>[1,2,3,6,9,30,120,4000,41234,152000].map(function(p){"
+        " return {peak:p, ticks:window.HistTrack.niceTicks(p)};})"
+    )
+    for row in ticks:
+        ts, peak = row["ticks"], row["peak"]
+        if len(ts) > 3:
+            raise AssertionError(f"niceTicks({peak}) returned {len(ts)} gridlines, expected ≤ 3: {ts}")
+        for t in ts:
+            if t < 1 or t != int(t):
+                raise AssertionError(
+                    f"niceTicks({peak}) → {ts}: a count gridline must be a whole number of "
+                    f"cars ≥ 1, {t} is not"
+                )
+            if t > peak:
+                raise AssertionError(f"niceTicks({peak}) → {ts}: {t} sits above the tallest bar")
+        for a, b in zip(ts, ts[1:]):
+            if not b > a:
+                raise AssertionError(f"niceTicks({peak}) is not strictly increasing: {ts}")
+        rendered = [_parse_cs_count(x) for x in page.evaluate(
+            "(ts)=>{var f=ts.map(function(v){return window.HistTrack.fmtInt(v);});return f;}", ts)]
+        if len(set(rendered)) != len(rendered):
+            raise AssertionError(f"niceTicks({peak}) → {ts} renders duplicate labels: {rendered}")
+
+    # Recompute the histogram the track drew (same domain, same layout maths as
+    # Track.metrics) so the gridline labels can be checked against a real peak.
+    probe = page.evaluate(
+        "(f)=>{var tr=document.querySelector('.range-filter .ht-track');"
+        " var r=tr.querySelector('input[type=range]'), min=+r.min, max=+r.max, step=+r.step;"
+        " var innerW=Math.max(40, tr.getBoundingClientRect().width - window.HistTrack.GUTTER);"
+        " var maxBins=null;"
+        " if(step){var steps=Math.round((max-min)/step)+1; if(steps<=200) maxBins=Math.max(2,steps);}"
+        " var lay=window.HistTrack.layout(innerW, maxBins), vals=[];"
+        # reference.json stores some numeric columns as strings ("150"), and the
+        # page's own value providers coerce — so coerce here too, or the probe finds
+        # nothing to bin on the reference page.
+        " window.__gridApi.forEachNode(function(n){var v=n.data&&n.data[f];"
+        "   var num=typeof v==='number'?v:parseFloat(v);"
+        "   if(isFinite(num)) vals.push(num);});"
+        " var h=window.HistTrack.histogram(vals, min, max, lay.bins);"
+        " return {peak:h.peak, total:h.total, n:vals.length, bins:lay.bins, bar:lay.bar};}",
+        field,
+    )
+    if probe["n"] < 10 or probe["peak"] <= 0:
+        raise AssertionError(f"no distribution to draw for {field!r}: {probe}")
+    if probe["total"] != probe["n"]:
+        raise AssertionError(
+            f"{probe['n'] - probe['total']} value(s) fell outside every bin over the "
+            f"full domain: {probe}"
+        )
+
+    labels = _ylabels(page)
+    if not labels:
+        raise AssertionError("the count axis drew no gridline labels")
+    if len(labels) > 3:
+        raise AssertionError(f"count axis drew {len(labels)} labels, expected ≤ 3: {labels}")
+    try:
+        vals = [_parse_cs_count(t) for t in labels]
+    except ValueError as e:
+        raise AssertionError(f"unparseable gridline label in {labels}: {e}")
+    for a, b in zip(vals, vals[1:]):
+        if not b > a:
+            raise AssertionError(f"gridline labels are not strictly increasing: {labels}")
+    if vals[-1] > probe["peak"] * 1.02:
+        raise AssertionError(
+            f"top gridline {labels[-1]!r} ({vals[-1]:.0f}) exceeds the peak bin count "
+            f"{probe['peak']} — the axis would sit above the tallest bar"
+        )
+    return ".range-filter"
+
+
+def scenario_hist_modes(page):
+    """The three .seg buttons pick WHAT the bars count: Vše (every row in the grid) /
+    Po filtru (the rows the grid shows) / Obojí (both layers, shared scale). It is a
+    global appearance pref, so it persists to localStorage carCompareHistMode.
+
+    Another column is filtered first: with nothing filtered "Po filtru" == "Vše" and
+    a repaint would be indistinguishable from a no-op."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = _pick_field(page, _RANGE_FIELDS)
+    narrow = _pick_field(page, ["Typ", "Palivo", "Karoserie"])
+    value = page.evaluate(
+        "(f)=>{var v=null;window.__gridApi.forEachNode(function(n){"
+        "if(v===null&&n.data&&n.data[f]) v=n.data[f];});return v;}",
+        narrow,
+    )
+    page.evaluate(
+        "(a)=>window.__gridApi.setFilterModel({[a[0]]:{filterType:'set',values:[a[1]]}})",
+        [narrow, value],
+    )
+    page.wait_for_timeout(400)
+    _open_range_filter(page, field)
+
+    # Ink on the first (un-animated) paint = the reference for "the bars are there".
+    baseline_ink = _canvas_ink(page)
+    if baseline_ink < 200:
+        raise AssertionError(f"nothing painted before the first mode switch (ink={baseline_ink})")
+
+    shots = {}
+    for mode in ("all", "filter", "both"):
+        page.click(".range-filter .rf-ctl-row .seg button[data-value='%s']" % mode)
+        page.wait_for_timeout(450)          # ANIM_MS 170 + rAF settle
+        active = page.evaluate(
+            "()=>{var b=document.querySelector('.range-filter .rf-ctl-row .seg button.active');"
+            " return b ? b.dataset.value : '';}"
+        )
+        if active != mode:
+            raise AssertionError(f"clicked {mode!r} but the active segment is {active!r}")
+        stored = page.evaluate("()=>{try{return JSON.parse(localStorage.getItem('carCompareHistMode'))||{};}catch(e){return {};}}")
+        if stored.get("mode") != mode:
+            raise AssertionError(f"localStorage carCompareHistMode did not follow: {stored}")
+        ink = _canvas_ink(page)
+        if ink < baseline_ink * 0.5:
+            raise AssertionError(
+                "mode %r left the track without bars (ink %d vs %d before the switch) — the "
+                "height tween paints NaN heights, so the last animated frame is bar-less and "
+                "stays on screen until an unrelated repaint" % (mode, ink, baseline_ink)
+            )
+        shots[mode] = _canvas_png(page)
+
+    if shots["all"] == shots["filter"]:
+        raise AssertionError("canvas did not repaint between 'Vše' and 'Po filtru'")
+    if shots["both"] == shots["filter"]:
+        raise AssertionError("'Obojí' painted the same as 'Po filtru' — no context layer")
+    if shots["both"] == shots["all"]:
+        raise AssertionError("'Obojí' painted the same as 'Vše' — no filtered layer")
+    return ".range-filter"
+
+
+def scenario_hist_zoom(page):
+    """.ht-zoom shrinks the value axis onto the filtered rows ("Po filtru" only —
+    zooming "Vše" would be a no-op, so the button is disabled there).
+
+    The zoom animates the DOMAIN and re-bins per frame; the count gridlines are
+    deliberately FROZEN to the end state, because deriving niceTicks() per frame
+    made the labels flicker through different round numbers. So:
+      • the value axis really moves (first AND last label change),
+      • the ± icon and its aria-label flip,
+      • the count labels change at most once across the whole animation.
+    """
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = _pick_field(page, _RANGE_FIELDS)
+    _open_range_filter(page, field)
+    page.click(".range-filter .rf-ctl-row .seg button[data-value='filter']")
+    page.wait_for_timeout(450)
+
+    # Narrow this column's own range: the zoom collapses the gap between the
+    # filtered rows' extent and the full domain, so there must be a gap.
+    dom = _col_domain(page)
+    span = dom["max"] - dom["min"]
+    lo = dom["min"] + span * 0.25
+    hi = dom["min"] + span * 0.45
+    page.evaluate(
+        "(a)=>window.__gridApi.setColumnFilterModel(a[0],"
+        "{filterType:'number',type:'inRange',filter:a[1],filterTo:a[2]})"
+        ".then(function(){window.__gridApi.onFilterChanged();})",
+        [field, lo, hi],
+    )
+    page.wait_for_timeout(600)
+
+    before_x = _xlabels(page)
+    before_zoom = page.evaluate(
+        "()=>{var b=document.querySelector('.range-filter .ht-zoom');"
+        " return {aria:b.getAttribute('aria-label')||'', paths:b.querySelectorAll('path').length,"
+        "         on:b.classList.contains('on'), disabled:!!b.disabled};}"
+    )
+    if before_zoom["disabled"]:
+        raise AssertionError("Lupa is still disabled in 'Po filtru' mode")
+
+    page.click(".range-filter .ht-zoom")
+    samples = []
+    for _ in range(9):
+        samples.append(tuple(_ylabels(page)))
+        page.wait_for_timeout(25)
+    page.wait_for_timeout(450)
+
+    after_x = _xlabels(page)
+    after_zoom = page.evaluate(
+        "()=>{var b=document.querySelector('.range-filter .ht-zoom');"
+        " return {aria:b.getAttribute('aria-label')||'', paths:b.querySelectorAll('path').length,"
+        "         on:b.classList.contains('on')};}"
+    )
+    if after_zoom["aria"] == before_zoom["aria"]:
+        raise AssertionError(f"zoom aria-label did not flip: {before_zoom['aria']!r}")
+    if after_zoom["paths"] == before_zoom["paths"]:
+        raise AssertionError(
+            f"zoom icon did not flip +/− (still {after_zoom['paths']} paths)"
+        )
+    if not after_zoom["on"]:
+        raise AssertionError("zoom button did not take the .on state")
+    if before_x[0] == after_x[0] or before_x[-1] == after_x[-1]:
+        raise AssertionError(
+            f"value axis did not zoom: {before_x} → {after_x}"
+        )
+
+    settled = tuple(_ylabels(page))
+    distinct = set(samples) | {settled}
+    if len(distinct) > 2:
+        raise AssertionError(
+            "count gridline labels flickered during the zoom (%d distinct sets, expected ≤ 2): %r"
+            % (len(distinct), sorted(distinct))
+        )
+    if samples[-1] != settled and samples[-2] != settled:
+        raise AssertionError(
+            f"count labels kept changing after the animation: {samples[-2:]} vs {settled}"
+        )
+    return ".range-filter"
+
+
+def scenario_blank_filter(page):
+    """"Bez hodnoty" (Skrýt / Zahrnout / Jen ty) turns blank cells into a real filter
+    question, and maps onto AG's OWN model shapes — which is why the URL codec and
+    the filter chips needed no new token:
+
+        hide + bounds → {inRange}
+        show + bounds → {operator:"OR", conditions:[inRange, {type:"blank"}]}
+        only          → {type:"blank"}
+
+    Driven on a sparse column (Kapacita baterie is blank on every combustion car),
+    asserting both the row counts and the emitted model.
+    """
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = _pick_field(page, _SPARSE_FIELDS)
+    total = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    blanks = page.evaluate(
+        "(f)=>{var n=0;window.__gridApi.forEachNode(function(x){var v=x.data&&x.data[f];"
+        " if(!(typeof v==='number'&&isFinite(v))) n++;});return n;}",
+        field,
+    )
+    if not blanks or blanks >= total:
+        raise AssertionError(f"{field!r} is not sparse on this page ({blanks} blank of {total})")
+    _open_range_filter(page, field)
+
+    def model():
+        return page.evaluate("(f)=>(window.__gridApi.getFilterModel()||{})[f]", field)
+
+    def pick(mode):
+        page.click(".range-filter .rf-blank-row .seg button[data-value='%s']" % mode)
+        page.wait_for_timeout(500)
+        active = page.evaluate(
+            "()=>{var b=document.querySelector('.range-filter .rf-blank-row .seg button.active');"
+            " return b ? b.dataset.value : '';}"
+        )
+        if active != mode:
+            raise AssertionError(f"clicked blank mode {mode!r}, active is {active!r}")
+
+    # The switch prints how many rows are missing a value, so the choice is informed.
+    shown = page.inner_text(".range-filter .rf-blank-count")
+    digits = "".join(ch for ch in shown if ch.isdigit())
+    if not digits or int(digits) != blanks:
+        raise AssertionError(f"blank count label {shown!r} != {blanks} rows without a value")
+
+    # "Jen ty" → exactly the blank rows, via AG's bare blank model.
+    pick("only")
+    only_shown = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if only_shown != blanks:
+        raise AssertionError(f"'Jen ty' shows {only_shown} rows, expected {blanks} blanks")
+    m = model()
+    if not m or m.get("type") != "blank" or m.get("filterType") != "number" or m.get("conditions"):
+        raise AssertionError(f"'Jen ty' emitted {m!r}, expected a bare number/blank model")
+
+    # "Skrýt" + a range → plain inRange; blanks fail it.
+    pick("hide")
+    dom = _col_domain(page)
+    span = dom["max"] - dom["min"]
+    lo = round(dom["min"] + span * 0.2)
+    hi = round(dom["min"] + span * 0.8)
+    _set_range_boxes(page, lo, hi)
+    hide_shown = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    m = model()
+    if not m or m.get("type") != "inRange":
+        raise AssertionError(f"'Skrýt' + range emitted {m!r}, expected an inRange model")
+    if float(m.get("filter")) != lo or float(m.get("filterTo")) != hi:
+        raise AssertionError(f"range bounds did not reach the model: {m!r} (wanted {lo}–{hi})")
+    leaked = page.evaluate(
+        "(f)=>{var n=0;window.__gridApi.forEachNodeAfterFilter(function(x){var v=x.data&&x.data[f];"
+        " if(!(typeof v==='number'&&isFinite(v))) n++;});return n;}",
+        field,
+    )
+    if leaked:
+        raise AssertionError(f"'Skrýt' left {leaked} blank row(s) in the grid")
+    if not 0 < hide_shown < total - blanks + 1:
+        raise AssertionError(f"'Skrýt' + range shows {hide_shown} of {total} rows — implausible")
+
+    # "Zahrnout" → the same range OR blank; the blanks come back on top.
+    pick("show")
+    show_shown = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    m = model()
+    conds = (m or {}).get("conditions") or []
+    types = sorted(c.get("type") for c in conds)
+    if (m or {}).get("operator") != "OR" or types != ["blank", "inRange"]:
+        raise AssertionError(f"'Zahrnout' emitted {m!r}, expected OR[inRange, blank]")
+    if show_shown < hide_shown:
+        raise AssertionError(f"'Zahrnout' shows fewer rows than 'Skrýt' ({show_shown} < {hide_shown})")
+    if show_shown != hide_shown + blanks:
+        raise AssertionError(
+            f"'Zahrnout' shows {show_shown}, expected range {hide_shown} + {blanks} blanks"
+        )
+
+    # …and back to "Skrýt": the blanks drop out again.
+    pick("hide")
+    back = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if back != hide_shown:
+        raise AssertionError(f"'Skrýt' after 'Zahrnout' shows {back}, expected {hide_shown}")
+    return ".range-filter"
+
+
+def scenario_colour_only(page):
+    """"Jen barvit, nefiltrovat" keeps the range as a colour threshold but emits NO
+    filter model (isFilterActive false), so the grid returns to its full row set
+    while the column stays tinted. Because AG then has nothing to render a chip
+    from, the range rides into the chips bar as a dashed .filter-chip.tint carrying
+    a "jen barva" tag — otherwise a column could stay tinted with nothing on screen
+    saying so. Its × clears the range outright (colour included).
+
+    The tint is asserted through the cells' inline backgrounds: the heat colour is a
+    pure function of value + colour range, so a changed threshold must change them,
+    and clearing must restore exactly the baseline map.
+    """
+    page.wait_for_selector(".ag-row", timeout=15000)
+    field = _pick_field(page, _RANGE_FIELDS)
+    page.evaluate("(f)=>window.__gridApi.ensureColumnVisible(f)", field)
+    page.wait_for_timeout(250)
+    total = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    base_bg = _cell_backgrounds(page, field)
+    if len(base_bg) < 5:
+        raise AssertionError(f"only {len(base_bg)} rendered cells for {field!r} — cannot check the tint")
+
+    _open_range_filter(page, field)
+    dom = _col_domain(page)
+    span = dom["max"] - dom["min"]
+    lo = round(dom["min"] + span * 0.25)
+    hi = round(dom["min"] + span * 0.60)
+    _set_range_boxes(page, lo, hi)
+    filtered = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if filtered >= total:
+        raise AssertionError(f"the range did not filter anything ({filtered} of {total})")
+
+    page.evaluate(
+        "()=>{var c=document.querySelector('.range-filter .rf-check input');"
+        " c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true}));}"
+    )
+    page.wait_for_timeout(600)
+
+    unfiltered = page.evaluate("window.__gridApi.getDisplayedRowCount()")
+    if unfiltered != total:
+        raise AssertionError(f"colour-only still filters: {unfiltered} of {total} rows")
+    if page.evaluate("(f)=>!!(window.__gridApi.getFilterModel()||{})[f]", field):
+        raise AssertionError("colour-only left a filter model behind")
+
+    chip = page.evaluate(
+        "()=>{var c=document.querySelector('#filter-chips-bar .filter-chip.tint');"
+        " if(!c) return null;"
+        " var t=c.querySelector('.filter-chip-tag'), l=c.querySelector('.filter-chip-label');"
+        " return {tag:t?(t.textContent||'').trim():'', label:l?(l.textContent||'').trim():'',"
+        "         close:!!c.querySelector('.filter-chip-close')};}"
+    )
+    if not chip:
+        raise AssertionError("no dashed .filter-chip.tint chip for the colour-only range")
+    if chip["tag"] != "jen barva":
+        raise AssertionError(f"tint chip tag is {chip['tag']!r}, expected 'jen barva'")
+    if field.split(" (")[0] not in chip["label"] or not chip["close"]:
+        raise AssertionError(f"tint chip is missing its column or × : {chip!r}")
+
+    tint_bg = _cell_backgrounds(page, field)
+    keys, changed = _shared_diff(base_bg, tint_bg)
+    if len(keys) < 5:
+        raise AssertionError(f"only {len(keys)} comparable cells after the colour-only switch")
+    if not changed:
+        raise AssertionError("colour-only range did not change a single cell's heat colour")
+    if any(not tint_bg[k] for k in keys):
+        raise AssertionError("a cell lost its heat background entirely under colour-only")
+
+    page.click("#filter-chips-bar .filter-chip.tint .filter-chip-close")
+    page.wait_for_timeout(600)
+    if page.query_selector("#filter-chips-bar .filter-chip.tint"):
+        raise AssertionError("the tint chip survived its own ×")
+    cleared_bg = _cell_backgrounds(page, field)
+    _, still = _shared_diff(base_bg, cleared_bg)
+    if still:
+        raise AssertionError(
+            f"{len(still)} cell(s) kept the colour-only tint after the chip × (e.g. {still[0]!r})"
+        )
+    th = page.evaluate("()=>localStorage.getItem('carCompareThresholds')||''")
+    if field in th:
+        raise AssertionError(f"the chip × left {field!r} in carCompareThresholds: {th}")
+
+    # Put the colour-only state back for the screenshot: the assertions end on a
+    # cleared grid, which looks exactly like the plain `grid` scenario and documents
+    # nothing. The shot should show the dashed "jen barva" chip over a tinted column.
+    _open_range_filter(page, field)
+    page.evaluate(
+        "()=>{var c=document.querySelector('.range-filter .rf-check input');"
+        " c.checked=true; c.dispatchEvent(new Event('change',{bubbles:true}));}"
+    )
+    _set_range_boxes(page, lo, hi)
+    page.keyboard.press("Escape")          # close the popup so the chip bar is unobstructed
+    page.wait_for_timeout(400)
+    if not page.query_selector("#filter-chips-bar .filter-chip.tint"):
+        raise AssertionError("the colour-only range did not come back for the screenshot")
+    return None
+
+
+def scenario_theme_cards(page):
+    """The colour drawer picks the theme from two miniatures of the page itself
+    (.theme-card > .theme-mini, painted in that theme's own tokens) — the gear
+    menu's "Přepnout motiv" item is gone and window.setTheme(theme) is the
+    primitive. Clicking a card must flip data-theme, persist carCompareTheme and
+    move the .active state; both directions are exercised so the screenshot ends up
+    in the requested --theme."""
+    page.wait_for_selector(".ag-row", timeout=15000)
+    page.evaluate("window.openColorSettings()")
+    page.wait_for_selector("#theme-choices .theme-card", timeout=5000)
+    page.wait_for_timeout(350)          # drawer slides in (transform transition)
+
+    cards = page.evaluate(
+        "()=>[].map.call(document.querySelectorAll('#theme-choices .theme-card'),"
+        " function(b){return {mini:!!b.querySelector('.theme-mini'),"
+        "   active:b.classList.contains('active'), label:(b.textContent||'').trim()};})"
+    )
+    if len(cards) != 2:
+        raise AssertionError(f"expected 2 theme cards, got {len(cards)}: {cards}")
+    if not all(c["mini"] for c in cards):
+        raise AssertionError(f"a theme card has no .theme-mini miniature: {cards}")
+    if sum(1 for c in cards if c["active"]) != 1:
+        raise AssertionError(f"exactly one theme card must be active: {cards}")
+
+    start = page.evaluate("document.documentElement.getAttribute('data-theme')")
+    other = [i for i, c in enumerate(cards) if not c["active"]][0]
+    problems = []
+
+    def click_card(idx):
+        page.locator("#theme-choices .theme-card").nth(idx).click()
+        page.wait_for_timeout(400)
+        st = page.evaluate(
+            "()=>({theme:document.documentElement.getAttribute('data-theme'),"
+            " stored:localStorage.getItem('carCompareTheme'),"
+            " open:!document.getElementById('settings-panel').classList.contains('hidden'),"
+            " active:[].findIndex.call(document.querySelectorAll('#theme-choices .theme-card'),"
+            "   function(c){return c.classList.contains('active');})})"
+        )
+        if not st["open"]:
+            # Deferred, not raised: the theme itself still applies, and the rest of
+            # the contract (both directions) is worth checking in one run.
+            msg = ("picking a theme CLOSES the drawer — setTheme() re-renders the cards, so the "
+                   "document 'click outside closes' listener sees a DETACHED e.target whose "
+                   "closest('#settings-panel') is null (same for the palette/style chips)")
+            if msg not in problems:
+                problems.append(msg)
+            page.evaluate("window.openColorSettings()")
+            page.wait_for_timeout(400)
+        return st
+
+    st = click_card(other)
+    if st["theme"] == start:
+        raise AssertionError(f"clicking the inactive theme card did not flip data-theme ({start})")
+    if st["stored"] != st["theme"]:
+        raise AssertionError(f"localStorage carCompareTheme={st['stored']!r} != data-theme={st['theme']!r}")
+    if st["active"] != other:
+        raise AssertionError(f"the .active card did not move onto the clicked one: {st}")
+
+    back = click_card(1 - other)
+    if back["theme"] != start or back["stored"] != start:
+        raise AssertionError(f"clicking back did not restore {start!r}: {back}")
+    if problems:
+        raise AssertionError("; ".join(problems))
+    return "#settings-panel"
+
+
 def _set_price_view(page, view):
     page.wait_for_selector(".ag-row", timeout=15000)
     page.evaluate("(v) => window.setPriceView(v)", view)
@@ -961,6 +1643,12 @@ SCENARIOS = {
     "price-histogram": scenario_price_histogram,
     "price-popup": scenario_price_popup,
     "threshold-filter-clear": scenario_threshold_filter_clear,
+    "hist-track": scenario_hist_track,
+    "hist-modes": scenario_hist_modes,
+    "hist-zoom": scenario_hist_zoom,
+    "blank-filter": scenario_blank_filter,
+    "colour-only": scenario_colour_only,
+    "theme-cards": scenario_theme_cards,
     "color-drawer": scenario_color_drawer,
     "heat-combo": scenario_heat_combo,
     "tools-menu": scenario_tools_menu,

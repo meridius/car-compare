@@ -467,7 +467,11 @@ compact custom codec in **`site/url-state.js`** (`window.UrlState`), shared by
 ~120-char base64 blob to `#f=Model~tcceed`. Column layout is deliberately **not**
 in the URL (see below). Pinned by `build/verify_ui.py` scenarios `url-state`
 (index) and `url-state-ref` (reference): round-trip battery + live reload +
-column-in-localStorage-not-URL + legacy migration.
+column-in-localStorage-not-URL + legacy migration. The `#t=` half of `url-state`
+drives the threshold from the **column-filter popup** (the drawer has no threshold
+boxes any more) and proves it *still colours* after the reload by diffing the
+column's inline cell backgrounds — asserting only "the value is back in
+localStorage" would pass on a payload that no longer tints.
 
 `url-state.js` is a plain `<script>` loaded **before** the page script in both
 HTML files (index's `app.js` is an ES module = deferred, so the plain script runs
@@ -538,36 +542,100 @@ path. Round-trip + no-time-in-URL pinned in `verify_ui.py` `_codec_battery` (gre
 
 ## site — UI (redesign 2026-07)
 
-### numeric filter = a dual slider, and it's the SAME state as the colour threshold
+### the numeric filter is a distribution track (histogram), not a gradient slider
 
-Every numeric column filters through a custom AG Grid `RangeFilter` (IFilterComp,
-both `site/app.js` and `site/reference.js`) — a dual min/max slider (track = the
-column's good→bad heat gradient) + od/do number boxes + a reset, rendered in the
-column-filter popup instead of AG's two text inputs. It is **coupled** to the
-Nastavení-barev colour slider: `userThresholds[field] = {min,max}` is the **single
-source of truth** for both the heat-map colouring AND row filtering. Editing either
-view drives the other — every editor (either slider, either box, either reset)
-routes through `commitRange(field,min,max)`, which mirrors state into the other view
-(skipping the focused control) and debounces (220 ms) the expensive recolour +
+Every numeric column on **both** pages filters through the custom AG `RangeFilter`
+(IFilterComp, `site/app.js` + `site/reference.js`), rendered in the column-filter
+popup instead of AG's two text inputs. The popup, top to bottom:
+
+```text
+.rf-name-row    .rf-name (column) · .rf-dir ("více = lépe") · .th-reset
+.rf-ctl-row     .seg (Vše | Po filtru | Obojí) · .ht-zoom (Lupa) · .rf-readout (hover)
+.track-wrap     .ht-track (canvas + .ht-ylabels + the two range thumbs) · .ht-xaxis
+.th-pair        od / do number boxes
+.rf-blank-row   "Bez hodnoty:" .seg (Skrýt | Zahrnout | Jen ty) · .rf-blank-count
+.rf-check       "Jen barvit, nefiltrovat"
+```
+
+Drawing lives in **`site/hist-track.js`** (`window.HistTrack`, a plain `<script>` on
+both pages); the page module only feeds it data + colours and owns the DOM around it.
+`userThresholds[field] = {min,max}` is still the **single source of truth** for both
+the heat-map colouring AND row filtering: every editor (thumb, box, reset) routes
+through `commitRange(field,min,max)`, which mirrors state into the other controls
+(skipping the focused one) and debounces (220 ms) the expensive recolour +
 `setColumnFilterModel` + `onFilterChanged` off the 150k-row hot path. `setModel`
 writes shared state but does **not** call `commitRange` (AG drives the filter pass),
-so there's no loop. The filter emits the standard AG number `inRange` model (null
-bound = open), so the URL codec (`url-state.js`), filter chips and persistence work
-unchanged.
+so there is no loop. Blank-mode / colour-only changes go through
+`commitFilterShape()` instead — they alter the model, not the range, so there is no
+drag to debounce.
 
-**The two stores split by concern — filtering vs colouring — and clearing a filter
-keeps the colour.** The filter store (`#f=` / `carCompareFilters`) is the *sole*
-source of truth for which columns filter; the threshold store (`#t=` /
-`carCompareThresholds`) only tints. On load the filter is restored from the filter
-store alone — a colour-only threshold (one the user cleared the filter for via the
-chip ×) is **never** re-armed as a filter. There used to be an `activateRangeFilters()`
-that re-derived a filter from *every* threshold on load, which resurrected filters the
-user had cleared (the threshold survives a chip × because chip removal only touches the
-filter model, not `userThresholds`) — deleted 2026-07-13. `commitRange` still couples
-the two at *edit* time (dragging either slider sets both colour and filter), so setting
-a range still filters; only clearing is asymmetric, and safe: colour may live without a
-filter (harmless tint), while a filter always renders a chip so it is never hidden.
+**The two stores still split by concern — filtering vs colouring.** The filter store
+(`#f=` / `carCompareFilters`) is the *sole* source of truth for which columns filter;
+the threshold store (`#t=` / `carCompareThresholds`) only tints. On load the filter is
+restored from the filter store alone — a colour-only threshold is **never** re-armed
+as a filter (the deleted `activateRangeFilters()` used to resurrect filters the user
+had cleared, 2026-07-13). Setting a range still couples both at *edit* time; only
+clearing is asymmetric.
 
+Traps in the track itself:
+
+- **It is a canvas, not flexbox.** DOM bars with `flex:1` + a 1px gap get their
+  fractional pixels spread by the browser, so bars come out 4px/5px/4px. `layout()`
+  instead picks an **integer** bar width up front, makes every gap exactly `GAP` (1px),
+  and pushes the **leftover pixels to the two EDGES as padding** — never between bars.
+  It is also one node per track instead of ~50, and hover is arithmetic (`binAt`), not
+  hit-testing.
+- **Bin count follows the track WIDTH**, capped to one bin per value for coarse
+  columns (`maxBins` derived from the column `step`; "Rok výroby" spans 12 values and
+  48 bins combed it into bars-and-gaps that read as missing data — those bars widen to
+  fill the track instead).
+- **Bar heights are sqrt-scaled.** Several columns are extremely peaked (Objem motoru
+  is ~all 1.5–2.0 l) and would render as an invisible stub on a linear axis. Read it
+  accordingly: **a gridline halfway up the track is a QUARTER of the peak**, not half.
+  No number is ever printed off a bar's height — the hover `.rf-readout` prints the
+  real count.
+- **Count gridlines are rounded DOWN to a nice number ≤ peak, and FROZEN during any
+  animation.** A line above the tallest bar reads as a broken axis; and deriving
+  `niceTicks()` per frame made the labels flicker through different round numbers, so
+  the animated frames carry the END state's ticks. The labels are DOM spans
+  (`.ht-ylabels span`) in a `GUTTER = 34` px left gutter, **reused** across frames
+  (recreating them made the text twitch), and one unit covers the whole axis (mixing
+  "10 tis." with "1 000" reads as two different scales).
+- **Which animation runs depends on WHAT changed** (`Track.render`): domain changed
+  (Lupa) → interpolate the **axis** and re-bin per frame, so bars spread apart / draw
+  together; **bin count** changed (resize) → short cross-fade, because bin *i* means
+  something different on the two sides and a height tween would be a lie; counts
+  changed (mode switch) → tween the bar heights.
+- **Bar colour comes from the value's GLOBAL position** in the column's full range,
+  never from the bin index — so a zoomed axis does **not** repaint globally-cheap cars
+  red.
+- **"Po filtru" counts the rows the grid SHOWS — this column's own range included.**
+  Cheap (one pass, no filter simulation) and honest: the bars are literally what is in
+  the table, which is also why they shrink as you drag a bound. "Obojí" draws all rows
+  faintly behind on a **shared** scale, so the height ratio is the share that survives
+  the filter; "Po filtru" alone self-scales, so a narrow filter still draws a readable
+  shape. The mode+zoom pair is a **global** appearance pref
+  (`localStorage["carCompareHistMode"] = {mode, zoom}`, shared by both pages like the
+  palette), so one segment click drives every open track.
+- **Filtered values are cached per filter version, never per frame** (`filteredCache`
+  keyed on `filterVersion`, bumped in `onFilterChanged`): the tracks re-bin from that
+  cached array on **every** animation frame, so a `forEachNodeAfterFilter` pass per
+  frame would be fatal. `setHistRows()` drops the caches when the row set changes
+  (archive load).
+- **Bins are counted over the rows in the grid**, so `loadArchive` concatenates the
+  archive rows and repaints. The *range* stays live-anchored (`computeRanges` is not
+  re-run), so archive values outside it clamp into the edge bins — the same clamp
+  `numericCellStyle` applies to `pos`.
+- **`repaintTracks()` must run on theme AND palette change** (`applyTheme`,
+  `updateThresholdGradients`) — `heatRGBof` is theme-tuned, so bars baked at dark-mode
+  colours would survive a switch to light. `applyTheme` runs from `initTheme()`
+  *before* `var liveTracks` is assigned, hence the `if (!liveTracks) return` guard.
+- **Known limit — an outlier stretches the axis.** The track spans the column's full
+  data range, so "Cena (Kč)" (max 3.36 M from a handful of dealer exotics, p99.5 =
+  749 k) compresses the whole real market into the left ~18 %. The Lupa is the per-use
+  escape hatch. A permanent fix means giving `colRanges` a robust (quantile) max, which
+  changes colouring and the slider's reachable maximum for everyone — a product
+  decision, not a rendering one.
 - **`fmtRangeNum`, not `fmtNum`** — `app.js` already has a 1-arg `fmtNum(n)` for the
   overview tables. The range formatter is 2-arg (`field, v`, cs-CZ thousands
   separator, `useGrouping:false` for "Rok výroby" — a year is not a thousand) and is
@@ -578,8 +646,74 @@ filter (harmless tint), while a filter always renders a chip so it is never hidd
   decimal.
 - **`doesFilterPass` coerces** — `reference.json` stores some numeric columns as
   strings ("150"); `computeRanges` (typeof number) skips them so they get number
-  boxes but no slider, and `doesFilterPass` does `parseFloat` so filtering still
-  works. `app.js`'s payload is float64 so this never bites there.
+  boxes but no track, and `doesFilterPass` does `parseFloat` so filtering still works.
+  `app.js`'s payload is float64 so this never bites there.
+- Pinned by `verify_ui.py` `hist-track` (canvas has ink; `layout()` geometry is
+  integer / non-overflowing / maxBins-honouring; `niceTicks()` is a whole-car axis;
+  the rendered gridline labels are ≤ 3, increasing and never above the peak),
+  `hist-modes` (segment + localStorage + the canvas actually repainting per mode) and
+  `hist-zoom` (axis really moves, ± icon flips, count labels do **not** flicker) —
+  both pages, both themes.
+
+### blank cells are a filter question, answered with AG's OWN model shapes
+
+"Bez hodnoty" (Skrýt / Zahrnout / Jen ty) makes "show me only cars that HAVE a
+number" / "only the ones missing it" expressible, and `rangeModel()` maps it onto
+shapes AG already understands:
+
+```text
+hide + bounds → { filterType:"number", type:"inRange", … }        (blanks fail)
+show + bounds → { operator:"OR", conditions:[ inRange, {type:"blank"} ] }
+only          → { filterType:"number", type:"blank" }
+colour-only   → no model at all (isFilterActive false)
+```
+
+That is why the URL codec (`site/url-state.js`) and `filter-chips.js` needed **no
+change**: `#f=Kapacita…~nb` is the existing blank op and `~konr100-200|nb` the
+existing combined-OR body. `.rf-blank-count` prints how many rows have no value so the
+choice is informed ("Kapacita baterie" is blank on every combustion car), and "Jen ty"
+greys out the range + the colour-only checkbox — a numeric range under "only blanks"
+would silently do nothing. Pinned by `verify_ui.py` `blank-filter` (row counts *and*
+the emitted model for all three states, both pages, both themes).
+
+### three traps found by actually clicking the popup (2026-07-28)
+
+Found only by real clicks/drags — every earlier check drove the filter through
+`setColumnFilterModel`, which exercises none of these:
+
+- **The canvas must be `pointer-events: none`.** `RangeFilter.init` appends the two
+  range inputs to `.ht-track` *before* `makeTrack()` creates the canvas, so the canvas
+  is a later sibling and painted on top: the thumbs became undraggable. Hover is
+  listened for on `.ht-track` (arithmetic, not a hit-test), so the painted layers never
+  need to be pointer targets — `.ht-canvas`, `.ht-ylabels` and `.ht-xaxis` are all
+  click-through.
+- **A null model is not a reason to reset "Zahrnout".** "Zahrnout" with no bounds
+  filters nothing, so `rangeModel()` returns null, AG echoes that back through
+  `setModel(null)` — and the old code read null as "no blank rule" and sprang the pill
+  back to "Skrýt", which read as an unclickable button. `setModel` now treats a null
+  model as agreement for `show` (and only contradicts `only`, which *is* a filter).
+- **`clearFilters()` must re-render the chips itself.** With a colour-only range the AG
+  filter model is already empty, so `setFilterModel(null)` changes nothing and
+  `onFilterChanged` never fires — the cleared "jen barva" chip stayed on screen. It also
+  clears `userThresholds` / `colourOnly` / `blankModes` now and repaints the cells,
+  because those ranges are exactly what the chip bar shows; the appearance drawer
+  therefore has **no** clearing button at all (it would have read as "clear filters"
+  while sitting among colour settings).
+
+### colour-only = a threshold with no filter model, plus its own dashed chip
+
+`colourOnly[field]` (persisted as a field list in `localStorage["carCompareColourOnly"]`)
+does not change the `{min,max}` state at all — it only says "do not turn it into a
+model", so `isFilterActive()` returns false and the column keeps its tint while hiding
+nothing. AG then has no model to render a chip from, so `colourOnlyChips()` feeds
+`renderFilterChips({extraChips})` a dashed **`.filter-chip.tint`** with a
+`.filter-chip-tag` "jen barva"; its × calls `clearColumnRange()` (colour + blank rule +
+model). Without that chip a column could stay tinted with nothing on screen saying so —
+which is exactly the invisible leftover the old "chip × keeps the colour" behaviour
+produced. A **normal** numeric chip's × now clears the colour too
+(`onRemoveField`). Pinned by `verify_ui.py` `colour-only` (row count returns to the
+full set, the dashed chip + tag render, the cells' inline heat backgrounds change and
+then return to baseline after the ×).
 
 ### heat-map colouring is a user-selectable palette × style, theme-aware
 
@@ -738,21 +872,39 @@ then `archiveVisible` drives `isExternalFilterPresent`/`doesExternalFilterPass`
 (hides `Stav=="Odstraněno"` when off). `totalRows` stays the live count;
 `archivedLoaded` is tracked separately so `updateRowCount` shows the right universe.
 
-### Nastavení barev is a right-side drawer; built-in filters are localised
+### Nastavení barev is a right-side drawer — appearance ONLY (theme, palette, style)
 
 `#settings-panel` is a `position:fixed` right drawer (`.settings-drawer`), not the
 old push-down panel that displaced the grid; it closes on Escape **and on any click
-outside it** (the opening click comes from `.menu-wrap`, which is excluded). Each
-numeric column gets a **dual min/max range slider whose track is the column's
-good→bad gradient** (two overlaid native ranges, `pointer-events` on thumbs only)
-kept two-way-synced with the number inputs — a thumb parked at the data edge
-clears its input back to "auto". Everything applies live (debounced
-`saveThresholds`, no Uložit button). AG's built-in number/text filters are Czech via
-`gridOptions.localeText` (the custom SetFilter was already Czech). Floating-filter
-inputs are transparent with the fill on `.ag-input-wrapper` — filling the input
-paints bands above/below the 24px box (the input spans the full 47px cell).
-`verify_ui.py` takes `--theme dark|light` and has `color-drawer` / `tools-menu` /
-`heat-combo` scenarios; screenshots are `<page>-<scenario>-<theme>.png`.
+outside it** (the opening click comes from `.menu-wrap`, which is excluded).
+
+**It no longer holds per-column ranges.** Those were ~15 always-open rows that
+duplicated the column filter — one `{min,max}` state rendered in two places — and they
+moved into the numeric filter popup (see the distribution-track gotcha); the drawer
+keeps only a hint pointing there plus a "Vymazat všechny rozsahy" button
+(`resetThresholds`). What it holds now:
+
+- **Motiv** — `#theme-choices`, two `.theme-card` buttons, each wrapping a
+  `.theme-mini` **miniature of the page** (header + filter chip + grid rows with heat
+  bars) painted in that theme's *own* tokens (`THEME_MINI`) rather than the live CSS
+  vars, because two plain colour swatches would not show what actually changes.
+  `window.setTheme("dark"|"light")` is the primitive (`toggleTheme` still works on top
+  of it) and the gear menu's "Přepnout motiv" item is **gone** — the theme is the same
+  kind of choice as the palette, not a tool. Pinned by `verify_ui.py` `theme-cards`.
+- **Barevná škála** / **Styl vybarvení** — `#palette-choices` / `#style-choices`
+  (`setHeatMode`, see the heat-map gotcha). Both previews are theme-tuned, so
+  `applyTheme` re-renders them.
+
+Everything applies live (no Uložit button). AG's built-in number/text filters are
+Czech via `gridOptions.localeText` (the custom SetFilter was already Czech).
+Floating-filter inputs are transparent with the fill on `.ag-input-wrapper` — filling
+the input paints bands above/below the 24px box (the input spans the full 47px cell).
+`verify_ui.py` takes `--theme dark|light` and has `color-drawer` / `theme-cards` /
+`tools-menu` / `heat-combo` scenarios; screenshots are `<page>-<scenario>-<theme>.png`.
+Note for anyone writing a drawer scenario: **clicking a choice re-renders that choice
+row**, so the clicked node is detached by the time anything else looks at it — a
+Playwright `Locator.click` retry then waits forever on a detached element, and
+`color-drawer` has to re-open the drawer before screenshotting it.
 
 ## core — normalize
 

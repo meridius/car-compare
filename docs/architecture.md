@@ -45,6 +45,30 @@ build/build_data.py  concat states + per-fuel reference enrichment → site/data
 
 Each adapter exposes `SOURCE_NAME`, `SOURCE_SLUG`, `FUELS`, and an async `scrape()` returning canonical rows.
 
+## Dashboard (`site/`)
+
+Static AG Grid pages, no build step. Three pages, and four plain `<script>` modules
+loaded **before** the page script so their `window.*` globals are ready:
+
+```text
+site/
+  index.html / app.js          the listings grid (columns, filters, heat map, overview)
+  reference.html / reference.js the reference-model grid (specs, Nabídek, Cena na trhu)
+  transmissions.html / .js     static catalogue page (no grid)
+  url-state.js    window.UrlState — the #f= / #t= codec (both grids)
+  hist-track.js   window.HistTrack — the numeric filter's canvas distribution track
+                  (bins, sqrt bars, count gridlines, zoom/mode animation); shared by
+                  app.js + reference.js, which supply the data and the heat colours
+  filter-chips.js window.renderFilterChips — the active-filter chip bar (incl. the
+                  dashed "jen barva" colour-only chips)
+  style.css       dark + light theme (amber accent, CSS custom props)
+  data/           cars.parquet + cars-archived.parquet + cars-meta.json +
+                  reference.json (all generated, git-ignored)
+```
+
+`build/verify_ui.py` drives every page in headless Chromium (`--page` × `--scenario` ×
+`--theme`) — mandatory after any `site/` change; see docs/conventions.md.
+
 ## Data Flow
 
 ```text

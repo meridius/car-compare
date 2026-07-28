@@ -78,7 +78,47 @@
     } catch (_) { /* a chip click must never break the page */ }
   }
 
-  // opts: { gridApi, barEl, headerNames: {field: label}, onClearAll: fn }
+  // Extra chips for state that is NOT in the grid's filter model — today only
+  // "colour-only" numeric ranges: they tint a column without hiding a single row,
+  // so AG has no model for them, yet they must stay visible and removable.
+  // Each entry: { field, label, summary, tag, onEdit, onRemove }.
+  function renderExtraChip(bar, entry, gridApi) {
+    var chip = document.createElement("span");
+    chip.className = "filter-chip tint";
+    var full = entry.label + ": " + entry.summary + (entry.tag ? " (" + entry.tag + ")" : "");
+    chip.title = full;
+
+    var label = document.createElement("button");
+    label.type = "button";
+    label.className = "filter-chip-label";
+    label.textContent = entry.label + ": " + entry.summary;
+    label.setAttribute("aria-label", "Upravit rozsah „" + entry.label + "“");
+    label.addEventListener("click", function () {
+      if (entry.onEdit) entry.onEdit();
+      else openColumnFilter(gridApi, entry.field);
+    });
+    chip.appendChild(label);
+
+    if (entry.tag) {
+      var tag = document.createElement("span");
+      tag.className = "filter-chip-tag";
+      tag.textContent = entry.tag;
+      chip.appendChild(tag);
+    }
+
+    var close = document.createElement("button");
+    close.type = "button";
+    close.className = "filter-chip-close";
+    close.textContent = "×";
+    close.title = "Odebrat „" + entry.label + "“";
+    close.addEventListener("click", function () { if (entry.onRemove) entry.onRemove(); });
+    chip.appendChild(close);
+
+    bar.appendChild(chip);
+  }
+
+  // opts: { gridApi, barEl, headerNames: {field: label}, onClearAll: fn,
+  //         extraChips: [ … ] }
   window.renderFilterChips = function (opts) {
     var gridApi = opts.gridApi;
     var bar = opts.barEl;
@@ -86,10 +126,11 @@
 
     var model = gridApi.getFilterModel() || {};
     var fields = Object.keys(model);
+    var extras = opts.extraChips || [];
 
     while (bar.firstChild) bar.removeChild(bar.firstChild);
 
-    if (!fields.length) {
+    if (!fields.length && !extras.length) {
       bar.classList.add("hidden");
       return;
     }
@@ -122,6 +163,11 @@
       closeBtn.textContent = "×";
       closeBtn.title = "Odebrat filtr „" + headerName + "“";
       closeBtn.addEventListener("click", function () {
+        // A numeric range colours the column as well as filtering it, so removing
+        // the chip clears BOTH. (It used to clear only the filter and silently
+        // leave the tint behind — that invisible leftover is now an explicit
+        // "jen barvit" choice inside the filter popup instead.)
+        if (opts.onRemoveField) opts.onRemoveField(field);
         var current = gridApi.getFilterModel() || {};
         delete current[field];
         gridApi.setFilterModel(current);
@@ -131,7 +177,9 @@
       bar.appendChild(chip);
     });
 
-    if (fields.length >= 2 && opts.onClearAll) {
+    extras.forEach(function (entry) { renderExtraChip(bar, entry, gridApi); });
+
+    if (fields.length + extras.length >= 2 && opts.onClearAll) {
       var clearBtn = document.createElement("button");
       clearBtn.type = "button";
       clearBtn.className = "filter-chips-clear";

@@ -5,6 +5,7 @@
   var THEME_KEY = "carCompareTheme";
   var COL_STATE_KEY = "refCompareColState";
   var THRESHOLD_KEY = "refCompareThresholds";   // isolated: reference has its own numeric columns
+  var COLOUR_ONLY_KEY = "refCompareColourOnly";  // ditto — which ranges only tint
   var HEATMODE_KEY = "carCompareHeatMode";       // shared with index (global appearance pref)
   var PRICE_VIEW_KEY = "refPriceView";           // "compact" | "boxplot" | "histogram"
 
@@ -28,13 +29,20 @@
       gridEl.classList.add(theme === "dark" ? "ag-theme-alpine-dark" : "ag-theme-alpine");
     }
     if (gridApi) gridApi.refreshCells({ force: true });
+    repaintTracks();          // the histogram bars are heat-coloured too
+    renderThemeChoices();     // the miniatures show which theme is active
+    renderHeatModeChoices();  // palette/style previews are theme-tuned
   }
+
+  window.setTheme = function (theme) {
+    if (theme !== "dark" && theme !== "light") return;
+    applyTheme(theme);
+    try { localStorage.setItem(THEME_KEY, theme); } catch (_) {}
+  };
 
   window.toggleTheme = function () {
     var current = document.documentElement.getAttribute("data-theme") || "dark";
-    var next = current === "dark" ? "light" : "dark";
-    applyTheme(next);
-    try { localStorage.setItem(THEME_KEY, next); } catch (_) {}
+    window.setTheme(current === "dark" ? "light" : "dark");
   };
 
   (function initTheme() {
@@ -213,10 +221,10 @@
 
   // ── Numeric range: ONE shared state drives BOTH colouring and filtering. ──
   // Mirrors site/app.js. userThresholds[field] = {min,max} is the single source of
-  // truth: the colour-settings slider and the column-filter slider are two views of
-  // it. Every editor routes through commitRange(); the filter side emits the
-  // standard AG number model so the URL codec / chips work unchanged. (Reference
-  // persists thresholds to localStorage only; filters go to #f=.)
+  // truth: the colour tint and the column-filter range are two views of it. Every
+  // editor routes through commitRange(); the filter side emits the standard AG
+  // number model so the URL codec / chips work unchanged. (Reference persists
+  // thresholds to localStorage only; filters go to #f=.)
 
   function fmtRangeNum(field, v) {
     if (v == null || v === "" || isNaN(v)) return "";
@@ -229,8 +237,13 @@
     var n = parseFloat(s);
     return isNaN(n) ? null : n;
   }
-  function cssEsc(s) {
-    return (window.CSS && CSS.escape) ? CSS.escape(s) : s.replace(/["\\]/g, "\\$&");
+  // reference.json stores some numeric columns as strings ("150") — every value
+  // read (ranges, histogram bins, blank counts, filtering) goes through this.
+  function numOf(v) {
+    if (typeof v === "number") return isFinite(v) ? v : NaN;
+    if (v == null || v === "") return NaN;
+    var n = parseFloat(v);
+    return isFinite(n) ? n : NaN;
   }
   function mkNumInput(placeholder) {
     var i = document.createElement("input");
@@ -250,23 +263,74 @@
     if (max != null) o.max = max;
     userThresholds[field] = o;
   }
-  function rangeModel(field) {
+  // ── Filter model ──────────────────────────────────────────────────────────
+  // Blank cells are a real filter question ("only models that HAVE the number",
+  // "only the ones missing it") and it maps onto AG's own shapes, so the URL codec
+  // and the filter chips need no new token:
+  //   hide + range → { inRange }                                (blanks fail)
+  //   show + range → { operator:"OR", conditions:[inRange, blank] }
+  //   only         → { blank }
+  //   nothing set  → null
+  var blankModes = {};              // field -> "hide" | "show" | "only"
+  var BLANK_COND = { filterType: "number", type: "blank" };
+
+  function blankModeOf(field) { return blankModes[field] || "hide"; }
+
+  function boundsCond(field) {
     var r = rangeOf(field);
     if (r.min == null && r.max == null) return null;
     return { filterType: "number", type: "inRange", filter: r.min, filterTo: r.max };
   }
+
+  function rangeModel(field) {
+    if (colourOnly[field]) return null;         // colours the column, filters nothing
+    var mode = blankModeOf(field);
+    if (mode === "only") return { filterType: "number", type: "blank" };
+    var cond = boundsCond(field);
+    if (!cond) return null;
+    if (mode === "show") {
+      return { filterType: "number", operator: "OR", conditions: [cond, BLANK_COND] };
+    }
+    return cond;
+  }
+
+  // A range that only tints. Same {min,max} state as a filtering range — the flag
+  // just says "do not turn it into a filter model".
+  var colourOnly = {};
+
+  function isColourOnly(field) { return !!colourOnly[field]; }
+
+  function setColourOnly(field, on) {
+    if (on) colourOnly[field] = true;
+    else delete colourOnly[field];
+    persistColourOnly();
+  }
+
+  function persistColourOnly() {
+    try { localStorage.setItem(COLOUR_ONLY_KEY, JSON.stringify(Object.keys(colourOnly))); } catch (_) {}
+  }
+
+  function loadColourOnly() {
+    colourOnly = {};
+    try {
+      var arr = JSON.parse(localStorage.getItem(COLOUR_ONLY_KEY));
+      if (Array.isArray(arr)) arr.forEach(function (f) { if (colRanges[f]) colourOnly[f] = true; });
+    } catch (_) {}
+  }
+
   function persistThresholds() {
     try { localStorage.setItem(THRESHOLD_KEY, JSON.stringify(userThresholds)); } catch (_) {}
   }
 
-  var rangeFilters = {};
+  var rangeFilters = {};   // field -> live RangeFilter instance
   var _rangeTimers = {};
 
+  // The one entry point every range editor calls. Updates shared state, mirrors it
+  // into the popup, then debounces the expensive part (recolour + (re)activate the
+  // grid filter) so dragging stays smooth.
   function commitRange(field, min, max) {
     setRange(field, min, max);
-    syncSidebarRow(field);
     if (rangeFilters[field]) rangeFilters[field].renderState();
-    updateThresholdOverrides();
     if (_rangeTimers[field]) clearTimeout(_rangeTimers[field]);
     _rangeTimers[field] = setTimeout(function () {
       persistThresholds();
@@ -279,19 +343,72 @@
     }, 220);
   }
 
-  function syncSidebarRow(field) {
-    var container = document.getElementById("threshold-inputs");
-    if (!container) return;
-    var row = container.querySelector('.threshold-row[data-field="' + cssEsc(field) + '"]');
-    if (!row) return;
-    var r = rangeOf(field), rg = colRanges[field] || {};
-    var mn = row.querySelector(".th-min"), mx = row.querySelector(".th-max");
-    if (mn && document.activeElement !== mn) mn.value = fmtRangeNum(field, r.min);
-    if (mx && document.activeElement !== mx) mx.value = fmtRangeNum(field, r.max);
-    var rMin = row.querySelector(".th-range-min"), rMax = row.querySelector(".th-range-max");
-    if (rMin && document.activeElement !== rMin) rMin.value = r.min != null ? r.min : rg.min;
-    if (rMax && document.activeElement !== rMax) rMax.value = r.max != null ? r.max : rg.max;
-    row.classList.toggle("overridden", r.min != null || r.max != null);
+  // Blank-handling / colour-only changes alter the model, not the range, so they
+  // apply immediately (no drag to debounce).
+  function commitFilterShape(field) {
+    if (rangeFilters[field]) rangeFilters[field].renderState();
+    if (!gridApi) return;
+    gridApi.refreshCells({ force: true });
+    gridApi.setColumnFilterModel(field, rangeModel(field)).then(function () {
+      gridApi.onFilterChanged();
+    });
+  }
+
+  // ── The numeric filter popup ──────────────────────────────────────────────
+  var HIST_MODES = [
+    ["all", "Vše", "Všechny modely v tabulce"],
+    ["filter", "Po filtru", "Jen modely, které tabulka teď zobrazuje"],
+    ["both", "Obojí", "Bledě všechny, plně po filtru — společné měřítko"],
+  ];
+  var BLANK_OPTS = [
+    ["hide", "Skrýt", "Skrýt modely bez hodnoty"],
+    ["show", "Zahrnout", "Zahrnout i modely bez hodnoty"],
+    ["only", "Jen ty", "Jen modely bez hodnoty"],
+  ];
+  var ZOOM_TIP_IN = "Přiblížit osu na rozsah po filtru";
+  var ZOOM_TIP_OUT = "Zrušit přiblížení osy";
+
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+
+  function zoomIconSVG(on) {
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" ' +
+      'stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.8-4.8"/>' +
+      '<path d="M7.5 10.5h6"/>' + (on ? "" : '<path d="M10.5 7.5v6"/>') + "</svg>";
+  }
+
+  // Slide the segmented highlight onto the active button (CSS animates it).
+  function slideIndicator(indicator, btn) {
+    if (!indicator || !btn || !btn.offsetWidth) return;
+    indicator.style.width = btn.offsetWidth + "px";
+    indicator.style.transform = "translateX(" + btn.offsetLeft + "px)";
+    indicator.style.opacity = "1";
+  }
+
+  function segmented(options, active, onPick) {
+    var seg = el("div", "seg");
+    var ind = el("div", "seg-ind");
+    seg.appendChild(ind);
+    var btns = {};
+    options.forEach(function (o) {
+      var b = el("button", null, o[1]);
+      b.type = "button";
+      b.dataset.value = o[0];
+      b.title = o[2];
+      if (o[0] === active) b.classList.add("active");
+      seg.appendChild(b);
+      btns[o[0]] = b;
+    });
+    seg.addEventListener("click", function (e) {
+      var b = e.target.closest("button[data-value]");
+      if (!b || b.disabled) return;
+      onPick(b.dataset.value);
+    });
+    return { gui: seg, indicator: ind, buttons: btns };
   }
 
   function RangeFilter() {}
@@ -301,54 +418,126 @@
     this.field = params.colDef.field;
     rangeFilters[this.field] = this;
 
+    var self = this;
     var field = this.field;
     var range = colRanges[field] || {};
-    var greenHigh = NUMERIC_COLS[field];
     this.range = range;
+    this.dec = _decimals(range.step || 1);
 
-    this.gui = document.createElement("div");
-    this.gui.className = "range-filter";
+    this.gui = el("div", "range-filter");
 
-    var self = this;
+    // ── header: name + direction + reset ──
+    var nameRow = el("div", "rf-name-row");
+    var name = el("span", "rf-name", CHIP_HEADER_NAMES[field] || field);
+    name.title = field;
+    nameRow.appendChild(name);
+    // Only the heat-coloured columns have a good→bad direction; Nabídek / Cena
+    // medián are plain counts (RANGE_EXTRA), so claiming one would be a lie.
+    if (NUMERIC_COLS.hasOwnProperty(field)) {
+      nameRow.appendChild(el("span", "rf-dir", NUMERIC_COLS[field] ? "více = lépe" : "méně = lépe"));
+    }
+    nameRow.appendChild(el("span", "rf-spacer"));
+    var reset = el("button", "th-reset", "⟲");
+    reset.type = "button";
+    reset.title = "Vymazat rozsah";
+    reset.setAttribute("aria-label", "Vymazat rozsah " + field);
+    reset.addEventListener("click", function () {
+      blankModes[field] = "hide";
+      setColourOnly(field, false);
+      commitRange(field, null, null);
+      commitFilterShape(field);
+    });
+    nameRow.appendChild(reset);
+    this.reset = reset;
+    this.gui.appendChild(nameRow);
 
-    // ⟲ reset header (matches the colour-sidebar icon), always visible in the popup.
-    var head = document.createElement("div");
-    head.className = "range-head";
-    var reset = document.createElement("button");
-    reset.type = "button"; reset.className = "th-reset";
-    reset.title = "Vymazat rozsah"; reset.setAttribute("aria-label", "Vymazat rozsah " + field);
-    reset.textContent = "⟲";
-    reset.addEventListener("click", function () { commitRange(field, null, null); });
-    head.appendChild(reset);
-    this.gui.appendChild(head);
+    // A column whose values are all blank (or a single value) has nothing to bin —
+    // it keeps the od/do boxes and the blank switch, without a track.
+    var hasTrack = range.min != null && range.max != null && range.max > range.min;
 
-    if (range.min != null && range.max != null && range.max > range.min) {
+    // ── controls: what the histogram counts + axis zoom + hover readout ──
+    if (hasTrack) {
+      var ctlRow = el("div", "rf-ctl-row");
+      var seg = segmented(HIST_MODES, histMode.mode, function (v) {
+        histMode.mode = v;
+        if (v === "all") histMode.zoom = false;
+        saveHistMode();
+        // one global appearance choice — every open track follows
+        Object.keys(rangeFilters).forEach(function (f) { rangeFilters[f].applyHistMode(true); });
+      });
+      this.seg = seg;
+      ctlRow.appendChild(seg.gui);
+
+      var zoomBtn = el("button", "ht-zoom");
+      zoomBtn.type = "button";
+      zoomBtn.innerHTML = zoomIconSVG(false);
+      zoomBtn.title = ZOOM_TIP_IN;
+      zoomBtn.setAttribute("aria-label", ZOOM_TIP_IN);
+      zoomBtn.addEventListener("click", function () {
+        histMode.zoom = !histMode.zoom;
+        saveHistMode();
+        Object.keys(rangeFilters).forEach(function (f) { rangeFilters[f].applyHistMode(true); });
+      });
+      this.zoomBtn = zoomBtn;
+      ctlRow.appendChild(zoomBtn);
+
+      ctlRow.appendChild(el("span", "rf-spacer"));
+      this.readout = el("span", "rf-readout empty", "—");
+      ctlRow.appendChild(this.readout);
+      this.gui.appendChild(ctlRow);
+    }
+
+    // ── track + thumbs + value axis ──
+    if (hasTrack) {
+      var wrap = el("div", "track-wrap");
+      var trackEl = el("div", "ht-track");
+      wrap.appendChild(trackEl);
+      this.trackEl = trackEl;
+
       var step = range.step || 1;
       this.step = step;
-      var slider = document.createElement("div");
-      slider.className = "th-slider";
-      slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
       var rMin = document.createElement("input"), rMax = document.createElement("input");
-      [rMin, rMax].forEach(function (r) { r.type = "range"; r.min = range.min; r.max = range.max; r.step = step; });
+      [rMin, rMax].forEach(function (r) {
+        r.type = "range"; r.min = range.min; r.max = range.max; r.step = step;
+        r.style.left = window.HistTrack.GUTTER + "px";
+        r.style.width = "calc(100% - " + window.HistTrack.GUTTER + "px)";
+      });
       rMin.setAttribute("aria-label", field + " min");
       rMax.setAttribute("aria-label", field + " max");
       this.rMin = rMin; this.rMax = rMax;
       rMin.addEventListener("input", function () {
         if (+rMin.value > +rMax.value) rMin.value = rMax.value;
         var v = _sliderRound(+rMin.value, step);
-        self._edit(v <= range.min ? null : v, undefined);
+        var dom = self.drawnDomain();
+        self._edit(v <= dom.min ? null : v, undefined);
       });
       rMax.addEventListener("input", function () {
         if (+rMax.value < +rMin.value) rMax.value = rMin.value;
         var v = _sliderRound(+rMax.value, step);
-        self._edit(undefined, v >= range.max ? null : v);
+        var dom = self.drawnDomain();
+        self._edit(undefined, v >= dom.max ? null : v);
       });
-      slider.appendChild(rMin); slider.appendChild(rMax);
-      this.gui.appendChild(slider);
+      trackEl.appendChild(rMin);
+      trackEl.appendChild(rMax);
+
+      this.xAxis = el("div", "ht-xaxis");
+      for (var t = 0; t < 4; t++) this.xAxis.appendChild(el("span"));
+      wrap.appendChild(this.xAxis);
+      this.gui.appendChild(wrap);
+
+      this.track = makeTrack(trackEl, field, false, function (dom) { self.updateAxis(dom); });
+      if (this.track) {
+        trackEl.addEventListener("mousemove", function (e) {
+          if (!self.track.state) return;
+          var r = trackEl.getBoundingClientRect();
+          self.showHover(self.track.binAt(self.track.state.m, e.clientX - r.left));
+        });
+        trackEl.addEventListener("mouseleave", function () { self.clearHover(); });
+      }
     }
 
-    var pair = document.createElement("div");
-    pair.className = "th-pair";
+    // ── od / do ──
+    var pair = el("div", "th-pair");
     // Empty by default (= no filter); placeholder shows the data min/max.
     var minInput = mkNumInput(range.min != null ? fmtRangeNum(field, range.min) : "od");
     var maxInput = mkNumInput(range.max != null ? fmtRangeNum(field, range.max) : "do");
@@ -359,36 +548,200 @@
     minInput.addEventListener("change", function () { minInput.value = fmtRangeNum(field, rangeOf(field).min); });
     maxInput.addEventListener("change", function () { maxInput.value = fmtRangeNum(field, rangeOf(field).max); });
     pair.appendChild(minInput); pair.appendChild(maxInput);
+    this.pair = pair;
     this.gui.appendChild(pair);
 
+    // ── blank cells ──
+    var blankRow = el("div", "rf-blank-row");
+    blankRow.appendChild(el("span", "rf-blank-lbl", "Bez hodnoty:"));
+    var bseg = segmented(BLANK_OPTS, blankModeOf(field), function (v) {
+      blankModes[field] = v;
+      if (v !== "hide") setColourOnly(field, false);   // a blank rule must filter
+      commitFilterShape(field);
+    });
+    this.blankSeg = bseg;
+    blankRow.appendChild(bseg.gui);
+    this.blankCount = el("span", "rf-blank-count");
+    blankRow.appendChild(this.blankCount);
+    this.gui.appendChild(blankRow);
+
+    // ── colour-only ──
+    var checkRow = el("label", "rf-check");
+    var check = document.createElement("input");
+    check.type = "checkbox";
+    check.checked = isColourOnly(field);
+    check.addEventListener("change", function () {
+      setColourOnly(field, check.checked);
+      if (check.checked) blankModes[field] = "hide";
+      commitFilterShape(field);
+    });
+    checkRow.appendChild(check);
+    checkRow.appendChild(el("span", null, "Jen barvit, nefiltrovat"));
+    checkRow.title = "Rozsah jen barví, nic neskryje";
+    this.colourCheck = check;
+    this.gui.appendChild(checkRow);
+
+    this.applyHistMode(false);
     this.renderState();
   };
 
+  // Push the global mode/zoom choice into this popup's track + controls.
+  RangeFilter.prototype.applyHistMode = function (animate) {
+    if (!this.track) { this.syncControls(); return; }
+    this.track.setState({ mode: histMode.mode, zoom: histMode.zoom, range: this.trackRange() }, animate);
+    this.updateAxis(this.track.domain());
+    this.renderState();      // the thumbs re-scale to the domain that is now drawn
+  };
+
+  // Current bounds as 0..1 of the drawn domain (null bound = open end).
+  RangeFilter.prototype.trackRange = function () {
+    var r = rangeOf(this.field);
+    var dom = this.track ? this.track.domain() : { min: this.range.min, max: this.range.max };
+    var span = dom.max - dom.min;
+    if (!(span > 0)) return { lo: 0, hi: 1 };
+    var lo = r.min != null ? (r.min - dom.min) / span : 0;
+    var hi = r.max != null ? (r.max - dom.min) / span : 1;
+    lo = Math.max(0, Math.min(1, lo));
+    hi = Math.max(lo, Math.min(1, hi));
+    return { lo: lo, hi: hi };
+  };
+
+  RangeFilter.prototype.syncControls = function () {
+    var field = this.field;
+    if (this.seg) {
+      Object.keys(this.seg.buttons).forEach(function (k) {
+        this.seg.buttons[k].classList.toggle("active", k === histMode.mode);
+      }, this);
+      slideIndicator(this.seg.indicator, this.seg.buttons[histMode.mode]);
+    }
+    if (this.zoomBtn) {
+      var zoomed = histMode.zoom && histMode.mode !== "all";
+      this.zoomBtn.disabled = histMode.mode === "all";
+      this.zoomBtn.classList.toggle("on", zoomed);
+      this.zoomBtn.innerHTML = zoomIconSVG(zoomed);
+      this.zoomBtn.title = zoomed ? ZOOM_TIP_OUT : ZOOM_TIP_IN;
+      this.zoomBtn.setAttribute("aria-label", this.zoomBtn.title);
+    }
+    var mode = blankModeOf(field);
+    if (this.blankSeg) {
+      Object.keys(this.blankSeg.buttons).forEach(function (k) {
+        this.blankSeg.buttons[k].classList.toggle("active", k === mode);
+      }, this);
+      slideIndicator(this.blankSeg.indicator, this.blankSeg.buttons[mode]);
+    }
+    // "only blanks" makes the numeric range meaningless — grey it out rather than
+    // keep a range that silently does nothing.
+    var off = mode === "only";
+    if (this.trackEl) this.trackEl.classList.toggle("disabled", off);
+    if (this.pair) this.pair.classList.toggle("disabled", off);
+    if (this.colourCheck) {
+      this.colourCheck.checked = isColourOnly(field);
+      this.colourCheck.disabled = off;
+    }
+    if (this.blankCount) {
+      var missing = blankCountOf(field);
+      this.blankCount.textContent = missing ? "(" + window.HistTrack.fmtInt(missing) + " modelů)" : "";
+    }
+    var active = rangeOf(field).min != null || rangeOf(field).max != null || mode === "only";
+    this.reset.classList.toggle("on", active);
+  };
+
+  RangeFilter.prototype.updateAxis = function (dom) {
+    if (!this.xAxis || !this.track) return;
+    var spans = this.xAxis.children;
+    var unit = unitOf(this.field);
+    for (var i = 0; i < spans.length; i++) {
+      var v = dom.min + (dom.max - dom.min) * (i / (spans.length - 1));
+      spans[i].textContent = window.HistTrack.fmtValue(v, this.dec, false) +
+        (i === spans.length - 1 && unit ? " " + unit : "");
+    }
+    var m = this.track.state && this.track.state.m;
+    if (m) {
+      this.xAxis.style.paddingLeft = m.x0 + "px";
+      this.xAxis.style.paddingRight = Math.max(0, m.w - m.x0 - m.barsW) + "px";
+    }
+  };
+
+  RangeFilter.prototype.showHover = function (i) {
+    if (!this.track) return;
+    if (this.track.hover === i && this.readout && !this.readout.classList.contains("empty")) return;
+    this.track.hover = i;
+    this.track.repaint();
+    var info = this.track.binInfo(i);
+    if (!info || !this.readout) return;
+    var unit = unitOf(this.field);
+    var span = window.HistTrack.fmtValue(info.lo, this.dec, false) + "–" +
+      window.HistTrack.fmtValue(info.hi, this.dec, false) + (unit ? " " + unit : "");
+    this.readout.classList.remove("empty");
+    this.readout.textContent = "";
+    this.readout.appendChild(document.createTextNode(span + " · "));
+    var b = document.createElement("b");
+    b.textContent = window.HistTrack.fmtInt(info.count);
+    this.readout.appendChild(b);
+    this.readout.appendChild(document.createTextNode(" modelů"));
+  };
+
+  RangeFilter.prototype.clearHover = function () {
+    if (!this.track) return;
+    this.track.hover = null;
+    this.track.repaint();
+    if (this.readout) this.readout.classList.add("empty");
+  };
+
+  // Change one bound (undefined = leave the other as-is), keeping the paired value.
   RangeFilter.prototype._edit = function (min, max) {
     var r = rangeOf(this.field);
     commitRange(this.field, min === undefined ? r.min : min, max === undefined ? r.max : max);
   };
 
+  // The domain currently DRAWN (zoom shrinks it onto the filtered rows); the thumbs
+  // must span the same range as the axis under them.
+  RangeFilter.prototype.drawnDomain = function () {
+    if (this.track) return this.track.domain();
+    var rg = this.range || {};
+    return { min: rg.min, max: rg.max };
+  };
+
+  // Mirror shared state into this popup's own controls (skip the focused one).
   RangeFilter.prototype.renderState = function () {
     var r = rangeOf(this.field), rg = this.range || {};
-    if (this.rMin && document.activeElement !== this.rMin) this.rMin.value = r.min != null ? r.min : rg.min;
-    if (this.rMax && document.activeElement !== this.rMax) this.rMax.value = r.max != null ? r.max : rg.max;
+    var dom = this.drawnDomain();
+    [this.rMin, this.rMax].forEach(function (input) {
+      if (!input || dom.min == null || dom.max == null) return;
+      input.min = dom.min;
+      input.max = dom.max;
+    });
+    if (this.rMin && document.activeElement !== this.rMin) {
+      this.rMin.value = r.min != null ? Math.max(dom.min, Math.min(dom.max, r.min)) : dom.min;
+    }
+    if (this.rMax && document.activeElement !== this.rMax) {
+      this.rMax.value = r.max != null ? Math.max(dom.min, Math.min(dom.max, r.max)) : dom.max;
+    }
     if (this.minInput && document.activeElement !== this.minInput) this.minInput.value = fmtRangeNum(this.field, r.min);
     if (this.maxInput && document.activeElement !== this.maxInput) this.maxInput.value = fmtRangeNum(this.field, r.max);
+    if (this.track) {
+      this.track.range = this.trackRange();
+      this.track.repaint();
+    }
+    this.syncControls();
   };
 
   RangeFilter.prototype.doesFilterPass = function (params) {
-    var r = rangeOf(this.field);
-    var v = params.data[this.field];
-    if (v == null || v === "") return false;
-    var n = typeof v === "number" ? v : parseFloat(v);    // reference stores some numeric cols as strings
-    if (isNaN(n)) return false;
+    var field = this.field;
+    var mode = blankModeOf(field);
+    var n = numOf(params.data[field]);   // reference stores some numeric cols as strings
+    var blank = isNaN(n);
+    if (mode === "only") return blank;
+    if (blank) return mode === "show";
+    var r = rangeOf(field);
     if (r.min != null && n < r.min) return false;
     if (r.max != null && n > r.max) return false;
     return true;
   };
 
   RangeFilter.prototype.isFilterActive = function () {
+    if (blankModeOf(this.field) === "only") return true;
+    if (isColourOnly(this.field)) return false;
     var r = rangeOf(this.field);
     return r.min != null || r.max != null;
   };
@@ -396,39 +749,223 @@
   RangeFilter.prototype.getModel = function () { return rangeModel(this.field); };
 
   RangeFilter.prototype.setModel = function (model) {
-    var min = null, max = null;
-    if (model) {
-      if (model.type === "inRange") {
-        min = model.filter != null ? +model.filter : null;
-        max = model.filterTo != null ? +model.filterTo : null;
+    var field = this.field;
+    // Turning a range colour-only means clearing the FILTER model while keeping the
+    // range itself — and AG clears a filter by calling setModel(null), which would
+    // otherwise wipe the very range we are preserving.
+    if (!model && isColourOnly(field)) {
+      blankModes[field] = "hide";
+      this.renderState();
+      return;
+    }
+    if (!model && blankModeOf(field) === "show") {
+      // "Zahrnout" with no bounds filters nothing, so AG hands back a null model —
+      // that is agreement, not a reason to drop the choice.
+      setRange(field, null, null);
+      this.renderState();
+      return;
+    }
+    var min = null, max = null, mode = "hide";
+    var cond = model;
+    if (model && model.operator && model.conditions) {
+      // OR-with-blank is how "Zahrnout" is expressed
+      var hasBlank = false, bounds = null;
+      model.conditions.forEach(function (c) {
+        if (c.type === "blank") hasBlank = true;
+        else bounds = c;
+      });
+      if (hasBlank) mode = "show";
+      cond = bounds;
+    }
+    if (cond) {
+      if (cond.type === "blank") {
+        mode = "only";
+        cond = null;
+      } else if (cond.type === "inRange") {
+        min = cond.filter != null ? +cond.filter : null;
+        max = cond.filterTo != null ? +cond.filterTo : null;
       } else {
-        var v = model.filter != null ? +model.filter : null;
-        if (model.type === "greaterThan" || model.type === "greaterThanOrEqual") min = v;
-        else if (model.type === "lessThan" || model.type === "lessThanOrEqual") max = v;
-        else if (model.type === "equals") { min = v; max = v; }
+        // Tolerate simple bound models (e.g. a legacy greaterThanOrEqual link).
+        var v = cond.filter != null ? +cond.filter : null;
+        if (cond.type === "greaterThan" || cond.type === "greaterThanOrEqual") min = v;
+        else if (cond.type === "lessThan" || cond.type === "lessThanOrEqual") max = v;
+        else if (cond.type === "equals") { min = v; max = v; }
       }
     }
-    setRange(this.field, min, max);
-    syncSidebarRow(this.field);
+    blankModes[field] = mode;
+    if (model) delete colourOnly[field];     // an incoming model means it filters
+    setRange(field, min, max);               // no commitRange → no debounce/loop
     this.renderState();
-    if (gridApi) gridApi.refreshCells({ force: true, columns: [this.field] });
+    if (gridApi) gridApi.refreshCells({ force: true, columns: [field] });
   };
 
   RangeFilter.prototype.getGui = function () { return this.gui; };
-  RangeFilter.prototype.destroy = function () { if (rangeFilters[this.field] === this) delete rangeFilters[this.field]; };
+
+  RangeFilter.prototype.destroy = function () {
+    if (rangeFilters[this.field] === this) delete rangeFilters[this.field];
+    if (this.track) dropTrack(this.track);
+  };
 
   RangeFilter.prototype.getModelAsString = function () {
+    var mode = blankModeOf(this.field);
+    if (mode === "only") return "bez hodnoty";
     var r = rangeOf(this.field);
-    if (r.min == null && r.max == null) return "";
+    var suffix = mode === "show" ? " nebo bez hodnoty" : "";
     var f = function (n) { return fmtRangeNum(this.field, n); }.bind(this);
-    if (r.min != null && r.max != null) return f(r.min) + "–" + f(r.max);
-    if (r.min != null) return "≥ " + f(r.min);
-    return "≤ " + f(r.max);
+    if (r.min == null && r.max == null) return "";
+    if (r.min != null && r.max != null) return f(r.min) + "–" + f(r.max) + suffix;
+    if (r.min != null) return "≥ " + f(r.min) + suffix;
+    return "≤ " + f(r.max) + suffix;
   };
 
   RangeFilter.prototype.afterGuiAttached = function () {
+    // The track needs a laid-out host to measure; the popup is attached now.
+    var self = this;
+    requestAnimationFrame(function () {
+      self.applyHistMode(false);
+      self.renderState();
+    });
     if (this.minInput) this.minInput.focus();
   };
+
+  // ── Distribution track ────────────────────────────────────────────────────
+  // The numeric range sits on a histogram of the column's own values instead of
+  // an inert gradient. Drawing lives in site/hist-track.js; this section only
+  // feeds it data + colours and caches the two value arrays it bins.
+  //
+  //   "Vše"      — every row in the grid
+  //   "Po filtru" — the rows the grid currently shows
+  //   "Obojí"    — both layers on a shared scale
+  //
+  // Mode + zoom are a GLOBAL appearance choice shared with the index page
+  // (same localStorage key, same shape), like the palette and the theme.
+  var HIST_MODE_KEY = "carCompareHistMode";
+  var histRows = [];              // every row currently in the grid
+  var allValueCache = {};         // field -> number[] (all rows)
+  var filteredCache = {};         // field -> { version, values }
+  var filterVersion = 0;          // bumped whenever the grid's filters change
+  var histMode = { mode: "all", zoom: false };
+
+  function setHistRows(rows) {
+    histRows = rows || [];
+    allValueCache = {};
+    filteredCache = {};
+    blankCounts = {};
+  }
+
+  function loadHistMode() {
+    try {
+      var s = JSON.parse(localStorage.getItem(HIST_MODE_KEY));
+      if (s && (s.mode === "all" || s.mode === "filter" || s.mode === "both")) {
+        histMode = { mode: s.mode, zoom: !!s.zoom && s.mode !== "all" };
+      }
+    } catch (_) {}
+  }
+
+  function saveHistMode() {
+    try { localStorage.setItem(HIST_MODE_KEY, JSON.stringify(histMode)); } catch (_) {}
+  }
+
+  function allValuesFor(field) {
+    if (allValueCache[field]) return allValueCache[field];
+    var out = [];
+    for (var i = 0; i < histRows.length; i++) {
+      var n = numOf(histRows[i][field]);
+      if (!isNaN(n)) out.push(n);
+    }
+    allValueCache[field] = out;
+    return out;
+  }
+
+  // Rows the grid shows right now. One pass per column, cached until the filter
+  // model changes — the tracks re-bin from the cached array every animation frame,
+  // so this must never run per frame.
+  function filteredValuesFor(field) {
+    var hit = filteredCache[field];
+    if (hit && hit.version === filterVersion) return hit.values;
+    var out = [];
+    if (gridApi) {
+      gridApi.forEachNodeAfterFilter(function (node) {
+        if (!node.data) return;
+        var n = numOf(node.data[field]);
+        if (!isNaN(n)) out.push(n);
+      });
+    }
+    filteredCache[field] = { version: filterVersion, values: out };
+    return out;
+  }
+
+  // "Výkon (kW)" → "kW"; the axis prints the unit once, at its right end.
+  function unitOf(field) {
+    var m = field.match(/\(([^)]+)\)$/);
+    return m ? m[1] : "";
+  }
+
+  // How many rows have no number in this column — the blanks switch prints it, so
+  // the choice is informed (EV spec columns are blank on every combustion model).
+  var blankCounts = {};
+  function blankCountOf(field) {
+    if (blankCounts[field] != null) return blankCounts[field];
+    var n = 0;
+    for (var i = 0; i < histRows.length; i++) {
+      if (isNaN(numOf(histRows[i][field]))) n++;
+    }
+    blankCounts[field] = n;
+    return n;
+  }
+
+  function cssColourTriplet(name) {
+    var raw = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    var hex = raw.replace("#", "");
+    if (hex.length === 3) hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+    var n = parseInt(hex || "888888", 16);
+    if (isNaN(n)) return "136,136,136";
+    return ((n >> 16) & 255) + "," + ((n >> 8) & 255) + "," + (n & 255);
+  }
+
+  // Live tracks, so a palette/theme/data change can repaint them all.
+  var liveTracks = [];
+
+  function makeTrack(host, field, compact, onFrame) {
+    var rg = colRanges[field] || {};
+    if (rg.min == null || rg.max == null || rg.max <= rg.min) return null;
+    // RANGE_EXTRA columns (Nabídek, Cena medián) carry no good→bad axis — their
+    // bars take the flat accent colour instead of a heat gradient.
+    var heat = NUMERIC_COLS.hasOwnProperty(field);
+    var track = window.HistTrack.create(host, {
+      min: rg.min, max: rg.max, step: rg.step, dec: _decimals(rg.step || 1),
+      unit: unitOf(field),
+      noGroup: false,
+      greenHigh: !!NUMERIC_COLS[field],
+      allValues: function () { return allValuesFor(field); },
+      filteredValues: function () { return filteredValuesFor(field); },
+      colourAt: heat ? function (t) { return heatRGB(t); }
+                     : function () { return cssColourTriplet("--clr-accent"); },
+      cssColour: cssColourTriplet,
+      isDark: isDarkTheme,
+      compact: !!compact,
+      onFrame: onFrame,
+    });
+    track.field = field;
+    liveTracks.push(track);
+    return track;
+  }
+
+  function dropTrack(track) {
+    var i = liveTracks.indexOf(track);
+    if (i >= 0) liveTracks.splice(i, 1);
+    if (track) track.destroy();
+  }
+
+  // Palette + theme change the bar colours; a filter change changes the counts.
+  function repaintTracks(invalidate) {
+    // initTheme() runs at module top, before `var liveTracks` is assigned.
+    if (!liveTracks) return;
+    for (var i = 0; i < liveTracks.length; i++) {
+      if (invalidate) liveTracks[i].invalidate();
+      liveTracks[i].render(false);
+    }
+  }
 
   // ── Missing-spec indicator (#19) ──
   // Flags reference rows missing "key" curated spec columns — the ones a human
@@ -628,8 +1165,9 @@
     if (HEAT_STYLES[style]) heatMode.style = style;
     try { localStorage.setItem(HEATMODE_KEY, JSON.stringify(heatMode)); } catch (_) {}
     if (gridApi) gridApi.refreshCells({ force: true });
-    renderHeatModeChoices();
-    updateThresholdGradients();
+    renderHeatModeChoices();   // reflect new active state
+    renderThemeChoices();      // the miniatures preview the palette too
+    repaintTracks();           // histogram bars are heat-coloured
   };
 
   function isDarkTheme() {
@@ -642,9 +1180,10 @@
             Math.round(a[2] + (b[2] - a[2]) * u)];
   }
 
-  function heatRGBof(paletteKey, t) {
+  function heatRGBof(paletteKey, t, darkOverride) {
     var pal = HEAT_PALETTES[paletteKey] || HEAT_PALETTES.redgreen;
-    var mid = isDarkTheme() ? [71, 85, 105] : [148, 163, 184];
+    var dark = darkOverride == null ? isDarkTheme() : darkOverride;
+    var mid = dark ? [71, 85, 105] : [148, 163, 184];
     var c = t < 0.5 ? lerp3(pal.good, mid, t * 2) : lerp3(mid, pal.bad, (t - 0.5) * 2);
     return c[0] + "," + c[1] + "," + c[2];
   }
@@ -818,6 +1357,42 @@
 
   // ── Filter chips bar ──
 
+  // Colour-only ranges have no AG filter model (they hide nothing), so they ride
+  // into the chip bar as extra chips — otherwise a column could stay tinted with
+  // nothing on screen saying so.
+  function colourOnlyChips() {
+    return Object.keys(colourOnly).filter(function (f) {
+      var r = rangeOf(f);
+      return r.min != null || r.max != null;
+    }).map(function (field) {
+      var r = rangeOf(field);
+      var summary = r.min != null && r.max != null
+        ? fmtRangeNum(field, r.min) + "–" + fmtRangeNum(field, r.max)
+        : (r.min != null ? "od " + fmtRangeNum(field, r.min) : "do " + fmtRangeNum(field, r.max));
+      return {
+        field: field,
+        label: (CHIP_HEADER_NAMES && CHIP_HEADER_NAMES[field]) || field,
+        summary: summary,
+        tag: "jen barva",
+        onRemove: function () { clearColumnRange(field); },
+      };
+    });
+  }
+
+  // Drop a column's range entirely: colour, blank rule and filter model.
+  function clearColumnRange(field) {
+    setRange(field, null, null);
+    setColourOnly(field, false);
+    delete blankModes[field];
+    persistThresholds();
+    if (rangeFilters[field]) rangeFilters[field].renderState();
+    if (!gridApi) return;
+    gridApi.refreshCells({ force: true });
+    gridApi.setColumnFilterModel(field, null).then(function () {
+      gridApi.onFilterChanged();
+    });
+  }
+
   function updateFilterChips() {
     if (!window.renderFilterChips) return;
     window.renderFilterChips({
@@ -825,15 +1400,35 @@
       barEl: document.getElementById("filter-chips-bar"),
       headerNames: CHIP_HEADER_NAMES,
       onClearAll: window.clearFilters,
+      extraChips: colourOnlyChips(),
+      onRemoveField: function (field) {
+        if (!colRanges[field]) return;      // only the RangeFilter columns
+        setRange(field, null, null);
+        setColourOnly(field, false);
+        delete blankModes[field];
+        persistThresholds();
+      },
     });
   }
 
   // ── Toolbar actions ──
 
   window.clearFilters = function () {
+    userThresholds = {};
+    colourOnly = {};
+    blankModes = {};
+    persistThresholds();
+    persistColourOnly();
     localStorage.removeItem(STORAGE_KEY);
-    if (gridApi) gridApi.setFilterModel(null); // fires onFilterChanged → writeHash
-    else writeHash();
+    if (gridApi) {
+      gridApi.setFilterModel(null); // fires onFilterChanged → writeHash
+      gridApi.refreshCells({ force: true });   // thresholds gone → heat scale is auto again
+    } else writeHash();
+    // A colour-only range leaves the AG model EMPTY, so setFilterModel(null) is a
+    // no-op there and onFilterChanged never fires — the chips must be re-rendered
+    // here or a cleared "jen barva" chip stays on screen.
+    updateFilterChips();
+    writeHash();
     updateRowCount();
   };
 
@@ -1104,12 +1699,20 @@
     if (gridApi) gridApi.refreshCells({ force: true });
   };
 
-  // Reset ALL columns: clears every colour threshold AND its coupled range filter.
+  // Reset ALL columns: clears every colour threshold AND its coupled range filter
+  // (including a blank-only rule, which carries no {min,max} of its own).
   window.resetThresholds = function () {
-    var fields = Object.keys(userThresholds);
+    var seen = {}, fields = [];
+    Object.keys(userThresholds).concat(Object.keys(blankModes)).forEach(function (f) {
+      if (!seen[f]) { seen[f] = 1; fields.push(f); }
+    });
     userThresholds = {};
-    try { localStorage.removeItem(THRESHOLD_KEY); } catch (_) {}
-    renderThresholdInputs();
+    colourOnly = {};
+    blankModes = {};
+    try {
+      localStorage.removeItem(THRESHOLD_KEY);
+      localStorage.removeItem(COLOUR_ONLY_KEY);
+    } catch (_) {}
     if (gridApi) {
       fields.forEach(function (f) { gridApi.setColumnFilterModel(f, null); });
       gridApi.refreshCells({ force: true });
@@ -1117,102 +1720,77 @@
     }
   };
 
-  function updateThresholdOverrides() {
-    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
-      var th = userThresholds[row.dataset.field] || {};
-      row.classList.toggle("overridden", th.min != null || th.max != null);
-    });
-  }
-
-  function updateThresholdGradients() {
-    document.querySelectorAll("#threshold-inputs .threshold-row").forEach(function (row) {
-      var g = row.querySelector(".th-slider");
-      if (g) g.style.background = heatGradientCSS(heatMode.palette, NUMERIC_COLS[row.dataset.field]);
-    });
-  }
-
   function _sliderRound(v, step) {
     return parseFloat((Math.round(v / step) * step).toFixed(4));
   }
 
-  function renderThresholdInputs() {
-    var container = document.getElementById("threshold-inputs");
-    if (!container) return;
-    while (container.firstChild) container.removeChild(container.firstChild);
+  // Theme is chosen from two miniatures of the page itself (header, filter chip,
+  // grid rows with heat bars) painted in that theme's own tokens — a pair of plain
+  // swatches would not show what actually changes. Lives in the colour drawer
+  // because it is the same kind of choice as the palette, not a tool.
+  var THEME_MINI = {
+    dark: { bg: "#0f172a", surf: "#1e293b", border: "#334155", muted: "#94a3b8", acc: "#e0872e", barA: 0.75 },
+    light: { bg: "#f8fafc", surf: "#ffffff", border: "#e2e8f0", muted: "#64748b", acc: "#b4611c", barA: 0.5 },
+  };
 
-    Object.keys(NUMERIC_COLS).forEach(function (field) {
-      var r = rangeOf(field);
-      var range = colRanges[field] || {};
-      var greenHigh = NUMERIC_COLS[field];
+  function themeMiniature(theme) {
+    var t = THEME_MINI[theme];
+    var card = el("div", "theme-mini");
+    card.style.background = t.bg;
+    card.style.borderColor = t.border;
 
-      var row = document.createElement("div");
-      row.className = "threshold-row" + ((r.min != null || r.max != null) ? " overridden" : "");
-      row.dataset.field = field;
+    var head = el("div", "tm-head");
+    head.style.background = t.surf;
+    head.style.borderColor = t.border;
+    var dot = el("span", "tm-dot");
+    dot.style.background = t.acc;
+    head.appendChild(dot);
+    [24, 17, 13].forEach(function (w) {
+      var tab = el("span", "tm-tab");
+      tab.style.width = w + "px";
+      tab.style.background = t.muted;
+      head.appendChild(tab);
+    });
+    card.appendChild(head);
 
-      var labelWrap = document.createElement("div");
-      labelWrap.className = "th-label";
-      var name = document.createElement("span");
-      name.textContent = field;
-      var dir = document.createElement("span");
-      dir.className = "th-dir";
-      dir.textContent = greenHigh ? "více = lépe" : "méně = lépe";
-      labelWrap.appendChild(name); labelWrap.appendChild(dir);
-      var reset = document.createElement("button");
-      reset.type = "button"; reset.className = "th-reset";
-      reset.title = "Vymazat rozsah"; reset.setAttribute("aria-label", "Vymazat rozsah " + field);
-      reset.textContent = "⟲";
-      reset.addEventListener("click", function () { commitRange(field, null, null); });
-      labelWrap.appendChild(reset);
-      row.appendChild(labelWrap);
+    var chip = el("div", "tm-chip");
+    chip.style.borderColor = t.acc;
+    chip.style.background = theme === "dark" ? "rgba(224,135,46,0.16)" : "rgba(180,97,28,0.12)";
+    card.appendChild(chip);
 
-      var minInput = mkNumInput(range.min != null ? fmtRangeNum(field, range.min) : "min");
-      var maxInput = mkNumInput(range.max != null ? fmtRangeNum(field, range.max) : "max");
-      minInput.className = "th-min"; maxInput.className = "th-max";
-      minInput.value = fmtRangeNum(field, r.min);
-      maxInput.value = fmtRangeNum(field, r.max);
-      minInput.addEventListener("input", function () { commitRange(field, parseNum(minInput.value), rangeOf(field).max); });
-      maxInput.addEventListener("input", function () { commitRange(field, rangeOf(field).min, parseNum(maxInput.value)); });
-      minInput.addEventListener("change", function () { minInput.value = fmtRangeNum(field, rangeOf(field).min); });
-      maxInput.addEventListener("change", function () { maxInput.value = fmtRangeNum(field, rangeOf(field).max); });
+    var grid = el("div", "tm-grid");
+    [[0.15, 0.9], [0.4, 0.62], [0.62, 0.44], [0.85, 0.24], [0.5, 0.7]].forEach(function (r) {
+      var row = el("div", "tm-row");
+      row.style.borderColor = t.border;
+      var lbl = el("span", "tm-lbl");
+      lbl.style.background = t.muted;
+      row.appendChild(lbl);
+      var cell = el("span", "tm-cell");
+      var rgb = heatRGBof(heatMode.palette, r[0], theme === "dark");
+      var pct = Math.round(r[1] * 100);
+      cell.style.background = "linear-gradient(90deg,rgba(" + rgb + "," + t.barA + ") 0,rgba(" + rgb + "," +
+        t.barA + ") " + pct + "%,rgba(" + rgb + ",0.14) " + pct + "%,rgba(" + rgb + ",0.14) 100%)";
+      row.appendChild(cell);
+      grid.appendChild(row);
+    });
+    card.appendChild(grid);
+    return card;
+  }
 
-      // Dual-range slider; shares state with the number boxes and the column-filter
-      // slider via commitRange; a thumb at the data edge clears that bound (= open).
-      if (range.min != null && range.max != null && range.max > range.min) {
-        var slider = document.createElement("div");
-        slider.className = "th-slider";
-        slider.style.background = heatGradientCSS(heatMode.palette, greenHigh);
-        var step = range.step || 1;
-        var rMin = document.createElement("input");
-        var rMax = document.createElement("input");
-        [rMin, rMax].forEach(function (rr) {
-          rr.type = "range"; rr.min = range.min; rr.max = range.max; rr.step = step;
-        });
-        rMin.className = "th-range-min"; rMax.className = "th-range-max";
-        rMin.value = r.min != null ? r.min : range.min;
-        rMax.value = r.max != null ? r.max : range.max;
-        rMin.setAttribute("aria-label", field + " min");
-        rMax.setAttribute("aria-label", field + " max");
-        rMin.addEventListener("input", function () {
-          if (+rMin.value > +rMax.value) rMin.value = rMax.value;
-          var v = _sliderRound(+rMin.value, step);
-          commitRange(field, v <= range.min ? null : v, rangeOf(field).max);
-        });
-        rMax.addEventListener("input", function () {
-          if (+rMax.value < +rMin.value) rMax.value = rMin.value;
-          var v = _sliderRound(+rMax.value, step);
-          commitRange(field, rangeOf(field).min, v >= range.max ? null : v);
-        });
-        slider.appendChild(rMin);
-        slider.appendChild(rMax);
-        row.appendChild(slider);
-      }
-
-      var pair = document.createElement("div");
-      pair.className = "th-pair";
-      pair.appendChild(minInput); pair.appendChild(maxInput);
-      row.appendChild(pair);
-
-      container.appendChild(row);
+  function renderThemeChoices() {
+    var wrap = document.getElementById("theme-choices");
+    if (!wrap || typeof heatMode === "undefined" || !heatMode) return;
+    while (wrap.firstChild) wrap.removeChild(wrap.firstChild);
+    var current = document.documentElement.getAttribute("data-theme") || "dark";
+    [["dark", "Tmavý"], ["light", "Světlý"]].forEach(function (pair) {
+      var btn = el("button", "theme-card" + (current === pair[0] ? " active" : ""));
+      btn.type = "button";
+      btn.title = pair[1] + " motiv";
+      btn.setAttribute("aria-pressed", String(current === pair[0]));
+      btn.appendChild(themeMiniature(pair[0]));
+      btn.appendChild(el("span", "theme-card-lbl", pair[1]));
+      btn.addEventListener("click", function () { window.setTheme(pair[0]); });
+      wrap.appendChild(btn);
     });
   }
 
@@ -1226,6 +1804,8 @@
   }
 
   function renderHeatModeChoices() {
+    // applyTheme() runs at module top, before `var heatMode` is assigned.
+    if (typeof heatMode === "undefined" || !heatMode) return;
     var palWrap = document.getElementById("palette-choices");
     var styWrap = document.getElementById("style-choices");
     if (!palWrap || !styWrap) return;
@@ -1283,6 +1863,11 @@
   document.addEventListener("click", function (e) {
     var c = e.target.closest ? e.target.closest.bind(e.target) : function () { return null; };
     if (!c(".menu-wrap")) closeToolsMenu();
+    // A drawer control that re-renders its own row (theme / palette / style) detaches
+    // the clicked button, and closest() on a detached node can no longer see
+    // #settings-panel — so the drawer used to close on every appearance choice. A node
+    // that is no longer in the document cannot be an "outside" click.
+    if (!e.target.isConnected) return;
     // Drawer closes on any click outside it (opening click comes from .menu-wrap).
     if (!c("#settings-panel") && !c(".menu-wrap")) window.closeColorSettings();
     // Price popup closes on any click outside it and outside the cell that opened it.
@@ -1292,10 +1877,12 @@
     if (e.key === "Escape") { closeToolsMenu(); window.closeColorSettings(); closePricePopup(); }
   });
 
+  // The colour drawer is appearance only — theme, palette, style. Per-column
+  // ranges live in the column-filter popup (one {min,max} state, one view).
   window.openColorSettings = function () {
     closeToolsMenu();
     renderHeatModeChoices();
-    renderThresholdInputs();
+    renderThemeChoices();
     var panel = document.getElementById("settings-panel");
     if (panel) panel.classList.remove("hidden");
   };
@@ -1309,8 +1896,11 @@
 
   function init(data) {
     computeRanges(data);
+    setHistRows(data);
     loadThresholds();
+    loadColourOnly();
     loadHeatMode();
+    loadHistMode();
     loadPriceView();
     totalRowCount = data.length;
 
@@ -1380,6 +1970,10 @@
         writeHash();
         updateRowCount();
         updateFilterChips();
+        // "Po filtru" / "Obojí" count the rows the grid shows, so every filter
+        // change invalidates the cached arrays and repaints the open tracks.
+        filterVersion++;
+        repaintTracks(true);
       },
       onDragStopped: persistColState,
       onSortChanged: persistColState,

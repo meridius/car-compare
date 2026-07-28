@@ -414,19 +414,75 @@ a:hover { text-decoration: underline; }
 
 .threshold-row .th-dir { font-size: 0.7rem; color: var(--clr-text-muted); font-weight: 400; }
 
-/* Dual min/max slider — the track itself is the column's good→bad gradient.
-   Two overlaid native range inputs; tracks are click-through, only thumbs grab. */
+/* ── Distribution track (site/hist-track.js) ──────────────────────────────────
+   One canvas paints bars + count gridlines + scrim; the count labels are DOM
+   spans in a 34px left gutter, and the two native range inputs are inset by the
+   same 34px so a thumb still sits exactly over its own bin. */
+.ht-track {
+    position: relative;
+    height: 56px;
+}
+
+.ht-track.compact { height: 34px; }
+
+.ht-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    transition: opacity 0.09s;
+    /* Painted decoration only. The canvas is appended after the range inputs, so
+       without this it sits on top of them and the thumbs cannot be dragged; hover
+       is listened for on .ht-track, not here. */
+    pointer-events: none;
+}
+
+.ht-ylabels { position: absolute; inset: 0; pointer-events: none; }
+.ht-track .ht-xaxis { pointer-events: none; }
+
+.ht-ylabels span {
+    position: absolute;
+    left: 0;
+    width: 30px;
+    text-align: right;
+    font-size: 0.6rem;
+    line-height: 1;
+    color: var(--clr-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Value axis under the track: 4 ticks, the unit printed once at the right end.
+   Padding is set from JS to the bar block's own edges. */
+.ht-xaxis {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 3px;
+    font-size: 0.62rem;
+    color: var(--clr-text-muted);
+}
+
+.ht-xaxis span { white-space: nowrap; }
+
+.ht-track.disabled { opacity: 0.35; pointer-events: none; }
+
+/* Two overlaid native range inputs; tracks are click-through, only thumbs grab. */
+.th-slider,
+.ht-track {
+    grid-column: 1 / -1;
+}
+
 .th-slider {
     position: relative;
     height: 18px;
     border-radius: 4px;
-    grid-column: 1 / -1;
 }
 
-.th-slider input[type="range"] {
+.th-slider input[type="range"],
+.ht-track input[type="range"] {
     position: absolute;
-    inset: 0;
-    width: 100%;
+    top: 0;
+    bottom: 0;
     height: 100%;
     margin: 0;
     padding: 0;
@@ -437,7 +493,10 @@ a:hover { text-decoration: underline; }
     pointer-events: none;
 }
 
-.th-slider input[type="range"]::-webkit-slider-thumb {
+.th-slider input[type="range"] { inset: 0; width: 100%; }
+
+.th-slider input[type="range"]::-webkit-slider-thumb,
+.ht-track input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     pointer-events: auto;
@@ -450,7 +509,11 @@ a:hover { text-decoration: underline; }
     cursor: ew-resize;
 }
 
-.th-slider input[type="range"]::-moz-range-thumb {
+.ht-track input[type="range"]::-webkit-slider-thumb { height: 60px; }
+.ht-track.compact input[type="range"]::-webkit-slider-thumb { height: 38px; }
+
+.th-slider input[type="range"]::-moz-range-thumb,
+.ht-track input[type="range"]::-moz-range-thumb {
     pointer-events: auto;
     width: 10px;
     height: 18px;
@@ -460,35 +523,193 @@ a:hover { text-decoration: underline; }
     cursor: ew-resize;
 }
 
-.th-slider input[type="range"]::-moz-range-track { background: transparent; }
-.th-slider input[type="range"]:focus-visible::-webkit-slider-thumb { border-color: var(--clr-accent); }
-.th-slider input[type="range"]:focus-visible::-moz-range-thumb { border-color: var(--clr-accent); }
-.threshold-row.overridden .th-label { color: var(--clr-accent); }
+.ht-track input[type="range"]::-moz-range-thumb { height: 56px; }
+.ht-track.compact input[type="range"]::-moz-range-thumb { height: 34px; }
 
-.threshold-row input {
-    width: 100%;
-    padding: 4px 7px;
+.th-slider input[type="range"]::-moz-range-track,
+.ht-track input[type="range"]::-moz-range-track { background: transparent; }
+
+.th-slider input[type="range"]:focus-visible::-webkit-slider-thumb,
+.ht-track input[type="range"]:focus-visible::-webkit-slider-thumb { border-color: var(--clr-accent); }
+.th-slider input[type="range"]:focus-visible::-moz-range-thumb,
+.ht-track input[type="range"]:focus-visible::-moz-range-thumb { border-color: var(--clr-accent); }
+
+/* ── Segmented switch (what the histogram counts / blank handling) ──
+   The highlight is its own element and SLIDES between options; three states that
+   jump between flat backgrounds were hard to read. */
+.seg {
+    position: relative;
+    display: inline-flex;
+    flex: 0 0 auto;
     border: 1px solid var(--clr-border);
-    border-radius: 4px;
-    background: var(--clr-bg);
-    color: var(--clr-text);
-    font-size: 0.8rem;
+    border-radius: 999px;
+    overflow: hidden;
 }
 
-.threshold-row .th-pair { display: flex; gap: 6px; grid-column: 1 / -1; }
+.seg-ind {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    opacity: 0;
+    border-radius: 999px;
+    background: var(--clr-accent);
+    transition: transform 0.14s cubic-bezier(0.3, 0, 0.2, 1), width 0.14s cubic-bezier(0.3, 0, 0.2, 1);
+    pointer-events: none;
+}
 
-/* ── RangeFilter popup (slider filter for numeric columns) ── */
+.seg button {
+    position: relative;
+    z-index: 1;
+    padding: 2px 9px;
+    border: none;
+    background: transparent;
+    color: var(--clr-text-muted);
+    font-size: 0.68rem;
+    font-family: inherit;
+    line-height: 1.6;
+    cursor: pointer;
+    transition: color 0.14s;
+}
+
+.seg button:hover { color: var(--clr-text); background: transparent; }
+.seg button.active { color: var(--clr-accent-contrast); font-weight: 600; }
+.seg button:disabled { opacity: 0.4; cursor: default; }
+
+/* Axis-zoom toggle: the icon flips +/− so it says what the click does. */
+.ht-zoom {
+    width: 22px;
+    height: 22px;
+    padding: 0;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+    color: var(--clr-text-muted);
+    cursor: pointer;
+    transition: color 0.14s, border-color 0.14s;
+}
+
+.ht-zoom svg { width: 14px; height: 14px; }
+.ht-zoom:hover { border-color: var(--clr-border); color: var(--clr-text); background: transparent; }
+.ht-zoom.on { color: var(--clr-accent); border-color: var(--clr-accent-border); }
+.ht-zoom:disabled { opacity: 0.35; cursor: default; }
+
+@media (prefers-reduced-motion: reduce) {
+    .seg-ind { transition: none; }
+    .ht-canvas { transition: none; }
+}
+
+/* ── Theme picker: two miniatures of the page, each in its own theme ── */
+.theme-cards { display: flex; gap: 10px; margin-bottom: 6px; }
+
+.theme-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 6px;
+    background: transparent;
+    border: 1px solid var(--clr-border);
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.theme-card:hover { border-color: var(--clr-text-muted); background: transparent; }
+.theme-card.active { border-color: var(--clr-accent); box-shadow: inset 0 0 0 1px var(--clr-accent); }
+.theme-card-lbl { font-size: 0.72rem; color: var(--clr-text-muted); }
+.theme-card.active .theme-card-lbl { color: var(--clr-accent); font-weight: 600; }
+
+.theme-mini {
+    width: 142px;
+    height: 92px;
+    border: 1px solid;
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.tm-head {
+    height: 14px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0 4px;
+    border-bottom: 1px solid;
+}
+
+.tm-dot { width: 7px; height: 7px; border-radius: 2px; flex: 0 0 auto; }
+.tm-tab { height: 4px; border-radius: 2px; opacity: 0.5; }
+.tm-chip { height: 8px; width: 44px; margin: 2px 4px 0; border: 1px solid; border-radius: 999px; }
+.tm-grid { flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 3px 4px 4px; }
+.tm-row { display: flex; align-items: center; gap: 4px; height: 9px; border-bottom: 1px solid; }
+.tm-lbl { width: 28px; height: 4px; border-radius: 2px; opacity: 0.45; flex: 0 0 auto; }
+.tm-cell { flex: 1; height: 8px; border-radius: 1px; }
+
+/* ── RangeFilter popup (distribution track + od/do + blank handling) ── */
 .range-filter {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    padding: 12px 12px 10px;
-    min-width: 200px;
+    gap: 8px;
+    padding: 9px 11px 11px;
+    min-width: 336px;
     background: var(--clr-surface);
     color: var(--clr-text);
 }
-.range-filter .th-slider { margin: 4px 6px 2px; }
+
+/* Name on its own row with an ellipsis (full name in the tooltip) so a long
+   column name can never wrap the header into two lines and shove the rest. */
+.rf-name-row { display: flex; align-items: baseline; gap: 7px; min-width: 0; }
+
+.rf-name {
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+.rf-dir { font-size: 0.68rem; color: var(--clr-text-muted); white-space: nowrap; flex: 0 0 auto; }
+.rf-spacer { flex: 1 1 auto; }
+.rf-ctl-row { display: flex; align-items: center; gap: 6px; }
+
+/* Hover readout: a fixed slot in the header, so nothing ever covers the bars. */
+.rf-readout {
+    font-size: 0.7rem;
+    color: var(--clr-text-muted);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+
+.rf-readout b { color: var(--clr-text); font-weight: 700; }
+.rf-readout.empty { opacity: 0; }
+
+.rf-blank-row { display: flex; align-items: center; gap: 7px; }
+.rf-blank-lbl { font-size: 0.7rem; color: var(--clr-text-muted); }
+.rf-blank-count { font-size: 0.68rem; color: var(--clr-text-muted); margin-left: auto; }
+
+.rf-check {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.72rem;
+    color: var(--clr-text-muted);
+    cursor: pointer;
+}
+
+.rf-check input { accent-color: var(--clr-accent); }
+
 .range-filter .th-pair { display: flex; gap: 6px; }
+.range-filter .th-pair.disabled { opacity: 0.35; pointer-events: none; }
+
 .range-filter .th-pair input {
     width: 100%;
     padding: 4px 7px;
@@ -497,7 +718,10 @@ a:hover { text-decoration: underline; }
     background: var(--clr-bg);
     color: var(--clr-text);
     font-size: 0.8rem;
+    font-family: inherit;
+    font-variant-numeric: tabular-nums;
 }
+
 /* Reset buttons: ghost "clear this range" — icon (⟲) in popup header + sidebar. */
 .th-reset {
     margin-left: auto;
@@ -517,9 +741,10 @@ a:hover { text-decoration: underline; }
 .threshold-row:hover .th-reset,
 .threshold-row.overridden .th-reset { opacity: 1; }
 .th-reset:hover { border-color: var(--clr-border); color: var(--clr-accent); }
-/* Popup ⟲ reset lives in a right-aligned header and is always visible. */
-.range-head { display: flex; justify-content: flex-end; margin-bottom: -6px; }
-.range-filter .th-reset { opacity: 1; }
+/* Popup ⟲ reset sits at the end of the name row and is always visible; it turns
+   accent-coloured while the column actually carries a range. */
+.range-filter .th-reset { opacity: 1; margin-left: 0; }
+.range-filter .th-reset.on { color: var(--clr-accent); border-color: var(--clr-accent-border); }
 
 /* AG Grid joins every condition of a column filter with ONE operator, but it
    renders a radio pair per join: the 2nd..Nth are `.ag-disabled` copies that only
@@ -600,6 +825,24 @@ a:hover { text-decoration: underline; }
 .filter-chip-close:hover {
     background: var(--clr-hover);
     color: var(--clr-text);
+}
+
+/* A range that only tints: dashed outline + a "jen barva" tag, so it never looks
+   like a filter that is hiding rows. */
+.filter-chip.tint {
+    background: transparent;
+    border-style: dashed;
+}
+
+.filter-chip-tag {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--clr-text-muted);
+    padding: 0 5px;
+    border: 1px solid var(--clr-border);
+    border-radius: 999px;
+    white-space: nowrap;
 }
 
 .filter-chips-clear {
