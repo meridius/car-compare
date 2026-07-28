@@ -493,3 +493,27 @@ class CnbRateTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class CategoryMapTest(unittest.TestCase):
+    """_CATEGORY_MAP only translates mobile.de's own taxonomy — the fold lives in
+    core/bodies.py. So every value it emits must be a label that fold knows,
+    otherwise the label reaches the payload unfolded (that is how "Allspace" and
+    "VAN" style strays used to leak into the grid's body filter)."""
+
+    def test_every_category_value_is_a_known_body_label(self):
+        from scrapers.core import bodies
+        for token, value in mobilede._CATEGORY_MAP.items():
+            if value == "":
+                continue
+            self.assertIn(bodies.to_display(value), bodies.CANONICAL,
+                          f"{token} -> {value!r} is not a body core/bodies.py knows")
+
+    def test_limousine_and_othercar_still_blank(self):
+        self.assertEqual(mobilede._CATEGORY_MAP["Limousine"], "")
+        self.assertEqual(mobilede._CATEGORY_MAP["OtherCar"], "")
+
+    def test_cabrio_does_not_become_a_coupe(self):
+        from scrapers.core import bodies
+        self.assertEqual(bodies.to_display(mobilede._CATEGORY_MAP["Cabrio"]),
+                         "Kabriolet")

@@ -2125,17 +2125,22 @@ import { parquetReadObjects } from "https://cdn.jsdelivr.net/npm/hyparquet@1.26.
 
     // Body type / Drivetrain matrix from loaded grid data
     if (gridApi) {
-      // Karoserie now arrives already folded onto the canonical display set by
-      // build_data.canonicalize_body_vocab (SUV/Hatchback/Kombi/Sedan/MPV/Kupé;
-      // Liftback/Sportback/Fastback fold into Hatchback — the reference labels
-      // that body class inconsistently). Synonyms kept for defence in depth.
+      // Karoserie arrives already folded onto the canonical DISPLAY set by
+      // build_data.canonicalize_body_vocab (scrapers/core/bodies.py CANONICAL —
+      // 9 values). Keep this order identical to CANONICAL. Liftback is its own
+      // bucket (the display taxonomy keeps it distinct from Hatchback; only
+      // matching folds them, because listings can't tell them apart), and
+      // Kabriolet is its own (an open car is not a coupé). Raw synonyms are kept
+      // as defence in depth in case an unfolded value ever reaches the payload.
       var bodyGroups = {
-        "Kombi": ["Kombi", "Combi", "Variant", "SW", "Touring", "Sports Tourer", "Avant"],
         "SUV": ["SUV", "CUV", "Terénní"],
-        "Hatchback": ["Hatchback", "Liftback", "Sportback", "Fastback"],
+        "Kombi": ["Kombi", "Combi", "Variant", "SW", "Touring", "Sports Tourer", "Avant", "Shooting Brake"],
+        "Hatchback": ["Hatchback"],
+        "Liftback": ["Liftback", "Sportback", "Fastback"],
         "Sedan": ["Sedan/limuzína", "Sedan"],
-        "MPV": ["MPV", "VAN", "Allspace"],
-        "Kupé / Kabrio": ["Kupé", "Kabriolet"],
+        "MPV": ["MPV", "VAN"],
+        "Kupé": ["Kupé", "Coupé"],
+        "Kabriolet": ["Kabriolet", "Kabrio", "Cabrio", "Roadster"],
         "Pick-up": ["Pick-up"],
       };
       var bodyLookup = {};

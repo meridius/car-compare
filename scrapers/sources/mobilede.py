@@ -78,6 +78,9 @@ _CATEGORY_MAP = {
     # like "OtherCar". _build_row then falls through to extract_body_type(title)
     # (recovers a real token like Sportback/Combi if present) and downstream
     # reference/majority-vote/derive_body fill the rest. See docs/gotchas.md.
+    # Values must be labels core/bodies.DISPLAY_FOLD knows (pinned by
+    # tests/test_mobilede.py::CategoryMapTest) — this map only translates
+    # mobile.de's own taxonomy; the fold itself lives in core/bodies.py.
     "OffRoad": "SUV", "EstateCar": "Kombi", "Limousine": "",
     "SmallCar": "Hatchback", "Van": "VAN", "SportsCar": "Kupé",
     "Cabrio": "Kabriolet", "OtherCar": "",

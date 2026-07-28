@@ -44,10 +44,15 @@ _HYBRID_PATTERNS = [
     (re.compile(r"\bhybrid\b", re.I), "HEV"),
 ]
 
+# Body words recoverable from a listing's free text (name remainder / Extra), used
+# as the fallback when a source carries no body field. Values are raw labels that
+# core/bodies.DISPLAY_FOLD knows — never a canonical-only string, and never a trim:
+# "Allspace" was here and produced Karoserie="Allspace" rows (it is a VW trim, not a
+# body). "Liftback" is included because sauto emits it natively on ~740 listings.
 BODY_KEYWORDS = [
-    "Sports Tourer",
+    "Sports Tourer", "Shooting Brake",
     "SW", "Combi", "Variant", "Touring",
-    "Fastback", "Allspace", "SUV", "Sportback",
+    "Liftback", "Fastback", "SUV", "Sportback",
 ]
 
 # EV edition/version names seen in the Extra column (mobile.de + sauto), curated

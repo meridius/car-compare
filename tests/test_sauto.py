@@ -163,3 +163,19 @@ class CylinderCountTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class IceBodyFilterTest(unittest.TestCase):
+    """sauto's typ_seo must request every passenger body we display, or a whole body
+    class is silently absent from the dataset (sedans + liftbacks were, until
+    core/bodies.py made Liftback a first-class value)."""
+
+    def test_typ_seo_requests_liftback_and_sedan(self):
+        typ = S.ICE_PARAMS["typ_seo"].split(",")
+        self.assertIn("liftback", typ)
+        self.assertIn("sedanlimuzina", typ)
+
+    def test_typ_seo_values_are_unique_and_nonempty(self):
+        typ = S.ICE_PARAMS["typ_seo"].split(",")
+        self.assertEqual(sorted(typ), sorted(set(typ)))
+        self.assertTrue(all(t.strip() for t in typ))

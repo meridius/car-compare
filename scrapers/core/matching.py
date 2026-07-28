@@ -2,6 +2,7 @@
 import csv
 import re
 
+from . import bodies
 from .fields import ENGINE_TYPE_KEYWORDS, TRIM_KEYWORDS
 
 # ---------------------------------------------------------------------------
@@ -17,27 +18,12 @@ _BRAND_MATCH_ALIASES = {
     "kgm": "ssangyong",
 }
 
-_BODY_GROUPS = {
-    "Kombi": {"Kombi", "Combi", "Variant", "SW", "Avant", "Touring",
-              "Sports Tourer", "Sportswagon", "Grandtour", "Sportstourer",
-              "Wagon", "Grandtour"},
-    "Hatchback": {"Hatchback", "Liftback"},
-    "Fastback": {"Fastback"},
-    # SUV absorbs the listing-side synonyms sauto/mobile.de emit (CUV, Czech
-    # "Terénní", English "Offroad") so a scraped-body vs auth-body scoring
-    # comparison doesn't spuriously penalise an obvious SUV.
-    "SUV": {"SUV", "Crossover", "CUV", "Terénní", "Offroad", "OffRoad"},
-    "Sedan": {"Sedan", "Sedan/limuzína", "Limuzína"},
-    "MPV": {"MPV", "VAN", "Van"},
-    "Kupé": {"Kupé", "Coupé", "Coupe"},
-    "Shooting Brake": {"Shooting Brake"},
-    "Sportback": {"Sportback", "Coupé-SUV"},
-}
-
-_BODY_CANON: dict[str, str] = {}
-for _canon, _syns in _BODY_GROUPS.items():
-    for _s in _syns:
-        _BODY_CANON[_s.lower()] = _canon
+# Body folding lives in core/bodies.py (single source of truth, shared with
+# build_data / fields / the adapters). Matching uses the SCORING taxonomy, which
+# collapses the liftback family into Hatchback and Shooting Brake into Kombi —
+# listings cannot distinguish those (a mobile.de liftback arrives tagged
+# SmallCar -> Hatchback), and body is the heaviest field here (+3/-2), so a false
+# penalty would push a correct match into Nejisté. Display keeps them distinct.
 
 _AUTH_BODY_KEYWORDS = [
     "Shooting Brake", "Sports Tourer", "Coupé-SUV",
@@ -58,9 +44,8 @@ def _parse_brand(text: str) -> tuple[str, str]:
 
 
 def _canonicalize_body(body: str) -> str:
-    if not body:
-        return ""
-    return _BODY_CANON.get(body.lower(), body)
+    """Fold a body onto the scoring canon (core/bodies.SCORING_FOLD)."""
+    return bodies.to_scoring(body)
 
 
 def load_authoritative_list(csv_path) -> list[dict]:

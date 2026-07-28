@@ -13,6 +13,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # including listings already removed from source providers (frozen rows that the
 # scraper never re-processes) — get backed by the current reference list.
 sys.path.insert(0, BASE_DIR)
+from scrapers.core import bodies  # noqa: E402
 from scrapers.core import matching as comb_utils  # noqa: E402
 from scrapers.core.filters import SOURCE_FILTERS  # noqa: E402
 from scrapers.core.normalize import normalize_model as _normalize_model  # noqa: E402
@@ -87,7 +88,10 @@ _BODY_NAME_RULES = [
     (re.compile(r'\b(?:Combi|Kombi|Variant|Avant|Tourer|Touring|Sports Tourer|SW)\b', re.I), "Kombi"),
     (re.compile(r'\b(?:Liftback|Sportback|Fastback)\b', re.I), "Liftback"),
     (re.compile(r'\bHatchback\b', re.I), "Hatchback"),
-    (re.compile(r'\b(?:Targa|Coup[ée]|Kabrio|Cabrio)\b', re.I), "Kupé"),
+    # Open roof before fixed roof: "Kabrio"/"Targa" must not read as a coupé
+    # (a convertible is a different car, and now a different canonical body).
+    (re.compile(r'\b(?:Targa|Kabrio\w*|Cabrio\w*|Roadster)\b', re.I), "Kabriolet"),
+    (re.compile(r'\bCoup[ée]\b', re.I), "Kupé"),
     (re.compile(r'\bSUV\b', re.I), "SUV"),
     (re.compile(r'\bSedan\b', re.I), "Sedan"),
 ]
@@ -233,52 +237,26 @@ def canonicalize_body(df):
     return df
 
 
-# Display body vocabulary: collapse the synonym sprawl the sources emit (CUV /
-# Terénní / VAN / Combi / Sedan-limuzína …) onto the clean set the dashboard
-# filters on, so one real body = one filter bucket (the root of the family
-# "filtering is broken" report).
-#
-# The liftback family (Liftback / Sportback / Fastback) folds INTO Hatchback —
-# not a stylistic choice but a data-forced one: the hand-curated ice_specs.csv
-# is itself INCONSISTENT for this body class (Škoda Octavia non-Combi appears as
-# both "Hatchback" and "Liftback" across entries; Superb→Hatchback, Arteon→
-# Hatchback, A5→Sportback, C5 X→Liftback — all the same 5-door-liftback shape).
-# Reference-pairing therefore hands different Octavia listings different bodies;
-# the only way to guarantee "same car → one body" without a full manual reference
-# re-audit is to fold the whole family to Hatchback. This also aligns the display
-# taxonomy with matching._canonicalize_body (which already folds Liftback→
-# Hatchback for scoring). Czech buyers filter these as hatchbacks anyway.
-_DISPLAY_BODY_CANON = {
-    "suv": "SUV", "cuv": "SUV", "terénní": "SUV", "terenni": "SUV",
-    "offroad": "SUV", "off-road": "SUV", "crossover": "SUV",
-    "kombi": "Kombi", "combi": "Kombi", "variant": "Kombi", "sw": "Kombi",
-    "avant": "Kombi", "touring": "Kombi", "sports tourer": "Kombi",
-    "sportstourer": "Kombi", "shooting brake": "Kombi",
-    "hatchback": "Hatchback",
-    "liftback": "Hatchback", "sportback": "Hatchback", "fastback": "Hatchback",
-    "sedan": "Sedan", "sedan/limuzína": "Sedan", "limuzína": "Sedan",
-    "limuzina": "Sedan",
-    "mpv": "MPV", "van": "MPV",
-    "kupé": "Kupé", "kupe": "Kupé", "coupé": "Kupé", "coupe": "Kupé",
-    "kabriolet": "Kupé", "kabrio": "Kupé", "grand sport": "Kupé",
-    "pick-up": "Pick-up", "pickup": "Pick-up",
-}
-
-
 def canonicalize_body_vocab(df):
-    """Fold every Karoserie cell onto the canonical display vocabulary
-    (_DISPLAY_BODY_CANON) so synonyms stop splitting one body across several
-    grid-filter buckets. Runs on the whole column — reference-driven,
-    listing-derived, and majority-voted values alike — so the source of a value
-    never leaks a stray label. Unknown values pass through unchanged."""
+    """Fold every Karoserie cell onto the canonical DISPLAY vocabulary
+    (`scrapers.core.bodies.CANONICAL`, 9 values) so the synonym sprawl the sources
+    emit (CUV / Terénní / VAN / Combi / Sedan-limuzína …) stops splitting one real
+    body across several grid-filter buckets — the root of the family "filtering is
+    broken" report.
+
+    Runs on the whole column — reference-driven, listing-derived and majority-voted
+    values alike — so the source of a value never leaks a stray label. The fold
+    itself lives in core/bodies.py, shared with matching and the adapters; this is
+    the DISPLAY half (Liftback and Kabriolet stay distinct here, and fold only for
+    scoring). Unknown values pass through unchanged; known non-bodies (e.g. the VW
+    trim "Allspace") blank so the vote/derive chain can fill them."""
     if "Karoserie" not in df.columns:
         return df
 
     def fold(v):
         if v is None or (isinstance(v, float) and v != v):
             return v
-        s = str(v).strip()
-        return _DISPLAY_BODY_CANON.get(s.lower(), s)
+        return bodies.to_display(v)
 
     df["Karoserie"] = df["Karoserie"].map(fold)
     return df

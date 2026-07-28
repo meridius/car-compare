@@ -16,6 +16,7 @@ import unittest
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 
+from scrapers.core import bodies as _bodies  # noqa: E402
 from scrapers.core.schema import CANONICAL_COLS  # noqa: E402
 from scrapers.core.matching import load_authoritative_list  # noqa: E402
 from build.build_data import strip_ice_engine_tokens  # noqa: E402
@@ -651,8 +652,10 @@ class BodyTypeConsistencyTest(unittest.TestCase):
     (build_data.apply_reference_body_specs + canonicalize_body_vocab). The core
     invariant is 'same car → one body'."""
 
-    # The canonical display vocabulary the whole grid must collapse onto.
-    CANON = {"SUV", "Hatchback", "Kombi", "Sedan", "MPV", "Kupé", "Pick-up"}
+    # The canonical display vocabulary the whole grid must collapse onto. Read from
+    # scrapers/core/bodies.py rather than re-listed here — a local copy is how the
+    # taxonomy drifted across five files in the first place.
+    CANON = set(_bodies.CANONICAL)
 
     @classmethod
     def setUpClass(cls):

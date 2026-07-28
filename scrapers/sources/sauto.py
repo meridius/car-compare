@@ -33,7 +33,12 @@ EV_PARAMS = {**_BASE_PARAMS, "fuel_seo": "elektro", "equipment_seo": "tepelne-ce
 ICE_PARAMS = {**_BASE_PARAMS, "fuel_seo": "benzin,nafta,lpg-benzin,cng-benzin",
               "engine_power_from": filters.MIN_POWER_KW_ICE,
               "condition_seo": "nove,ojete,predvadeci",
-              "typ_seo": "cuv,kombi,suv,hatchback,mpv"}
+              # sauto's body codebook (id 4) has 13 values; we request the passenger
+              # bodies. "liftback" + "sedanlimuzina" were MISSING, so sedans and
+              # liftbacks were never fetched at all — incoherent once Liftback became
+              # a first-class display body (core/bodies.py). Deliberately excluded:
+              # kabriolet/roadster/kupe (not family cars), pick-up/terenni (utility).
+              "typ_seo": "cuv,kombi,suv,hatchback,liftback,sedanlimuzina,mpv"}
 
 AWD_RE = re.compile(r'všech\s+kol|4x4|AWD|4MATIC|quattro|xDrive', re.IGNORECASE)
 _EXCLUDED_FUEL_RE = re.compile(r'hybrid|elektro', re.IGNORECASE)
