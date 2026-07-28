@@ -1240,6 +1240,60 @@ researcher-flagged hybrid fabrications before apply ("Arteon 1.4 TSI HEV" is
 really the eHybrid PHEV; "Kona 1.6 GDI" ships only as HEV) — `exists:true` with a
 contradicting `variant_note` still needs a human read.
 
+### a body-agnostic reference PK silently rewrites the WRONG body onto listings
+
+Reported live 2026-07-27: Škoda Octavia **liftbacks** were displayed as `Kombi`
+(e.g. sauto listing 209900301 — a 2.0 TDI liftback, `Karoserie` = Liftback and
+`Verze` = Top Selection in state, shown as Kombi in the grid). Not a display bug
+— a **reference gap** amplified by reference-driven body:
+
+1. `ice_specs.csv` had exactly one 2.0 TDI Octavia row, `Škoda Octavia 2.0 TDI`
+   — PK carried **no body token** but `Karoserie` = Kombi. Same for `2.0 TSI`.
+   (The 1.5 TSI family was already split Liftback/Combi; the 2.0 rows, added
+   later by the ref-growth loop, were not.)
+2. A liftback listing scores that row `+2 vol +2 type +1 fuel −2 body = 3`, and
+   every genuinely-liftback reference row is a **1.5 TSI** (engine mismatch
+   scores far worse) — so the Kombi row wins by a wide margin → **Ano**. Body
+   contradiction alone never blocks confidence; it is just −2.
+3. `apply_reference_body_specs` then overwrites `Karoserie` from the matched
+   entry for the whole entry group. The listing's *correct* Liftback is replaced
+   by the reference's Kombi. Reference-as-truth is right when the listing is
+   noisy (a Karoq tagged "Kombi") and wrong when the reference is the one
+   missing the variant — the mechanism cannot tell the two apart.
+
+Fix is data, not code: split the row per body and **put the body token in the
+PK** (`Škoda Octavia Liftback 2.0 TDI` + `Škoda Octavia Combi 2.0 TDI`). The PK
+token is load-bearing twice — matching ignores it (it reads the structured
+columns), but the *payload* splits Model out of the PK, so without it both rows
+collapse to one `(Značka, Model, Verze, Objem, Typ motoru)` key and
+`test_matched_ice_entry_has_single_body` breaks. Measured on full state: **190
+Octavia rows Kombi → Hatchback**, and the reported listing's score 3 → 8. Zero
+non-Octavia rows changed state.
+
+**The fix costs Ano and that is correct.** 201 Octavia rows went Ano → Nejisté
+(134 body-blank + 67 stale mobile.de `Sedan/limuzína`): with two same-engine
+siblings differing only by body, a listing that never states its body genuinely
+ties, and Lever A2 only rescues the ones whose text names exactly one body.
+A coin-flip Kombi is worse than an honest Nejisté — do not "fix" this by
+re-merging the rows.
+
+Guards: `tests/test_matching.py::BodyAgnosticPKTest` (Octavia 2.0 offers both
+bodies) + `OctaviaBodySplitTest` (golden pick/tie behaviour), and
+`tests/test_build_data.py::ReferencePayloadKeyTest` (no reference payload key
+spans two canonical bodies — catches a naive same-PK split before a build).
+
+**This is a family, not a one-off.** On full state **2 651 confidently-matched
+ICE rows across 351 entry groups** display a body contradicting the listing's
+own `Karoserie`. They split three ways and only the first is a bug of this kind:
+a genuine reference gap (`VW Golf Hatchback 2.0 TDI` vs Kombi listings 140,
+`Audi A6 2.0 TDI` Sedan vs Kombi/Avant 60, `Škoda Superb Combi Style 2.0 TDI`
+vs liftbacks 64, `VW Arteon Liftback 2.0 TSI` 201); a reference data error
+(`Renault Clio 1.3 TCe` labelled Sedan, `Mazda CX-30 2.5` Sedan); and plain
+listing noise where the reference is right and the overwrite is doing its job
+(`Škoda Karoq 1.5 TSI` tagged Kombi by 91 sellers). Only the first two want
+fixing — a blanket "listing body wins" or "body mismatch blocks Ano" rule would
+break the third, which is the majority.
+
 ### a reference-growth batch can be NET NEGATIVE — audit per-row before merging
 
 Applying researched candidate rows can *worsen* matching even when every row is a

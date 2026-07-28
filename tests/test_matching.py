@@ -522,5 +522,76 @@ class ReferenceCSVSchemaTest(unittest.TestCase):
                         "no trims read — 'Verze' column not wired into matching")
 
 
+class BodyAgnosticPKTest(unittest.TestCase):
+    """A reference row whose PK carries no body token, while the nameplate also
+    ships in another body, is the shape that produced the reported bug: liftback
+    Octavia 2.0 listings matched the only 2.0 entry — a Kombi one — and
+    `apply_reference_body_specs` then overwrote their correct Liftback with
+    Kombi. (The companion payload-key uniqueness guard lives in
+    tests/test_build_data.py, where the payload split helpers are imported.)"""
+
+    _REF = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                        "scrapers", "data", "reference")
+
+    @classmethod
+    def setUpClass(cls):
+        import csv
+        with open(os.path.join(cls._REF, "ice_specs.csv"), encoding="utf-8") as f:
+            cls.rows = list(csv.DictReader(f))
+
+    def test_octavia_2_0_offers_both_bodies(self):
+        """Octavia 2.0 TDI and 2.0 TSI ship as both Liftback and Combi. With
+        only the Kombi row present, every liftback listing matched it Ano
+        (engine +4, body −2 still wins) and was displayed as Kombi."""
+        for etype in ("TDI", "TSI"):
+            bodies = {M._canonicalize_body(r["Karoserie"]) for r in self.rows
+                      if r["Značka"] == "Škoda" and r["Model"] == "Octavia"
+                      and r["Objem motoru"] == "2.0" and r["Typ motoru"] == etype}
+            self.assertIn("Kombi", bodies, f"Octavia 2.0 {etype}: no Kombi entry")
+            self.assertIn("Hatchback", bodies,
+                          f"Octavia 2.0 {etype}: no Liftback entry — liftback "
+                          f"listings will be matched to (and displayed as) the Kombi")
+
+
+class OctaviaBodySplitTest(unittest.TestCase):
+    """Golden: with both bodies present, the listing's own Karoserie picks the
+    right sibling, and a body-silent listing stays honestly Nejisté."""
+
+    AL = [auth("Škoda Octavia Combi 2.0 TDI", "Škoda", "Octavia", body="Kombi",
+               vol="2.0", etype="TDI", fuel="Nafta"),
+          auth("Škoda Octavia Liftback 2.0 TDI", "Škoda", "Octavia", body="Hatchback",
+               vol="2.0", etype="TDI", fuel="Nafta")]
+
+    def test_liftback_listing_picks_liftback_entry(self):
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="Liftback", vol="2.0", etype="TDI",
+                    fuel="Nafta"), self.AL)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Liftback 2.0 TDI")
+
+    def test_kombi_listing_picks_combi_entry(self):
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", body="Kombi", vol="2.0", etype="TDI",
+                    fuel="Nafta"), self.AL)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Combi 2.0 TDI")
+
+    def test_body_silent_listing_is_nejiste(self):
+        """No body stated and nothing recoverable from the text — the two
+        siblings tie. Honest uncertainty beats a coin-flip Kombi."""
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", vol="2.0", etype="TDI", fuel="Nafta"),
+            self.AL)
+        self.assertEqual(res["state"], "Nejisté")
+
+    def test_body_silent_listing_resolved_by_text_token(self):
+        """Lever A2: a single body word in the listing text breaks the tie."""
+        res = M.classify_match(
+            scraped("Škoda", "Octavia", vol="2.0", etype="TDI", fuel="Nafta",
+                    body_raw="Hatchback"), self.AL)
+        self.assertEqual(res["state"], "Ano")
+        self.assertEqual(res["entry"], "Škoda Octavia Liftback 2.0 TDI")
+
+
 if __name__ == "__main__":
     unittest.main()

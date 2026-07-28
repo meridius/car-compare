@@ -977,5 +977,36 @@ class ExtractEvExtraSpecsTest(unittest.TestCase):
         self.assertEqual(out.iloc[1]["Verze"], "")
 
 
+class ReferencePayloadKeyTest(unittest.TestCase):
+    """The payload drops "Model auta" and shows Značka + Model + Verze + engine
+    instead, so two reference rows that reduce to the same payload key but carry
+    different bodies render as one car with two bodies
+    (test_data_integrity.test_matched_ice_entry_has_single_body). A body-split
+    pair must therefore keep the body token in its PK ("… Liftback 2.0 TDI" vs
+    "… Combi 2.0 TDI") — this guards the reference side, before a build."""
+
+    def test_no_reference_payload_key_spans_two_bodies(self):
+        import csv
+        from collections import defaultdict
+
+        from scrapers.core import matching as M
+
+        path = os.path.join(ROOT, "scrapers", "data", "reference", "ice_specs.csv")
+        with open(path, encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+
+        keyed = defaultdict(set)
+        for r in rows:
+            brand, model = B.split_brand_model(r["Jednoznačná varianta vozu"])
+            key = (brand, B.strip_ice_engine_tokens(model), r["Verze"],
+                   r["Objem motoru"], r["Typ motoru"], r["Hybrid typ"])
+            body = M._canonicalize_body(r["Karoserie"])
+            if body:
+                keyed[key].add(body)
+        split = {k: sorted(v) for k, v in keyed.items() if len(v) > 1}
+        self.assertEqual(split, {},
+                         f"reference rows sharing a payload key across bodies: {split}")
+
+
 if __name__ == "__main__":
     unittest.main()
