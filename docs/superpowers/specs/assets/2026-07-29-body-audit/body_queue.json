@@ -1,0 +1,4027 @@
+[
+ {
+  "znacka": "Alfa Romeo",
+  "model": "Junior",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Alfa Romeo Junior 1.2 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Alfa Romeo Junior 1.2 MHEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Audi",
+  "model": "A1",
+  "bodies": [
+   "Hatchback",
+   "Liftback"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Audi A1 2.0 TFSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi A1 1.5 TSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A1 1.5 TFSI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A1 2.0 TSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 2 (Type GB)",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A1 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Audi",
+  "model": "A3",
+  "bodies": [
+   "Hatchback",
+   "Liftback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Audi A3 Hatchback 35 TFSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi A3 Hatchback 40 TFSI e",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.4",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Audi A3 Sedan 35 TFSI",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi A3 2.0 TDI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A3 2.0 TFSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4 (8Y)",
+    "objem": "2.0",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A3 1.5 TSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi A3 1.5 TFSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Audi",
+  "model": "Q2",
+  "bodies": [
+   "SUV"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Audi Q2 35 TFSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi Q2 40 TFSI Quattro",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "2",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi Q2 TSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1 (Type GA, 2020/21 facelift)",
+    "objem": "",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi Q2 TFSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi Q2 2.0 TDI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Audi",
+  "model": "Q3",
+  "bodies": [
+   "Liftback",
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Audi Q3 35 TFSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi Q3 Sportback 35 TFSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Audi Q3 45 TFSI e",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.4",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Audi Q3 2.0 TDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi Q3 2.0 TFSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "TFSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Audi Q3 1.5 TSI",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "118",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "BMW 118 Hatchback 1.5",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "F40 (2019-2024)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 118 Sedan 1.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F40 (2019-2024)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 118 Sedan 2.0 d",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F40 (2019-2024)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 118 2.0",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3 (F40)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 118 2.0 TSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "123",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 123 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "218",
+  "bodies": [
+   "Kupé",
+   "MPV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "BMW 218 Kupé 1.5",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "F22 LCI (2017-2021)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "BMW 218 Kupé 2.0 d",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "F22 LCI (2017-2020/21)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "BMW 218 Sedan 1.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F44 (2019-2024)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 218 VAN 1.5 PHEV",
+    "body": "MPV",
+    "verze": "",
+    "generace": "U06 (2021+) or F45 (2016-2021)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 218 1.5 TSI",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "BMW 218 2.0 TSI",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 218 1.5",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 1 (F44)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 218 2.0",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 1 (F44)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "220",
+  "bodies": [
+   "MPV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "BMW 220 Sedan 2.0",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F44 (2019-2024)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 220 VAN 1.5 PHEV",
+    "body": "MPV",
+    "verze": "",
+    "generace": "U06 (2021-present)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "220 Gran Coupé",
+  "bodies": [
+   "Kombi",
+   "Kupé",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "BMW 220 Gran Coupé Kupé 1.5",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "F44 (2019-2024)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 220 Gran Coupé Kupé 2.0",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "F44 (2019-2024)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 220 Gran Coupé Kupé 2.0 d",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "G42 (2021+)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "BMW 220 Gran Coupé Sedan 2.0 d",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F44 (2019-2024)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 220 Gran Coupé 2.0 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 1 (F44)",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 220 Gran Coupé 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "2er Gran Coupé",
+  "bodies": [
+   "Kupé",
+   "MPV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "BMW 2er Gran Coupé Kupé 1.5",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "F44 (2019-2025)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 2er Gran Coupé Sedan 1.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "F44 (2019–present, facelift 2023)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 2er Gran Coupé 2.0",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Gen 1 (F44)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "BMW 2er Gran Coupé 1.5",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 1 (F44)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "518",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 518 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 7 (G30 LCI, 2020-2023)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "620 Gran Turismo",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 620 Gran Turismo 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "630 Gran Turismo",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 630 Gran Turismo 3.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1 (G32 LCI)",
+    "objem": "3.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "640 Gran Turismo",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW 640 Gran Turismo 3.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1 (G32)",
+    "objem": "3.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BMW",
+  "model": "M135",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BMW M135 2.0 TSI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3 (F40)",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "BYD",
+  "model": "SEAL 6",
+  "bodies": [
+   "Kombi"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "BYD SEAL 6 Kombi 1.5 HEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "2025+",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "BYD SEAL 6 1.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Bestune",
+  "model": "B70",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Bestune B70 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Citroën",
+  "model": "C3 Aircross",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Citroën C3 Aircross 1.2",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Citroën C3 Aircross 1.2 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Citroën",
+  "model": "C4",
+  "bodies": [
+   "Liftback"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Citroën C4 1.2 PureTech",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Citroën C4 1.2 MHEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Citroën",
+  "model": "C5",
+  "bodies": [
+   "Liftback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Citroën C5 X 1.2 PureTech",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Citroën C5 X Plug-In Hybrid",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Citroën C5 1.6 PureTech",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Citroën C5 2.0 BlueHDi",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "BlueHDi",
+    "palivo": "",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Citroën C5 1.6 PureTech PHEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Citroën",
+  "model": "C5-e",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Citroën C5-e 1.6",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Cupra",
+  "model": "Leon",
+  "bodies": [
+   "Hatchback",
+   "Kombi"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Cupra Leon Hatchback 1.5 TSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Cupra Leon Sportstourer 1.5 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Cupra Leon 2.0 TDI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Cupra Leon 2.0 TSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Cupra Leon 1.5 eTSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "eTSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Cupra Leon 1.5",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "DFSK",
+  "model": "Fengon",
+  "bodies": [
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "DFSK Fengon 5 1.5 CVT",
+    "body": "MPV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "DFSK Fengon 2.0 GDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Fengon 2.0 TGDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Fengon 1.5 T-GDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "DFSK Fengon 2.0",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   }
+  ]
+ },
+ {
+  "znacka": "DFSK",
+  "model": "Forthing 4",
+  "bodies": [
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "DFSK Forthing 4 SUV 1.5",
+    "body": "SUV",
+    "verze": "",
+    "generace": "U-Tour (2023-present)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 VAN 1.5",
+    "body": "MPV",
+    "verze": "",
+    "generace": "I (2023+)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.5",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.5 T-GDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.5 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.5 TGDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.5 GDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "DFSK Forthing 4 1.4",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.4",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   }
+  ]
+ },
+ {
+  "znacka": "DS",
+  "model": "4",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "DS 4 1.2 PureTech",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "DS 4 1.6",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Dacia",
+  "model": "Duster",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Dacia Duster ECO-G 100 LPG",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1",
+    "typ_motoru": "",
+    "palivo": "LPG + benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Dacia Duster Hybrid 140",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Dacia Duster 1.3 TCe",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Dacia Duster 1.2 MHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Dongfeng",
+  "model": "Mage",
+  "bodies": [
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Dongfeng Mage 1.5 Turbo",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Dongfeng Mage 1.5",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "FAW",
+  "model": "Bestune",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "FAW Bestune 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Fiat",
+  "model": "500X",
+  "bodies": [
+   "Hatchback",
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Fiat 500X Hatchback 1.4",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "1st gen facelift (2019-2023)",
+    "objem": "1.4",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Fiat 500X SUV 1.3",
+    "body": "SUV",
+    "verze": "",
+    "generace": "500X facelift (2018-2023)",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Fiat 500X Sedan 1.3",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Series 2 / facelift (2018-2023)",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Fiat",
+  "model": "600",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Fiat 600 1.2 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Fiat 600 1.2 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Fiat",
+  "model": "Grande Panda",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Fiat Grande Panda 1.2",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Fiat Grande Panda 1.2 MHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Ford",
+  "model": "PumaST",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Ford PumaST 1.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Ford",
+  "model": "Ranger",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Ford Ranger 2.0 EcoBlue",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "EcoBlue",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "Ford",
+  "model": "S-MAX",
+  "bodies": [
+   "Kombi",
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Ford S-MAX 2.5 Duratec FHEV",
+    "body": "MPV",
+    "verze": "",
+    "generace": "",
+    "objem": "2.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Ford S-MAX 2.0 EcoBlue",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "EcoBlue",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "Ford S-MAX 2.5",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "Ford S-MAX 2.0 TSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "Ford S-MAX 2.0 dCi",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "7"
+   }
+  ]
+ },
+ {
+  "znacka": "Ford",
+  "model": "Transit Custom",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Ford Transit Custom 2.0 dCi",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "GWM",
+  "model": "HAVAL Jolion Pro",
+  "bodies": [
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "GWM HAVAL Jolion Pro SUV 1.5",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Jolion Pro (2024+)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "GWM HAVAL Jolion Pro Sedan 1.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "I, Pro facelift (2021-2026+)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "GWM Haval",
+  "model": "",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "GWM Haval 1.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Honda",
+  "model": "CR-V",
+  "bodies": [
+   "SUV"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Honda CR-V 1.5",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Honda CR-V 2.0 HEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Hyundai",
+  "model": "i30",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Hyundai i30 Hatchback 1.0 T-GDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.0",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Hyundai i30 Kombi 1.5 T-GDI MHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Hyundai i30 1.6 CRDi",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.6",
+    "typ_motoru": "CRDi",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Hyundai i30 2.0 T-GDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.0",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Iveco",
+  "model": "Daily",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Iveco Daily 2.3",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 6",
+    "objem": "2.3",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "3"
+   }
+  ]
+ },
+ {
+  "znacka": "Jaecoo",
+  "model": "7",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Jaecoo 7 1.6 TGDI AWD",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Jaecoo 7 1.5 TGDI PHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Jaecoo 7 1.6 T-GDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "KGM",
+  "model": "Korando",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "KGM Korando 1.5 GDI-T 2WD",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "KGM Korando 1.5 T-GDI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "KGM Korando 1.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Kia",
+  "model": "Ceed",
+  "bodies": [
+   "Hatchback",
+   "Kombi"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Kia Ceed Hatchback 1.5 T-GDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Kia Ceed SW 1.5 T-GDI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Kia Ceed SW 1.6 GDI PHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "GDI",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Kia Ceed 1.6 CRDi",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.6",
+    "typ_motoru": "CRDi",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Kia Ceed 1.6 T-GDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.6",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Kia Ceed 1.5 T-GDI",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.5",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Kia Ceed 1.5 TGDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.5",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Kia Ceed 1.6 TGDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.6",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Kia Ceed 1.4",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.4",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Lexus",
+  "model": "ES",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Lexus ES 2.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 7 (XZ10, facelift 2021)",
+    "objem": "2.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Lexus",
+  "model": "LBX",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Lexus LBX 1.5 Hybrid",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Lexus LBX 1.5",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Lexus",
+  "model": "UX",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Lexus UX SUV 2.0 HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "1st generation (2018-2024, facelift 2022)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Lexus UX 2.0",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "MG",
+  "model": "MG3",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "MG MG3 1.5",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "MG MG3 1.5 HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "MG",
+  "model": "MG4",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "MG MG4",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "MG",
+  "model": "ZS",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "MG ZS 1.5 VTi-tech",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "MG ZS 1.5 HEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "MINI",
+  "model": "ONE",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "MINI ONE 1.5",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3 (F56)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "4"
+   }
+  ]
+ },
+ {
+  "znacka": "Maserati",
+  "model": "Ghibli",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Maserati Ghibli 3.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "3.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mazda",
+  "model": "3",
+  "bodies": [
+   "Hatchback",
+   "Liftback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mazda 3 Hatchback 2.0 e-Skyactiv G",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mazda 3 Sedan 2.0 e-Skyactiv X",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mazda 3 2.0 SKYACTIV-G",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "SKYACTIV-G",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mazda",
+  "model": "CX-30",
+  "bodies": [
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mazda CX-30 2.0 e-Skyactiv G",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mazda CX-30 2.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mazda",
+  "model": "MX-30",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mazda MX-30 SUV 0.8 HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "DR (2020-present) — R-EV variant introduced 2023",
+    "objem": "0.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Mazda MX-30 SUV 0.8 PHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "1st gen \"DR\" (2020–present); R-EV rotary-PHEV variant from Feb 2023",
+    "objem": "0.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Mazda MX-30 0.8",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "0.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Mazda MX-30",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mercedes-Benz",
+  "model": "CLA",
+  "bodies": [
+   "Kombi",
+   "Kupé",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mercedes-Benz CLA Coupé 180",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mercedes-Benz CLA Shooting Brake 200",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mercedes-Benz CLA 1.9",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.9",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Mercedes-Benz CLA 1.3 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 2 (C118/X118)",
+    "objem": "1.3",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Mercedes-Benz CLA 1.3",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Mercedes-Benz CLA 2.0",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mercedes-Benz",
+  "model": "Třídy A",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mercedes-Benz Třídy A Hatchback 180",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mercedes-Benz Třídy A Sedan 180",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "Mini",
+  "model": "Cooper 3D",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "Kupé",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mini Cooper 3D Hatchback",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mini Cooper 3D 2.0",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Gen 3 (F56 LCI)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "Mini Cooper 3D 1.5 TSI",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 3 (F56 facelift, 2021+)",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "4"
+   },
+   {
+    "pk": "Mini Cooper 3D 2.0 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 3 (F56 LCI, facelift 2021)",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "4"
+   }
+  ]
+ },
+ {
+  "znacka": "Mitsubishi",
+  "model": "Colt",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mitsubishi Colt Hatchback 1.6 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Colt VII (2023-present)",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Mitsubishi Colt Sedan 1.6 HEV",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "VII (2023-present)",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mitsubishi",
+  "model": "Grandis",
+  "bodies": [
+   "Kombi",
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Mitsubishi Grandis 1.3",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mitsubishi Grandis 1.3 Turbo MHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.3",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Mitsubishi Grandis 1.8 HEV",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Mitsubishi",
+  "model": "L200",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Mitsubishi L200 2.3",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Mitsubishi L200",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Nissan",
+  "model": "Interstar",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Nissan Interstar 2.3 dCi",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.3",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "3"
+   }
+  ]
+ },
+ {
+  "znacka": "Nissan",
+  "model": "Juke",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Nissan Juke 1.0 DIG-T",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Nissan Juke 1.6 Hybrid",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Nissan Juke 1.6",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Omoda",
+  "model": "C5",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Omoda C5 1.6 T-GDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "T-GDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Omoda C5 1.6 TGDI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "TGDI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Opel",
+  "model": "Astra",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "Kupé"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Opel Astra Hatchback 1.2 Turbo",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Astra Sports Tourer 1.2 Turbo",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Astra 1.2",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen 6",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Astra 1.5 CDTi",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "1.5",
+    "typ_motoru": "CDTi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Astra 1.6 PHEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 6",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Opel",
+  "model": "Frontera",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Opel Frontera Hybrid",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Frontera 1.2",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Frontera 1.2 MHEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1 (2024 nameplate revival)",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Opel",
+  "model": "Grandland",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Opel Grandland X 1.2 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Grandland 1.6 PHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Grandland 1.2 MHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Grandland 2.0 CDTi",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1 (Grandland X, 2017–2021)",
+    "objem": "2.0",
+    "typ_motoru": "CDTi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Grandland 1.6 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Grandland",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Opel",
+  "model": "Insignia",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "Kupé",
+   "Liftback"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Opel Insignia Grand Sport 2.0 CDTI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "CDTi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Insignia Sports Tourer 2.0 CDTI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "CDTi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Insignia 2.0 CDTi",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2 (B, facelift 2020)",
+    "objem": "2.0",
+    "typ_motoru": "CDTi",
+    "palivo": "",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Opel Insignia 2.0",
+    "body": "Kupé",
+    "verze": "",
+    "generace": "Gen B",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Opel",
+  "model": "Mokka",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Opel Mokka 1.2 Turbo",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "Turbo",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Opel Mokka 1.2 MHEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Peugeot",
+  "model": "2008",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Peugeot 2008 1.2 PureTech",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 2008 1.2 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Peugeot",
+  "model": "208",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Peugeot 208 Hatchback 1.2 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "II (2019-2025)",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Peugeot 208 Hatchback 1.2 MHEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "II, Phase II facelift (2023+)",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Peugeot 208 Sedan 1.2 HEV",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "II (P21, 2019+)",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Peugeot 208 1.2 PureTech",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Peugeot",
+  "model": "3008",
+  "bodies": [
+   "SUV"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Peugeot 3008 1.2",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 3008 1.6",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 3008 1.6 HEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Peugeot 3008",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Peugeot",
+  "model": "308",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Peugeot 308 Hatchback 1.2 PureTech",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 308 SW 1.2 PureTech",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "PureTech",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 308 1.2 HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Peugeot",
+  "model": "408",
+  "bodies": [
+   "Hatchback",
+   "Liftback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Peugeot 408 1.2",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Peugeot 408 1.6 PHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Peugeot 408 1.2 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Austral",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Austral 1.3 TCe",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Austral 1.2 e-TEC HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.2",
+    "typ_motoru": "e-TEC",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Austral 1.3 MHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Captur",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Captur 1.0 TCe",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.0",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Captur 1.3 TCe",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Captur 1.8 e-TEC HEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.8",
+    "typ_motoru": "e-TEC",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Captur 1.3 e-TEC MHEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "1.3",
+    "typ_motoru": "e-TEC",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Captur e-TEC",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 2",
+    "objem": "",
+    "typ_motoru": "e-TEC",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Clio",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Clio 1.8 e-TEC",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.8",
+    "typ_motoru": "e-TEC",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Clio 1.3 TCe",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Clio 1.6",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Espace",
+  "bodies": [
+   "Kombi",
+   "MPV",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Espace VAN 2.0 d",
+    "body": "MPV",
+    "verze": "",
+    "generace": "V Phase II (2020-2023)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Espace 1.8 TCe",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "1.8",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Espace 1.2",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 6",
+    "objem": "1.2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Espace 2.0 dCi",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "2.0",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Megane",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "MPV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Megane Kombi 1.3",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "IV (Phase II, 2020-2023)",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Megane Kombi 1.6 PHEV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "IV Phase II (2020-2023)",
+    "objem": "1.6",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Megane Sedan 1.3",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "IV Sedan, Phase II (2021-2023)",
+    "objem": "1.3",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Megane 1.8",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Megane 1.3 TCe",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Talisman",
+  "bodies": [
+   "Kombi",
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Renault Talisman Sedan 2.0 BlueHDi",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "BlueHDi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Talisman Grandtour 2.0 dCi",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Talisman 1.3 TCe",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.3",
+    "typ_motoru": "TCe",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Renault Talisman 2.0",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1 (facelift 2020)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Renault",
+  "model": "Trafic",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Renault Trafic 1.9",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "1.9",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Renault Trafic 2.0 dCi",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "dCi",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "Seat",
+  "model": "Ibiza",
+  "bodies": [
+   "Hatchback",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Seat Ibiza Hatchback 1.5",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "V (facelift 2021)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Seat Ibiza Sedan 1.5",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "FB (2017-present, facelift 2021+)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Seat",
+  "model": "Tarraco",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Seat Tarraco 1.5 TSI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Seat Tarraco 1.4 e-Hybrid",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.4",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Seat Tarraco 2.0 TDI",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "7"
+   },
+   {
+    "pk": "Seat Tarraco 2.0 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Subaru",
+  "model": "Forester",
+  "bodies": [
+   "Kombi",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Subaru Forester 2.0i e-Boxer",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Subaru Forester 2.0",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 5",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Toyota",
+  "model": "C-HR",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Toyota C-HR 1.8",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Toyota C-HR 2.0",
+    "body": "SUV",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Toyota C-HR 1.8 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Toyota C-HR 2.0 HEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Toyota",
+  "model": "Corolla",
+  "bodies": [
+   "Hatchback",
+   "SUV"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Toyota Corolla Hatchback 1.8 Hybrid",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": ""
+   },
+   {
+    "pk": "Toyota Corolla 1.8",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 1",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Toyota",
+  "model": "Prius",
+  "bodies": [
+   "MPV"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Toyota Prius 2.0 PHEV",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 5 (XW60)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Toyota Prius 1.8",
+    "body": "MPV",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "1.8",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Toyota",
+  "model": "Proace",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Toyota Proace 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   }
+  ]
+ },
+ {
+  "znacka": "Toyota",
+  "model": "Yaris",
+  "bodies": [
+   "Hatchback"
+  ],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Toyota Yaris 1.5 HEV",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "Gen 4 (XP210)",
+    "objem": "1.5",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "HEV",
+    "mist": "5"
+   },
+   {
+    "pk": "Toyota Yaris",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Volvo",
+  "model": "S60",
+  "bodies": [
+   "SUV",
+   "Sedan"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Volvo S60 Sedan 2.0",
+    "body": "Sedan",
+    "verze": "",
+    "generace": "S60 III (2018–present, SPA platform)",
+    "objem": "2",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Volvo S60 2.0 MHEV",
+    "body": "SUV",
+    "verze": "",
+    "generace": "Gen 3",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "MHEV",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Volvo",
+  "model": "S90",
+  "bodies": [],
+  "reason": "blank_body",
+  "rows": [
+   {
+    "pk": "Volvo S90 2.0",
+    "body": "",
+    "verze": "",
+    "generace": "Gen 2 (facelift 2020, SPA)",
+    "objem": "2.0",
+    "typ_motoru": "",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ },
+ {
+  "znacka": "Škoda",
+  "model": "Octavia",
+  "bodies": [
+   "Hatchback",
+   "Kombi",
+   "Liftback"
+  ],
+  "reason": "implausible_pair",
+  "rows": [
+   {
+    "pk": "Škoda Octavia Liftback 1.5 TSI",
+    "body": "Hatchback",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Combi 1.5 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Combi iV",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "",
+    "objem": "1.4",
+    "typ_motoru": "",
+    "palivo": "Benzín",
+    "hybrid": "PHEV",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Combi Selection 1.5 TSI",
+    "body": "Kombi",
+    "verze": "Selection",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Combi Style 1.5 TSI",
+    "body": "Kombi",
+    "verze": "Style",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Style 1.5 TSI",
+    "body": "Liftback",
+    "verze": "Style",
+    "generace": "Gen 4",
+    "objem": "1.5",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": ""
+   },
+   {
+    "pk": "Škoda Octavia Combi 2.0 TDI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Škoda Octavia Liftback 2.0 TDI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "TDI",
+    "palivo": "Nafta",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Škoda Octavia Combi 2.0 TSI",
+    "body": "Kombi",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   },
+   {
+    "pk": "Škoda Octavia Liftback 2.0 TSI",
+    "body": "Liftback",
+    "verze": "",
+    "generace": "Gen 4",
+    "objem": "2.0",
+    "typ_motoru": "TSI",
+    "palivo": "Benzín",
+    "hybrid": "",
+    "mist": "5"
+   }
+  ]
+ }
+]
