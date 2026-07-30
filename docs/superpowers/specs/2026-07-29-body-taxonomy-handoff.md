@@ -9,8 +9,8 @@ A–E decomposition and an "Implementation outcome" section with the measurement
 | | |
 |---|---|
 | Worktree | `.claude/worktrees/body-taxonomy` |
-| Branch | `feature/body-taxonomy` — **3 commits, unmerged**, clean tree |
-| `main` | **ahead of `origin/main` by 2, unpushed** (`83d2181`, `b1744d3`) |
+| Branch | `feature/body-taxonomy` — **5 commits, unmerged**, pushed, clean tree |
+| `main` | **in sync with `origin/main`** as of 2026-07-30 (`83d2181`) |
 | Tests | `./bin/test.sh` → **464 pass** |
 
 Branch commits (oldest first):
@@ -19,14 +19,21 @@ Branch commits (oldest first):
 86b3e96  docs(spec): body-style taxonomy design (Phase A)
 aa58980  feat(bodies): one module owns the body taxonomy; display 9 vs scoring folded
 6a7db11  fix(reference): audit every body label; neutral-zone body scoring
+4056abc  docs(handoff): Phase A state, local fresh-data recipe, next step
+eb952ea  docs(bodies): verify Martin's Karoserie redesign proposal against Phase A
 ```
 
-**Two decisions are waiting on Martin** and nothing should be pushed/merged without
-him saying so: pushing `main`, and merging `feature/body-taxonomy`. The project
-merge ritual is squash → rebase → `--ff-only` (see CLAUDE.md). One caveat learned
-the hard way: that ritual assumes local `main == origin/main`; when `main` is ahead
-(as now), rebase the branch onto **local `main`**, not `origin/main`, or the
-`--ff-only` step is impossible.
+**One decision is waiting on Martin**: merging `feature/body-taxonomy`. The project
+merge ritual is squash → rebase → `--ff-only` (see CLAUDE.md).
+
+> **Status corrected 2026-07-30.** This block previously said `main` was ahead of
+> `origin/main` by 2 unpushed commits, and warned that the merge ritual therefore
+> needed a rebase onto **local** `main` rather than `origin/main`. Both were true
+> when written; `main` has since been pushed and is now level with `origin/main`
+> (`83d2181`, which is the squashed Octavia body-split fix and *is* an ancestor of
+> this branch). The plain ritual applies again — but re-check with
+> `git rev-list --count origin/main..main` before merging rather than trusting
+> either version of this table.
 
 ## Run it locally on fresh data, no scraping
 
