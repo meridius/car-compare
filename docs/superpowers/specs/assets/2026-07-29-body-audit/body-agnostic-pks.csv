@@ -1,0 +1,89 @@
+PK,Značka,Model,Objem motoru,Typ motoru,Karoserie,nameplate_bodies
+Citroën C5 X 1.2 PureTech,Citroën,C5,1.2,PureTech,Liftback,Liftback|SUV
+Citroën C5 X Plug-In Hybrid,Citroën,C5,1.6,,Liftback,Liftback|SUV
+Kia K4 2.0 MPI,Kia,K4,2.0,,Sedan,Kombi|Sedan
+Mazda 6 Wagon 2.5 Skyactiv-G,Mazda,6,2.5,SKYACTIV-G,Kombi,Kombi|Sedan
+Opel Insignia Grand Sport 2.0 CDTI,Opel,Insignia,2.0,CDTi,Liftback,Kombi|Liftback
+Renault Arkana 1.3 TCe MHEV,Renault,Arkana,1.3,TCe,SUV,Kupé|SUV
+Škoda Scala 1.0 TSI,Škoda,Scala,1.0,TSI,Hatchback,Hatchback|Kombi
+VW Golf 8 eHybrid,VW,Golf,1.4,,Hatchback,Hatchback|Kombi
+Audi A6 2.0 TDI,Audi,A6,2.0,TDI,Sedan,Kombi|Sedan
+Audi A6 2.0 TFSI,Audi,A6,2.0,TFSI,Sedan,Kombi|Sedan
+Audi A6 3.0 TDI,Audi,A6,3.0,TDI,Sedan,Kombi|Sedan
+BMW 3 2.0,BMW,3,2.0,,Sedan,Kombi|Sedan
+BMW 5 2.0,BMW,5,2.0,,Sedan,Kombi|Sedan
+Dacia Jogger 1.6,Dacia,Jogger,1.6,,MPV,Kombi|MPV
+Ford Tourneo Custom 2.0 EcoBlue,Ford,Tourneo Custom,2.0,EcoBlue,MPV,Kombi|MPV
+Genesis G70 2.2,Genesis,G70,2.2,,Sedan,Kombi|Sedan
+Kia Sorento 2.2 CRDi,Kia,Sorento,2.2,CRDi,SUV,Kupé|SUV
+Kia Sorento 2.5,Kia,Sorento,2.5,,SUV,Kupé|SUV
+Mercedes-Benz C 220d,Mercedes-Benz,C,2,,Sedan,Kombi|Sedan
+Mercedes-Benz C 300d,Mercedes-Benz,C,2,,Sedan,Kombi|Sedan
+Opel Vivaro 2.0 CDTi,Opel,Vivaro,2.0,CDTi,MPV,Kombi|MPV
+Subaru Impreza 2.0,Subaru,Impreza,2.0,,Hatchback,Hatchback|Kombi
+Cupra Leon 2.0 TDI,Cupra,Leon,2.0,TDI,Hatchback,Hatchback|Kombi
+Audi A3 2.0 TDI,Audi,A3,2.0,TDI,Liftback,Liftback|Sedan
+Ford Focus 2.0 EcoBlue,Ford,Focus,2.0,EcoBlue,Kombi,Hatchback|Kombi
+Seat Leon 2.0 TDI,Seat,Leon,2.0,TDI,Kombi,Hatchback|Kombi
+Mercedes-Benz C 1.5,Mercedes-Benz,C,1.5,,Kombi,Kombi|Sedan
+Mercedes-Benz CLA 1.9,Mercedes-Benz,CLA,1.9,,Sedan,Kombi|Sedan
+Kia K4 1.6 T-GDI,Kia,K4,1.6,T-GDI,Kombi,Kombi|Sedan
+BMW 3 3.0,BMW,3,3.0,,Kombi,Kombi|Sedan
+Genesis G70 2.0 T-GDI,Genesis,G70,2.0,T-GDI,Kombi,Kombi|Sedan
+Hyundai i30 1.6 CRDi,Hyundai,i30,1.6,CRDi,Hatchback,Hatchback|Kombi
+Mercedes-Benz C 1.6,Mercedes-Benz,C,1.6,,Kombi,Kombi|Sedan
+Renault Espace 1.8 TCe,Renault,Espace,1.8,TCe,MPV,MPV|SUV
+Dacia Jogger 1.8 HEV,Dacia,Jogger,1.8,,MPV,Kombi|MPV
+Ford Focus 1.5 EcoBoost,Ford,Focus,1.5,EcoBoost,Hatchback,Hatchback|Kombi
+VW Arteon 1.4 TSI PHEV,VW,Arteon,1.4,TSI,Kombi,Hatchback|Kombi
+Kia Ceed 1.6 CRDi,Kia,Ceed,1.6,CRDi,Hatchback,Hatchback|Kombi
+Citroën C5 1.6 PureTech,Citroën,C5,1.6,PureTech,,Liftback|SUV
+Audi A4 2.0 TDI,Audi,A4,2.0,TDI,Sedan,Kombi|Sedan
+Kia Ceed 1.6 T-GDI,Kia,Ceed,1.6,T-GDI,Hatchback,Hatchback|Kombi
+Renault Megane 1.8,Renault,Megane,1.8,,Hatchback,Hatchback|Kombi|Sedan
+VW Arteon TDI,VW,Arteon,,TDI,Hatchback,Hatchback|Kombi
+Hyundai i30 2.0 T-GDI,Hyundai,i30,2.0,T-GDI,Hatchback,Hatchback|Kombi
+BMW 5 3.0,BMW,5,3.0,,Kombi,Kombi|Sedan
+Škoda Superb 2.0 TSI,Škoda,Superb,2.0,TSI,Kombi,Hatchback|Kombi
+VW Golf 2.0 TSI,VW,Golf,2.0,TSI,Hatchback,Hatchback|Kombi
+Audi A6 3.0 TFSI,Audi,A6,3.0,TFSI,Kombi,Kombi|Sedan
+Opel Insignia 2.0 CDTi,Opel,Insignia,2.0,CDTi,Liftback,Kombi|Liftback
+Cupra Leon 2.0 TSI,Cupra,Leon,2.0,TSI,Hatchback,Hatchback|Kombi
+Opel Vivaro 2.2,Opel,Vivaro,2.2,,Kombi,Kombi|MPV
+BMW 530 3.0 TSI,BMW,530,3.0,TSI,Kombi,Kombi|Sedan
+Renault Talisman 1.3 TCe,Renault,Talisman,1.3,TCe,Sedan,Kombi|Sedan
+Audi A3 2.0 TFSI,Audi,A3,2.0,TFSI,Liftback,Liftback|Sedan
+Audi A3 1.5 TSI,Audi,A3,1.5,TSI,Liftback,Liftback|Sedan
+BMW 330 3.0 TSI,BMW,330,3.0,TSI,Kombi,Kombi|Sedan
+Citroën C5 2.0 BlueHDi,Citroën,C5,2.0,BlueHDi,SUV,Liftback|SUV
+Cupra Leon 1.5 eTSI,Cupra,Leon,1.5,eTSI,Hatchback,Hatchback|Kombi
+Genesis G70 2.2 CRDi,Genesis,G70,2.2,CRDi,Kombi,Kombi|Sedan
+Mercedes-Benz CLA 1.3 TSI,Mercedes-Benz,CLA,1.3,TSI,Sedan,Kombi|Sedan
+Dacia Jogger 1.8,Dacia,Jogger,1.8,,Kombi,Kombi|MPV
+Peugeot 308 1.2 HEV,Peugeot,308,1.2,,Hatchback,Hatchback|Kombi
+Renault Arkana 1.3,Renault,Arkana,1.3,,Kupé,Kupé|SUV
+VW Golf 2.0 TDI,VW,Golf,2.0,TDI,Kombi,Hatchback|Kombi
+Audi A3 1.5 TFSI,Audi,A3,1.5,TFSI,Liftback,Liftback|Sedan
+BMW 218 2.0 TSI,BMW,218,2.0,TSI,,Kupé|MPV|Sedan
+Cupra Leon 1.5,Cupra,Leon,1.5,,Hatchback,Hatchback|Kombi
+Audi A4 3.0 TDI,Audi,A4,3.0,TDI,Kombi,Kombi|Sedan
+Subaru Impreza 2.0 HEV,Subaru,Impreza,2.0,,Kombi,Hatchback|Kombi
+BMW 218 2.0,BMW,218,2.0,,Sedan,Kupé|MPV|Sedan
+Škoda Scala 1.5 TSI,Škoda,Scala,1.5,TSI,Kombi,Hatchback|Kombi
+Renault Megane 1.3 TCe,Renault,Megane,1.3,TCe,Hatchback,Hatchback|Kombi|Sedan
+Ford Tourneo Custom 2.0 MHEV,Ford,Tourneo Custom,2.0,,Kombi,Kombi|MPV
+Opel Astra 1.5 CDTi,Opel,Astra,1.5,CDTi,Hatchback,Hatchback|Kombi
+Opel Insignia 2.0,Opel,Insignia,2.0,,Liftback,Kombi|Liftback
+Mercedes-Benz CLA 2.0,Mercedes-Benz,CLA,2.0,,Sedan,Kombi|Sedan
+Citroën C5 1.6 PureTech PHEV,Citroën,C5,1.6,PureTech,,Liftback|SUV
+Ford Mondeo 2.0 EcoBlue,Ford,Mondeo,2.0,EcoBlue,Kombi,Hatchback|Kombi
+BMW 320 2.0 TSI,BMW,320,2.0,TSI,Kombi,Kombi|Sedan
+Ford Focus,Ford,Focus,,,Hatchback,Hatchback|Kombi
+Ford Tourneo Custom 2.0 dCi MHEV,Ford,Tourneo Custom,2.0,dCi,MPV,Kombi|MPV
+Škoda Superb TSI,Škoda,Superb,,TSI,Kombi,Hatchback|Kombi
+Kia Ceed 1.5 TGDI,Kia,Ceed,1.5,TGDI,Hatchback,Hatchback|Kombi
+Kia Ceed 1.6 TGDI,Kia,Ceed,1.6,TGDI,Hatchback,Hatchback|Kombi
+Opel Astra 1.6 PHEV,Opel,Astra,1.6,,Hatchback,Hatchback|Kombi
+Kia Ceed 1.4,Kia,Ceed,1.4,,Hatchback,Hatchback|Kombi
+Renault Espace 1.2,Renault,Espace,1.2,,SUV,MPV|SUV
+Kia Sorento,Kia,Sorento,,,Kupé,Kupé|SUV
