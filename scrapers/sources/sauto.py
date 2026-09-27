@@ -23,6 +23,11 @@ SEARCH_URL = "https://www.sauto.cz/api/v1/items/search"
 DETAIL_URL = "https://www.sauto.cz/api/v1/items/{id}"
 LISTING_URL = "https://www.sauto.cz/osobni/detail/{man}/{mod}/{id}"
 
+# The search API rejects offset >= 10 000 (422 "too_high_offset"), so a query
+# with more results than this can't be paged to its end — _fetch_banded splits
+# the price band until every slice fits.
+RESULT_CAP = 10000
+
 _BASE_PARAMS = {
     "price_to": filters.MAX_PRICE_KC, "vehicle_age_from": filters.MIN_YEAR,
     "tachometer_to": filters.MAX_MILEAGE_KM,
@@ -223,8 +228,33 @@ def build_ice(item, detail):
     return row
 
 
+async def _count(session, params):
+    async with session.get(SEARCH_URL, params={**params, "limit": 1, "offset": 0}) as resp:
+        resp.raise_for_status()
+        return (await resp.json())["pagination"]["total"]
+
+
+async def _fetch_banded(session, params, price_lo, price_hi):
+    """Fetch every result by recursively halving the Kč price band while a band
+    exceeds RESULT_CAP. Bounds are inclusive on the API, so halves are
+    [lo, mid] + [mid+1, hi] — no overlap. Never returns a truncated band: a
+    partial scrape would make merge mark the missing listings Odstraněno."""
+    banded = {**params, "price_from": price_lo, "price_to": price_hi}
+    total = await _count(session, banded)
+    if total == 0:
+        return []
+    if total <= RESULT_CAP:
+        return await http.fetch_all_items(session, SEARCH_URL, banded)
+    if price_hi - price_lo <= 1:
+        raise RuntimeError(f"Sauto: {total} inzerátů v cenovém pásmu {price_lo}–{price_hi} "
+                           f"přesahuje limit API {RESULT_CAP}")
+    mid = (price_lo + price_hi) // 2
+    return (await _fetch_banded(session, params, price_lo, mid)
+            + await _fetch_banded(session, params, mid + 1, price_hi))
+
+
 async def _scrape_fuel(session, params, builder):
-    items = await http.fetch_all_items(session, SEARCH_URL, params)
+    items = await _fetch_banded(session, params, 0, filters.MAX_PRICE_KC)
     print(f"  Staženo {len(items)} položek. Načítám detaily...")
     urls = [DETAIL_URL.format(id=it["id"]) for it in items]
     details = await http.fetch_all_details(session, urls)

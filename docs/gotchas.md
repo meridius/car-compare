@@ -79,6 +79,19 @@ sauto exposes a REST API. No browser is launched. `aiohttp` sessions (`core/http
 
 `_BASE_PARAMS` / `EV_PARAMS` / `ICE_PARAMS` hard-code price ceiling, year floor, km ceiling, seat/door minimums. EV also requires a heat pump; ICE adds engine-power floor + condition + body-type filters. The resulting CSV is a curated subset, not a full dump.
 
+### search API caps paging at offset 10 000 → price-band slicing
+
+`/api/v1/items/search` answers `offset >= 10000` with **422
+`too_high_offset`** (probed 2026-09-27; `offset=9900&limit=100` still works).
+ICE crossed 10k results on 2026-09-17 and the whole daily workflow went red:
+sauto is not `continue-on-error`, so `build`/`deploy` were skipped for 11 days.
+`_fetch_banded()` (sauto.py) now counts each query (`limit=1`) and recursively
+halves the Kč band (`price_from`/`price_to`, both **inclusive** → halves are
+`[lo, mid]` + `[mid+1, hi]`) until every slice is ≤ `RESULT_CAP`, mirroring
+mobile.de's 2000-cap banding. A single-price band still over the cap raises
+instead of truncating — a partial scrape would get merge to mark the missing
+listings `Odstraněno`.
+
 ### fuel_seo uses comma-separated format (ICE)
 
 The `fuel_seo` parameter accepts comma-separated values: `"benzin,nafta,lpg-benzin,cng-benzin"`. This mirrors the URL format on sauto.cz. (EV uses `fuel_seo: "elektro"`.)

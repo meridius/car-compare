@@ -1,5 +1,6 @@
 """Unit tests for sauto purchase-validity guard (operating-lease takeovers,
 deposit-only prices). Pure, offline, stdlib unittest."""
+import asyncio
 import os
 import sys
 import unittest
@@ -159,6 +160,81 @@ class CylinderCountTest(unittest.TestCase):
         row = S.build_ice(item, detail)
         self.assertIsNotNone(row)
         self.assertEqual(row["Počet válců"], "")
+
+
+class _FakeSearchResp:
+    def __init__(self, status, payload):
+        self.status, self._payload = status, payload
+
+    def raise_for_status(self):
+        if self.status >= 400:
+            raise RuntimeError(f"HTTP {self.status}")
+
+    async def json(self):
+        return self._payload
+
+
+class _FakeGetCtx:
+    def __init__(self, resp):
+        self._resp = resp
+
+    async def __aenter__(self):
+        return self._resp
+
+    async def __aexit__(self, *exc):
+        return False
+
+
+class _FakeSearchSession:
+    """sauto search API stand-in: inclusive price_from/price_to filter, limit/offset
+    paging, and the live 422 'too_high_offset' once offset reaches max_offset."""
+
+    def __init__(self, prices, max_offset):
+        self.prices, self.max_offset, self.bands = prices, max_offset, []
+
+    def get(self, url, params=None):
+        lo = int(params.get("price_from", 0))
+        hi = int(params.get("price_to", 10**9))
+        offset, limit = int(params["offset"]), int(params["limit"])
+        if offset >= self.max_offset:
+            return _FakeGetCtx(_FakeSearchResp(422, {"errors": [{"error_code": "too_high_offset"}]}))
+        hits = [{"id": i, "price": p} for i, p in enumerate(self.prices) if lo <= p <= hi]
+        if limit > 1:
+            self.bands.append((lo, hi))
+        return _FakeGetCtx(_FakeSearchResp(200, {
+            "pagination": {"total": len(hits)},
+            "results": hits[offset:offset + limit],
+        }))
+
+
+class FetchBandedTest(unittest.TestCase):
+    """The search API rejects offset >= 10 000 (422 too_high_offset, live since
+    2026-09-17 when sauto ICE crossed 10k results). _fetch_banded must split the
+    price band so every listing is still reached."""
+
+    def _fetch(self, prices):
+        session = _FakeSearchSession(prices, S.RESULT_CAP)
+        items = asyncio.run(S._fetch_banded(session, S.ICE_PARAMS, 0, 750000))
+        return items, session
+
+    def test_over_cap_fetches_every_listing(self):
+        prices = [100000 + (i * 37) % 650000 for i in range(S.RESULT_CAP + 174)]
+        items, session = self._fetch(prices)
+        self.assertEqual(sorted(it["id"] for it in items), list(range(len(prices))))
+        self.assertGreater(len(session.bands), 1)
+
+    def test_under_cap_single_band(self):
+        items, session = self._fetch([200000, 300000, 750000])
+        self.assertEqual(len(items), 3)
+        self.assertEqual(session.bands, [(0, 750000)])
+
+    def test_bands_inclusive_no_overlap(self):
+        # A listing priced exactly at the split point must appear once, not twice.
+        mid = 375000
+        prices = [mid] * 10 + [100000 + i for i in range(S.RESULT_CAP)]
+        items, _ = self._fetch(prices)
+        self.assertEqual(len(items), len(prices))
+        self.assertEqual(len({it["id"] for it in items}), len(prices))
 
 
 if __name__ == "__main__":

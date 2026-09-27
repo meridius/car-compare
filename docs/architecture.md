@@ -217,7 +217,8 @@ Shared `_BASE_PARAMS`, then per-fuel:
 - **EV** (`EV_PARAMS`): `fuel_seo` `elektro` + `equipment_seo` `tepelne-cerpadlo` (heat pump required).
 - **ICE** (`ICE_PARAMS`): `fuel_seo` `benzin,nafta,lpg-benzin,cng-benzin` · `engine_power_from` 100 kW · `condition_seo` `nove,ojete,predvadeci` · `typ_seo` `cuv,kombi,suv,hatchback,mpv`.
 
-The result is a **pre-screened subset**, not all listings.
+The result is a **pre-screened subset**, not all listings. The search API refuses `offset >= 10000`, so
+`_fetch_banded()` splits the Kč price band until each slice fits (see gotchas).
 
 ## mobile.de API Filters
 
