@@ -350,6 +350,11 @@ def extract_ev_extra_specs(df):
     has_bat = bat != ""
     if "Kapacita baterie (kWh)" not in df.columns:
         df["Kapacita baterie (kWh)"] = ""
+    # pandas 3 infers an all-"" column as the arrow `str` dtype, which rejects a
+    # float assignment; widen it to object (a no-op on pandas 2 / numeric cols).
+    col = df["Kapacita baterie (kWh)"]
+    if pd.api.types.is_string_dtype(col) and col.dtype != object:
+        df["Kapacita baterie (kWh)"] = col.astype(object)
     idx = extra.index[has_bat.values]
     df.loc[idx, "Kapacita baterie (kWh)"] = bat[has_bat].astype(float).values
 
@@ -448,7 +453,7 @@ def load_scraper_data(scrapes_dir=None):
     from scrapers.core import storage
 
     dfs = []
-    scrapes = Path(scrapes_dir or os.path.join(BASE_DIR, "scrapers", "data", "scrapes"))
+    scrapes = Path(scrapes_dir) if scrapes_dir else storage.state_dir()
     for name in ["sauto", "autodraft", "energycars", "mobilede"]:
         df = storage.read_state(scrapes / name)
         if df is not None:

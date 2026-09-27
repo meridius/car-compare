@@ -30,6 +30,11 @@ _ISO_DATE_RE = _re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 
 def setUpModule():
+    # bin/nas-daily.sh runs the logic suite BEFORE the day's scrape, when the only
+    # payload on disk is yesterday's (possibly built by older code); these
+    # invariants run separately against the fresh build instead.
+    if os.environ.get("CAR_COMPARE_SKIP_PAYLOAD_TESTS") == "1":
+        raise unittest.SkipTest("payload invariants skipped (CAR_COMPARE_SKIP_PAYLOAD_TESTS=1)")
     if not os.path.exists(CARS_PARQUET):
         subprocess.run([sys.executable, os.path.join(ROOT, "build", "build_data.py")],
                        check=True, cwd=ROOT)

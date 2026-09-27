@@ -293,8 +293,11 @@ MM/YYYY) drives `Záruka = "Ano"`.
 ### CI never scrapes on push (rate-limit guard)
 
 mobile.de rate-limits by IP, so the workflow must not scrape on arbitrary changes.
-Scraping runs **only** on the daily cron or a manual `workflow_dispatch` (which has a
-`skip_scrape` input to deploy without scraping). Pushes to `main` — filtered to paths
+Since 2026-09-28 CI has **no daily cron at all** — the scheduled host
+(`bin/nas-daily.sh`) scrapes and dispatches `deploy_only=true`, which skips `scrape`
+and `build` and deploys the payload straight from the `data` release. CI scraping
+remains available only through a manual `workflow_dispatch` (which also has a
+`skip_scrape` input to rebuild without scraping). Pushes to `main` — filtered to paths
 that affect the built site (`site/**`, `build/**`, `scrapers/core/**`,
 `scrapers/data/reference/**`, the workflow file) — **rebuild + redeploy from the state
 already in the rolling `data` release**, no fetch. Mechanics: `scrape` is gated
@@ -1069,22 +1072,27 @@ flip. Pinned by `tests/test_matching.py` `BodyFromTextTest` + `SubBodyTieTest`.
 
 `merge_with_previous()` skips previous-CSV rows with an empty `Odkaz na auto`. Without this, rows that somehow lost their URL would accumulate as undedupeable copies on every run — this was the root cause of ~8k CSV growth per 4 days.
 
-### merge is O(n²) — a local full scrape vs a large stale previous state hangs
+### merge was O(n²) — FIXED 2026-09-28
 
-`merge_with_previous()` loops every previous-state row and does
-`df[df["Odkaz na auto"] == link]` (a full linear scan of the *new* frame) per
-iteration. On CI this is cheap: the previous state is the same-day release, so the
-removed set is tiny. But a **local** full mobile.de scrape merged against a
-stale/mismatched bootstrap state (~148k previous × ~130k new) is ~19 billion string
-compares — it ran **>60 min pegged at one core with no output** (2026-07-14) before
-being killed, long after the network fetch (~20 min, clean) finished. Two takeaways:
-- To refresh one source's state locally, **move its previous `<slug>.parquet` aside
-  first** (`mv … tmp/`) so merge takes the `prev is None` fast path and writes the
-  fresh rows directly — you lose the removed/archive rows (fine for a local
-  analysis/reference-growth build; canonical state is the release).
-- The real fix (not yet done) is to index the new frame by link once
-  (`groupby`/`dict`) instead of re-scanning per previous row — O(n) not O(n²).
-- Run `python -u -m scrapers.run` (unbuffered) for local scrapes; stdout is
+`merge_with_previous()` used to loop every previous-state row and do
+`df[df["Odkaz na auto"] == link]` (a full scan of the *new* frame) per iteration.
+Cheap on CI (same-day previous state), but a **local** full mobile.de scrape merged
+against a stale bootstrap state (~148k previous × ~130k new) ran **>60 min pegged at
+one core** (2026-07-14). It now indexes the new frame by link once (dict, first
+occurrence wins — same as the old `.iloc[0]`) and walks the previous rows lazily:
+183k previous × 135k new merges in **~11 s** (laptop), peak +~460 MB.
+
+- The old loop survives verbatim as `_quadratic_merge` in `tests/test_merge.py` —
+  the parity oracle. `QuadraticParityTest` pins the fast merge to it frame-for-frame
+  on a fixture that hits every branch, **including the quirks kept on purpose**: a
+  duplicate previous link emits one row per duplicate; an empty-link new row is
+  dropped when the previous state has an empty-link row (it is in `prev_links`).
+  `MergeScalingTest` (20k × 20k < 10 s) is the regression guard; the old loop took
+  260 s on 40k × 40k.
+- Rows are built with `_records()` (column-wise `tolist()` + `zip`), not
+  `to_dict("records")`: pandas boxes every cell through `maybe_box_native`, which was
+  half the runtime on full state.
+- Still true: run `python -u -m scrapers.run` (unbuffered) for local scrapes; stdout is
   block-buffered to a file otherwise, so "Hotovo"/errors don't appear until exit.
 
 ### mobile.de is NOT Akamai-blocked from a residential IP

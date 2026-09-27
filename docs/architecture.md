@@ -97,6 +97,9 @@ always wins. See gotchas for `merge_with_previous` behaviour.
 
 - **State layer**: `scrapers/data/scrapes/<slug>.parquet`, stringly-typed (every
   column str, blanks "") for exact parity with the old CSV semantics. Git-ignored.
+  `CAR_COMPARE_STATE_DIR` relocates it (`storage.state_dir()`, read by the pipeline,
+  `build_data` and `bin/bootstrap-data.sh`); the seed-CSV fallback exists only in
+  the default directory.
 - **Canonical store**: rolling GitHub Release `data` (assets clobbered daily) +
   immutable monthly `data-YYYY-MM` snapshots. Bootstrap falls back to the frozen
   seed CSVs tracked in git.
@@ -105,6 +108,24 @@ always wins. See gotchas for `merge_with_previous` behaviour.
   At 141k rows: 129 MB JSON → ~8 MB parquet, browser decode 9 s → ~1.5 s.
 - **Dashboard**: AG Grid Community clientSideRowModel unchanged; `app.js` decodes
   the parquet with hyparquet (pinned jsDelivr ESM) and feeds the same row objects.
+
+## Scheduled host (`deploy/nas/`, `bin/nas-daily.sh`)
+
+The daily run moved off GitHub Actions (Akamai blocks its runners for mobile.de) onto
+an always-on host with a residential IP. `deploy/nas/Dockerfile` bakes only the
+dependencies (pinned `requirements.txt`, Chromium, git, gh, supercronic — binaries
+sha256-asserted); the clone is a bind mount and `bin/nas-daily.sh` resets it to
+`origin/main` each run, re-execing the fresh copy. State lives outside the clone
+(`CAR_COMPARE_STATE_DIR`, plus `scrape_history.json`). Order, each step gating the next:
+
+```text
+fetch+reset → logic tests (payload tests skipped) → sauto, autodraft, energycars,
+mobilede one at a time (a failure keeps yesterday's state, exits 1 at the end) →
+build_data (→ test_data_integrity, opt-in: ~3.2 GB RSS) → gh release upload data
+(+ data-YYYY-MM once a month) → gh workflow run … deploy_only=true
+```
+
+Host-specific wiring (compose file, schedule, mounts, token) lives with the host, not here.
 
 ## Source Comparison
 

@@ -3,9 +3,11 @@
 State files are stringly-typed: every column str, blanks "" (never NaN/"nan").
 This mirrors the old `pd.read_csv(dtype=str).fillna("")` semantics exactly.
 """
+import os
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 import pandas as pd
 
@@ -128,6 +130,50 @@ class SchemaEvolutionTest(unittest.TestCase):
             storage.write_state(df, base)
             back = storage.read_state(base)
         self.assertEqual(back.iloc[0]["Verze"], "Fresh")
+
+
+class StateDirOverrideTest(unittest.TestCase):
+    """CAR_COMPARE_STATE_DIR moves live state out of the clone (NAS runs reset the
+    clone to origin/main each day; state must survive that)."""
+
+    def test_default_is_repo_scrapes_dir(self):
+        with mock.patch.dict(os.environ, {}, clear=False):
+            os.environ.pop(storage.STATE_DIR_ENV, None)
+            self.assertEqual(storage.state_dir(),
+                             Path(storage.__file__).resolve().parent.parent / "data" / "scrapes")
+
+    def test_env_override(self):
+        with tempfile.TemporaryDirectory() as td, \
+                mock.patch.dict(os.environ, {storage.STATE_DIR_ENV: td}):
+            self.assertEqual(storage.state_dir(), Path(td))
+
+    def test_pipeline_writes_to_override(self):
+        from scrapers.core import pipeline
+        from scrapers.core.schema import blank_row
+
+        class _StubSource:
+            SOURCE_SLUG = "stub"
+
+            @staticmethod
+            async def scrape():
+                r = blank_row()
+                r.update({"Typ": "Elektrické", "Model auta": "BMW i4",
+                          "Odkaz na auto": "https://x/1", "Stav": "Dostupný"})
+                return [r]
+
+        with tempfile.TemporaryDirectory() as td, \
+                mock.patch.dict(os.environ, {storage.STATE_DIR_ENV: td}):
+            out = pipeline.run_source(_StubSource)
+            self.assertEqual(out, Path(td) / "stub.parquet")
+            self.assertTrue(out.exists())
+
+    def test_build_reads_from_override(self):
+        from build import build_data
+        with tempfile.TemporaryDirectory() as td, \
+                mock.patch.dict(os.environ, {storage.STATE_DIR_ENV: td}):
+            storage.write_state(_df([["X", "1", "https://x/1"]]), Path(td) / "sauto")
+            df = build_data.load_scraper_data()
+        self.assertEqual(list(df["Model auta"]), ["X"])
 
 
 if __name__ == "__main__":

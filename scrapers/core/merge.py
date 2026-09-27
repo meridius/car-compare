@@ -95,6 +95,17 @@ def _seller_content_changed(new_row, prev_row) -> bool:
     return _price_changed(new_row, prev_row)
 
 
+def _records(frame: pd.DataFrame):
+    """Yield each row as a fresh dict — like to_dict("records"), several × faster.
+
+    Column-wise tolist() boxes values once per column instead of once per cell
+    (pandas' maybe_box_native was ~half of the merge's runtime on full state).
+    """
+    cols = list(frame.columns)
+    for values in zip(*(frame[c].tolist() for c in cols)):
+        yield dict(zip(cols, values))
+
+
 def _keep_removed(row, cutoff) -> bool:
     """True when a previously-removed row is still within the retention window.
 
@@ -128,15 +139,22 @@ def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = 
         if col not in prev.columns:
             prev = prev.assign(**{col: ""})
 
+    # Index the new frame by link ONCE (first occurrence wins, like the old
+    # `df[df[link] == link].iloc[0]`). The previous per-row boolean-mask scan was
+    # O(n²) — over an hour for a 148k-row mobile.de state (see gotchas).
+    new_records = list(_records(df))
+    new_by_link = {}
+    for rec in new_records:
+        new_by_link.setdefault(rec["Odkaz na auto"], rec)
+
     result_rows = []
-    for _, prev_row in prev.iterrows():
-        link = prev_row["Odkaz na auto"]
+    for prev_dict in _records(prev):   # lazy: never hold all previous rows twice
+        link = prev_dict["Odkaz na auto"]
         if not link:
             continue
-        new_rows = df[df["Odkaz na auto"] == link]
-        if len(new_rows) > 0:
-            prev_dict = prev_row.to_dict()
-            new_row = new_rows.iloc[0].to_dict()
+        match = new_by_link.get(link)
+        if match is not None:
+            new_row = dict(match)   # copy: a duplicate previous link reuses the match
             # Present in both: carry Přidáno; bump Upraveno only on a real edit.
             new_row["Přidáno"] = prev_dict.get("Přidáno", "")
             if _seller_content_changed(new_row, prev_dict):
@@ -145,7 +163,7 @@ def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = 
                 new_row["Upraveno"] = prev_dict.get("Upraveno", "")
             result_rows.append(new_row)
             continue
-        row = prev_row.copy()
+        row = prev_dict                    # fresh dict per row — safe to mutate
         if row["Stav"] == "Odstraněno" and not _keep_removed(row, cutoff):
             continue
         row["Stav"] = "Odstraněno"
@@ -154,12 +172,12 @@ def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = 
         except ValueError:
             row["Odstraněno dne"] = today_iso
         # Přidáno / Upraveno carried forward untouched (removal is not an edit).
-        result_rows.append(row.to_dict())
+        result_rows.append(row)
     # Add genuinely new listings (not in prev) at the end
     prev_links = set(prev["Odkaz na auto"])
-    for _, row in df.iterrows():
-        if row["Odkaz na auto"] not in prev_links:
-            new_row = row.to_dict()
+    for rec in new_records:
+        if rec["Odkaz na auto"] not in prev_links:
+            new_row = dict(rec)
             new_row["Přidáno"] = today_iso
             new_row["Upraveno"] = today_iso
             result_rows.append(new_row)

@@ -158,11 +158,22 @@ Exit 0 = no console errors + grid rendered; screenshot lands in `tmp/ui-verify/`
 
 ### GitHub Actions
 
-`.github/workflows/scrape-and-deploy.yml` — daily 6am UTC + manual trigger. Runs `python -m scrapers.run` per source (previous state pulled from the rolling `data` release), builds the parquet payload, publishes state+payload back to the release (immutable `data-YYYY-MM` snapshot on the 1st), deploys Pages from artifacts. **No data is committed to git.**
+`.github/workflows/scrape-and-deploy.yml` — **no schedule any more**: mobile.de's Akamai
+front blocks GitHub's runners, so the daily scrape runs on a scheduled host with a
+residential IP (`deploy/nas/` image → `bin/nas-daily.sh`: fetch main → tests → four
+scrapers one after another → build → publish state+payload to the
+rolling `data` release, monthly `data-YYYY-MM` snapshot → dispatch this workflow with
+`deploy_only=true`, which deploys the released payload to Pages without building).
+Pushes to main still rebuild + redeploy from release state; a manual dispatch can still
+scrape on CI (fallback). **No data is committed to git.**
 
 ## Dependencies
 
 ```bash
-pip install playwright pandas pyarrow beautifulsoup4 aiohttp
+pip install -r requirements.txt    # pinned; bump deliberately
 playwright install chromium
 ```
+
+State lives in `scrapers/data/scrapes/` unless `CAR_COMPARE_STATE_DIR` points
+elsewhere (`scrapers/core/storage.state_dir()`); the scheduled host run keeps it
+outside the clone.

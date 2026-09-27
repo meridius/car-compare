@@ -1,4 +1,9 @@
-playwright
-pandas
-beautifulsoup4
-aiohttp
+# Runtime dependencies, pinned to the versions the daily CI scrape last ran
+# green with (2026-09-27). The NAS image (deploy/nas/Dockerfile) and CI both
+# install exactly this file; bump deliberately and re-run ./bin/test.sh.
+aiohttp==3.14.3
+beautifulsoup4==4.15.0
+numpy==2.5.3
+pandas==3.0.6
+playwright==1.63.0
+pyarrow==25.0.1

@@ -1,18 +1,25 @@
 name: Scrape and Deploy
 
+# The daily scrape no longer runs here: mobile.de's Akamai front blocks GitHub's
+# datacenter runners (the leg failed every day from 2026-09-16), so a scheduled
+# host on a residential IP runs bin/nas-daily.sh instead — scrape, build,
+# publish to the `data` release — and then dispatches this workflow with
+# deploy_only=true to put the published payload on Pages.
 on:
-  schedule:
-    - cron: '0 6 * * *'
   workflow_dispatch:
     inputs:
       skip_scrape:
         description: 'Skip scraping — just rebuild + redeploy from the current release data'
         type: boolean
         default: false
+      deploy_only:
+        description: 'Deploy the payload already in the data release — no scrape, no build'
+        type: boolean
+        default: false
   # Pushes to main only rebuild + redeploy the dashboard from the data already in
   # the rolling release — they NEVER scrape, so a code change can't trigger a
   # mobile.de fetch and get us rate-limited. Only paths that change the built
-  # site/data are watched; a real scrape happens on the daily cron or a manual run.
+  # site/data are watched; the real scrape runs on the scheduled host (see above).
   push:
     branches:
       - main
@@ -44,10 +51,10 @@ jobs:
   # own adapter, whose internal fuel configurations (EV/ICE, palivo URLs) stay
   # serial. Legs are write-independent: each writes only its own <slug>.parquet.
   scrape:
-    # Scrape only on the daily cron or an explicit manual run — never on push, and
-    # skippable on a manual run (skip_scrape) — so arbitrary code changes never hit
-    # mobile.de. A no-scrape run rebuilds the payload from the existing release state.
-    if: ${{ github.event_name != 'push' && github.event.inputs.skip_scrape != 'true' }}
+    # Scrape only on an explicit manual run — never on push, and skippable
+    # (skip_scrape / deploy_only) — so arbitrary code changes never hit mobile.de.
+    # A no-scrape run rebuilds the payload from the existing release state.
+    if: ${{ github.event_name != 'push' && github.event.inputs.skip_scrape != 'true' && github.event.inputs.deploy_only != 'true' }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -65,7 +72,7 @@ jobs:
           python-version: '3.12'
           cache: pip
 
-      - run: pip install playwright pandas pyarrow beautifulsoup4 aiohttp
+      - run: pip install -r requirements.txt
 
       - uses: actions/cache@v6
         with:
@@ -102,8 +109,8 @@ jobs:
     needs: scrape
     # Run when scrape succeeded OR was skipped (push / skip_scrape) — just not when
     # it actually failed. On a no-scrape run the payload is rebuilt from the state
-    # already in the rolling release.
-    if: ${{ always() && needs.scrape.result != 'failure' && needs.scrape.result != 'cancelled' }}
+    # already in the rolling release. deploy_only builds nothing.
+    if: ${{ always() && github.event.inputs.deploy_only != 'true' && needs.scrape.result != 'failure' && needs.scrape.result != 'cancelled' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -113,7 +120,7 @@ jobs:
           python-version: '3.12'
           cache: pip
 
-      - run: pip install pandas pyarrow
+      - run: pip install -r requirements.txt
 
       # Yesterday's state + history first (covers a failed mobilede leg)…
       - name: Download previous release data
@@ -194,26 +201,6 @@ jobs:
             scrapers/data/scrapes/*.parquet \
             site/data/scrape_history.json
 
-      - name: Monthly immutable snapshot
-        if: ${{ github.event_name == 'schedule' && needs.scrape.result == 'success' }}
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if [ "$(date -u +%d)" = "01" ]; then
-            TAG="data-$(date -u +%Y-%m)"
-            shopt -s nullglob   # a failed scrape leg's parquet just drops from the list
-            gh release create "$TAG" \
-              --title "Data snapshot $(date -u +%Y-%m)" \
-              --notes "Immutable monthly snapshot (see docs/decisions/001-scalable-storage.md)." \
-              scrapers/data/scrapes/*.parquet \
-              site/data/cars.parquet \
-              site/data/cars-archived.parquet \
-              site/data/cars-meta.json \
-              site/data/reference.json \
-              site/data/scrape_history.json \
-              || echo "snapshot $TAG already exists"
-          fi
-
   deploy:
     needs: build
     # always() is required: on a no-scrape run `scrape` is skipped, and without a
@@ -221,7 +208,8 @@ jobs:
     # skip the deploy too. We instead explicitly require build to have succeeded.
     # Pages only deploys from main (the github-pages environment blocks other refs),
     # so keep the branch guard to keep feature-branch runs green.
-    if: ${{ always() && needs.build.result == 'success' && github.ref == 'refs/heads/main' }}
+    # deploy_only skips build on purpose and takes the payload from the release.
+    if: ${{ always() && github.ref == 'refs/heads/main' && (needs.build.result == 'success' || (github.event.inputs.deploy_only == 'true' && needs.build.result == 'skipped')) }}
     # Guard against two runs deploying the same content at once (e.g. a push and a
     # manual scrape dispatch fired together) — they otherwise race on the single
     # github-pages deployment and both fail with "Deployment failed, try again
@@ -241,9 +229,22 @@ jobs:
 
       # Data is not in git — inject the freshly built payload into the Pages artifact.
       - uses: actions/download-artifact@v8
+        if: ${{ github.event.inputs.deploy_only != 'true' }}
         with:
           name: site-data
           path: site/data
+
+      # deploy_only: the scheduled host already built and published the payload.
+      - name: Download published payload from release
+        if: ${{ github.event.inputs.deploy_only == 'true' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p site/data
+          gh release download data --dir site/data --clobber \
+            --pattern cars.parquet --pattern cars-archived.parquet \
+            --pattern cars-meta.json --pattern reference.json \
+            --pattern scrape_history.json
 
       - uses: actions/configure-pages@v5
 

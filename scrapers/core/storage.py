@@ -7,12 +7,27 @@ exists.
 
 State is stringly-typed: every column str, blanks "" — exact parity with the
 old `pd.read_csv(dtype=str).fillna("")` contract that merge/matching rely on.
+
+The state directory defaults to `scrapers/data/scrapes/` inside the clone;
+`CAR_COMPARE_STATE_DIR` moves it elsewhere (a scheduled host that resets its
+clone to origin/main every run keeps state outside it). The seed-CSV fallback
+only exists in the default directory.
 """
+import os
 from pathlib import Path
 
 import pandas as pd
 
 PARQUET_COMPRESSION = "zstd"
+
+STATE_DIR_ENV = "CAR_COMPARE_STATE_DIR"
+_REPO_STATE_DIR = Path(__file__).resolve().parent.parent / "data" / "scrapes"
+
+
+def state_dir() -> Path:
+    """Directory holding the per-source `<slug>.parquet` state (env-overridable)."""
+    override = os.environ.get(STATE_DIR_ENV)
+    return Path(override) if override else _REPO_STATE_DIR
 
 
 def _stringly(df: pd.DataFrame) -> pd.DataFrame:

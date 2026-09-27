@@ -9,6 +9,9 @@
 #   ./bin/bootstrap-data.sh            # download state + payload
 #   ./bin/bootstrap-data.sh --build    # …then rebuild cars.parquet from state
 #
+# CAR_COMPARE_STATE_DIR (see scrapers/core/storage.py) redirects the state
+# parquets — and a copy of scrape_history.json — out of the clone.
+#
 # Requires the `gh` CLI, authenticated with read access to the repo (the repo
 # is private, so its release assets are NOT publicly downloadable).
 set -euo pipefail
@@ -27,15 +30,22 @@ if ! gh release download data --dir "$TMP" --clobber 2>/dev/null; then
   exit 0
 fi
 
-mkdir -p scrapers/data/scrapes site/data
+STATE_DIR="${CAR_COMPARE_STATE_DIR:-scrapers/data/scrapes}"
+mkdir -p "$STATE_DIR" site/data
 
-# Per-source state parquets → scrapers/data/scrapes/ (drives build + merge).
+# Per-source state parquets → the state dir (drives build + merge).
 for slug in sauto autodraft energycars mobilede; do
   if [ -f "$TMP/$slug.parquet" ]; then
-    cp "$TMP/$slug.parquet" scrapers/data/scrapes/
-    echo "  state:   $slug.parquet"
+    cp "$TMP/$slug.parquet" "$STATE_DIR/"
+    echo "  state:   $slug.parquet → $STATE_DIR"
   fi
 done
+# An out-of-clone state dir also keeps the scrape history (bin/nas-daily.sh
+# restores it into site/data before each build).
+if [ -n "${CAR_COMPARE_STATE_DIR:-}" ] && [ -f "$TMP/scrape_history.json" ]; then
+  cp "$TMP/scrape_history.json" "$STATE_DIR/"
+  echo "  state:   scrape_history.json → $STATE_DIR"
+fi
 
 # Built payload + sidecars → site/data/ (lets serve.sh run without a rebuild).
 for f in cars.parquet cars-archived.parquet cars-meta.json reference.json scrape_history.json; do

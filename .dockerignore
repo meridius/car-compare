@@ -1,0 +1,7 @@
+# The only image in this repo is deploy/nas/Dockerfile, which bakes in nothing
+# but the pinned dependencies and its entrypoint — the code itself is a bind
+# mount that bin/nas-daily.sh resets to origin/main each run. Allowlist only.
+*
+!requirements.txt
+!deploy/nas/entrypoint.sh
+!deploy/nas/fetch_pinned.py

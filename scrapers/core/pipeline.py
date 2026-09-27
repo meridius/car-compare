@@ -7,7 +7,8 @@ from .merge import merge_with_previous
 from . import matching, storage, fields
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-SCRAPES_DIR = DATA_DIR / "scrapes"
+# None = storage.state_dir() at run time (honours CAR_COMPARE_STATE_DIR); tests patch it.
+SCRAPES_DIR = None
 AUTH_CSV = DATA_DIR / "reference" / "ice_specs.csv"
 
 
@@ -42,8 +43,9 @@ def run_source(source_module):
     auth = matching.load_authoritative_list(AUTH_CSV)
     df = _match_ice(df, auth)
 
-    SCRAPES_DIR.mkdir(parents=True, exist_ok=True)
-    base_path = SCRAPES_DIR / source_module.SOURCE_SLUG
+    scrapes_dir = SCRAPES_DIR or storage.state_dir()
+    scrapes_dir.mkdir(parents=True, exist_ok=True)
+    base_path = scrapes_dir / source_module.SOURCE_SLUG
     df = merge_with_previous(df, base_path)
     # Reindex to the canonical schema so column order is stable and any column added
     # since the previous state (e.g. "Odstraněno dne") is present/blank on preserved rows.

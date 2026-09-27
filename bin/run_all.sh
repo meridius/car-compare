@@ -27,7 +27,7 @@ fi
 echo "==> Kontroluji Python závislosti..."
 python3 -c "import playwright, pandas, pyarrow, bs4, aiohttp" 2>/dev/null || {
     echo "    Instaluji chybějící balíčky..."
-    pip install playwright pandas pyarrow beautifulsoup4 aiohttp
+    pip install -r requirements.txt
 }
 
 echo "==> Kontroluji Playwright Chromium prohlížeč..."

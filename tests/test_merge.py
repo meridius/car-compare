@@ -272,5 +272,163 @@ class LifecycleDateTest(unittest.TestCase):
         self.assertEqual(row["Upraveno"], "2026-06-01")  # not bumped
 
 
+# ---------------------------------------------------------------------------
+# O(n) rewrite: merge used to re-scan the whole new frame for every
+# previous row (`df[df["Odkaz na auto"] == link]`), O(n²) — >60 min against a
+# 148k-row mobile.de state (gotchas → merge is O(n²)). The rewrite indexes the
+# new frame by link once. _quadratic_merge below is the pre-rewrite loop kept
+# verbatim as the parity oracle: the fast merge must produce the identical frame
+# on a fixture that hits every branch (incl. the quirks: duplicate previous
+# links, empty links on both sides, prev-only columns).
+
+def _quadratic_merge(df, base_path, today, retention_days):
+    from scrapers.core.merge import _keep_removed, _seller_content_changed
+    today_iso = today.isoformat()
+    cutoff = None if retention_days is None else today - timedelta(days=retention_days)
+    prev = storage.read_state(base_path)
+    if prev is None or "Odkaz na auto" not in prev.columns:
+        df = df.copy()
+        df["Přidáno"] = today_iso
+        df["Upraveno"] = today_iso
+        return df
+    for col in ("Odstraněno dne", "Přidáno", "Upraveno"):
+        if col not in prev.columns:
+            prev = prev.assign(**{col: ""})
+    result_rows = []
+    for _, prev_row in prev.iterrows():
+        link = prev_row["Odkaz na auto"]
+        if not link:
+            continue
+        new_rows = df[df["Odkaz na auto"] == link]
+        if len(new_rows) > 0:
+            prev_dict = prev_row.to_dict()
+            new_row = new_rows.iloc[0].to_dict()
+            new_row["Přidáno"] = prev_dict.get("Přidáno", "")
+            if _seller_content_changed(new_row, prev_dict):
+                new_row["Upraveno"] = today_iso
+            else:
+                new_row["Upraveno"] = prev_dict.get("Upraveno", "")
+            result_rows.append(new_row)
+            continue
+        row = prev_row.copy()
+        if row["Stav"] == "Odstraněno" and not _keep_removed(row, cutoff):
+            continue
+        row["Stav"] = "Odstraněno"
+        try:
+            date.fromisoformat(row["Odstraněno dne"])
+        except ValueError:
+            row["Odstraněno dne"] = today_iso
+        result_rows.append(row.to_dict())
+    prev_links = set(prev["Odkaz na auto"])
+    for _, row in df.iterrows():
+        if row["Odkaz na auto"] not in prev_links:
+            new_row = row.to_dict()
+            new_row["Přidáno"] = today_iso
+            new_row["Upraveno"] = today_iso
+            result_rows.append(new_row)
+    return pd.DataFrame(result_rows).reset_index(drop=True)
+
+
+def _both(new_df, prev_df, today=TODAY, retention_days=None):
+    with tempfile.TemporaryDirectory() as td:
+        base = Path(td) / "src"
+        if prev_df is not None:
+            storage.write_state(prev_df, base)
+        fast = merge_with_previous(new_df, base, today=today, retention_days=retention_days)
+        slow = _quadratic_merge(new_df, base, today, retention_days)
+    return fast, slow
+
+
+def _parity_fixture():
+    """prev/new over CANONICAL_COLS hitting every merge branch, deterministically."""
+    import random
+    from scrapers.core.schema import CANONICAL_COLS
+    rng = random.Random(1234)
+
+    def row(i, **over):
+        r = {c: "" for c in CANONICAL_COLS}
+        r.update({"Typ": "Spalovací", "Model auta": f"M{i % 7}", "Stav": "Dostupný",
+                  "Cena (Kč)": str(400000 + 1000 * i), "Nájezd (km)": str(10000 + i),
+                  "Odkaz na auto": f"https://x/{i}", "Přidáno": "2026-06-01",
+                  "Upraveno": "2026-06-02"})
+        r.update(over)
+        return r
+
+    prev, new = [], []
+    for i in range(300):
+        kind = rng.randrange(8)
+        if kind == 0:     # unchanged, present in both
+            prev.append(row(i)); new.append(row(i, **{"Přidáno": "", "Upraveno": ""}))
+        elif kind == 1:   # seller edit → bump
+            prev.append(row(i)); new.append(row(i, **{"Nájezd (km)": "99999"}))
+        elif kind == 2:   # FX jitter / real price move
+            prev.append(row(i))
+            new.append(row(i, **{"Cena (Kč)": str(int((400000 + 1000 * i) * rng.choice([1.004, 0.95])))}))
+        elif kind == 3:   # vanished live row
+            prev.append(row(i))
+        elif kind == 4:   # already removed, stamp old / fresh / blank / garbage
+            prev.append(row(i, Stav="Odstraněno",
+                            **{"Odstraněno dne": rng.choice(["2020-01-01", "2026-07-01", "", "junk"])}))
+        elif kind == 5:   # removed row reappearing
+            prev.append(row(i, Stav="Odstraněno", **{"Odstraněno dne": "2026-06-20"}))
+            new.append(row(i, **{"Model auta": "fresh"}))
+        elif kind == 6:   # genuinely new
+            new.append(row(i))
+        else:             # duplicate previous link (one live, one removed)
+            prev.append(row(i)); prev.append(row(i, Stav="Odstraněno", **{"Model auta": "dup"}))
+            if rng.random() < 0.5:
+                new.append(row(i, **{"Nájezd (km)": "1"}))
+    prev.append(row(9001, **{"Odkaz na auto": ""}))   # empty link in prev
+    new.append(row(9002, **{"Odkaz na auto": ""}))    # empty link in new
+    rng.shuffle(prev); rng.shuffle(new)
+    prev_df = pd.DataFrame(prev).drop(columns=["Počet válců"])  # prev-older schema
+    return pd.DataFrame(new), prev_df
+
+
+class QuadraticParityTest(unittest.TestCase):
+    def test_fast_merge_matches_quadratic_oracle(self):
+        new, prev = _parity_fixture()
+        fast, slow = _both(new, prev)
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_with_retention_cap(self):
+        new, prev = _parity_fixture()
+        fast, slow = _both(new, prev, retention_days=30)
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_without_date_columns_in_prev(self):
+        new, prev = _parity_fixture()
+        prev = prev.drop(columns=["Přidáno", "Upraveno", "Odstraněno dne"])
+        fast, slow = _both(new, prev)
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_no_previous_state(self):
+        new, _ = _parity_fixture()
+        fast, slow = _both(new, None)
+        pd.testing.assert_frame_equal(fast, slow)
+
+
+class MergeScalingTest(unittest.TestCase):
+    def test_large_merge_is_linear(self):
+        # 20k × 20k: the O(n²) loop does 20k full-column scans (~30 s here);
+        # the link index keeps it to a couple of seconds on a slow box.
+        import time
+        n = 20000
+        links = [f"https://x/{i}" for i in range(n)]
+        base = {"Model auta": "A", "Cena (Kč)": "500000", "Stav": "Dostupný",
+                "Odstraněno dne": "", "Přidáno": "2026-06-01", "Upraveno": "2026-06-01"}
+        prev = pd.DataFrame([{**base, "Odkaz na auto": l} for l in links])
+        new = pd.DataFrame([{**base, "Odkaz na auto": l} for l in links[n // 2:]]
+                           + [{**base, "Odkaz na auto": f"https://y/{i}"} for i in range(n // 2)])
+        with tempfile.TemporaryDirectory() as td:
+            p = Path(td) / "src"
+            storage.write_state(prev, p)
+            t0 = time.perf_counter()
+            out = merge_with_previous(new, p, today=TODAY)
+            elapsed = time.perf_counter() - t0
+        self.assertEqual(len(out), n + n // 2)
+        self.assertLess(elapsed, 10.0, f"merge took {elapsed:.1f}s — quadratic again?")
+
+
 if __name__ == "__main__":
     unittest.main()
