@@ -343,6 +343,31 @@ class AndereRecoveryTest(unittest.TestCase):
         self.assertEqual(row["Model auta"], "GWM Andere")
 
 
+class FetchSliceBuildTest(unittest.TestCase):
+    """Rows are built page by page: ~150k raw JSON items held until the end of the
+    fetch plus the rows built from them pushed the scrape past a 2 GB limit."""
+
+    def test_build_runs_per_page_and_drops_none(self):
+        pages = {0: [{"n": 0}, {"n": 1}], mobilede.PAGE_SIZE: [{"n": 2}], 2 * mobilede.PAGE_SIZE: []}
+        seen_before_page = []
+
+        async def fake_search(session, params, offset, sem, page_size=mobilede.PAGE_SIZE):
+            seen_before_page.append(len(built))
+            return {"items": pages[offset]}
+
+        built = []
+
+        def build(item):
+            built.append(item["n"])
+            return None if item["n"] == 1 else {"row": item["n"]}
+
+        with mock.patch.object(mobilede, "_search", fake_search):
+            rows = asyncio.run(mobilede._fetch_slice(None, (), 3 * mobilede.PAGE_SIZE, None, build))
+        self.assertEqual(rows, [{"row": 0}, {"row": 2}])
+        # page 2 was requested only after page 1's items were already built
+        self.assertEqual(seen_before_page[:2], [0, 2])
+
+
 class FetchBandedTest(unittest.TestCase):
     """Price-band splitter: split while >= RESULT_CAP, fetch when under."""
 
@@ -355,7 +380,7 @@ class FetchBandedTest(unittest.TestCase):
             lo, hi = (int(x) for x in band.split(":"))
             return counts.get((lo, hi), 0)
 
-        async def fake_fetch_slice(session, params, total, sem):
+        async def fake_fetch_slice(session, params, total, sem, build=None):
             band = dict(params)["p"]
             fetched.append(band)
             return [{"band": band, "i": i} for i in range(min(total, mobilede.RESULT_CAP))]

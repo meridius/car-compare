@@ -37,6 +37,7 @@ def run_source(source_module):
     import asyncio
     rows = asyncio.run(source_module.scrape())
     df = pd.DataFrame(rows, columns=CANONICAL_COLS)
+    del rows   # ~150k row dicts for mobile.de; the frame holds the same cells
     df.drop_duplicates(subset="Odkaz na auto", inplace=True)
     df.sort_values("Odkaz na auto", inplace=True)
 

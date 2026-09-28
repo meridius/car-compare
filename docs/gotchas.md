@@ -197,6 +197,14 @@ Caveat: `/api/` is disallowed in robots.txt and undocumented; it can change or s
 enforcing request signing at any time (the CI leg is `continue-on-error` for this
 reason).
 
+### rows are built page by page, never from the whole raw result
+
+`_fetch_slice()` takes a `build` callable and turns each page's raw JSON into rows as
+it arrives. Keeping all ~150k raw items until the fetch ended (and only then
+building rows next to them) held ~1.8 GB during the ICE fetch alone — with the merge
+on top that is what OOM-killed the first 2 GB NAS rehearsal. Pinned by
+`tests/test_mobilede.py::FetchSliceBuildTest`.
+
 ### 2000-result cap → recursive price-band slicing
 
 Any query exposes at most 2000 results through pagination (`ps` offset / `psz` page
@@ -1089,9 +1097,16 @@ occurrence wins — same as the old `.iloc[0]`) and walks the previous rows lazi
   dropped when the previous state has an empty-link row (it is in `prev_links`).
   `MergeScalingTest` (20k × 20k < 10 s) is the regression guard; the old loop took
   260 s on 40k × 40k.
-- Rows are built with `_records()` (column-wise `tolist()` + `zip`), not
-  `to_dict("records")`: pandas boxes every cell through `maybe_box_native`, which was
-  half the runtime on full state.
+- **Memory, not just time (2026-09-28).** The first dict-per-row O(n) version still
+  built ~360k output dicts plus a DataFrame from them, and the whole mobile.de step
+  peaked at **2.4 GB** — the first NAS rehearsal (2 GB `mem_limit`) was OOM-killed
+  right after a clean 154k-listing fetch. `_merge_frames()` now slices and concats
+  frames (matched / removed / new, re-interleaved by previous position) so cells are
+  shared, never re-boxed: full-state peak **1.43 GB** under the pandas 3 pins, same
+  output. Column order is first-appearance over the rows actually emitted and dtypes
+  are `infer_objects()`-ed, both to match what a frame built from the rows would
+  have; the parity tests cover the first-row-removed / all-removed / nothing-in-common
+  shapes that exposed both.
 - Still true: run `python -u -m scrapers.run` (unbuffered) for local scrapes; stdout is
   block-buffered to a file otherwise, so "Hotovo"/errors don't appear until exit.
 

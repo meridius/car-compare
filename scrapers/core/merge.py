@@ -24,6 +24,7 @@ import hashlib
 from datetime import date, timedelta
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from . import storage
@@ -95,17 +96,6 @@ def _seller_content_changed(new_row, prev_row) -> bool:
     return _price_changed(new_row, prev_row)
 
 
-def _records(frame: pd.DataFrame):
-    """Yield each row as a fresh dict — like to_dict("records"), several × faster.
-
-    Column-wise tolist() boxes values once per column instead of once per cell
-    (pandas' maybe_box_native was ~half of the merge's runtime on full state).
-    """
-    cols = list(frame.columns)
-    for values in zip(*(frame[c].tolist() for c in cols)):
-        yield dict(zip(cols, values))
-
-
 def _keep_removed(row, cutoff) -> bool:
     """True when a previously-removed row is still within the retention window.
 
@@ -139,46 +129,103 @@ def merge_with_previous(df: pd.DataFrame, base_path: Path, today: date | None = 
         if col not in prev.columns:
             prev = prev.assign(**{col: ""})
 
-    # Index the new frame by link ONCE (first occurrence wins, like the old
-    # `df[df[link] == link].iloc[0]`). The previous per-row boolean-mask scan was
-    # O(n²) — over an hour for a 148k-row mobile.de state (see gotchas).
-    new_records = list(_records(df))
-    new_by_link = {}
-    for rec in new_records:
-        new_by_link.setdefault(rec["Odkaz na auto"], rec)
+    return _merge_frames(df, prev, today_iso, cutoff)
 
-    result_rows = []
-    for prev_dict in _records(prev):   # lazy: never hold all previous rows twice
-        link = prev_dict["Odkaz na auto"]
-        if not link:
-            continue
-        match = new_by_link.get(link)
-        if match is not None:
-            new_row = dict(match)   # copy: a duplicate previous link reuses the match
-            # Present in both: carry Přidáno; bump Upraveno only on a real edit.
-            new_row["Přidáno"] = prev_dict.get("Přidáno", "")
-            if _seller_content_changed(new_row, prev_dict):
-                new_row["Upraveno"] = today_iso
-            else:
-                new_row["Upraveno"] = prev_dict.get("Upraveno", "")
-            result_rows.append(new_row)
-            continue
-        row = prev_dict                    # fresh dict per row — safe to mutate
-        if row["Stav"] == "Odstraněno" and not _keep_removed(row, cutoff):
-            continue
-        row["Stav"] = "Odstraněno"
+
+def _cells(series: pd.Series) -> list:
+    """Per-cell `_cell()` for a whole column: None -> "", everything else str()."""
+    return ["" if v is None else str(v) for v in series.tolist()]
+
+
+def _content_keys(frame: pd.DataFrame, cols) -> list:
+    """The `_content_hash()` payload per row, unhashed (equality is all we need)."""
+    columns = [[f"{c}\x1e{v}" for v in _cells(frame[c])] for c in cols]
+    return ["\x1f".join(parts) for parts in zip(*columns)] if columns else [""] * len(frame)
+
+
+def _column_or_blank(frame: pd.DataFrame, col: str) -> pd.Series:
+    """frame[col], or "" per row when the column is absent (dict .get(col, ""))."""
+    return frame[col] if col in frame.columns else pd.Series([""] * len(frame), index=frame.index)
+
+
+def _price_changed_many(new_prices: pd.Series, prev_prices: pd.Series) -> list:
+    return [_price_changed({_PRICE_COL: b}, {_PRICE_COL: a})
+            for b, a in zip(new_prices.tolist(), prev_prices.tolist())]
+
+
+def _valid_iso(values) -> list:
+    out = []
+    for v in values:
         try:
-            date.fromisoformat(row["Odstraněno dne"])
-        except ValueError:
-            row["Odstraněno dne"] = today_iso
-        # Přidáno / Upraveno carried forward untouched (removal is not an edit).
-        result_rows.append(row)
-    # Add genuinely new listings (not in prev) at the end
-    prev_links = set(prev["Odkaz na auto"])
-    for rec in new_records:
-        if rec["Odkaz na auto"] not in prev_links:
-            new_row = dict(rec)
-            new_row["Přidáno"] = today_iso
-            new_row["Upraveno"] = today_iso
-            result_rows.append(new_row)
-    return pd.DataFrame(result_rows).reset_index(drop=True)
+            date.fromisoformat(v)
+            out.append(True)
+        except (TypeError, ValueError):
+            out.append(False)
+    return out
+
+
+def _merge_frames(df: pd.DataFrame, prev: pd.DataFrame, today_iso: str, cutoff) -> pd.DataFrame:
+    """Column-wise merge — the same result as walking prev row by row.
+
+    Row order: every previous row with a link, in previous order, becomes either
+    its (first) new-scrape row or a kept removed row; genuinely new links follow
+    in scrape order. It used to build one dict per output row (~360k for
+    mobile.de) and a DataFrame from them, which doubled the merge's memory and
+    OOM-killed the scrape on a 2 GB host; frames slice and concat instead, and
+    only share the cell objects.
+    """
+    link = "Odkaz na auto"
+    new_cols = list(df.columns) + [c for c in ("Přidáno", "Upraveno") if c not in df.columns]
+    prev_links = set(prev[link].tolist())
+
+    live = prev[prev[link].map(bool)]
+    first = df.drop_duplicates(subset=link, keep="first")
+    at = pd.Index(first[link]).get_indexer(live[link])
+    in_new = at >= 0
+    order = np.arange(len(live))
+
+    # Present in both: the new row; carry Přidáno, bump Upraveno on a real edit.
+    pm = live[in_new]
+    matched = first.iloc[at[in_new]].reindex(columns=new_cols)
+    shared = [c for c in _CONTENT_COLS if c in df.columns and c in prev.columns]
+    changed = [a != b or p for a, b, p in zip(
+        _content_keys(matched, shared), _content_keys(pm, shared),
+        _price_changed_many(_column_or_blank(first, _PRICE_COL).iloc[at[in_new]],
+                            _column_or_blank(pm, _PRICE_COL)))]
+    matched["Přidáno"] = pm["Přidáno"].tolist()
+    matched["Upraveno"] = np.where(changed, today_iso, pm["Upraveno"].to_numpy(dtype=object))
+    matched.index = order[in_new]
+
+    # Gone from the scrape: marked removed (and dropped past retention).
+    removed = live[~in_new].copy()
+    removed.index = order[~in_new]
+    if cutoff is not None:
+        was_removed = (removed["Stav"] == "Odstraněno").to_numpy()
+        stamps = removed["Odstraněno dne"].tolist()
+        within = [not ok or date.fromisoformat(v) >= cutoff
+                  for v, ok in zip(stamps, _valid_iso(stamps))]
+        removed = removed[~was_removed | np.array(within, dtype=bool)]
+    removed["Stav"] = "Odstraněno"
+    stamped = np.array(_valid_iso(removed["Odstraněno dne"].tolist()), dtype=bool)
+    removed.loc[~stamped, "Odstraněno dne"] = today_iso
+
+    fresh = df[~df[link].isin(prev_links)].reindex(columns=new_cols)
+    fresh["Přidáno"] = today_iso
+    fresh["Upraveno"] = today_iso
+
+    # Columns in first-appearance order over the rows actually emitted, as a
+    # frame built from the rows would have them; dtypes re-inferred likewise.
+    kept = matched.index.union(removed.index)
+    kinds = []
+    if len(kept):
+        kinds = [removed, matched] if kept[0] in removed.index else [matched, removed]
+    kinds.append(fresh)
+    columns = []
+    for part in kinds:
+        if len(part):
+            columns += [c for c in part.columns if c not in columns]
+    body = pd.concat([matched, removed]).sort_index(kind="stable")
+    out = pd.concat([body, fresh], ignore_index=True)
+    if not len(out):
+        return pd.DataFrame()
+    return out.reindex(columns=columns).infer_objects()

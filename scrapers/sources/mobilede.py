@@ -362,20 +362,29 @@ async def _count(session, params, sem):
     return data.get("numResultsTotal") or 0
 
 
-async def _fetch_slice(session, params, total, sem):
+def _keep_item(item):
+    return item
+
+
+async def _fetch_slice(session, params, total, sem, build=_keep_item):
     """Page one sub-cap query to its end. Pages are serial inside the slice;
-    the semaphore (applied per request in _search) bounds cross-slice concurrency."""
-    items = []
+    the semaphore (applied per request in _search) bounds cross-slice concurrency.
+
+    `build` turns each raw item into a row as its page arrives (None drops it),
+    so the raw JSON of a page is garbage as soon as the next one is requested:
+    holding all ~150k raw items to the end of the fetch was most of the memory
+    that got the ICE scrape OOM-killed under a 2 GB limit."""
+    rows = []
     for offset in range(0, min(total, RESULT_CAP), PAGE_SIZE):
         data = await _search(session, params, offset, sem)
         batch = data.get("items") or []
         if not batch:
             break
-        items.extend(batch)
-    return items
+        rows.extend(r for r in map(build, batch) if r is not None)
+    return rows
 
 
-async def _fetch_banded(session, params, price_lo, price_hi, sem):
+async def _fetch_banded(session, params, price_lo, price_hi, sem, build=_keep_item):
     """Fetch every result by recursively halving the EUR price band while a
     band would hit the 2000-result cap. Boundary duplicates are deduped by
     link in pipeline.run_source. Every request (counts included) goes through
@@ -385,11 +394,11 @@ async def _fetch_banded(session, params, price_lo, price_hi, sem):
     if total == 0:
         return []
     if total < RESULT_CAP or price_hi - price_lo <= 1:
-        return await _fetch_slice(session, banded, total, sem)
+        return await _fetch_slice(session, banded, total, sem, build=build)
     mid = (price_lo + price_hi) // 2
     halves = await asyncio.gather(
-        _fetch_banded(session, params, price_lo, mid, sem),
-        _fetch_banded(session, params, mid + 1, price_hi, sem),
+        _fetch_banded(session, params, price_lo, mid, sem, build),
+        _fetch_banded(session, params, mid + 1, price_hi, sem, build),
     )
     return halves[0] + halves[1]
 
@@ -397,9 +406,10 @@ async def _fetch_banded(session, params, price_lo, price_hi, sem):
 async def _scrape_config(session, fuels, countries, extra, rate, sem, label):
     params = _BASE_PARAMS + tuple(fuels) + tuple(("cn", c) for c in countries) + tuple(extra)
     eur_ceiling = round(PRICE_CEILING_KC / rate)
-    items = await _fetch_banded(session, params, 0, eur_ceiling, sem)
-    print(f"  {label}: staženo {len(items)} položek")
-    return [r for r in (_build_row(it, rate) for it in items) if r is not None]
+    rows = await _fetch_banded(session, params, 0, eur_ceiling, sem,
+                               lambda item: _build_row(item, rate))
+    print(f"  {label}: staženo {len(rows)} inzerátů")
+    return rows
 
 
 async def scrape():

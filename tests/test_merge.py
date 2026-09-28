@@ -402,6 +402,31 @@ class QuadraticParityTest(unittest.TestCase):
         fast, slow = _both(new, prev)
         pd.testing.assert_frame_equal(fast, slow)
 
+    def test_parity_first_output_row_is_removed(self):
+        # Column order follows the first output row; a removed first row puts the
+        # previous state's column order first.
+        new, prev = _parity_fixture()
+        prev = pd.concat([prev[~prev["Odkaz na auto"].isin(new["Odkaz na auto"])].head(1), prev])
+        fast, slow = _both(new, prev)
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_first_output_row_is_matched(self):
+        new, prev = _parity_fixture()
+        both = prev[prev["Odkaz na auto"].isin(new["Odkaz na auto"])].head(1)
+        fast, slow = _both(new, pd.concat([both, prev]))
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_everything_removed(self):
+        new, prev = _parity_fixture()
+        fast, slow = _both(new.iloc[:0], prev)
+        pd.testing.assert_frame_equal(fast, slow)
+
+    def test_parity_nothing_in_common(self):
+        new, prev = _parity_fixture()
+        new = new.assign(**{"Odkaz na auto": "https://z/" + new.index.astype(str)})
+        fast, slow = _both(new, prev)
+        pd.testing.assert_frame_equal(fast, slow)
+
     def test_parity_no_previous_state(self):
         new, _ = _parity_fixture()
         fast, slow = _both(new, None)
