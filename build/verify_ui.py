@@ -51,8 +51,8 @@ def ensure_data():
         )
 
 
-def start_server(port):
-    handler = functools.partial(_QuietHandler, directory=SITE_DIR)
+def start_server(port, site_dir=SITE_DIR):
+    handler = functools.partial(_QuietHandler, directory=site_dir)
     httpd = http.server.HTTPServer(("127.0.0.1", port), handler)
     threading.Thread(target=httpd.serve_forever, daemon=True).start()
     return httpd, httpd.server_address[1]
@@ -77,7 +77,7 @@ def scenario_loading(page):
         time.sleep(3)
         route.continue_()
 
-    page.route("**/cars.parquet", _slow)
+    page.route("**/cars.parquet*", _slow)  # * : a published copy adds ?v=
     page.reload(wait_until="commit")
     page.wait_for_selector("#loading-overlay:not(.hidden)", timeout=5000)
     return "#loading-overlay"
@@ -1725,12 +1725,23 @@ def main():
     ap.add_argument("--scenario", choices=SCENARIOS, default="grid")
     ap.add_argument("--theme", choices=("dark", "light"), default="dark")
     ap.add_argument("--port", type=int, default=0)
+    # A published copy (build/publish_site.py) instead of site/ — proves the
+    # ?v= versioned references still load — or a deployed site, no local server.
+    where = ap.add_mutually_exclusive_group()
+    where.add_argument("--site-dir", help="serve this directory instead of site/")
+    where.add_argument("--base-url", help="load the pages from this URL, e.g. https://cars.example.org")
     args = ap.parse_args()
 
-    ensure_data()
     os.makedirs(OUT_DIR, exist_ok=True)
-    httpd, port = start_server(args.port)
-    url = f"http://127.0.0.1:{port}/{PAGE_FILES[args.page]}"
+    httpd = None
+    if args.base_url:
+        base = args.base_url.rstrip("/")
+    else:
+        if not args.site_dir:
+            ensure_data()
+        httpd, port = start_server(args.port, args.site_dir or SITE_DIR)
+        base = f"http://127.0.0.1:{port}"
+    url = f"{base}/{PAGE_FILES[args.page]}"
     shot_path = os.path.join(OUT_DIR, f"{args.page}-{args.scenario}-{args.theme}.png")
 
     errors = []
@@ -1789,7 +1800,8 @@ def main():
 
             browser.close()
     finally:
-        httpd.shutdown()
+        if httpd:
+            httpd.shutdown()
 
     if errors:
         failures.append(f"{len(errors)} console/page error(s)")

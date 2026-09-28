@@ -9,8 +9,12 @@
 #   3. the four scrapers ONE AFTER ANOTHER (small host: two Chromiums plus a
 #      pandas build would swap); a failed source keeps its previous state
 #   4. build_data.py (+ the payload invariants, opt-in — see NAS_DAILY_PAYLOAD_TESTS)
-#   5. publish: rolling `data` release (state + payload + history), the monthly
-#      data-YYYY-MM snapshot once per month, then dispatch the Pages deploy
+#   5. serve (opt-in, NAS_DAILY_SITE_ROOT): a versioned copy of site/ as
+#      <root>/releases/<ts>/, atomically made <root>/current, then the entry
+#      pages purged from the CDN in front of it (build/publish_site.py)
+#   6. publish (opt-out, NAS_DAILY_PUBLISH): rolling `data` release (state +
+#      payload + history), the monthly data-YYYY-MM snapshot once per month,
+#      then dispatch the Pages deploy
 #
 # Exit 0 only when every step and every source succeeded. A failed source still
 # publishes the others (its state stays yesterday's, like CI's continue-on-error
@@ -28,7 +32,15 @@
 #                             uploads, Actions RW for the Pages dispatch)
 #   NAS_DAILY_FETCH=1         do step 1. Off by default so a run from a working
 #                             clone never resets it; the job image sets it on
-#   NAS_DAILY_PUBLISH=0       skip step 5 (dry run: everything local)
+#   NAS_DAILY_PUBLISH=0       skip step 6 (nothing goes to GitHub)
+#   NAS_DAILY_SITE_ROOT       do step 5 into this directory; the web server's root
+#                             is its `current` symlink (relative, so the server
+#                             may mount the directory at another path)
+#   NAS_DAILY_SITE_URL        public base URL of that site, e.g. https://cars.example.org;
+#   CF_ZONE_ID                with these three set, step 5 purges the entry pages
+#   CF_PURGE_TOKEN_FILE       from Cloudflare after the swap (token: Zone / Cache
+#                             Purge only). A failed purge is reported
+#                             (`FAILED: cdn-purge`) — the edge keeps the old HTML
 #   NAS_DAILY_SOURCES         space-separated subset (default: all four)
 #   NAS_DAILY_SOURCE_TIMEOUT  per-source `timeout` (default 3h)
 #   NAS_DAILY_PAYLOAD_TESTS=1 also run tests/test_data_integrity.py on the fresh
@@ -106,7 +118,26 @@ if [ "${NAS_DAILY_PAYLOAD_TESTS:-0}" = 1 ]; then
 fi
 cp site/data/scrape_history.json "$STATE_DIR/"
 
-# --- 5. publish ----------------------------------------------------------------
+# --- 5. serve -------------------------------------------------------------------
+# Purge only after the swap: the other order lets the edge refill from the old
+# release. A failed release leaves yesterday's `current` in place.
+if [ -n "${NAS_DAILY_SITE_ROOT:-}" ]; then
+    log "release site into $NAS_DAILY_SITE_ROOT"
+    if python -u build/publish_site.py release --public "$NAS_DAILY_SITE_ROOT"; then
+        if [ -n "${NAS_DAILY_SITE_URL:-}" ] && [ -n "${CF_ZONE_ID:-}" ] \
+                && [ -n "${CF_PURGE_TOKEN_FILE:-}" ]; then
+            python -u build/publish_site.py purge --base-url "$NAS_DAILY_SITE_URL" \
+                --zone-id "$CF_ZONE_ID" --token-file "$CF_PURGE_TOKEN_FILE" \
+                || failed+=("cdn-purge")
+        else
+            log "no NAS_DAILY_SITE_URL / CF_ZONE_ID / CF_PURGE_TOKEN_FILE — not purging"
+        fi
+    else
+        failed+=("site-release")
+    fi
+fi
+
+# --- 6. publish ----------------------------------------------------------------
 if [ "${NAS_DAILY_PUBLISH:-1}" = 1 ]; then
     if [ -n "${GH_TOKEN_FILE:-}" ]; then
         GH_TOKEN="$(cat "$GH_TOKEN_FILE")" || die "cannot read GH_TOKEN_FILE"

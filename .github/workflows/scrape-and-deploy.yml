@@ -248,18 +248,15 @@ jobs:
 
       - uses: actions/configure-pages@v5
 
-      - name: Cache-bust local assets
-        run: |
-          V=$(git rev-parse --short HEAD)
-          sed -i "s|style\.css\"|style.css?v=$V\"|g" site/*.html
-          sed -i "s|app\.js\"|app.js?v=$V\"|g" site/index.html
-          sed -i "s|reference\.js\"|reference.js?v=$V\"|g" site/reference.html
-          sed -i "s|data/cars\.parquet\"|data/cars.parquet?v=$V\"|g" site/app.js
-          sed -i "s|data/cars-archived\.parquet\"|data/cars-archived.parquet?v=$V\"|g" site/app.js
+      # Every local asset URL gets ?v=<sha>-<build ts> (the data changes daily
+      # without a commit); fails if any local reference escapes the versioning.
+      # Stdlib-only, so the runner's system python3 is enough.
+      - name: Versioned site copy
+        run: python3 build/publish_site.py build --out _site
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: _site
 
       - id: deployment
         uses: actions/deploy-pages@v4

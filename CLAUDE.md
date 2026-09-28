@@ -161,9 +161,12 @@ Exit 0 = no console errors + grid rendered; screenshot lands in `tmp/ui-verify/`
 `.github/workflows/scrape-and-deploy.yml` — **no schedule any more**: mobile.de's Akamai
 front blocks GitHub's runners, so the daily scrape runs on a scheduled host with a
 residential IP (`deploy/nas/` image → `bin/nas-daily.sh`: fetch main → tests → four
-scrapers one after another → build → publish state+payload to the
-rolling `data` release, monthly `data-YYYY-MM` snapshot → dispatch this workflow with
-`deploy_only=true`, which deploys the released payload to Pages without building).
+scrapers one after another → build → optionally serve a versioned copy of the site
+itself (`build/publish_site.py release` + Cloudflare purge) and/or publish state+payload
+to the rolling `data` release, monthly `data-YYYY-MM` snapshot → dispatch this workflow
+with `deploy_only=true`, which deploys the released payload to Pages without building).
+Every deployable copy of `site/` comes from `build/publish_site.py` (`?v=<sha>-<ts>` on
+every local asset URL; fails on an unversioned one).
 Pushes to main still rebuild + redeploy from release state; a manual dispatch can still
 scrape on CI (fallback). **No data is committed to git.**
 

@@ -482,6 +482,41 @@ Two consequences:
 
 ---
 
+## site — publish (`build/publish_site.py`)
+
+### every local asset URL is versioned — a new kind of reference must be too
+
+The public site sits behind a CDN that caches **every** file (HTML, JS, CSS,
+parquet, JSON) for weeks, keyed on the full URL. So a deployable copy is only ever
+made by `publish_site.py`, which appends `?v=<sha>-<build ts>` to every local
+`src=`/`href=` in the HTML and to every quoted `"data/…"` literal in the JS. The
+timestamp is load-bearing: the data changes daily without a commit, so a sha-only
+id would serve yesterday's parquet from the edge. The entry pages
+(`index/reference/transmissions.html`, plus `/`) keep fixed names and are **purged**
+after each swap (purge-by-URL, `publish_site.py purge`) — purge **after** the swap,
+or the edge refills from the old release.
+
+The JS rewrite deliberately covers only `data/…` literals, and the check
+(`unversioned_refs`) is wider: any quoted literal that looks like a local asset path
+(`foo.json`, `img/x.png`, …) without `?v=` fails the publish. So a new fetch outside
+`data/` — or a script that `import`s a local module — fails loud instead of going
+stale at the edge for a month; extend `version_js` when that happens. Before this,
+the Pages deploy's `sed` versioned only style.css / app.js / reference.js and the two
+`cars*.parquet` fetches — `url-state.js`, `hist-track.js`, `filter-chips.js`,
+`transmissions.js`, `cars-meta.json`, `reference.json`, `scrape_history.json` and
+transmissions.js's own parquet fetch were all unversioned. Pinned by
+`tests/test_publish_site.py`; `verify_ui.py --site-dir <copy>` renders a published
+copy (and `--base-url <url>` a deployed site), which is how to check a publish
+really loads.
+
+`release` writes `<root>/releases/.<ts>.partial`, renames it into place, then swaps
+`<root>/current` by `os.replace` of a fresh **relative** symlink (the web server
+mounts `<root>` at another path, so an absolute target would dangle there). A failed
+build leaves `current` on yesterday's release. Keep serving from `current` — a web
+server bind-mounting a release directory directly would pin its inode.
+
+---
+
 ## site — URL state codec (`#f=` / `#t=`)
 
 Shareable dashboard state lives in the URL **fragment**, not the query string:

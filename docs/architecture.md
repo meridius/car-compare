@@ -121,9 +121,19 @@ sha256-asserted); the clone is a bind mount and `bin/nas-daily.sh` resets it to
 ```text
 fetch+reset → logic tests (payload tests skipped) → sauto, autodraft, energycars,
 mobilede one at a time (a failure keeps yesterday's state, exits 1 at the end) →
-build_data (→ test_data_integrity, opt-in: ~3.2 GB RSS) → gh release upload data
-(+ data-YYYY-MM once a month) → gh workflow run … deploy_only=true
+build_data (→ test_data_integrity, opt-in: ~3.2 GB RSS) →
+[NAS_DAILY_SITE_ROOT] publish_site release (versioned copy → <root>/releases/<ts>,
+atomic swap of <root>/current, keep 3) → purge the entry pages from Cloudflare →
+[NAS_DAILY_PUBLISH] gh release upload data (+ data-YYYY-MM once a month) →
+gh workflow run … deploy_only=true
 ```
+
+`build/publish_site.py` is the one place a deployable copy of `site/` is made (the
+Pages deploy uses its `build` subcommand too): every local asset URL — scripts,
+stylesheet, and the `data/…` fetches inside the scripts — gets
+`?v=<git sha>-<build ts>`, so a CDN may cache every file for weeks and a new build
+still means new URLs; only the fixed-name entry pages need purging. It fails the
+publish if any local reference escapes the versioning (see gotchas → site → publish).
 
 Host-specific wiring (compose file, schedule, mounts, token) lives with the host, not here.
 
